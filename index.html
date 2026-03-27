@@ -630,6 +630,36 @@ input.pat-synced:focus, select.pat-synced:focus {
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
+/* NOTA EVOLUCION */
+.nota-format-toggle {
+  display: flex; gap: 0; margin-bottom: 12px; border: 1px solid var(--border2); border-radius: 6px; overflow: hidden;
+}
+.nota-format-btn {
+  flex: 1; text-align: center; padding: 6px 10px; font-family: var(--mono); font-size: 10px;
+  background: var(--surface2); color: var(--muted); cursor: pointer; border: none;
+  transition: all 0.15s; letter-spacing: 0.04em;
+}
+.nota-format-btn.active { background: var(--accent2); color: #fff; font-weight: 600; }
+.nota-section-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 0; cursor: pointer; user-select: none;
+  font-family: var(--mono); font-size: 10px; color: var(--accent);
+  letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;
+  border-bottom: 1px solid rgba(0,200,255,0.1); margin: 10px 0 8px;
+}
+.nota-section-hdr .nota-chev { transition: transform 0.2s; font-size: 12px; }
+.nota-section-hdr.collapsed .nota-chev { transform: rotate(-90deg); }
+.nota-section-body { overflow: hidden; transition: max-height 0.25s ease; }
+.nota-section-hdr.collapsed + .nota-section-body { max-height: 0 !important; padding: 0; margin: 0; }
+.nota-ai-btn {
+  background: linear-gradient(135deg, rgba(0,200,255,0.12), rgba(0,200,255,0.04));
+  border: 1px solid rgba(0,200,255,0.25); border-radius: 6px;
+  color: var(--accent); font-family: var(--mono); font-size: 11px;
+  padding: 8px 14px; cursor: pointer; transition: all 0.15s;
+}
+.nota-ai-btn:hover { background: rgba(0,200,255,0.18); border-color: var(--accent); }
+.nota-ai-btn:disabled { opacity: 0.4; cursor: default; }
+
 /* SEPSIS CHECKLIST */
 .bundle-check { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 12px; color: var(--text); }
 .bundle-check input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
@@ -2892,36 +2922,92 @@ input.pat-synced:focus, select.pat-synced:focus {
 <div id="calc-nota" class="calc-panel">
   <div class="card">
     <div class="card-title">Nota de Evolución Médica UCI</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-      <button class="calc" onclick="generarNota()" style="flex:1;">Generar nota automática</button>
+
+    <!-- Tabs: Diaria / Ingreso -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchNotaTab('diaria',this)">Evolución Diaria</button>
+      <button class="tab-btn" onclick="switchNotaTab('ingreso',this)">Ingreso UCI</button>
+    </div>
+
+    <!-- Format toggle -->
+    <div class="nota-format-toggle">
+      <button class="nota-format-btn active" id="nota-fmt-libre" onclick="toggleNotaFormat('libre')">Formato Libre</button>
+      <button class="nota-format-btn" id="nota-fmt-soap" onclick="toggleNotaFormat('soap')">Formato SOAP</button>
+    </div>
+
+    <!-- ── TAB: Evolución Diaria ── -->
+    <div class="tab-content active" id="nota-tab-diaria">
+      <div class="nota-section-hdr" onclick="toggleNotaSection(this)">Datos complementarios <span class="nota-chev">▾</span></div>
+      <div class="nota-section-body" style="max-height:500px;">
+        <div class="row cols2" style="margin-bottom:8px;">
+          <div><label>Signos vitales</label><input type="text" id="nota-sv" placeholder="TA 120/70, FC 88, FR 16, T 36.8, SpO2 96%"></div>
+          <div><label>Ventilación</label><input type="text" id="nota-vent" placeholder="VMC, FR 14, VT 450, PEEP 7, FiO2 0.40"></div>
+        </div>
+        <div class="row cols2" style="margin-bottom:8px;">
+          <div><label>Vasopresor activo</label><input type="text" id="nota-vaso" placeholder="NE 0.05 mcg/kg/min a 8.5 mL/hr"></div>
+          <div><label>Diuresis en turno (mL)</label><input type="number" id="nota-uri" placeholder="ej. 600"></div>
+        </div>
+        <div class="row cols2" style="margin-bottom:8px;">
+          <div><label>Laboratorios relevantes</label><input type="text" id="nota-labs" placeholder="Hb 10.2, Cr 1.8, Lac 2.1, PCT 0.5"></div>
+          <div><label>Gasometría</label><input type="text" id="nota-gaso" placeholder="pH 7.38, PaCO2 40, HCO3 24, PaFi 280"></div>
+        </div>
+      </div>
+
+      <div class="nota-section-hdr" onclick="toggleNotaSection(this)">Plan e indicaciones <span class="nota-chev">▾</span></div>
+      <div class="nota-section-body" style="max-height:500px;">
+        <div style="margin-bottom:8px;"><label>Plan / Indicaciones</label><textarea id="nota-plan" rows="3" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--sans);font-size:12px;padding:8px;resize:vertical;" placeholder="Continuar antibiótico, ajustar PEEP, metas hemodinámicas..."></textarea></div>
+        <div style="margin-bottom:8px;"><label>Observaciones adicionales</label><textarea id="nota-obs" rows="2" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--sans);font-size:12px;padding:8px;resize:vertical;" placeholder="Interconsultas, pendientes, familiares informados..."></textarea></div>
+      </div>
+    </div>
+
+    <!-- ── TAB: Ingreso UCI ── -->
+    <div class="tab-content" id="nota-tab-ingreso">
+      <div class="nota-section-hdr" onclick="toggleNotaSection(this)">Historia clínica <span class="nota-chev">▾</span></div>
+      <div class="nota-section-body" style="max-height:800px;">
+        <div style="margin-bottom:8px;"><label>Motivo de ingreso a UCI</label><input type="text" id="ning-motivo" placeholder="ej. Choque séptico de foco pulmonar" style="width:100%;"></div>
+        <div style="margin-bottom:8px;"><label>Padecimiento actual</label><textarea id="ning-padecimiento" rows="3" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--sans);font-size:12px;padding:8px;resize:vertical;" placeholder="Inicio, evolución, manejo previo..."></textarea></div>
+        <div style="margin-bottom:8px;"><label>Antecedentes relevantes</label><textarea id="ning-antecedentes" rows="2" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--sans);font-size:12px;padding:8px;resize:vertical;" placeholder="DM2, HAS, tabaquismo, cirugías previas..."></textarea></div>
+      </div>
+
+      <div class="nota-section-hdr" onclick="toggleNotaSection(this)">Exploración y estudios <span class="nota-chev">▾</span></div>
+      <div class="nota-section-body" style="max-height:800px;">
+        <div style="margin-bottom:8px;"><label>Exploración física</label><textarea id="ning-ef" rows="3" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--sans);font-size:12px;padding:8px;resize:vertical;" placeholder="Neurológico, cardiopulmonar, abdomen, extremidades..."></textarea></div>
+        <div class="row cols2" style="margin-bottom:8px;">
+          <div><label>Signos vitales al ingreso</label><input type="text" id="ning-sv" placeholder="TA 90/50, FC 110, FR 24, T 38.5, SpO2 88%"></div>
+          <div><label>Laboratorios de ingreso</label><input type="text" id="ning-labs" placeholder="BH, QS, ES, PFH, gasometría"></div>
+        </div>
+        <div style="margin-bottom:8px;"><label>Estudios de gabinete</label><textarea id="ning-gabinete" rows="2" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--sans);font-size:12px;padding:8px;resize:vertical;" placeholder="Rx tórax, TAC, USG, ECG..."></textarea></div>
+      </div>
+
+      <div class="nota-section-hdr" onclick="toggleNotaSection(this)">Diagnósticos y plan <span class="nota-chev">▾</span></div>
+      <div class="nota-section-body" style="max-height:800px;">
+        <div style="margin-bottom:8px;"><label>Diagnósticos de ingreso</label><textarea id="ning-dx" rows="2" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--sans);font-size:12px;padding:8px;resize:vertical;" placeholder="1. Choque séptico&#10;2. SDRA moderado&#10;3. LRA KDIGO 2"></textarea></div>
+        <div style="margin-bottom:8px;"><label>Plan inicial</label><textarea id="ning-plan" rows="3" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--sans);font-size:12px;padding:8px;resize:vertical;" placeholder="Reanimación hídrica, ATB amplio espectro, VMC protectora, vasopresores..."></textarea></div>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="btn-row" style="margin-top:12px;">
+      <button class="calc" onclick="generarNotaActual()" style="flex:1;">Generar nota</button>
+      <button class="nota-ai-btn" onclick="aiMejorarNota()">🧠 IA: Mejorar</button>
       <button class="reset" onclick="copiarNota()" style="border-color:var(--accent2);color:var(--accent);">📋 Copiar</button>
       <button class="reset" onclick="imprimirNota()">🖨️ Imprimir</button>
     </div>
 
-    <div class="section-sub">Personalizar nota</div>
-    <div class="row cols2" style="margin-bottom:8px;">
-      <div><label>Signos vitales (texto libre)</label><input type="text" id="nota-sv" placeholder="TA 120/70, FC 88, FR 16, T 36.8, SpO2 96%"></div>
-      <div><label>Ventilación (si aplica)</label><input type="text" id="nota-vent" placeholder="VMC, FR 14, VT 450, PEEP 7, FiO2 0.40"></div>
-    </div>
-    <div class="row cols2" style="margin-bottom:8px;">
-      <div><label>Vasopresor activo</label><input type="text" id="nota-vaso" placeholder="NE 0.05 mcg/kg/min a 8.5 mL/hr"></div>
-      <div><label>Diuresis en turno (mL)</label><input type="number" id="nota-uri" placeholder="ej. 600"></div>
-    </div>
-    <div style="margin-bottom:8px;"><label>Plan / Indicaciones</label><textarea id="nota-plan" rows="3" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--sans);font-size:12px;padding:8px;resize:vertical;" placeholder="Continuar antibiótico, ajustar PEEP, metas hemodinámicas..."></textarea></div>
-
-    <div id="nota-output" style="display:none; margin-top:10px;">
+    <!-- Output -->
+    <div id="nota-output" style="display:none; margin-top:12px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
         <span style="font-size:10px;color:var(--muted);font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;">NOTA GENERADA</span>
         <span id="nota-qr-btn" onclick="generarQR()" style="font-size:11px;color:var(--accent);cursor:pointer;text-decoration:underline;">🔗 Generar QR</span>
       </div>
-      <textarea id="nota-text" rows="22" readonly style="width:100%;background:var(--bg);border:1px solid var(--accent2);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:11px;padding:10px;resize:vertical;line-height:1.7;"></textarea>
+      <textarea id="nota-text" rows="22" style="width:100%;background:var(--bg);border:1px solid var(--accent2);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:11px;padding:10px;resize:vertical;line-height:1.7;"></textarea>
       <div id="qr-container" style="display:none;margin-top:12px;text-align:center;">
         <div style="font-size:11px;color:var(--muted2);margin-bottom:8px;">Escanear para compartir el reporte</div>
         <canvas id="qr-canvas" style="border:1px solid var(--border);border-radius:6px;padding:8px;background:#fff;"></canvas>
         <div style="font-size:10px;color:var(--muted);margin-top:4px;">QR generado localmente — no se envían datos a internet</div>
       </div>
     </div>
-    <div class="info">La nota se genera automáticamente con los scores calculados en esta sesión. Revisa y ajusta antes de firmar.</div>
+    <div class="info" style="margin-top:6px;">Los scores se incluyen automáticamente. Puedes editar la nota generada antes de copiar/imprimir.</div>
   </div>
 </div>
 
@@ -6294,134 +6380,368 @@ function resetElectro() {
 }
 
 // ============ NOTA DE EVOLUCIÓN ============
-function generarNota() {
+let notaActiveTab = 'diaria';
+let notaActiveFormat = 'libre';
+
+function switchNotaTab(tab, btn) {
+  notaActiveTab = tab;
+  document.querySelectorAll('#calc-nota .tab-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.getElementById('nota-tab-diaria').classList.toggle('active', tab === 'diaria');
+  document.getElementById('nota-tab-ingreso').classList.toggle('active', tab === 'ingreso');
+  document.getElementById('nota-output').style.display = 'none';
+}
+
+function toggleNotaFormat(fmt) {
+  notaActiveFormat = fmt;
+  document.getElementById('nota-fmt-libre').classList.toggle('active', fmt === 'libre');
+  document.getElementById('nota-fmt-soap').classList.toggle('active', fmt === 'soap');
+}
+
+function toggleNotaSection(hdr) {
+  hdr.classList.toggle('collapsed');
+}
+
+// Shared: gather patient + scores data
+function _notaData() {
+  const pf = id => { const e = document.getElementById(id); return e ? (e.value || e.textContent || '').trim() : ''; };
+  const scoreVal = (resId, valId, suffix) => {
+    const r = document.getElementById(resId);
+    if (!r || r.style.display === 'none') return 'No calculado';
+    const v = document.getElementById(valId);
+    return v ? v.textContent.trim() + (suffix || '') : 'No calculado';
+  };
   const now = new Date();
-  const fecha = now.toLocaleDateString('es-MX', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
-  const hora  = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  return {
+    fecha: now.toLocaleDateString('es-MX', {weekday:'long', year:'numeric', month:'long', day:'numeric'}),
+    hora: String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0'),
+    nombre: pf('pat-nombre') || 'NO ESPECIFICADO',
+    cama: pf('pat-cama') || '—',
+    edad: pf('pat-edad') || '—',
+    sexo: document.getElementById('pat-sexo').value,
+    sexoStr: document.getElementById('pat-sexo').value === 'M' ? 'masculino' : document.getElementById('pat-sexo').value === 'F' ? 'femenino' : '—',
+    peso: pf('pat-peso') || '—',
+    dx: pf('pat-dx') || 'NO ESPECIFICADO',
+    medico: pf('pat-medico') || '_______________',
+    dias: pf('pat-dias') || '—',
+    sofa: (pf('sofa-total') || '0') + ' pts',
+    apache: scoreVal('apache-result', 'apache-total', ' pts'),
+    saps: scoreVal('saps-result', 'saps-total', ' pts'),
+    nutric: scoreVal('nutric-result', 'nutric-total', ' pts'),
+    pafi: scoreVal('pafi-result', 'pafi-val', ' mmHg'),
+    dp: scoreVal('dp-result', 'dp-val', ' cmH2O'),
+    mp: scoreVal('mp-result', 'mp-val', ' J/min'),
+    kdigo: scoreVal('kdigo-result', 'kd-final', ''),
+    padua: (() => { const r = document.getElementById('padua-result'); return r && r.style.display !== 'none' ? pf('padua-total') + ' pts — ' + pf('padua-badge') : 'No calculado'; })(),
+    cam: scoreVal('cam-result', 'cam-val', ''),
+    harris: (() => { const r = document.getElementById('harris-result'); return r && r.style.display !== 'none' ? 'GET ' + pf('hb-get') + ' · Proteínas ' + pf('hb-prot') : 'No calculado'; })(),
+    rass: (() => { const r = document.getElementById('rass-result'); return r && r.style.display !== 'none' ? pf('rass-val') + ' — ' + pf('rass-label') : 'No evaluado'; })(),
+    news2: scoreVal('news2-result', 'news2-total', ' pts'),
+    balPar: pf('bal-par'), iuk: pf('bal-iuk'),
+    sv: pf('nota-sv') || 'Pendiente',
+    vent: pf('nota-vent') || 'No en ventilación mecánica',
+    vaso: pf('nota-vaso') || 'Sin vasopresores',
+    uriN: pf('nota-uri'),
+    plan: pf('nota-plan') || 'Continuar manejo actual, reevaluar en próximo turno.',
+    obs: pf('nota-obs') || '',
+    labs: pf('nota-labs') || '',
+    gaso: pf('nota-gaso') || '',
+  };
+}
 
-  // Datos paciente
-  const nombre = document.getElementById('pat-nombre').value || 'NO ESPECIFICADO';
-  const cama   = document.getElementById('pat-cama').value || '—';
-  const nss    = document.getElementById('pat-nss').value || '—';
-  const edad   = document.getElementById('pat-edad').value || '—';
-  const sexo   = document.getElementById('pat-sexo').value;
-  const peso   = document.getElementById('pat-peso').value || '—';
-  const dx     = document.getElementById('pat-dx').value || 'NO ESPECIFICADO';
-  const medico = document.getElementById('pat-medico').value || '_______________';
-  const dias   = document.getElementById('pat-dias').value || '—';
+function generarNotaActual() {
+  if (notaActiveTab === 'diaria') {
+    if (notaActiveFormat === 'soap') generarNotaDiariaSOAP();
+    else generarNotaDiaria();
+  } else {
+    if (notaActiveFormat === 'soap') generarNotaIngresoSOAP();
+    else generarNotaIngreso();
+  }
+}
 
-  // Scores
-  const sofa   = document.getElementById('sofa-total').textContent;
-  const apacheR = document.getElementById('apache-result');
-  const apache  = apacheR && apacheR.style.display !== 'none' ? document.getElementById('apache-total').textContent + ' pts' : 'No calculado';
-  const sapsR  = document.getElementById('saps-result');
-  const saps   = sapsR && sapsR.style.display !== 'none' ? document.getElementById('saps-total').textContent + ' pts' : 'No calculado';
-  const nutricR = document.getElementById('nutric-result');
-  const nutric  = nutricR && nutricR.style.display !== 'none' ? document.getElementById('nutric-total').textContent + ' pts' : 'No calculado';
-
-  const pafiR  = document.getElementById('pafi-result');
-  const pafi   = pafiR && pafiR.style.display !== 'none' ? document.getElementById('pafi-val').textContent + ' mmHg' : 'No calculado';
-  const dpR    = document.getElementById('dp-result');
-  const dp_val = dpR && dpR.style.display !== 'none' ? document.getElementById('dp-val').textContent + ' cmH2O' : 'No calculado';
-  const mpR    = document.getElementById('mp-result');
-  const mp_val = mpR && mpR.style.display !== 'none' ? document.getElementById('mp-val').textContent + ' J/min' : 'No calculado';
-
-  const balPar = document.getElementById('bal-par').textContent;
-  const iuk    = document.getElementById('bal-iuk').textContent;
-
-  const kdigoR = document.getElementById('kdigo-result');
-  const kdigo  = kdigoR && kdigoR.style.display !== 'none' ? document.getElementById('kd-final').textContent : 'No evaluado';
-
-  const padR   = document.getElementById('padua-result');
-  const padua  = padR && padR.style.display !== 'none' ? document.getElementById('padua-total').textContent + ' pts — ' + document.getElementById('padua-badge').textContent : 'No calculado';
-
-  const camR   = document.getElementById('cam-result');
-  const cam    = camR && camR.style.display !== 'none' ? document.getElementById('cam-val').textContent : 'No evaluado';
-
-  const harrisR = document.getElementById('harris-result');
-  const harris  = harrisR && harrisR.style.display !== 'none' ? 'GET ' + document.getElementById('hb-get').textContent + ' · Proteínas ' + document.getElementById('hb-prot').textContent : 'No calculado';
-
-  const rassR  = document.getElementById('rass-result');
-  const rass   = rassR && rassR.style.display !== 'none' ? document.getElementById('rass-val').textContent + ' — ' + document.getElementById('rass-label').textContent : 'No evaluado';
-
-  // Datos libres
-  const sv     = document.getElementById('nota-sv').value || 'Pendiente';
-  const vent   = document.getElementById('nota-vent').value || 'No en ventilación mecánica';
-  const vaso   = document.getElementById('nota-vaso').value || 'Sin vasopresores';
-  const uriN   = document.getElementById('nota-uri').value;
-  const plan   = document.getElementById('nota-plan').value || 'Continuar manejo actual, reevaluar en próximo turno.';
-
-  const sexoStr = sexo === 'M' ? 'masculino' : sexo === 'F' ? 'femenino' : '—';
-
+function generarNotaDiaria() {
+  const d = _notaData();
   const nota = `NOTA DE EVOLUCIÓN — MEDICINA CRÍTICA
 UCI Siglo XXI — Unidad de Cuidados Intensivos
 ${'═'.repeat(55)}
-Fecha: ${fecha}
-Hora:  ${hora} hrs
+Fecha: ${d.fecha}
+Hora:  ${d.hora} hrs
 ${'─'.repeat(55)}
 DATOS DEL PACIENTE
-  Nombre:     ${nombre}
-  Cama:       ${cama}   |   NSS/Exp.: ${nss}
-  Edad/Sexo:  ${edad} años, ${sexoStr}   |   Peso: ${peso} kg
-  Día UCI:    ${dias}
-  Dx:         ${dx}
+  Nombre:     ${d.nombre}
+  Cama:       ${d.cama}
+  Edad/Sexo:  ${d.edad} años, ${d.sexoStr}   |   Peso: ${d.peso} kg
+  Día UCI:    ${d.dias}
+  Dx:         ${d.dx}
 ${'─'.repeat(55)}
 SIGNOS VITALES Y MONITOREO
-  ${sv}
+  ${d.sv}
 
 VENTILACIÓN MECÁNICA
-  ${vent}
-  · Driving Pressure: ${dp_val}
-  · Poder Mecánico:   ${mp_val}
-  · PAFI (P:F):       ${pafi}
+  ${d.vent}
+  · Driving Pressure: ${d.dp}
+  · Poder Mecánico:   ${d.mp}
+  · PAFI (P:F):       ${d.pafi}
 
 SOPORTE VASOPRESOR
-  ${vaso}
+  ${d.vaso}
 
 BALANCE HÍDRICO
-  · Balance de turno: ${balPar}
-  · Índice urinario:  ${iuk}
-  · Diuresis turno:   ${uriN ? uriN + ' mL' : 'No registrada'}
+  · Balance de turno: ${d.balPar}
+  · Índice urinario:  ${d.iuk}
+  · Diuresis turno:   ${d.uriN ? d.uriN + ' mL' : 'No registrada'}
+${d.labs ? '\nLABORATORIOS\n  ' + d.labs : ''}
+${d.gaso ? '\nGASOMETRÍA\n  ' + d.gaso : ''}
 ${'─'.repeat(55)}
 SCORES Y ESCALAS
   Pronóstico
-    · SOFA:         ${sofa} pts
-    · APACHE II:    ${apache}
-    · SAPS II:      ${saps}
-    · NUTRIC Score: ${nutric}
+    · SOFA:         ${d.sofa}
+    · APACHE II:    ${d.apache}
+    · SAPS II:      ${d.saps}
+    · NUTRIC Score: ${d.nutric}
+    · NEWS2:        ${d.news2}
 
   Neurológico
-    · RASS:         ${rass}
-    · CAM-ICU:      ${cam}
+    · RASS:         ${d.rass}
+    · CAM-ICU:      ${d.cam}
 
   Renal
-    · KDIGO:        ${kdigo}
+    · KDIGO:        ${d.kdigo}
 
   Riesgo
-    · PADUA (TEV):  ${padua}
+    · PADUA (TEV):  ${d.padua}
 
   Nutricional
-    · Harris-Benedict: ${harris}
+    · Harris-Benedict: ${d.harris}
 ${'─'.repeat(55)}
 PLAN Y CONDUCTA
-${plan.split('\n').map(l => '  ' + l).join('\n')}
+${d.plan.split('\n').map(l => '  ' + l).join('\n')}
+${d.obs ? '\nOBSERVACIONES\n' + d.obs.split('\n').map(l => '  ' + l).join('\n') : ''}
 ${'═'.repeat(55)}
-Médico tratante: ${medico}
+Médico tratante: ${d.medico}
 Firma: ________________________   Cédula: ____________
 ${'─'.repeat(55)}
 Nota generada con UCI Tools · UCI Siglo XXI`;
 
+  _outputNota(nota);
+}
+
+function generarNotaDiariaSOAP() {
+  const d = _notaData();
+  const nota = `NOTA DE EVOLUCIÓN (SOAP) — MEDICINA CRÍTICA
+UCI Siglo XXI — ${d.fecha} — ${d.hora} hrs
+${'═'.repeat(55)}
+Paciente: ${d.nombre} | Cama ${d.cama} | ${d.edad}a ${d.sexoStr} | ${d.peso}kg | Día UCI ${d.dias}
+Dx: ${d.dx}
+${'─'.repeat(55)}
+S — SUBJETIVO
+  Día ${d.dias} de estancia en UCI.
+  ${d.obs || 'Sin nuevos eventos referidos por personal de turno.'}
+
+O — OBJETIVO
+  Signos vitales: ${d.sv}
+  Ventilación: ${d.vent}
+  Vasopresor: ${d.vaso}
+  Diuresis: ${d.uriN ? d.uriN + ' mL' : 'No registrada'}
+  Balance: ${d.balPar} | IU: ${d.iuk}
+  ${d.labs ? 'Labs: ' + d.labs : ''}
+  ${d.gaso ? 'Gasometría: ' + d.gaso : ''}
+
+  Scores:
+    SOFA ${d.sofa} | APACHE II ${d.apache} | SAPS II ${d.saps}
+    NEWS2 ${d.news2} | NUTRIC ${d.nutric}
+    RASS ${d.rass} | CAM-ICU ${d.cam}
+    KDIGO ${d.kdigo} | PADUA ${d.padua}
+
+  Ventilatorio: DP ${d.dp} | PM ${d.mp} | PaFi ${d.pafi}
+  Nutricional: ${d.harris}
+
+A — ANÁLISIS
+  Paciente en día ${d.dias} UCI con Dx ${d.dx}.
+  SOFA ${d.sofa} — tendencia a evaluar.
+  ${d.kdigo !== 'No evaluado' ? 'Función renal: KDIGO ' + d.kdigo + '.' : ''}
+  ${d.cam !== 'No evaluado' ? 'Neurológico: CAM-ICU ' + d.cam + ', RASS ' + d.rass + '.' : ''}
+
+P — PLAN
+${d.plan.split('\n').map(l => '  ' + l).join('\n')}
+${'═'.repeat(55)}
+Médico: ${d.medico}
+Firma: ________________________   Cédula: ____________
+${'─'.repeat(55)}
+Nota generada con UCI Tools · UCI Siglo XXI`;
+
+  _outputNota(nota);
+}
+
+function generarNotaIngreso() {
+  const d = _notaData();
+  const pf = id => { const e = document.getElementById(id); return e ? e.value.trim() : ''; };
+  const motivo = pf('ning-motivo') || 'No especificado';
+  const padec = pf('ning-padecimiento') || 'No especificado';
+  const antec = pf('ning-antecedentes') || 'No referidos';
+  const ef = pf('ning-ef') || 'Pendiente';
+  const svIng = pf('ning-sv') || d.sv;
+  const labsIng = pf('ning-labs') || d.labs || 'Pendientes';
+  const gabinete = pf('ning-gabinete') || 'Pendientes';
+  const dxIng = pf('ning-dx') || d.dx;
+  const planIng = pf('ning-plan') || d.plan;
+
+  const nota = `NOTA DE INGRESO A UCI — MEDICINA CRÍTICA
+UCI Siglo XXI — Unidad de Cuidados Intensivos
+${'═'.repeat(55)}
+Fecha: ${d.fecha}
+Hora:  ${d.hora} hrs
+${'─'.repeat(55)}
+DATOS DEL PACIENTE
+  Nombre:     ${d.nombre}
+  Cama:       ${d.cama}
+  Edad/Sexo:  ${d.edad} años, ${d.sexoStr}   |   Peso: ${d.peso} kg
+  Médico:     ${d.medico}
+${'─'.repeat(55)}
+MOTIVO DE INGRESO A UCI
+  ${motivo}
+${'─'.repeat(55)}
+PADECIMIENTO ACTUAL
+${padec.split('\n').map(l => '  ' + l).join('\n')}
+${'─'.repeat(55)}
+ANTECEDENTES RELEVANTES
+${antec.split('\n').map(l => '  ' + l).join('\n')}
+${'─'.repeat(55)}
+EXPLORACIÓN FÍSICA AL INGRESO
+  Signos vitales: ${svIng}
+${ef.split('\n').map(l => '  ' + l).join('\n')}
+${'─'.repeat(55)}
+ESTUDIOS
+  Laboratorios: ${labsIng}
+  Gabinete: ${gabinete}
+${'─'.repeat(55)}
+SCORES AL INGRESO
+  · SOFA:      ${d.sofa}
+  · APACHE II: ${d.apache}
+  · SAPS II:   ${d.saps}
+  · NEWS2:     ${d.news2}
+  · PaFi:      ${d.pafi}
+  · KDIGO:     ${d.kdigo}
+${'─'.repeat(55)}
+DIAGNÓSTICOS DE INGRESO
+${dxIng.split('\n').map(l => '  ' + l).join('\n')}
+${'─'.repeat(55)}
+PLAN INICIAL
+${planIng.split('\n').map(l => '  ' + l).join('\n')}
+${'═'.repeat(55)}
+Médico tratante: ${d.medico}
+Firma: ________________________   Cédula: ____________
+${'─'.repeat(55)}
+Nota generada con UCI Tools · UCI Siglo XXI`;
+
+  _outputNota(nota);
+}
+
+function generarNotaIngresoSOAP() {
+  const d = _notaData();
+  const pf = id => { const e = document.getElementById(id); return e ? e.value.trim() : ''; };
+  const motivo = pf('ning-motivo') || 'No especificado';
+  const padec = pf('ning-padecimiento') || 'No especificado';
+  const antec = pf('ning-antecedentes') || 'No referidos';
+  const ef = pf('ning-ef') || 'Pendiente';
+  const svIng = pf('ning-sv') || d.sv;
+  const labsIng = pf('ning-labs') || d.labs || 'Pendientes';
+  const gabinete = pf('ning-gabinete') || 'Pendientes';
+  const dxIng = pf('ning-dx') || d.dx;
+  const planIng = pf('ning-plan') || d.plan;
+
+  const nota = `NOTA DE INGRESO A UCI (SOAP) — MEDICINA CRÍTICA
+UCI Siglo XXI — ${d.fecha} — ${d.hora} hrs
+${'═'.repeat(55)}
+Paciente: ${d.nombre} | Cama ${d.cama} | ${d.edad}a ${d.sexoStr} | ${d.peso}kg
+${'─'.repeat(55)}
+S — SUBJETIVO
+  Motivo de ingreso: ${motivo}
+  Padecimiento actual:
+${padec.split('\n').map(l => '    ' + l).join('\n')}
+  Antecedentes:
+${antec.split('\n').map(l => '    ' + l).join('\n')}
+
+O — OBJETIVO
+  Signos vitales: ${svIng}
+  Exploración física:
+${ef.split('\n').map(l => '    ' + l).join('\n')}
+  Laboratorios: ${labsIng}
+  Gabinete: ${gabinete}
+
+  Scores al ingreso:
+    SOFA ${d.sofa} | APACHE II ${d.apache} | SAPS II ${d.saps}
+    NEWS2 ${d.news2} | PaFi ${d.pafi} | KDIGO ${d.kdigo}
+
+A — ANÁLISIS / DIAGNÓSTICOS
+${dxIng.split('\n').map(l => '  ' + l).join('\n')}
+
+P — PLAN
+${planIng.split('\n').map(l => '  ' + l).join('\n')}
+${'═'.repeat(55)}
+Médico: ${d.medico}
+Firma: ________________________   Cédula: ____________
+${'─'.repeat(55)}
+Nota generada con UCI Tools · UCI Siglo XXI`;
+
+  _outputNota(nota);
+}
+
+function _outputNota(nota) {
   document.getElementById('nota-text').value = nota;
   document.getElementById('nota-output').style.display = 'block';
   document.getElementById('qr-container').style.display = 'none';
 }
 
+// AI: Improve note
+async function aiMejorarNota() {
+  const textEl = document.getElementById('nota-text');
+  if (!textEl.value) generarNotaActual();
+  const nota = textEl.value;
+  if (!nota || nota.length < 20) return;
+
+  if (!hasAPIKey || (typeof hasAPIKey === 'function' && !hasAPIKey())) {
+    alert('Configura tu API Key de OpenAI en el asistente IA (botón 🧠) para usar esta función.');
+    return;
+  }
+
+  const btn = document.querySelector('.nota-ai-btn');
+  const origText = btn.textContent;
+  btn.textContent = '🧠 Mejorando...';
+  btn.disabled = true;
+
+  try {
+    const cfg = JSON.parse(localStorage.getItem('uci-ai-config')) || {};
+    const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.key },
+      body: JSON.stringify({
+        model: cfg.model || 'gpt-4o-mini',
+        max_tokens: 1500,
+        temperature: 0.2,
+        messages: [
+          { role: 'system', content: 'Eres un médico intensivista experto en redacción de notas clínicas. Mejora la nota médica proporcionada: corrige redacción, hazla más concisa y profesional, mantén TODA la información clínica y numérica exacta. Responde SOLO con la nota mejorada, sin explicaciones. Mantén el mismo formato (separadores, secciones). En español.' },
+          { role: 'user', content: nota }
+        ]
+      })
+    });
+    if (!resp.ok) throw new Error('Error ' + resp.status);
+    const data = await resp.json();
+    const improved = data.choices?.[0]?.message?.content;
+    if (improved) textEl.value = improved;
+  } catch(e) {
+    alert('Error al mejorar nota: ' + e.message);
+  } finally {
+    btn.textContent = origText;
+    btn.disabled = false;
+  }
+}
+
 function copiarNota() {
   const el = document.getElementById('nota-text');
-  if (!el.value) { generarNota(); }
+  if (!el.value) generarNotaActual();
   el.select();
   document.execCommand('copy');
-  // Visual feedback
   const btn = event.target;
   const orig = btn.textContent;
   btn.textContent = '✓ Copiado';
@@ -6430,12 +6750,12 @@ function copiarNota() {
 }
 
 function imprimirNota() {
-  if (!document.getElementById('nota-text').value) generarNota();
+  if (!document.getElementById('nota-text').value) generarNotaActual();
   const content = document.getElementById('nota-text').value;
   const nombre  = document.getElementById('pat-nombre').value || 'Paciente';
   const printHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Nota UCI</title>
 <style>body{font-family:monospace;font-size:12px;padding:24px;white-space:pre-wrap;line-height:1.6;}
-@media print{body{padding:10px;}}</style></head><body>${content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</body></html>`;
+@media print{body{padding:10px;}}<\/style></head><body>${content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</body></html>`;
   const blob = new Blob([printHTML], {type:'text/html'});
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
@@ -6445,10 +6765,10 @@ function imprimirNota() {
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
-// ── QR Code generation (no external lib, pure JS) ────────────────────────────
+// ── QR Code generation ────────────────────────────
 function generarQR() {
-  if (!document.getElementById('nota-text').value) generarNota();
-  const text = document.getElementById('nota-text').value.substring(0, 800); // QR capacity limit
+  if (!document.getElementById('nota-text').value) generarNotaActual();
+  const text = document.getElementById('nota-text').value.substring(0, 800);
   const url  = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(text);
   const img  = new Image();
   img.onload = () => {
@@ -6459,7 +6779,6 @@ function generarQR() {
     document.getElementById('qr-container').style.display = 'block';
   };
   img.onerror = () => {
-    // Offline fallback — show text URL
     document.getElementById('qr-container').innerHTML = '<div style="color:var(--muted2);font-size:11px;">Sin conexión para generar QR. Copia el texto de la nota.</div>';
     document.getElementById('qr-container').style.display = 'block';
   };
@@ -7859,15 +8178,12 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.calc-panel').forEach(panel => {
     const id = panel.id.replace('calc-', '');
     if (['paciente','exportar','nota'].includes(id)) return;
-    const firstCard = panel.querySelector('.card');
-    if (!firstCard) return;
-    const title = firstCard.querySelector('.card-title');
-    if (!title) return;
-    title.style.display = 'flex';
-    title.style.alignItems = 'center';
-    title.style.justifyContent = 'space-between';
+    const btnRow = panel.querySelector('.btn-row');
+    if (!btnRow) return;
     const btn = document.createElement('button');
-    btn.className = 'btn-copy-module';
+    btn.className = 'reset btn-copy-module';
+    btn.style.borderColor = 'var(--accent2)';
+    btn.style.color = 'var(--accent)';
     btn.textContent = '📋 Copiar';
     btn.onclick = function(e) {
       e.stopPropagation();
@@ -7876,7 +8192,7 @@ document.addEventListener('DOMContentLoaded', function() {
       btn.classList.add('copied');
       setTimeout(() => { btn.textContent = '📋 Copiar'; btn.classList.remove('copied'); }, 1500);
     };
-    title.appendChild(btn);
+    btnRow.appendChild(btn);
   });
 });
 </script>
