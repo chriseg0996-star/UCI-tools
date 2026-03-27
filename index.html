@@ -447,19 +447,6 @@ input.pat-synced, select.pat-synced {
 input.pat-synced:focus, select.pat-synced:focus {
   border-color: var(--accent) !important;
 }
-/* MOBILE */
-@media (max-width: 700px) {
-  .sidebar { position: fixed; left: -var(--sidebar); top: 48px; height: calc(100vh - 48px); z-index: 150; transform: translateX(-100%); transition: transform 0.2s; }
-  .sidebar.open { transform: translateX(0); }
-  .menu-toggle { display: block; }
-  .row.cols3 { grid-template-columns: 1fr 1fr; }
-  .row.cols4 { grid-template-columns: 1fr 1fr; }
-  .sofa-item { grid-template-columns: 1fr auto; }
-  .gas-result-grid { grid-template-columns: 1fr; }
-  .vaso-result-grid { grid-template-columns: 1fr 1fr; }
-  .content { padding: 12px; }
-}
-
 /* PATIENT PROFILE */
 .patient-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
 .patient-grid.cols3 { grid-template-columns: 1fr 1fr 1fr; }
@@ -532,6 +519,87 @@ input.pat-synced:focus, select.pat-synced:focus {
   .score-grid { grid-template-columns: 1fr 1fr 1fr !important; }
 }
 .print-header { display: none; }
+
+/* FOOTER */
+.app-footer {
+  padding: 20px 20px 12px;
+  border-top: 1px solid var(--border);
+  margin-top: 24px;
+  text-align: center;
+  font-family: var(--mono);
+}
+.app-footer .footer-title {
+  font-size: 11px; color: var(--accent); letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.app-footer .footer-copy {
+  font-size: 10px; color: var(--muted); margin-bottom: 8px;
+}
+.app-footer .footer-disclaimer {
+  font-size: 10px; color: var(--muted2); line-height: 1.6;
+  max-width: 560px; margin: 0 auto;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: rgba(255,179,0,0.04);
+}
+.app-footer .footer-disclaimer b { color: var(--yellow); }
+
+/* MOBILE ≤700px — al final para ganar cascada sobre reglas base */
+@media (max-width: 700px) {
+  .sidebar { position: fixed; left: -var(--sidebar); top: 48px; height: calc(100vh - 48px); z-index: 150; transform: translateX(-100%); transition: transform 0.2s; }
+  .sidebar.open { transform: translateX(0); }
+  .menu-toggle { display: block; }
+  /* header compacto */
+  header { gap: 8px; padding: 0 10px; overflow: hidden; }
+  .logo { font-size: 11px; white-space: nowrap; }
+  .logo span:last-child { display: none; }
+  .header-right { gap: 8px; }
+  .clock { font-size: 11px; }
+  .header-right > div:last-child { display: none; }
+  /* grids */
+  .row.cols3 { grid-template-columns: 1fr 1fr; }
+  .row.cols4 { grid-template-columns: 1fr 1fr; }
+  .sofa-item { grid-template-columns: 1fr auto; }
+  .gas-result-grid { grid-template-columns: 1fr; }
+  .vaso-result-grid { grid-template-columns: 1fr 1fr; }
+  .patient-grid.cols3 { grid-template-columns: 1fr 1fr; }
+  /* spacing */
+  .content { padding: 10px; }
+  .card { padding: 12px; margin-bottom: 8px; }
+  .row { gap: 8px; margin-bottom: 8px; }
+  .section-sub { margin: 10px 0 6px; }
+  /* inputs & buttons tap-friendly */
+  input[type=number], input[type=text], input[type=date], select { padding: 9px 10px; font-size: 14px; min-height: 42px; }
+  button.calc { padding: 10px 16px; font-size: 13px; min-height: 42px; }
+  button.reset { padding: 10px 12px; font-size: 12px; min-height: 42px; }
+  /* results */
+  .result-val { font-size: 22px; }
+  .mr-row { gap: 6px; padding: 5px 0; }
+  .mr-val { font-size: 14px; }
+  .result-badge { font-size: 10px; padding: 3px 7px; }
+  .card-title { font-size: 13px; letter-spacing: 0.05em; }
+  .app-footer { padding: 16px 12px 10px; }
+}
+
+/* MOBILE ≤480px — teléfonos pequeños */
+@media (max-width: 480px) {
+  .row.cols2 { grid-template-columns: 1fr; }
+  .row.cols3 { grid-template-columns: 1fr; }
+  .row.cols4 { grid-template-columns: 1fr 1fr; }
+  .patient-grid, .patient-grid.cols3 { grid-template-columns: 1fr 1fr; }
+  .vaso-result-grid { grid-template-columns: 1fr; }
+  .gas-result-grid { grid-template-columns: 1fr; }
+  .btn-row { flex-wrap: wrap; }
+  .btn-row button.calc { flex: 1 1 100%; }
+  .content { padding: 8px; }
+  .card { padding: 10px; border-radius: 6px; }
+  .result { flex-direction: column; gap: 6px; }
+  .result-val { font-size: 28px; }
+  .multi-result { padding: 8px 10px; }
+  .mr-label { font-size: 11px; }
+  .mr-val { font-size: 13px; }
+}
 </style>
 </head>
 <body>
@@ -560,21 +628,11 @@ input.pat-synced:focus, select.pat-synced:focus {
   <div class="nav-divider"></div>
 
   <div class="nav-group">
-    <div class="nav-group-header collapsed" onclick="toggleGroup('g-alerta',this)">
-      <span class="nav-group-label">⚡ Alerta Temprana</span><span class="nav-chevron">▾</span>
-    </div>
-    <div class="nav-group-items collapsed" id="g-alerta">
-      <div class="nav-item" onclick="showCalc('news2',this)"><span class="nav-icon">·</span>NEWS2 — Deterioro</div>
-    </div>
-  </div>
-
-  <div class="nav-divider"></div>
-
-  <div class="nav-group">
     <div class="nav-group-header collapsed" onclick="toggleGroup('g-pronostico',this)">
-      <span class="nav-group-label">📊 Pronóstico</span><span class="nav-chevron">▾</span>
+      <span class="nav-group-label">📊 Escalas Clínicas</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-pronostico">
+      <div class="nav-item" onclick="showCalc('news2',this)"><span class="nav-icon">·</span>NEWS2 — Alerta Temprana</div>
       <div class="nav-item" onclick="showCalc('sofa',this)"><span class="nav-icon">·</span>SOFA Score</div>
       <div class="nav-item" onclick="showCalc('apache',this)"><span class="nav-icon">·</span>APACHE II</div>
       <div class="nav-item" onclick="showCalc('saps',this)"><span class="nav-icon">·</span>SAPS II</div>
@@ -1717,7 +1775,20 @@ input.pat-synced:focus, select.pat-synced:focus {
   <div class="card">
     <div class="card-title">Método 1 — PPC Directa (PAM − PIC medida)</div>
     <div class="row cols3">
-      <div><label>PAM (mmHg)</label><input type="number" id="ppc-pam" placeholder="65-90"></div>
+      <div>
+        <label>PAS (mmHg)</label>
+        <input type="number" id="ppc-pas" placeholder="ej. 120" oninput="pamAutoCalc('ppc-pam','ppc-pas','ppc-pad')">
+      </div>
+      <div>
+        <label>PAD (mmHg)</label>
+        <input type="number" id="ppc-pad" placeholder="ej. 70" oninput="pamAutoCalc('ppc-pam','ppc-pas','ppc-pad')">
+      </div>
+      <div>
+        <label>PAM (mmHg) <span style="font-size:9px;color:var(--accent)">auto</span></label>
+        <input type="number" id="ppc-pam" placeholder="65–90" style="background:rgba(0,200,255,0.05);">
+      </div>
+    </div>
+    <div class="row cols2">
       <div><label>PIC medida (mmHg)</label><input type="number" id="ppc-pic" placeholder="<20"></div>
       <div><label>Meta PPC (mmHg)</label><input type="number" id="ppc-meta" placeholder="60"></div>
     </div>
@@ -1739,10 +1810,23 @@ input.pat-synced:focus, select.pat-synced:focus {
   <div class="card" style="margin-top:12px;">
     <div class="card-title">Método 2 — PIC Estimada por DVNO (Vaina del Nervio Óptico)</div>
     <div class="info" style="margin-bottom:12px;">Ultrasonido ocular: medir DVNO a <b>3 mm</b> detrás de la papila en eje sagital. Normal: &lt;5.0 mm. Medición bilateral, promediar.</div>
-    <div class="row cols3">
+    <div class="row cols2">
       <div><label>DVNO ojo derecho (mm)</label><input type="number" id="dvno-od" placeholder="<5.0" step="0.1"></div>
       <div><label>DVNO ojo izquierdo (mm)</label><input type="number" id="dvno-oi" placeholder="<5.0" step="0.1"></div>
-      <div><label>PAM para PPC (mmHg)</label><input type="number" id="dvno-pam" placeholder="65-90"></div>
+    </div>
+    <div class="row cols3">
+      <div>
+        <label>PAS (mmHg)</label>
+        <input type="number" id="dvno-pas" placeholder="ej. 120" oninput="pamAutoCalc('dvno-pam','dvno-pas','dvno-pad')">
+      </div>
+      <div>
+        <label>PAD (mmHg)</label>
+        <input type="number" id="dvno-pad" placeholder="ej. 70" oninput="pamAutoCalc('dvno-pam','dvno-pas','dvno-pad')">
+      </div>
+      <div>
+        <label>PAM (mmHg) <span style="font-size:9px;color:var(--accent)">auto</span></label>
+        <input type="number" id="dvno-pam" placeholder="65–90" style="background:rgba(0,200,255,0.05);">
+      </div>
     </div>
     <div class="btn-row">
       <button class="calc" onclick="calcDVNO()">Calcular</button>
@@ -1768,15 +1852,24 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="info" style="margin-bottom:12px;">Ventana temporal: arteria cerebral media (ACM). Índice de pulsatilidad (IP) = (VSist − VDiast) / VMedia. Correlaciona con resistencia cerebrovascular.</div>
     <div class="section-sub">Velocidades ACM (cm/s)</div>
     <div class="row cols3">
-      <div><label>V sistólica (cm/s)</label><input type="number" id="dtc-vs" placeholder="40-100"></div>
-      <div><label>V diastólica (cm/s)</label><input type="number" id="dtc-vd" placeholder="25-50"></div>
-      <div><label>V media / TAMM (cm/s)</label><input type="number" id="dtc-vm" placeholder="35-70"></div>
+      <div><label>V sistólica (cm/s)</label><input type="number" id="dtc-vs" placeholder="40-100" oninput="pamAutoCalc('dtc-vm','dtc-vs','dtc-vd')"></div>
+      <div><label>V diastólica (cm/s)</label><input type="number" id="dtc-vd" placeholder="25-50" oninput="pamAutoCalc('dtc-vm','dtc-vs','dtc-vd')"></div>
+      <div><label>V media / TAMM (cm/s) <span style="font-size:9px;color:var(--accent)">auto</span></label><input type="number" id="dtc-vm" placeholder="—" readonly style="background:rgba(0,200,255,0.05);cursor:default;"></div>
     </div>
-    <div class="section-sub">Parámetros hemodinámicos</div>
+    <div class="section-sub">Parámetros hemodinámicos — ingresa PAS y PAD, PAM se calcula automáticamente</div>
     <div class="row cols3">
-      <div><label>PAM (mmHg)</label><input type="number" id="dtc-pam" placeholder="65-90"></div>
-      <div><label>PAS (mmHg)</label><input type="number" id="dtc-pas" placeholder="110-130"></div>
-      <div><label>PAD (mmHg)</label><input type="number" id="dtc-pad" placeholder="60-80"></div>
+      <div>
+        <label>PAS (mmHg)</label>
+        <input type="number" id="dtc-pas" placeholder="ej. 120" oninput="pamAutoCalc('dtc-pam','dtc-pas','dtc-pad')">
+      </div>
+      <div>
+        <label>PAD (mmHg)</label>
+        <input type="number" id="dtc-pad" placeholder="ej. 70" oninput="pamAutoCalc('dtc-pam','dtc-pas','dtc-pad')">
+      </div>
+      <div>
+        <label>PAM calculada (mmHg) <span style="font-size:9px;color:var(--accent)">auto</span></label>
+        <input type="number" id="dtc-pam" placeholder="—" readonly style="background:rgba(0,200,255,0.05);cursor:default;">
+      </div>
     </div>
     <div class="btn-row">
       <button class="calc" onclick="calcDTC()">Calcular</button>
@@ -1785,9 +1878,9 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="mr-row"><span class="mr-label">Índice de Pulsatilidad (IP)</span><span class="mr-val accent" id="dtc-ip">—</span></div>
       <div class="mr-row"><span class="mr-label">Índice de Resistencia (IR)</span><span class="mr-val" id="dtc-ir">—</span></div>
       <div class="divider"></div>
-      <div class="mr-row"><span class="mr-label">PIC estimada (fórmula Bellner)</span><span class="mr-val accent" id="dtc-pic-bellner">—</span></div>
-      <div class="mr-row"><span class="mr-label">PIC estimada (fórmula Schmidt)</span><span class="mr-val" id="dtc-pic-schmidt">—</span></div>
-      <div class="mr-row"><span class="mr-label">PIC estimada (fórmula RAP)</span><span class="mr-val" id="dtc-pic-rap">—</span></div>
+      <div class="mr-row"><span class="mr-label">PIC estimada — Bellner 2004 <span style="font-size:9px;color:var(--muted)">(IP × 10.93 − 1.28)</span></span><span class="mr-val accent" id="dtc-pic-bellner">—</span></div>
+      <div class="mr-row"><span class="mr-label">PIC estimada — CPP approx <span style="font-size:9px;color:var(--muted)">(MAP × (1 − Vd/Vm))</span></span><span class="mr-val" id="dtc-pic-schmidt">—</span></div>
+      <div class="mr-row"><span class="mr-label">IR × PAD <span style="font-size:9px;color:var(--muted)">(índice cualitativo, no incluido en consenso)</span></span><span class="mr-val" style="color:var(--muted)" id="dtc-pic-rap">—</span></div>
       <div class="mr-row"><span class="mr-label">Interpretación IP</span><span class="result-badge" id="dtc-ip-badge">—</span></div>
       <div class="divider"></div>
       <div class="mr-row"><span class="mr-label">PIC promedio estimada</span><span class="mr-val accent" style="font-size:18px;" id="dtc-pic-prom">—</span></div>
@@ -1795,8 +1888,9 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="mr-row"><span class="mr-label">Estado perfusión estimada</span><span class="result-badge" id="dtc-ppc-badge">—</span></div>
     </div>
     <div class="info">
-      Bellner 2004: PIC = (IP × 10.93) − 1.28 · Schmidt 1997: PIC = PAM × (VSist−VDiast)/VMed − 14<br>
-      RAP index (Czosnyka): PIC estimada por correlación PAM−VM (método indirecto)<br>
+      <b>Bellner 2004:</b> PIC = (IP × 10.93) − 1.28 — validada en TBI, mejor calibrada para rango normal<br>
+      <b>CPP approx (Czosnyka/Aaslid):</b> CPP ≈ MAP × Vd/Vm → PIC = MAP × (1 − Vd/Vm) — modelo fisiológico de RVC<br>
+      <b>IR × PAD:</b> índice cualitativo de resistencia, no usar para estimar PIC en mmHg<br>
       IP normal: 0.6–1.1 · IP &gt;1.4: resistencia alta, sugiere PIC elevada · IP &gt;2.0: flujo diastólico ausente/reverso (PIC crítica)
     </div>
   </div>
@@ -3000,17 +3094,11 @@ function buildEvid(id) {
   if (!d) return '';
   let html = `<div class="evid-panel">
     <div class="evid-toggle" id="evid-toggle-${id}" onclick="toggleEvid('${id}')">
-      <span>📚 Fórmula y Bibliografía</span>
+      <span>📚 Bibliografía y Evidencia</span>
       <span class="evid-arrow">▾</span>
     </div>
     <div class="evid-body" id="evid-body-${id}">`;
 
-  if (d.formula) {
-    html += `<div class="evid-section">
-      <div class="evid-section-title">Fórmula</div>
-      <div class="evid-formula">${d.formula}</div>
-    </div>`;
-  }
   if (d.interpretation) {
     html += `<div class="evid-section">
       <div class="evid-section-title">Interpretación</div>
@@ -4591,6 +4679,15 @@ function ppcStatus(ppc, meta) {
   return ['badge-red', 'HIPOPERFUSIÓN (<50)'];
 }
 
+// ── HELPER: auto-calcula PAM desde PAS y PAD ─────────────────────────────────
+function pamAutoCalc(pamId, pasId, padId) {
+  const pas = parseFloat(document.getElementById(pasId)?.value);
+  const pad = parseFloat(document.getElementById(padId)?.value);
+  if (!isNaN(pas) && !isNaN(pad)) {
+    document.getElementById(pamId).value = Math.round((pas + 2 * pad) / 3);
+  }
+}
+
 function calcPPC() {
   if (!validate([{id:'ppc-pam',label:'PAM'},{id:'ppc-pic',label:'PIC'}])) return;
   if (!validateRanges([
@@ -4676,22 +4773,23 @@ function calcDTC() {
   // PIC Bellner 2004: PIC = (IP × 10.93) − 1.28
   const picBellner = (ip * 10.93) - 1.28;
 
-  // PIC Schmidt 1997 (requiere PAM): PIC = PAM × (Vs−Vd)/Vm − 14
+  // PIC por aproximación CPP (Czosnyka/Aaslid): CPP ≈ MAP × Vd/Vm → PIC = MAP × (1 − Vd/Vm)
+  // Corrección vs. Schmidt original (MAP×IP−14) que sobreestimaba en ~40 mmHg para valores normales
   let picSchmidt = null;
   const pamVal = !isNaN(pam) ? pam : (!isNaN(pas) && !isNaN(pad) ? (pas + 2*pad)/3 : null);
   if (pamVal !== null) {
-    picSchmidt = pamVal * (vs - vd) / vmCalc - 14;
+    picSchmidt = pamVal * (1 - vd / vmCalc);
   }
 
-  // PIC por RAP index aproximado: PIC = PAD − (PAD × Vd/Vs) (método simplificado no invasivo)
+  // IR × PAD: índice cualitativo (no incluir en consenso — sobreestima sistemáticamente)
   let picRAP = null;
-  if (pamVal !== null && !isNaN(pad)) {
-    picRAP = pad - (pad * vd / vs);
+  if (!isNaN(pad)) {
+    picRAP = pad * ir;  // IR = (Vs−Vd)/Vs
   }
 
   elCached('dtc-pic-bellner').textContent = picBellner.toFixed(1) + ' mmHg';
   elCached('dtc-pic-schmidt').textContent = picSchmidt !== null ? picSchmidt.toFixed(1) + ' mmHg' : 'Ingresar PAM';
-  elCached('dtc-pic-rap').textContent     = picRAP !== null ? picRAP.toFixed(1) + ' mmHg' : 'Ingresar PAD';
+  elCached('dtc-pic-rap').textContent     = picRAP !== null ? picRAP.toFixed(1) + ' (cualitativo)' : '—';
 
   // Interpretación IP
   const ib = elCached('dtc-ip-badge');
@@ -4701,8 +4799,8 @@ function calcDTC() {
   else if (ip <= 2.0) { ib.className='result-badge badge-orange'; ib.textContent='IP alto (1.4–2.0) — HTIC probable'; }
   else                { ib.className='result-badge badge-red';     ib.textContent='IP >2.0 — flujo diastólico ausente/reverso, HTIC crítica'; }
 
-  // Promedio de estimaciones disponibles
-  const picsDisp = [picBellner, picSchmidt, picRAP].filter(v => v !== null && v > 0);
+  // Consenso solo con fórmulas validadas (Bellner + CPP approx), excluir IR×PAD
+  const picsDisp = [picBellner, picSchmidt].filter(v => v !== null && v > 0);
   const picPromedio = picsDisp.length > 0 ? picsDisp.reduce((a,b) => a+b, 0) / picsDisp.length : null;
 
   if (picPromedio !== null) {
