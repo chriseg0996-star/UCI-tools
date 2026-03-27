@@ -1,7 +1,7 @@
 // UCI Tools — Service Worker
 // © Christopher Godines
 
-const CACHE_NAME = 'uci-tools-v2';
+const CACHE_NAME = 'uci-tools-v3';
 
 function assetUrl(path) {
   return new URL(path, self.location.href).href;
@@ -42,6 +42,11 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  const url = event.request.url;
+  if (url.includes('api.openai.com')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;

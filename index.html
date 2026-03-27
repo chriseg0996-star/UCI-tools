@@ -704,6 +704,134 @@ input.pat-synced:focus, select.pat-synced:focus {
   .mr-label { font-size: 11px; }
   .mr-val { font-size: 13px; }
 }
+
+/* ═══════ AI ASSISTANT ═══════ */
+.ai-fab {
+  position: fixed; bottom: 20px; right: 20px; z-index: 200;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none; color: #fff; font-size: 22px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(0,200,255,0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.ai-fab:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(0,200,255,0.5); }
+.ai-fab .ai-status-dot {
+  position: absolute; top: 4px; right: 4px; width: 10px; height: 10px;
+  border-radius: 50%; border: 2px solid var(--bg);
+}
+.ai-status-dot.online { background: var(--green); }
+.ai-status-dot.offline { background: var(--yellow); }
+
+.ai-panel {
+  position: fixed; bottom: 82px; right: 20px; z-index: 200;
+  width: 370px; max-height: 540px; display: none; flex-direction: column;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 12px; overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+.ai-panel.open { display: flex; }
+
+.ai-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+.ai-header-title { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--accent); }
+.ai-header-sub { font-size: 9px; color: var(--muted); font-family: var(--mono); }
+.ai-header-btns { display: flex; gap: 6px; }
+.ai-header-btns button {
+  background: none; border: 1px solid var(--border2); border-radius: 4px;
+  color: var(--muted2); font-size: 11px; padding: 3px 7px; cursor: pointer;
+  font-family: var(--mono); transition: color 0.15s, border-color 0.15s;
+}
+.ai-header-btns button:hover { color: var(--accent); border-color: var(--accent); }
+
+.ai-context-bar {
+  padding: 5px 14px; font-size: 9px; color: var(--muted);
+  font-family: var(--mono); background: rgba(0,200,255,0.03);
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.ai-context-bar b { color: var(--accent); }
+
+.ai-messages {
+  flex: 1; overflow-y: auto; padding: 12px 14px; display: flex;
+  flex-direction: column; gap: 10px; min-height: 200px; max-height: 340px;
+  scrollbar-width: thin; scrollbar-color: var(--border2) transparent;
+}
+
+.ai-msg { max-width: 88%; padding: 8px 12px; border-radius: 10px; font-size: 12px; line-height: 1.5; font-family: var(--sans); }
+.ai-msg-user { align-self: flex-end; background: var(--accent2); color: #fff; border-bottom-right-radius: 3px; }
+.ai-msg-bot { align-self: flex-start; background: var(--surface2); color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 3px; }
+.ai-msg-bot b { color: var(--accent); }
+.ai-msg-bot code { background: var(--surface3); padding: 1px 4px; border-radius: 3px; font-family: var(--mono); font-size: 11px; }
+.ai-msg-typing { color: var(--muted); font-style: italic; }
+.ai-msg-error { color: var(--red); font-size: 11px; }
+.ai-msg-offline-tag { display: inline-block; font-size: 8px; color: var(--yellow); background: rgba(255,179,0,0.1); padding: 1px 5px; border-radius: 3px; margin-bottom: 4px; font-family: var(--mono); letter-spacing: 0.05em; }
+
+.ai-quick {
+  display: flex; gap: 6px; padding: 8px 14px;
+  border-top: 1px solid var(--border); flex-wrap: wrap;
+}
+.ai-quick button {
+  background: var(--surface2); border: 1px solid var(--border2); border-radius: 16px;
+  color: var(--muted2); font-size: 10px; padding: 5px 10px; cursor: pointer;
+  font-family: var(--mono); transition: all 0.15s; white-space: nowrap;
+}
+.ai-quick button:hover { color: var(--accent); border-color: var(--accent); background: rgba(0,200,255,0.06); }
+
+.ai-input-row {
+  display: flex; gap: 6px; padding: 10px 14px;
+  border-top: 1px solid var(--border); background: var(--surface2);
+}
+.ai-input-row input {
+  flex: 1; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text); font-family: var(--sans);
+  font-size: 12px; padding: 8px 10px; outline: none;
+}
+.ai-input-row input:focus { border-color: var(--accent); }
+.ai-input-row button {
+  background: var(--accent); border: none; border-radius: 6px;
+  color: #fff; font-size: 13px; padding: 0 14px; cursor: pointer;
+  font-weight: 600; transition: background 0.15s;
+}
+.ai-input-row button:hover { background: var(--accent2); }
+.ai-input-row button:disabled { opacity: 0.4; cursor: default; }
+
+.ai-config-overlay {
+  position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.6);
+  display: none; align-items: center; justify-content: center;
+}
+.ai-config-overlay.open { display: flex; }
+.ai-config-modal {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 20px; width: 340px; max-width: 90vw;
+}
+.ai-config-modal h3 { font-family: var(--mono); font-size: 13px; color: var(--accent); margin: 0 0 12px; }
+.ai-config-modal label { font-size: 10px; color: var(--muted); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin: 10px 0 4px; }
+.ai-config-modal input, .ai-config-modal select {
+  width: 100%; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 4px; color: var(--text); font-family: var(--mono);
+  font-size: 12px; padding: 8px 10px; outline: none;
+}
+.ai-config-modal input:focus, .ai-config-modal select:focus { border-color: var(--accent); }
+.ai-config-modal .ai-cfg-btns { display: flex; gap: 8px; margin-top: 16px; }
+.ai-config-modal .ai-cfg-btns button {
+  flex: 1; padding: 8px; border-radius: 6px; font-family: var(--mono);
+  font-size: 11px; cursor: pointer; border: 1px solid var(--border2);
+}
+.ai-cfg-save { background: var(--accent); color: #fff; border-color: var(--accent) !important; }
+.ai-cfg-cancel { background: var(--surface2); color: var(--muted2); }
+
+@media (max-width: 768px) {
+  .ai-panel { width: calc(100vw - 20px); right: 10px; bottom: 76px; max-height: 60vh; }
+  .ai-fab { width: 46px; height: 46px; font-size: 20px; bottom: 14px; right: 14px; }
+}
+@media (max-width: 480px) {
+  .ai-panel { width: calc(100vw - 10px); right: 5px; bottom: 68px; }
+}
+@media print { .ai-fab, .ai-panel, .ai-config-overlay { display: none !important; } }
 </style>
 </head>
 <body>
@@ -7761,5 +7889,519 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+
+<!-- ═══════ AI ASSISTANT LOGIC ═══════ -->
+<script>
+// ── Offline Knowledge Base ──────────────────────────
+const uciKB = {
+  sofa: {
+    keys: ['sofa','fallo orgánico','organ failure','disfunción'],
+    answer: '**SOFA** (Sequential Organ Failure Assessment)\n0–6: disfunción leve · 7–9: moderada · 10–12: severa · ≥13: muy severa.\nUn aumento ≥2 puntos desde el basal sugiere sepsis (Sepsis-3).\nEvaluar cada 24h; la tendencia importa más que un valor aislado.'
+  },
+  apache: {
+    keys: ['apache','apache ii','mortalidad predicha','pronóstico'],
+    answer: '**APACHE II** — Rango 0–71.\n0–9: ~5% mortalidad · 10–19: ~15% · 20–29: ~35% · 30–39: ~60% · ≥40: >80%.\nCalcular en las primeras 24h de ingreso. Usar el peor valor de cada variable.'
+  },
+  saps: {
+    keys: ['saps','saps ii','saps2','simplificado'],
+    answer: '**SAPS II** — Rango 0–163.\nCalcula mortalidad hospitalaria predicha con 17 variables en las primeras 24h.\n<30: bajo riesgo · 30–50: moderado · >50: alto riesgo.'
+  },
+  news2: {
+    keys: ['news','news2','early warning','alerta temprana','deterioro'],
+    answer: '**NEWS2** (National Early Warning Score).\n0–4: riesgo bajo (monitoreo cada 4–6h) · Score de 3 en un solo parámetro: respuesta urgente · 5–6: riesgo intermedio (cada 1h) · ≥7: riesgo alto (activar equipo de respuesta rápida).'
+  },
+  nutric: {
+    keys: ['nutric','nutrición','riesgo nutricional','desnutrición'],
+    answer: '**NUTRIC** — Riesgo nutricional en UCI.\n≤4: bajo riesgo (nutrición estándar) · 5–9: alto riesgo (optimizar aporte calórico-proteico, considerar nutrición enteral temprana).'
+  },
+  sepsis: {
+    keys: ['sepsis','séptico','sepsis bundle','hour-1','bundle sepsis','qsofa'],
+    answer: '**Bundle Sepsis (Hour-1)**:\n1. Medir lactato (repetir si >2 mmol/L)\n2. Hemocultivos antes de antibiótico\n3. Antibiótico de amplio espectro en ≤1h\n4. Cristaloide 30 mL/kg si hipotensión o lactato ≥4\n5. Vasopresores si PAM <65 tras reanimación con líquidos\nqSOFA: FR≥22, PAS≤100, alteración del estado mental.'
+  },
+  shock: {
+    keys: ['choque','shock','estado de choque','tipo de shock','distributivo','cardiogénico','hipovolémico','obstructivo'],
+    answer: '**Clasificación de Shock**:\n• Distributivo (séptico): GC↑, RVS↓, ScvO2 variable\n• Cardiogénico: GC↓, RVS↑, PCP↑, ScvO2↓\n• Hipovolémico: GC↓, RVS↑, PVC↓, ScvO2↓\n• Obstructivo: GC↓, RVS↑, PVC↑, signos específicos\nLactato >2 mmol/L sugiere hipoperfusión. PAM objetivo ≥65 mmHg.'
+  },
+  vasopresores: {
+    keys: ['vasopresor','norepinefrina','vasopresina','dobutamina','noradrenalina','dosis vasopresor','fenilefrina','epinefrina'],
+    answer: '**Vasopresores en UCI**:\n• Norepinefrina: 1ª línea, 0.01–3 mcg/kg/min, α1>β1\n• Vasopresina: 2ª línea, 0.01–0.04 U/min, complemento a NE\n• Epinefrina: shock séptico refractario, 0.01–0.5 mcg/kg/min\n• Dobutamina: GC bajo, 2–20 mcg/kg/min (inotrópico)\n• Fenilefrina: α1 puro, útil en taquiarritmias\nMeta: PAM ≥65 mmHg, mejoría de lactato y diuresis.'
+  },
+  sedacion: {
+    keys: ['sedación','rass','cam-icu','delirium','propofol','midazolam','dexmedetomidina','fentanilo','precedex'],
+    answer: '**Sedación/Analgesia en UCI**:\n• RASS objetivo: -2 a 0 (sedación ligera preferida)\n• CAM-ICU diario para detectar delirium\n• 1ª línea analgesia: Fentanilo 25–100 mcg/h\n• Sedación: Propofol 5–80 mcg/kg/min o Dexmedetomidina 0.2–1.5 mcg/kg/h\n• Evitar benzodiacepinas (mayor riesgo de delirium)\n• Protocolo ABCDEF: despertar diario + prueba de ventilación espontánea.'
+  },
+  ventilacion: {
+    keys: ['ventilación','ventilador','sdra','ards','peep','vt','volumen tidal','protectora','driving pressure','presión meseta'],
+    answer: '**Ventilación protectora**:\n• Vt 6–8 mL/kg peso ideal\n• Pplat ≤30 cmH₂O\n• Driving pressure ≤15 cmH₂O\n• PEEP según tabla ARDSNet o titulación\n**SDRA** (Berlin): Leve PaFi 200–300, Moderado 100–200, Severo <100\n• Prono ≥16h si PaFi <150\n• Considerar relajante neuromuscular en SDRA severo temprano.'
+  },
+  extubacion: {
+    keys: ['extubación','destete','weaning','tubo en t','rsbi','pva'],
+    answer: '**Criterios de extubación**:\n• RSBI <105 (FR/Vt en L)\n• Prueba de ventilación espontánea exitosa (30–120 min)\n• Tos adecuada, manejo de secreciones\n• Sin requerimiento alto de vasopresores\n• FiO₂ ≤0.4, PEEP ≤8\n• Estado neurológico: GCS ≥8 o que proteja vía aérea\n• Cuff leak test si riesgo de edema laríngeo.'
+  },
+  kdigo: {
+    keys: ['kdigo','lesión renal','aki','creatinina','oliguria','diálisis','terapia renal'],
+    answer: '**KDIGO AKI**:\n• Estadio 1: Cr ×1.5–1.9 o +0.3 mg/dL en 48h, o UO <0.5 mL/kg/h ×6–12h\n• Estadio 2: Cr ×2–2.9, o UO <0.5 mL/kg/h ×≥12h\n• Estadio 3: Cr ×3 o ≥4 mg/dL, o UO <0.3 mL/kg/h ×≥24h, o anuria ×12h, o TRR\nManejo: optimizar volemia, suspender nefrotóxicos, ajustar dosis renales.'
+  },
+  electrolitos: {
+    keys: ['electrolitos','sodio','potasio','calcio','magnesio','fósforo','hiponatremia','hiperkalemia','hipocalcemia'],
+    answer: '**Electrolitos — Valores críticos**:\n• Na: 135–145 mEq/L. Hipo <130: corregir ≤10 mEq/24h (riesgo mielinólisis)\n• K: 3.5–5.0 mEq/L. Hiper >6.0: Ca gluconato + insulina/glucosa + salbutamol\n• Ca ionizado: 4.4–5.4 mg/dL. Hipo: Ca gluconato 1–2g IV\n• Mg: 1.8–2.4 mg/dL. Hipo: MgSO₄ 1–2g IV en 1h\n• PO₄: 2.5–4.5 mg/dL.'
+  },
+  gasometria: {
+    keys: ['gasometría','gas arterial','ph','paco2','hco3','acidosis','alcalosis','anion gap','brecha aniónica','delta delta'],
+    answer: '**Gasometría arterial**:\npH 7.35–7.45 · PaCO₂ 35–45 · HCO₃ 22–26 · BE ±2\n**Anion Gap** = Na − (Cl + HCO₃) [normal 8–12]\nAG elevado: MUDPILES (metanol, uremia, DKA, propilenglicol, isoniazida, lactato, etilenglicol, salicilatos)\n**Delta-Delta** = ΔAG/ΔHCO₃: <1 acidosis no-AG concomitante, 1–2 compensada, >2 alcalosis metabólica concomitante.'
+  },
+  transfusion: {
+    keys: ['transfusión','hemoglobina','plaquetas','pfc','crioprecipitados','sangrado masivo','concentrado eritrocitario'],
+    answer: '**Umbrales de transfusión**:\n• CE: Hb <7 g/dL (general UCI), <8 si cardiopatía\n• Plaquetas: <10,000 profiláctico, <50,000 si procedimiento, <100,000 si neurocirugía\n• PFC: INR >1.5 con sangrado activo, 10–15 mL/kg\n• Crioprecipitados: Fibrinógeno <150 mg/dL, 1 pool\n**Transfusión masiva** (protocolo 1:1:1): CE:PFC:Plaq.'
+  },
+  antibioticos: {
+    keys: ['antibiótico','antimicrobiano','empírico','vancomicina','meropenem','piperacilina','ceftriaxona','infección'],
+    answer: '**Antibióticos en UCI — Principios**:\n• Administrar en ≤1h si sepsis\n• Empírico según foco y flora local\n• NAC severa: Ceftriaxona + Macrólido o Fluoroquinolona\n• Nosocomial/VAP: Pipe/Tazo o Meropenem ± Vancomicina\n• Intraabdominal: Pipe/Tazo o Meropenem\n• Ajustar por TFG (CKD-EPI) y niveles séricos\n• Desescalar a las 48–72h según cultivos.'
+  },
+  vexus: {
+    keys: ['vexus','congestión venosa','vci','vena cava inferior','fluid responsiveness','precarga'],
+    answer: '**VExUS** (Venous Excess Ultrasound Score):\n• Grado 0: VCI <2 cm → sin congestión\n• Grado 1: VCI ≥2 cm, flujos normales\n• Grado 2: VCI ≥2 cm + 1 flujo anormal (hepáticas, portal, renal)\n• Grado 3: VCI ≥2 cm + ≥2 flujos anormales → congestión severa\nÚtil para guiar descongestión y evitar sobrecarga hídrica.'
+  },
+  ppc: {
+    keys: ['presión perfusión cerebral','ppc','pic','presión intracraneal','neurocrítico','tce'],
+    answer: '**Presión de Perfusión Cerebral**:\nPPC = PAM − PIC\nObjetivo: PPC 60–70 mmHg\nPIC normal <20 mmHg. PIC >22: tratar (osmoterapia, drenaje, sedación, hiperventilación controlada, craniectomía).\nEvitar hipotensión (PAM <80) e hipoxemia en TCE severo.'
+  },
+  nutricion: {
+    keys: ['nutrición','harris benedict','calorías','proteínas','nutrición enteral','nutrición parenteral','gasto energético'],
+    answer: '**Nutrición en UCI**:\n• Iniciar nutrición enteral temprana (24–48h)\n• Calorías: 25–30 kcal/kg/día (fase aguda: 15–20 kcal/kg/día)\n• Proteínas: 1.2–2.0 g/kg/día\n• Harris-Benedict para gasto energético basal × factor de estrés\n• Si intolerancia enteral: procinéticos → post-pilórica → parenteral suplementaria\n• Monitorizar residuo gástrico, glucemia, triglicéridos.'
+  },
+  padua: {
+    keys: ['padua','tev','tromboembolismo','tvp','tep','anticoagulación profiláctica','enoxaparina'],
+    answer: '**Score de Padua** (riesgo de TEV):\n≥4: alto riesgo → tromboprofilaxis farmacológica\n<4: bajo riesgo → movilización temprana\nProfilaxis: Enoxaparina 40 mg SC/día o HNF 5000 UI SC c/8–12h.\nContraindicaciones: sangrado activo, plaquetas <50,000, procedimiento reciente.'
+  }
+};
+
+// ── AI State ────────────────────────────────────────
+let aiChatHistory = [];
+let aiCurrentCalc = 'paciente';
+let aiSending = false;
+
+// ── Gather Context ──────────────────────────────────
+function gatherContext() {
+  const ctx = { patient: {}, calc: aiCurrentCalc, results: {} };
+  const pf = (id) => { const e = document.getElementById(id); return e ? e.value.trim() : ''; };
+  ctx.patient = {
+    nombre: pf('pat-nombre'), edad: pf('pat-edad'), sexo: pf('pat-sexo'),
+    peso: pf('pat-peso'), talla: pf('pat-talla'), dias: pf('pat-dias'), dx: pf('pat-dx')
+  };
+
+  const panel = document.querySelector('.calc-panel.active') || document.getElementById('calc-' + aiCurrentCalc);
+  if (panel) {
+    ctx.calc = panel.id.replace('calc-','');
+    panel.querySelectorAll('.result-val, .mr-val, [id$="-total"], [id$="-badge"]').forEach(el => {
+      if (el.textContent && el.textContent.trim() !== '—' && el.textContent.trim() !== '') {
+        const key = el.id || el.className;
+        ctx.results[key] = el.textContent.trim();
+      }
+    });
+    panel.querySelectorAll('.multi-result[style*="display: block"], .multi-result[style*="display:block"], .result[style*="display: block"], .result[style*="display:block"]').forEach(box => {
+      box.querySelectorAll('.mr-row').forEach(row => {
+        const label = row.querySelector('.mr-label');
+        const val = row.querySelector('.mr-val');
+        if (label && val && val.textContent.trim() !== '—') {
+          ctx.results[label.textContent.trim()] = val.textContent.trim();
+        }
+      });
+    });
+  }
+  return ctx;
+}
+
+function getContextSummary() {
+  const ctx = gatherContext();
+  const p = ctx.patient;
+  const patStr = p.nombre ? `${p.nombre}, ${p.edad||'?'}a, ${p.sexo||'?'}, ${p.peso||'?'}kg` : 'sin paciente';
+  const calcStr = ctx.calc || 'ninguna';
+  const resCount = Object.keys(ctx.results).length;
+  return { text: `Contexto: <b>${patStr}</b> · calc: ${calcStr}` + (resCount ? ` · ${resCount} resultados` : ''), ctx };
+}
+
+function updateContextBar() {
+  const { text } = getContextSummary();
+  document.getElementById('ai-context-bar').innerHTML = text;
+}
+
+// ── Offline Search ──────────────────────────────────
+function searchOffline(query) {
+  const q = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const words = q.split(/\s+/).filter(w => w.length > 2);
+  let best = null, bestScore = 0;
+
+  for (const [id, entry] of Object.entries(uciKB)) {
+    let score = 0;
+    const allKeys = entry.keys.join(' ').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    for (const w of words) {
+      if (allKeys.includes(w)) score += 3;
+      if (entry.answer.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(w)) score += 1;
+    }
+    for (const k of entry.keys) {
+      if (q.includes(k.toLowerCase())) score += 5;
+    }
+    if (score > bestScore) { bestScore = score; best = entry; }
+  }
+  return bestScore >= 3 ? best : null;
+}
+
+// ── Online API ──────────────────────────────────────
+function getAIConfig() {
+  try {
+    return JSON.parse(localStorage.getItem('uci-ai-config')) || {};
+  } catch(e) { return {}; }
+}
+
+function hasAPIKey() {
+  const cfg = getAIConfig();
+  return !!(cfg.key && cfg.key.startsWith('sk-'));
+}
+
+function buildSystemPrompt(ctx) {
+  let sys = `Eres un asistente clínico especializado en Medicina Crítica / UCI (Unidad de Cuidados Intensivos). Trabajas en UCI Siglo XXI.
+
+Responde de forma concisa, práctica y basada en evidencia. Usa viñetas y negritas para claridad. Siempre en español.
+
+REGLAS:
+- Respuestas cortas y directas (máx 200 palabras)
+- Si el usuario pide dosis, incluye rangos y ajustes renales/hepáticos
+- Si interpretas resultados, da significado clínico + siguiente paso sugerido
+- Siempre incluye una advertencia si la decisión es de alto riesgo
+- No inventes datos; si no estás seguro, dilo`;
+
+  if (ctx.patient && ctx.patient.nombre) {
+    sys += `\n\nPACIENTE ACTUAL:
+Nombre: ${ctx.patient.nombre}
+Edad: ${ctx.patient.edad || '?'} años · Sexo: ${ctx.patient.sexo || '?'}
+Peso: ${ctx.patient.peso || '?'} kg · Talla: ${ctx.patient.talla || '?'} cm
+Días UCI: ${ctx.patient.dias || '?'} · Dx: ${ctx.patient.dx || 'no especificado'}`;
+  }
+
+  if (ctx.calc) sys += `\nCalculadora activa: ${ctx.calc}`;
+
+  const resEntries = Object.entries(ctx.results || {});
+  if (resEntries.length) {
+    sys += '\nResultados actuales:';
+    resEntries.forEach(([k,v]) => { sys += `\n  ${k}: ${v}`; });
+  }
+  return sys;
+}
+
+async function sendToAI(messages, ctx) {
+  const cfg = getAIConfig();
+  if (!cfg.key) throw new Error('NO_KEY');
+
+  const model = cfg.model || 'gpt-4o-mini';
+  const sysPr = buildSystemPrompt(ctx);
+  const apiMessages = [{ role: 'system', content: sysPr }, ...messages];
+
+  const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.key },
+    body: JSON.stringify({ model, messages: apiMessages, max_tokens: 800, temperature: 0.3 })
+  });
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    if (resp.status === 401) throw new Error('API Key inválida. Revisa la configuración.');
+    if (resp.status === 429) throw new Error('Límite de requests alcanzado. Intenta en un momento.');
+    throw new Error(err.error?.message || `Error ${resp.status}`);
+  }
+
+  const data = await resp.json();
+  return data.choices?.[0]?.message?.content || 'Sin respuesta.';
+}
+
+// ── Chat Features ───────────────────────────────────
+function formatAIResponse(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+    .replace(/\n• /g, '<br>• ')
+    .replace(/\n- /g, '<br>- ')
+    .replace(/\n\d+\./g, m => '<br>' + m.trim())
+    .replace(/\n/g, '<br>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+
+function appendMsg(role, html, extraClass) {
+  const msgDiv = document.createElement('div');
+  msgDiv.className = 'ai-msg ' + (role === 'user' ? 'ai-msg-user' : 'ai-msg-bot') + (extraClass ? ' ' + extraClass : '');
+  msgDiv.innerHTML = html;
+  const container = document.getElementById('ai-messages');
+  container.appendChild(msgDiv);
+  container.scrollTop = container.scrollHeight;
+  return msgDiv;
+}
+
+function removeTyping() {
+  document.querySelectorAll('.ai-msg-typing').forEach(e => e.remove());
+}
+
+async function handleUserMessage(text) {
+  if (aiSending || !text.trim()) return;
+  aiSending = true;
+
+  appendMsg('user', text);
+  aiChatHistory.push({ role: 'user', content: text });
+
+  const sendBtn = document.getElementById('ai-send-btn');
+  sendBtn.disabled = true;
+  updateContextBar();
+
+  const typingEl = appendMsg('bot', '...pensando', 'ai-msg-typing');
+  const { ctx } = getContextSummary();
+
+  const isOnline = hasAPIKey() && navigator.onLine;
+
+  if (!isOnline) {
+    removeTyping();
+    const match = searchOffline(text);
+    if (match) {
+      const html = '<span class="ai-msg-offline-tag">OFFLINE</span><br>' + formatAIResponse(match.answer);
+      appendMsg('bot', html);
+      aiChatHistory.push({ role: 'assistant', content: match.answer });
+    } else {
+      appendMsg('bot', '<span class="ai-msg-offline-tag">OFFLINE</span><br>No encontré información offline para esa consulta. Configura tu API Key de OpenAI para consultas en línea.', 'ai-msg-error');
+    }
+  } else {
+    try {
+      const response = await sendToAI(aiChatHistory.slice(-10), ctx);
+      removeTyping();
+      appendMsg('bot', formatAIResponse(response));
+      aiChatHistory.push({ role: 'assistant', content: response });
+    } catch(e) {
+      removeTyping();
+      if (e.message === 'NO_KEY') {
+        const match = searchOffline(text);
+        if (match) {
+          appendMsg('bot', '<span class="ai-msg-offline-tag">OFFLINE</span><br>' + formatAIResponse(match.answer));
+        } else {
+          appendMsg('bot', 'Configura tu API Key de OpenAI (⚙) para habilitar consultas en línea.', 'ai-msg-error');
+        }
+      } else {
+        appendMsg('bot', '⚠ ' + e.message, 'ai-msg-error');
+      }
+    }
+  }
+
+  sendBtn.disabled = false;
+  aiSending = false;
+  saveAIChatHistory();
+}
+
+function interpretCurrentCalc() {
+  const { ctx } = getContextSummary();
+  const resEntries = Object.entries(ctx.results);
+  if (resEntries.length === 0) {
+    return 'Interpreta los resultados actuales de mi paciente en la calculadora activa. No hay resultados visibles aún — por favor indica qué calculadora estás revisando.';
+  }
+  let msg = `Interpreta estos resultados de la calculadora "${ctx.calc}" para mi paciente:\n`;
+  resEntries.forEach(([k,v]) => { msg += `${k}: ${v}\n`; });
+  msg += 'Dame significado clínico y siguiente paso sugerido.';
+  return msg;
+}
+
+function generateNotePrompt() {
+  const { ctx } = getContextSummary();
+  const p = ctx.patient;
+  let msg = 'Genera una nota de evolución en formato SOAP para mi paciente de UCI con estos datos:\n';
+  if (p.nombre) msg += `Paciente: ${p.nombre}, ${p.edad||'?'}a, ${p.sexo||'?'}, ${p.peso||'?'}kg\n`;
+  if (p.dx) msg += `Dx: ${p.dx}\n`;
+  if (p.dias) msg += `Día UCI: ${p.dias}\n`;
+  const resEntries = Object.entries(ctx.results);
+  if (resEntries.length) {
+    msg += 'Resultados/Scores:\n';
+    resEntries.forEach(([k,v]) => { msg += `  ${k}: ${v}\n`; });
+  }
+  msg += '\nIncluye: Subjetivo, Objetivo (signos vitales pendientes), Análisis, Plan. Formato conciso para expediente.';
+  return msg;
+}
+
+function suggestCalcPrompt() {
+  const { ctx } = getContextSummary();
+  const p = ctx.patient;
+  let msg = 'Basándote en los datos de mi paciente, sugiere qué calculadoras de UCI debo usar y en qué orden.\n';
+  if (p.dx) msg += `Diagnóstico: ${p.dx}\n`;
+  if (p.dias) msg += `Día UCI: ${p.dias}\n`;
+  msg += 'Calculadoras disponibles: SOFA, APACHE II, SAPS II, NEWS2, NUTRIC, Gasometría, Vasopresor, KDIGO, VExUS, Hemodynamics, PPC, Transfusión, Sedación (RASS/CAM-ICU), PADUA, CURB-65, Harris-Benedict, Electrolitos, Balance hídrico.';
+  return msg;
+}
+
+function protocolPrompt() {
+  const { ctx } = getContextSummary();
+  const p = ctx.patient;
+  let msg = 'Dame un protocolo paso a paso para el manejo actual de mi paciente en UCI.\n';
+  if (p.dx) msg += `Diagnóstico: ${p.dx}\n`;
+  if (p.dias) msg += `Día UCI: ${p.dias}\n`;
+  msg += 'Incluye: evaluación inicial, estudios, manejo farmacológico, metas, y cuándo re-evaluar.';
+  return msg;
+}
+
+function aiQuickAction(type) {
+  let msg;
+  switch(type) {
+    case 'interpret': msg = interpretCurrentCalc(); break;
+    case 'note': msg = generateNotePrompt(); break;
+    case 'suggest': msg = suggestCalcPrompt(); break;
+    case 'protocol': msg = protocolPrompt(); break;
+    default: return;
+  }
+  document.getElementById('ai-input').value = '';
+  handleUserMessage(msg);
+}
+
+// ── UI Handlers ─────────────────────────────────────
+function toggleAIPanel() {
+  const panel = document.getElementById('ai-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) {
+    updateContextBar();
+    updateAIStatusDot();
+    document.getElementById('ai-input').focus();
+  }
+}
+
+function sendAIMessage() {
+  const input = document.getElementById('ai-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  handleUserMessage(text);
+}
+
+function clearAIChat() {
+  aiChatHistory = [];
+  const container = document.getElementById('ai-messages');
+  container.innerHTML = '<div class="ai-msg ai-msg-bot">Chat limpiado. ¿En qué puedo ayudarte?</div>';
+  try { localStorage.removeItem('uci-ai-history'); } catch(e) {}
+}
+
+function openAIConfig() {
+  const cfg = getAIConfig();
+  document.getElementById('ai-cfg-key').value = cfg.key || '';
+  document.getElementById('ai-cfg-model').value = cfg.model || 'gpt-4o-mini';
+  document.getElementById('ai-config-overlay').classList.add('open');
+}
+
+function closeAIConfig() {
+  document.getElementById('ai-config-overlay').classList.remove('open');
+}
+
+function saveAIConfig() {
+  const key = document.getElementById('ai-cfg-key').value.trim();
+  const model = document.getElementById('ai-cfg-model').value;
+  try {
+    localStorage.setItem('uci-ai-config', JSON.stringify({ key, model }));
+  } catch(e) {}
+  closeAIConfig();
+  updateAIStatusDot();
+  const label = document.getElementById('ai-model-label');
+  label.textContent = key ? model : 'offline';
+}
+
+function updateAIStatusDot() {
+  const dot = document.getElementById('ai-status-dot');
+  const online = hasAPIKey() && navigator.onLine;
+  dot.className = 'ai-status-dot ' + (online ? 'online' : 'offline');
+  document.getElementById('ai-model-label').textContent = online ? (getAIConfig().model || 'gpt-4o-mini') : 'offline';
+}
+
+function saveAIChatHistory() {
+  try {
+    const last20 = aiChatHistory.slice(-20);
+    localStorage.setItem('uci-ai-history', JSON.stringify(last20));
+  } catch(e) {}
+}
+
+function restoreAIChatHistory() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('uci-ai-history'));
+    if (saved && saved.length) {
+      aiChatHistory = saved;
+      const container = document.getElementById('ai-messages');
+      saved.forEach(m => {
+        if (m.role === 'user') appendMsg('user', m.content);
+        else if (m.role === 'assistant') appendMsg('bot', formatAIResponse(m.content));
+      });
+    }
+  } catch(e) {}
+}
+
+// Track active calculator for context
+(function() {
+  const _origShow = window.showCalc;
+  if (_origShow) {
+    window.showCalc = function(id, el) {
+      aiCurrentCalc = id;
+      _origShow(id, el);
+    };
+  }
+})();
+
+// Init on load
+document.addEventListener('DOMContentLoaded', function() {
+  updateAIStatusDot();
+  restoreAIChatHistory();
+  window.addEventListener('online', updateAIStatusDot);
+  window.addEventListener('offline', updateAIStatusDot);
+});
+</script>
+
+<!-- AI ASSISTANT -->
+<button class="ai-fab" id="ai-fab" onclick="toggleAIPanel()" title="Asistente IA">
+  🧠
+  <span class="ai-status-dot" id="ai-status-dot"></span>
+</button>
+
+<div class="ai-panel" id="ai-panel">
+  <div class="ai-header">
+    <div>
+      <div class="ai-header-title">UCI Assistant</div>
+      <div class="ai-header-sub" id="ai-model-label">offline</div>
+    </div>
+    <div class="ai-header-btns">
+      <button onclick="openAIConfig()" title="Configurar API Key">⚙</button>
+      <button onclick="clearAIChat()" title="Limpiar chat">🗑</button>
+      <button onclick="toggleAIPanel()" title="Cerrar">✕</button>
+    </div>
+  </div>
+  <div class="ai-context-bar" id="ai-context-bar">Contexto: <b>sin paciente</b> · sin calculadora activa</div>
+  <div class="ai-messages" id="ai-messages">
+    <div class="ai-msg ai-msg-bot">Hola, soy tu asistente de UCI. Puedo ayudarte con consultas clínicas, interpretar resultados o generar notas de evolución.<br><br><span style="font-size:10px;color:var(--yellow);">⚠ No sustituye el juicio clínico.</span></div>
+  </div>
+  <div class="ai-quick">
+    <button onclick="aiQuickAction('interpret')">🔍 Interpretar</button>
+    <button onclick="aiQuickAction('suggest')">💡 Sugerir calc</button>
+    <button onclick="aiQuickAction('note')">📝 Generar nota</button>
+    <button onclick="aiQuickAction('protocol')">📋 Protocolo</button>
+  </div>
+  <div class="ai-input-row">
+    <input type="text" id="ai-input" placeholder="Escribe tu consulta..." onkeydown="if(event.key==='Enter')sendAIMessage()">
+    <button id="ai-send-btn" onclick="sendAIMessage()">➤</button>
+  </div>
+</div>
+
+<div class="ai-config-overlay" id="ai-config-overlay">
+  <div class="ai-config-modal">
+    <h3>⚙ Configuración IA</h3>
+    <label>API Key de OpenAI</label>
+    <input type="password" id="ai-cfg-key" placeholder="sk-...">
+    <label>Modelo</label>
+    <select id="ai-cfg-model">
+      <option value="gpt-4o-mini">GPT-4o-mini (rápido, económico)</option>
+      <option value="gpt-4o">GPT-4o (más capaz)</option>
+    </select>
+    <div style="margin-top:10px;font-size:9px;color:var(--muted);line-height:1.4;">
+      Tu API key se guarda solo en este dispositivo (localStorage). Nunca se envía a terceros — solo a la API de OpenAI directamente.
+    </div>
+    <div class="ai-cfg-btns">
+      <button class="ai-cfg-cancel" onclick="closeAIConfig()">Cancelar</button>
+      <button class="ai-cfg-save" onclick="saveAIConfig()">Guardar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
