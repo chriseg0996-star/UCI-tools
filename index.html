@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UCI Tools · IMSS Siglo XXI</title>
+<title>UCI Tools · UCI Siglo XXI</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="UCI Tools">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#00c8ff">
-<meta name="description" content="Calculadoras clínicas UCI · Medicina Crítica IMSS Siglo XXI · © Christopher Godines">
+<meta name="description" content="Calculadoras clínicas UCI · Medicina Crítica UCI Siglo XXI · © Christopher Godines">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="manifest" href="./manifest.json">
@@ -171,10 +171,14 @@ header {
 }
 .card-title {
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
-  color: var(--muted); text-transform: uppercase; margin-bottom: 14px;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 14px;
   display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(90deg, rgba(0,200,255,0.14), rgba(0,200,255,0.03));
+  border: 1px solid rgba(0,200,255,0.2);
+  border-radius: 5px;
+  padding: 7px 10px;
 }
-.card-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.card-title::after { content: ''; flex: 1; height: 1px; background: rgba(0,200,255,0.22); }
 
 /* SECTION SUB */
 .section-sub {
@@ -190,7 +194,7 @@ header {
 .row.cols3 { grid-template-columns: 1fr 1fr 1fr; }
 .row.cols4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
 label { font-size: 11px; color: var(--muted2); display: block; margin-bottom: 4px; font-weight: 500; }
-input[type=number], select {
+input[type=number], input[type=text], input[type=date], select {
   width: 100%; background: var(--bg); border: 1px solid var(--border);
   border-radius: 4px; color: var(--text); font-family: var(--mono);
   font-size: 13px; padding: 7px 10px; outline: none; transition: border-color 0.15s;
@@ -198,7 +202,7 @@ input[type=number], select {
 }
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
-input[type=number]:focus, select:focus { border-color: var(--accent2); }
+input[type=number]:focus, input[type=text]:focus, input[type=date]:focus, select:focus { border-color: var(--accent2); }
 select option { background: var(--surface2); }
 
 /* BUTTONS */
@@ -464,6 +468,50 @@ input.pat-synced:focus, select.pat-synced:focus {
 }
 .pat-badge b { color: var(--text); }
 
+/* PATIENT STICKY HEADER */
+.patient-sticky {
+  display: flex; position: sticky; top: 0; z-index: 50;
+  background: var(--bg); border-bottom: 1px solid var(--border);
+  padding: 5px 20px; font-family: var(--mono);
+  font-size: 11px; color: var(--muted2);
+  gap: 8px; align-items: center; flex-wrap: nowrap;
+  margin: -20px -20px 12px -20px;
+  overflow: hidden; white-space: nowrap;
+}
+.patient-sticky .ps-name { color: var(--text); font-weight: 700; font-size: 12px; flex-shrink: 0; }
+.patient-sticky .ps-sep { color: var(--border2); flex-shrink: 0; }
+.patient-sticky .ps-dx { color: var(--muted); font-style: italic; font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+
+/* DERIVED BADGES */
+.derived-badges {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 10px; padding: 8px 10px;
+  background: rgba(0,200,255,0.04); border-radius: 6px;
+  border: 1px solid rgba(0,200,255,0.1);
+  min-height: 52px;
+}
+.derived-badge {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 6px 12px; border-radius: 6px; min-width: 80px;
+  background: var(--surface2); border: 1px solid var(--border2);
+}
+.derived-badge .db-label {
+  font-size: 8px; color: var(--muted); text-transform: uppercase;
+  letter-spacing: 0.1em; font-family: var(--mono); margin-bottom: 2px;
+}
+.derived-badge .db-val {
+  font-size: 15px; font-weight: 700; color: var(--accent);
+  font-family: var(--mono);
+}
+.derived-badge .db-unit {
+  font-size: 9px; color: var(--muted2); font-family: var(--mono);
+}
+.derived-badge.db-green  { border-color: rgba(0,200,100,0.3); background: rgba(0,200,100,0.06); }
+.derived-badge.db-yellow { border-color: rgba(255,179,0,0.3); background: rgba(255,179,0,0.06); }
+.derived-badge.db-orange { border-color: rgba(255,120,50,0.3); background: rgba(255,120,50,0.06); }
+.derived-badge.db-red    { border-color: rgba(255,60,60,0.3); background: rgba(255,60,60,0.06); }
+.patient-grid.cols4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
 /* NAV PATIENT/EXPORT */
 .nav-patient { color: var(--accent) !important; border-left: 2px solid var(--accent); background: rgba(0,200,255,0.06); font-weight: 600; }
 .nav-patient:hover { background: rgba(0,200,255,0.12) !important; }
@@ -500,7 +548,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 @media print {
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   body { background: #fff !important; color: #111 !important; font-family: Arial, sans-serif; }
-  header, .sidebar, .btn-row, button, .info, .nav-item, .menu-toggle { display: none !important; }
+  header, .sidebar, .btn-row, button, .info, .nav-item, .menu-toggle, .patient-sticky { display: none !important; }
   .app-body { display: block !important; }
   .content { padding: 0 !important; overflow: visible !important; }
   .calc-panel { display: none !important; }
@@ -522,7 +570,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 
 /* FOOTER */
 .app-footer {
-  padding: 20px 20px 12px;
+  padding: 16px 20px 12px;
   border-top: 1px solid var(--border);
   margin-top: 24px;
   text-align: center;
@@ -536,14 +584,58 @@ input.pat-synced:focus, select.pat-synced:focus {
   font-size: 10px; color: var(--muted); margin-bottom: 8px;
 }
 .app-footer .footer-disclaimer {
-  font-size: 10px; color: var(--muted2); line-height: 1.6;
-  max-width: 560px; margin: 0 auto;
+  font-size: 10px; color: var(--muted2); line-height: 1.4;
+  max-width: 100%; margin: 0 auto;
   padding: 8px 12px;
   border: 1px solid var(--border);
   border-radius: 4px;
   background: rgba(255,179,0,0.04);
 }
 .app-footer .footer-disclaimer b { color: var(--yellow); }
+
+/* QUICK ACCESS BAR */
+.quick-access { padding: 6px 8px; display: flex; flex-wrap: wrap; gap: 4px; }
+.quick-btn {
+  font-family: var(--mono); font-size: 10px; padding: 4px 8px;
+  background: rgba(0,200,255,0.08); border: 1px solid rgba(0,200,255,0.18);
+  border-radius: 4px; color: var(--accent); cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.quick-btn:hover { background: rgba(0,200,255,0.18); border-color: var(--accent); }
+
+/* COPY MODULE BUTTON */
+.btn-copy-module {
+  font-family: var(--mono); font-size: 10px; padding: 4px 10px;
+  background: rgba(0,200,255,0.08); border: 1px solid rgba(0,200,255,0.18);
+  border-radius: 4px; color: var(--accent); cursor: pointer;
+  transition: background 0.15s; margin-left: auto;
+}
+.btn-copy-module:hover { background: rgba(0,200,255,0.2); }
+.btn-copy-module.copied { background: rgba(0,200,100,0.15); border-color: rgba(0,200,100,0.3); color: var(--green); }
+
+/* TABS */
+.tab-bar {
+  display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 14px;
+}
+.tab-btn {
+  font-family: var(--mono); font-size: 11px; padding: 8px 16px;
+  background: none; border: none; border-bottom: 2px solid transparent;
+  color: var(--muted); cursor: pointer; margin-bottom: -2px;
+  transition: color 0.15s, border-color 0.15s;
+  letter-spacing: 0.04em;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* SEPSIS CHECKLIST */
+.bundle-check { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 12px; color: var(--text); }
+.bundle-check input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+.bundle-check.done { color: var(--green); text-decoration: line-through; opacity: 0.7; }
+.bundle-progress { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 8px 0; }
+.bundle-progress-bar { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.3s; }
 
 /* MOBILE ≤700px — al final para ganar cascada sobre reglas base */
 @media (max-width: 700px) {
@@ -580,6 +672,17 @@ input.pat-synced:focus, select.pat-synced:focus {
   .result-badge { font-size: 10px; padding: 3px 7px; }
   .card-title { font-size: 13px; letter-spacing: 0.05em; }
   .app-footer { padding: 16px 12px 10px; }
+  .quick-access { gap: 3px; }
+  .quick-btn { font-size: 9px; padding: 3px 6px; }
+  .patient-grid.cols4 { grid-template-columns: 1fr 1fr; }
+  .patient-sticky { font-size: 10px; padding: 4px 10px; margin: -10px -10px 8px -10px; }
+  .patient-sticky .ps-dx { max-width: 100px; }
+  .derived-badges { gap: 6px; }
+  .derived-badge { min-width: 65px; padding: 4px 8px; }
+  .derived-badge .db-val { font-size: 13px; }
+  .tab-bar { overflow-x: auto; }
+  .tab-btn { font-size: 10px; padding: 6px 10px; white-space: nowrap; }
+  .btn-copy-module { font-size: 9px; padding: 3px 7px; }
 }
 
 /* MOBILE ≤480px — teléfonos pequeños */
@@ -587,12 +690,13 @@ input.pat-synced:focus, select.pat-synced:focus {
   .row.cols2 { grid-template-columns: 1fr; }
   .row.cols3 { grid-template-columns: 1fr; }
   .row.cols4 { grid-template-columns: 1fr 1fr; }
-  .patient-grid, .patient-grid.cols3 { grid-template-columns: 1fr 1fr; }
+  .patient-grid, .patient-grid.cols3, .patient-grid.cols4 { grid-template-columns: 1fr 1fr; }
   .vaso-result-grid { grid-template-columns: 1fr; }
   .gas-result-grid { grid-template-columns: 1fr; }
   .btn-row { flex-wrap: wrap; }
   .btn-row button.calc { flex: 1 1 100%; }
   .content { padding: 8px; }
+  .patient-sticky { margin: -8px -8px 8px -8px; padding: 4px 8px; font-size: 9px; gap: 4px; }
   .card { padding: 10px; border-radius: 6px; }
   .result { flex-direction: column; gap: 6px; }
   .result-val { font-size: 28px; }
@@ -606,11 +710,9 @@ input.pat-synced:focus, select.pat-synced:focus {
 
 <header>
   <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-  <div class="logo">UCI<span>/</span>Tools <span>· IMSS Siglo XXI</span></div>
+  <div class="logo">UCI<span>/</span>Tools <span>· UCI Siglo XXI</span></div>
   <div class="header-right">
-    <div class="turno-pill" id="turno-label">—</div>
     <div class="clock" id="clock">--:--</div>
-    <div style="font-size:10px;color:var(--muted);font-family:var(--mono);letter-spacing:0.06em;white-space:nowrap;">© Christopher Godines</div>
   </div>
 </header>
 
@@ -644,14 +746,25 @@ input.pat-synced:focus, select.pat-synced:focus {
 
   <div class="nav-group">
     <div class="nav-group-header collapsed" onclick="toggleGroup('g-vent',this)">
-      <span class="nav-group-label">🫁 Ventilación / Gasometría</span><span class="nav-chevron">▾</span>
+      <span class="nav-group-label">🫁 Ventilación</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-vent">
       <div class="nav-item" onclick="showCalc('vent-mec',this)"><span class="nav-icon">·</span>Mecánica Ventilatoria</div>
       <div class="nav-item" onclick="showCalc('kirby',this)"><span class="nav-icon">·</span>Índice de Kirby (SF/PF)</div>
+      <div class="nav-item" onclick="showCalc('tvent',this)"><span class="nav-icon">·</span>Destete ventilatorio / Extubación</div>
+    </div>
+  </div>
+
+  <div class="nav-divider"></div>
+
+  <div class="nav-group">
+    <div class="nav-group-header collapsed" onclick="toggleGroup('g-gas',this)">
+      <span class="nav-group-label">🧪 Gasometría / Oxigenación</span><span class="nav-chevron">▾</span>
+    </div>
+    <div class="nav-group-items collapsed" id="g-gas">
       <div class="nav-item" onclick="showCalc('gas',this)"><span class="nav-icon">·</span>Gasometría</div>
-      <div class="nav-item" onclick="showCalc('tgas',this)"><span class="nav-icon">·</span>Taller Gasometría</div>
-      <div class="nav-item" onclick="showCalc('tvent',this)"><span class="nav-icon">·</span>Taller Ventilatorio</div>
+      <div class="nav-item" onclick="showCalc('tgas',this)"><span class="nav-icon">·</span>Taller Gasométrico (Choque)</div>
+      <div class="nav-item" onclick="showCalc('metabolic',this)"><span class="nav-icon">·</span>Panel Metabólico Rápido</div>
     </div>
   </div>
 
@@ -664,11 +777,22 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="nav-group-items collapsed" id="g-hemo">
       <div class="nav-item" onclick="showCalc('shock',this)"><span class="nav-icon">·</span>Clasificación de Shock</div>
       <div class="nav-item" onclick="showCalc('hemodynamics',this)"><span class="nav-icon">·</span>Cálculos Hemodinámicos</div>
-      <div class="nav-item" onclick="showCalc('balance',this)"><span class="nav-icon">·</span>Balance Hídrico</div>
       <div class="nav-item" onclick="showCalc('vaso',this)"><span class="nav-icon">·</span>Vasopresor</div>
-      <div class="nav-item" onclick="showCalc('starling',this)"><span class="nav-icon">·</span>Precarga / VPP / VCI</div>
       <div class="nav-item" onclick="showCalc('vexus',this)"><span class="nav-icon">·</span>VExUS — Congestión Venosa</div>
+    </div>
+  </div>
+
+  <div class="nav-divider"></div>
+
+  <div class="nav-group">
+    <div class="nav-group-header collapsed" onclick="toggleGroup('g-manejo',this)">
+      <span class="nav-group-label">💊 Manejo Crítico</span><span class="nav-chevron">▾</span>
+    </div>
+    <div class="nav-group-items collapsed" id="g-manejo">
+      <div class="nav-item" onclick="showCalc('sepsis-bundle',this)"><span class="nav-icon">·</span>Sepsis Bundle (3h/6h)</div>
       <div class="nav-item" onclick="showCalc('ppc',this)"><span class="nav-icon">·</span>Perf. Cerebral (PPC)</div>
+      <div class="nav-item" onclick="showCalc('sedation',this)"><span class="nav-icon">·</span>Sedación / Analgesia</div>
+      <div class="nav-item" onclick="showCalc('transfusion',this)"><span class="nav-icon">·</span>Transfusión — Decisión</div>
     </div>
   </div>
 
@@ -679,13 +803,11 @@ input.pat-synced:focus, select.pat-synced:focus {
       <span class="nav-group-label">🫘 Renal / Electrolitos</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-renal">
-      <div class="nav-item" onclick="showCalc('gfr-dosing',this)"><span class="nav-icon">·</span>Dosificación por TFG</div>
-      <div class="nav-item" onclick="showCalc('abx-dosing',this)"><span class="nav-icon">·</span>Antibióticos por función renal</div>
       <div class="nav-item" onclick="showCalc('kdigo',this)"><span class="nav-icon">·</span>KDIGO — LRA</div>
-      <div class="nav-item" onclick="showCalc('osmo',this)"><span class="nav-icon">·</span>Osmolaridad sérica</div>
-      <div class="nav-item" onclick="showCalc('ca',this)"><span class="nav-icon">·</span>Ca corregido (Alb)</div>
+      <div class="nav-item" onclick="showCalc('balance',this)"><span class="nav-icon">·</span>Balance Hídrico</div>
+      <div class="nav-item" onclick="showCalc('gfr-dosing',this)"><span class="nav-icon">·</span>Dosificación Renal (TFG + ATB)</div>
       <div class="nav-item" onclick="showCalc('elec-uri',this)"><span class="nav-icon">·</span>Electrolitos Urinarios</div>
-      <div class="nav-item" onclick="showCalc('electrolitos',this)"><span class="nav-icon">·</span>Reposición Electrolitos</div>
+      <div class="nav-item" onclick="showCalc('electrolitos',this)"><span class="nav-icon">·</span>Reposición Electrolitos (incl. Ca)</div>
     </div>
   </div>
 
@@ -707,7 +829,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 
   <div class="nav-group">
     <div class="nav-group-header collapsed" onclick="toggleGroup('g-nutri',this)">
-      <span class="nav-group-label">🍽️ Nutrición / Neuro</span><span class="nav-chevron">▾</span>
+      <span class="nav-group-label">🍽️ Nutrición / Neurocrítico</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-nutri">
       <div class="nav-item" onclick="showCalc('harris',this)"><span class="nav-icon">·</span>Harris-Benedict</div>
@@ -731,69 +853,83 @@ input.pat-synced:focus, select.pat-synced:focus {
 
   <div class="nav-divider"></div>
 
-  <div class="nav-group">
-    <div class="nav-group-header collapsed" onclick="toggleGroup('g-manejo',this)">
-      <span class="nav-group-label">💊 Manejo Crítico</span><span class="nav-chevron">▾</span>
-    </div>
-    <div class="nav-group-items collapsed" id="g-manejo">
-      <div class="nav-item" onclick="showCalc('sedation',this)"><span class="nav-icon">·</span>Sedación / Analgesia</div>
-      <div class="nav-item" onclick="showCalc('transfusion',this)"><span class="nav-icon">·</span>Transfusión — Decisión</div>
-    </div>
-  </div>
-
 </nav>
 
 <!-- MAIN CONTENT -->
 <main class="content" id="main-content">
 
+<!-- PATIENT STICKY HEADER (inside scrollable content so sticky works) -->
+<div class="patient-sticky" id="patient-sticky">
+  <span class="ps-name" id="ps-name">—</span>
+  <span class="ps-sep">|</span>
+  <span>Cama <b id="ps-cama">—</b></span>
+  <span class="ps-sep">|</span>
+  <span><b id="ps-peso">—</b> kg</span>
+  <span class="ps-sep">|</span>
+  <span>UCI día <b id="ps-dias">—</b></span>
+  <span class="ps-sep">|</span>
+  <span class="ps-dx" id="ps-dx">—</span>
+</div>
+
 <!-- PATIENT PROFILE PANEL -->
 <div id="calc-paciente" class="calc-panel active">
   <div class="card">
     <div class="card-title">Datos del Paciente</div>
-    <div class="patient-grid cols3">
-      <div><label>Nombre completo</label><input type="text" id="pat-nombre" placeholder="Apellido Paterno, Nombre" oninput="debouncedSyncPatient()"></div>
-      <div><label>No. de Cama</label><input type="text" id="pat-cama" placeholder="ej. 112A" oninput="debouncedSyncPatient()"></div>
-      <div><label>No. Expediente / NSS</label><input type="text" id="pat-nss" placeholder="ej. 12345678" oninput="debouncedSyncPatient()"></div>
-    </div>
-    <div class="patient-grid cols3">
-      <div><label>Edad (años)</label><input type="number" id="pat-edad" placeholder="ej. 54" oninput="debouncedSyncPatient()"></div>
+
+    <div class="row cols4">
+      <div><label>Nombre</label><input type="text" id="pat-nombre" placeholder="Nombre completo" oninput="debouncedSyncPatient()"></div>
+      <div><label>Cama</label><input type="text" id="pat-cama" placeholder="ej. 112A" oninput="debouncedSyncPatient()"></div>
+      <div><label>Edad</label><input type="number" id="pat-edad" placeholder="años" oninput="debouncedSyncPatient()"></div>
       <div><label>Sexo</label>
         <select id="pat-sexo" onchange="debouncedSyncPatient()">
-          <option value="">Seleccionar</option>
-          <option value="M">Masculino</option>
-          <option value="F">Femenino</option>
+          <option value="">—</option>
+          <option value="M">M</option>
+          <option value="F">F</option>
         </select>
       </div>
-      <div><label>Peso (kg)</label><input type="number" id="pat-peso" placeholder="ej. 72" step="0.1" oninput="debouncedSyncPatient()"></div>
     </div>
-    <div class="patient-grid cols3">
-      <div><label>Talla (cm)</label><input type="number" id="pat-talla" placeholder="ej. 168" oninput="debouncedSyncPatient()"></div>
-      <div><label>Dias en UCI</label><input type="number" id="pat-dias" placeholder="ej. 3" oninput="debouncedSyncPatient()"></div>
-      <div><label>Fecha de ingreso</label><input type="date" id="pat-fecha" oninput="debouncedSyncPatient()"></div>
+    <div class="row cols4">
+      <div><label>Peso (kg)</label><input type="number" id="pat-peso" placeholder="kg" step="0.1" oninput="debouncedSyncPatient()"></div>
+      <div><label>Talla (cm)</label><input type="number" id="pat-talla" placeholder="cm" oninput="debouncedSyncPatient()"></div>
+      <div><label>Fecha ingreso</label><input type="date" id="pat-fecha" oninput="debouncedSyncPatient()"></div>
+      <div><label>Días UCI <span style="font-size:9px;color:var(--accent);" id="pat-dias-auto"></span></label><input type="number" id="pat-dias" placeholder="auto" oninput="debouncedSyncPatient()"></div>
     </div>
-    <div class="patient-grid" style="grid-template-columns:1fr;">
-      <div><label>Diagnóstico principal</label><input type="text" id="pat-dx" placeholder="ej. Sepsis de foco pulmonar, SDRA moderado" oninput="debouncedSyncPatient()"></div>
+    <div class="row cols3">
+      <div><label>Médico</label><input type="text" id="pat-medico" placeholder="Dr./Dra." oninput="debouncedSyncPatient()"></div>
+      <div style="grid-column: span 2;"><label>Diagnóstico</label><input type="text" id="pat-dx" placeholder="ej. Sepsis de foco pulmonar, SDRA moderado" oninput="debouncedSyncPatient()"></div>
     </div>
-    <div class="patient-grid" style="grid-template-columns:1fr;">
-      <div><label>Médico tratante</label><input type="text" id="pat-medico" placeholder="Dr./Dra." oninput="debouncedSyncPatient()"></div>
-    </div>
-    <div style="margin-top:14px; padding:10px; background:rgba(0,200,255,0.06); border-radius:6px; border:1px solid rgba(0,200,255,0.15);">
-      <div style="font-size:10px;color:var(--muted);font-family:var(--mono);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">Vista previa — estos datos se llenarán automáticamente en todas las calculadoras</div>
-      <div id="pat-preview" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
-        <span class="pat-badge"><b id="pv-nombre">—</b></span>
-        <span class="pat-badge">Cama <b id="pv-cama">—</b></span>
-        <span class="pat-badge">NSS <b id="pv-nss">—</b></span>
-        <span class="pat-badge"><b id="pv-edad">—</b> años</span>
-        <span class="pat-badge"><b id="pv-sexo">—</b></span>
-        <span class="pat-badge"><b id="pv-peso">—</b> kg / <b id="pv-talla">—</b> cm</span>
-        <span class="pat-badge">UCI día <b id="pv-dias">—</b></span>
+
+    <input type="hidden" id="pat-nss" value="">
+
+    <!-- Derived values — always visible, badges appear/hide individually -->
+    <div class="derived-badges" id="pat-derived">
+      <div class="derived-badge" id="db-imc-wrap">
+        <span class="db-label">IMC</span>
+        <span class="db-val" id="db-imc">—</span>
+        <span class="db-unit" id="db-imc-cat">—</span>
       </div>
-      <div style="margin-top:8px;font-size:12px;color:var(--text);font-style:italic;" id="pv-dx">—</div>
+      <div class="derived-badge" id="db-pci-wrap">
+        <span class="db-label">Peso ideal</span>
+        <span class="db-val" id="db-pci">—</span>
+        <span class="db-unit">kg</span>
+      </div>
+      <div class="derived-badge" id="db-bsa-wrap">
+        <span class="db-label">SCT</span>
+        <span class="db-val" id="db-bsa">—</span>
+        <span class="db-unit">m²</span>
+      </div>
+      <div class="derived-badge" id="db-dias-wrap">
+        <span class="db-label">Estancia</span>
+        <span class="db-val" id="db-dias">—</span>
+        <span class="db-unit" id="pat-estancia-badge">días</span>
+      </div>
     </div>
-    <div class="btn-row" style="margin-top:12px;">
+
+    <div class="btn-row" style="margin-top:10px;">
       <button class="calc" onclick="showCalc('sofa', document.querySelector('.nav-item[onclick*=sofa]'))">Ir a calcular →</button>
       <button class="reset" onclick="clearPatient()">Limpiar datos</button>
     </div>
+    <div class="info" style="margin-top:6px;">Datos se guardan automáticamente y se propagan a todas las calculadoras.</div>
   </div>
 </div>
 
@@ -803,7 +939,7 @@ input.pat-synced:focus, select.pat-synced:focus {
   <div class="print-header" id="print-header" style="margin-bottom:20px; border-bottom:2px solid #1a4a6a; padding-bottom:12px;">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;">
       <div>
-        <div style="font-size:18px;font-weight:700;color:#0055aa;">UCI Tools · IMSS Siglo XXI</div>
+        <div style="font-size:18px;font-weight:700;color:#0055aa;">UCI Tools · UCI Siglo XXI</div>
         <div style="font-size:11px;color:#555;margin-top:2px;">Reporte de Scores — Medicina Critica</div>
       </div>
       <div style="text-align:right;font-size:11px;color:#555;">
@@ -906,7 +1042,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- WELCOME -->
 <div id="calc-welcome" class="calc-panel active">
   <div class="card">
-    <div class="card-title">UCI Tools · Medicina Critica IMSS Siglo XXI</div>
+    <div class="card-title">UCI Tools · Medicina Critica UCI Siglo XXI</div>
     <div style="color:var(--muted2);font-size:13px;line-height:1.8;">
       Selecciona una calculadora del menu lateral.<br><br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">PRONOSTICO</span> — SOFA · APACHE II · SAPS II · NUTRIC<br>
@@ -954,6 +1090,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="result-label" id="news2-interp">—</div>
       <div class="result-badge" id="news2-badge"></div>
     </div>
+    <div id="evid-wrap-news2" style="margin-top:0;"></div>
     <div class="info" id="news2-action">Completa todos los campos para calcular</div>
   </div>
 </div>
@@ -997,6 +1134,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
 
     <div class="info" id="shock-note" style="margin-top:12px;"></div>
+    <div id="evid-wrap-shock" style="margin-top:0;"></div>
   </div>
 </div>
 
@@ -1066,6 +1204,68 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
 
     <div class="info" style="margin-top:12px;">💡 Calcula TFG primero. Las dosis se ajustan automáticamente según tu función renal.</div>
+    <div id="evid-wrap-gfr-dosing" style="margin-top:0;"></div>
+  </div>
+
+  <div class="card" style="margin-top:12px;">
+    <div class="card-title">Antibióticos por Función Renal / Hepática</div>
+
+    <div class="section-sub">Función renal (usa TFG calculada arriba)</div>
+    <div class="row">
+      <div><label>TFG estimada (mL/min/1.73m²)</label><input type="number" id="abx-gfr" placeholder="ej. 60" oninput="showAntibioticDosing()"></div>
+    </div>
+
+    <div class="section-sub">Función hepática (opcional)</div>
+    <div class="row cols2">
+      <div><label>Hepatopatía</label>
+        <select id="abx-liver" onchange="showAntibioticDosing()">
+          <option value="normal">Normal</option>
+          <option value="mild">Leve (INR 1.2-1.5)</option>
+          <option value="moderate">Moderada (INR 1.5-2.0)</option>
+          <option value="severe">Grave (INR >2.0)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section-sub">Tipo de RRT (si aplica)</div>
+    <div class="row">
+      <div><label>¿En terapia de reemplazo renal?</label>
+        <select id="abx-rrt" onchange="showAntibioticDosing()">
+          <option value="none">No</option>
+          <option value="ihd">IHD (hemodiálisis intermitente)</option>
+          <option value="crrt">CRRT (hemodiálisis continua)</option>
+          <option value="sled">SLED (lenta)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section-sub">Selecciona antibiótico</div>
+    <div class="row">
+      <div><label>Medicamento</label>
+        <select id="abx-drug" onchange="showAntibioticDosing()">
+          <option value="">— Seleccionar —</option>
+          <option value="vancomycin">Vancomicina (IV)</option>
+          <option value="piptaz">Piperacilina/Tazobactam</option>
+          <option value="ceftriaxone">Ceftriaxona</option>
+          <option value="cefepime">Cefepima</option>
+          <option value="meropenem">Meropenem</option>
+          <option value="ertapenem">Ertapenem</option>
+          <option value="gentamicin">Gentamicina</option>
+          <option value="levofloxacin">Levofloxacina</option>
+          <option value="ciprofloxacin">Ciprofloxacina</option>
+          <option value="acyclovir">Aciclovir</option>
+          <option value="fluconazole">Fluconazol</option>
+          <option value="linezolid">Linezolid</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="abx-dosing-info" style="padding:12px;background:rgba(0,200,255,0.06);border-radius:6px;border:1px solid rgba(0,200,255,0.15);margin-top:12px;display:none;">
+      <div style="font-size:11px;color:var(--text);line-height:1.7;" id="abx-dosing-text">—</div>
+    </div>
+
+    <div class="info" style="margin-top:12px;">💡 Considera monitorización terapéutica para vancomicina y aminoglucósidos</div>
+    <div id="evid-wrap-abx-dosing" style="margin-top:0;"></div>
   </div>
 </div>
 
@@ -1118,65 +1318,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
 
     <div class="info" style="margin-top:12px;">💡 <b>Fórmulas:</b> CI = CO/BSA · SVR = (MAP-CVP)×80/CO · DO₂ = (Hb×SaO₂×1.34 + PaO2×0.003)×CO · VO₂ = (SaO₂-SvO₂)×Hb×1.34×CO</div>
-  </div>
-</div>
-
-<!-- ANTIBIOTIC DOSING BY RENAL/HEPATIC FUNCTION -->
-<div id="calc-abx-dosing" class="calc-panel">
-  <div class="card">
-    <div class="card-title">Dosificación de Antibióticos por Función Renal</div>
-
-    <div class="section-sub">Función renal (usa TFG del calculador anterior)</div>
-    <div class="row">
-      <div><label>TFG estimada (mL/min/1.73m²)</label><input type="number" id="abx-gfr" placeholder="ej. 60" oninput="showAntibioticDosing()"></div>
-      <div><label>¿Función hepática comprometida?</label>
-        <select id="abx-liver" onchange="showAntibioticDosing()">
-          <option value="normal">Normal</option>
-          <option value="mild">Leve (INR 1.2-1.5)</option>
-          <option value="moderate">Moderada (INR 1.5-2.0)</option>
-          <option value="severe">Grave (INR >2.0)</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="section-sub">Tipo de RRT (si aplica)</div>
-    <div class="row">
-      <div><label>¿En terapia de reemplazo renal?</label>
-        <select id="abx-rrt" onchange="showAntibioticDosing()">
-          <option value="none">No</option>
-          <option value="ihd">IHD (hemodiálisis intermitente)</option>
-          <option value="crrt">CRRT (hemodiálisis continua)</option>
-          <option value="sled">SLED (lenta)</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="section-sub">Selecciona antibiótico</div>
-    <div class="row">
-      <div><label>Medicamento</label>
-        <select id="abx-drug" onchange="showAntibioticDosing()">
-          <option value="">— Seleccionar —</option>
-          <option value="vancomycin">Vancomicina (IV)</option>
-          <option value="piptaz">Piperacilina/Tazobactam</option>
-          <option value="ceftriaxone">Ceftriaxona</option>
-          <option value="cefepime">Cefepima</option>
-          <option value="meropenem">Meropenem</option>
-          <option value="ertapenem">Ertapenem</option>
-          <option value="gentamicin">Gentamicina</option>
-          <option value="levofloxacin">Levofloxacina</option>
-          <option value="ciprofloxacin">Ciprofloxacina</option>
-          <option value="acyclovir">Aciclovir</option>
-          <option value="fluconazole">Fluconazol</option>
-          <option value="linezolid">Linezolid</option>
-        </select>
-      </div>
-    </div>
-
-    <div id="abx-dosing-info" style="padding:12px;background:rgba(0,200,255,0.06);border-radius:6px;border:1px solid rgba(0,200,255,0.15);margin-top:12px;display:none;">
-      <div style="font-size:11px;color:var(--text);line-height:1.7;" id="abx-dosing-text">—</div>
-    </div>
-
-    <div class="info" style="margin-top:12px;">💡 Consulta TFG del calculador "Dosificación por TFG" · Considera monitorización terapéutica para vancomicina y aminoglucósidos</div>
+    <div id="evid-wrap-hemodynamics" style="margin-top:0;"></div>
   </div>
 </div>
 
@@ -1239,6 +1381,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
 
     <div class="info" style="margin-top:12px;">💡 <b>Meta RASS:</b> Equilibrio entre seguridad (no sobre-sedación) y confort · TBI: RASS -1 a 0 para examen neuro · SDRA grave: RASS -2 a -3 para sincronización VM</div>
+    <div id="evid-wrap-sedation" style="margin-top:0;"></div>
   </div>
 </div>
 
@@ -1246,6 +1389,11 @@ input.pat-synced:focus, select.pat-synced:focus {
 <div id="calc-transfusion" class="calc-panel">
   <div class="card">
     <div class="card-title">Soporte de Decisión Transfusional</div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTfTab('electivo',this)">Electivo / Estable</button>
+      <button class="tab-btn" onclick="switchTfTab('sangrado',this)">Sangrado / Masivo</button>
+    </div>
 
     <div class="section-sub">Parámetros hematológicos actuales</div>
     <div class="row cols3">
@@ -1259,24 +1407,51 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div><label>aPTT (segundos)</label><input type="number" id="tf-aptt" placeholder="ej. 42" oninput="calcTransfusion()"></div>
       <div><label>Lactato (mmol/L)</label><input type="number" id="tf-lactate" placeholder="ej. 3.0" step="0.1" oninput="calcTransfusion()"></div>
     </div>
-
-    <div class="section-sub">Escenario clínico</div>
     <div class="row cols2">
-      <div><label>Diagnóstico</label>
-        <select id="tf-scenario" onchange="calcTransfusion()">
-          <option value="">— Seleccionar —</option>
-          <option value="elective">Electivo (sin sangrado activo)</option>
-          <option value="bleeding">Sangrado activo controlado</option>
-          <option value="uncontrolled">Sangrado no controlado/masivo</option>
-          <option value="dic">DIC (coagulopatía)</option>
-        </select>
+      <div><label>Peso (kg) — para dosis de componentes</label><input type="number" id="tf-weight" placeholder="ej. 70" step="0.1" oninput="calcTransfusion()"></div>
+    </div>
+
+    <!-- TAB: Electivo -->
+    <div class="tab-content active" id="tf-tab-electivo">
+      <div class="section-sub">Escenario electivo</div>
+      <div class="row cols2">
+        <div><label>Diagnóstico</label>
+          <select id="tf-scenario" onchange="calcTransfusion()">
+            <option value="">— Seleccionar —</option>
+            <option value="elective">Electivo (sin sangrado activo)</option>
+            <option value="dic">DIC (coagulopatía)</option>
+          </select>
+        </div>
+        <div><label>¿Sangrado activo?</label>
+          <select id="tf-bleeding" onchange="calcTransfusion()">
+            <option value="no">No</option>
+            <option value="yes">Sí, en control</option>
+          </select>
+        </div>
       </div>
-      <div><label>¿Sangrado activo?</label>
-        <select id="tf-bleeding" onchange="calcTransfusion()">
-          <option value="no">No</option>
-          <option value="yes">Sí, en control</option>
-          <option value="massive">Sí, masivo (protocolo de transfusión)</option>
-        </select>
+    </div>
+
+    <!-- TAB: Sangrado -->
+    <div class="tab-content" id="tf-tab-sangrado">
+      <div class="section-sub">Escenario de sangrado</div>
+      <div class="row cols2">
+        <div><label>Diagnóstico</label>
+          <select id="tf-scenario-b" onchange="calcTransfusionBleed()">
+            <option value="">— Seleccionar —</option>
+            <option value="bleeding">Sangrado activo controlado</option>
+            <option value="uncontrolled">Sangrado no controlado/masivo</option>
+            <option value="dic">DIC (coagulopatía + sangrado)</option>
+          </select>
+        </div>
+        <div><label>Activar protocolo masivo?</label>
+          <select id="tf-bleeding-b" onchange="calcTransfusionBleed()">
+            <option value="yes">Sangrado en control</option>
+            <option value="massive">Sí — Transfusión masiva 1:1:1</option>
+          </select>
+        </div>
+      </div>
+      <div id="tf-result-bleed-box" style="padding:12px;background:rgba(255,80,80,0.06);border-radius:6px;border:1px solid rgba(255,80,80,0.15);margin-top:12px;display:none;">
+        <div style="font-size:12px;color:var(--text);line-height:1.8;" id="tf-result-bleed-text">—</div>
       </div>
     </div>
 
@@ -1285,6 +1460,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
 
     <div class="info" style="margin-top:12px;">💡 <b>Umbrales restrictos:</b> Hb ≥7 en paciente estable · Hb ≥10 en sangrado activo/cardiopatía · <b>Massive Transfusion:</b> Activar si >4 unidades PRBCs en 1 hora (ratio 1:1:1)</div>
+    <div id="evid-wrap-transfusion" style="margin-top:0;"></div>
   </div>
 </div>
 
@@ -1547,7 +1723,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     
 <div id="evid-wrap-vt" style="margin-top:0;"></div>
-<div class="info">Hombre: 50 + 0.91×(talla−152.4) · Mujer: 45.5 + 0.91×(talla−152.4)</div>
+<div class="info">Ajusta VT según peso predicho y reevalúa con P meseta y driving pressure para proteger pulmón.</div>
   </div>
 
   <div class="card" id="vent-sec-dp">
@@ -1591,7 +1767,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     
 <div id="evid-wrap-mp" style="margin-top:0;"></div>
-<div class="info">MP = 0.098 × FR × VT(L) × (Ppico - dP/2) · Meta: &lt;17 J/min</div>
+<div class="info">Meta práctica: mantener poder mecánico bajo, idealmente &lt;17 J/min cuando sea posible.</div>
   </div>
 
   <div class="card" id="vent-sec-pafi">
@@ -1688,6 +1864,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="vaso-box"><div class="vaso-box-label">Dosis</div><div class="vaso-box-val" id="vas-dosis-ok">—</div><div style="font-size:10px;color:var(--muted)" id="vas-unit-label">mcg/kg/min</div></div>
       <div class="vaso-box"><div class="vaso-box-label">Concentracion</div><div class="vaso-box-val" id="vas-conc">—</div><div style="font-size:10px;color:var(--muted)" id="vas-conc-unit">mcg/mL</div></div>
     </div>
+    <div id="vaso-interp" style="margin-top:10px;padding:10px;border:1px solid var(--border);border-radius:6px;background:rgba(0,200,255,0.06);font-size:11px;line-height:1.6;color:var(--text);"></div>
     <div class="info" id="vaso-ref"></div>
     <div id="evid-wrap-vaso" style="margin-top:0;"></div>
   </div>
@@ -1731,42 +1908,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 </div>
 
 <!-- PRECARGA / VPP / VCI -->
-<div id="calc-starling" class="calc-panel">
-  <div class="card">
-    <div class="card-title">Precarga y Respuesta a Liquidos</div>
-    <div class="section-sub">Conversion PVC</div>
-    <div class="row cols2">
-      <div><label>PVC en cmH2O</label><input type="number" id="st-pvc" placeholder="4-12" step="0.1"></div>
-      <div><label>PVC en mmHg</label><input type="number" id="st-pvcmm" placeholder="3-9" step="0.1"></div>
-    </div>
-    <div class="section-sub">Variabilidad de Presion de Pulso (VPP)</div>
-    <div class="row cols2">
-      <div><label>PP maxima (mmHg)</label><input type="number" id="st-ppmax" placeholder="" step="0.1"></div>
-      <div><label>PP minima (mmHg)</label><input type="number" id="st-ppmin" placeholder="" step="0.1"></div>
-    </div>
-    <div class="section-sub">Distensibilidad VCI</div>
-    <div class="row cols2">
-      <div><label>VCI max inspiración (mm)</label><input type="number" id="st-vcimax" placeholder="15-25" step="0.1"></div>
-      <div><label>VCI min espiración (mm)</label><input type="number" id="st-vcimin" placeholder="" step="0.1"></div>
-    </div>
-    <div class="btn-row">
-      <button class="calc" onclick="calcSTARLING()">Calcular</button>
-      <button class="reset" onclick="resetPanel('calc-starling')">Limpiar</button>
-    </div>
-    <div class="multi-result" id="starling-result" style="display:none; margin-top:12px;">
-      <div class="mr-row"><span class="mr-label">Conversion PVC</span><span class="mr-val accent" id="st-conv">—</span></div>
-      <div class="divider"></div>
-      <div class="mr-row"><span class="mr-label">VPP</span><span class="mr-val accent" id="st-vpp">—</span></div>
-      <div class="mr-row"><span class="mr-label">Interpretacion VPP</span><span class="mr-val" id="st-vppinterp">—</span></div>
-      <div class="divider"></div>
-      <div class="mr-row"><span class="mr-label">Distensibilidad VCI</span><span class="mr-val accent" id="st-vci">—</span></div>
-      <div class="mr-row"><span class="mr-label">Interpretacion VCI</span><span class="mr-val" id="st-vciinterp">—</span></div>
-    </div>
-    
-<div id="evid-wrap-starling" style="margin-top:0;"></div>
-<div class="info">VPP &gt;13%: responde a liquidos · VCI dist. &gt;18%: precarga dependiente · PVC: cmH2O / 1.36 = mmHg</div>
-  </div>
-</div>
+<!-- Starling consolidado dentro de VExUS -->
 
 <!-- PPC -->
 <div id="calc-ppc" class="calc-panel">
@@ -2033,6 +2175,40 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div class="info" style="margin-top:10px;">VExUS validado por Beaubien-Souligny 2020 · VExUS 3 asociado a LRA y mayor mortalidad en UCI · Complementa balance hídrico y KDIGO</div>
 <div id="evid-wrap-vexus"></div>
+  </div>
+
+  <!-- PRECARGA / VPP / VCI integrado -->
+  <div class="card" style="margin-top:12px;">
+    <div class="card-title">Precarga y Respuesta a Líquidos (VPP / VCI)</div>
+    <div class="section-sub">Conversión PVC</div>
+    <div class="row cols2">
+      <div><label>PVC en cmH2O</label><input type="number" id="st-pvc" placeholder="4-12" step="0.1"></div>
+      <div><label>PVC en mmHg</label><input type="number" id="st-pvcmm" placeholder="3-9" step="0.1"></div>
+    </div>
+    <div class="section-sub">Variabilidad de Presión de Pulso (VPP)</div>
+    <div class="row cols2">
+      <div><label>PP máxima (mmHg)</label><input type="number" id="st-ppmax" placeholder="" step="0.1"></div>
+      <div><label>PP mínima (mmHg)</label><input type="number" id="st-ppmin" placeholder="" step="0.1"></div>
+    </div>
+    <div class="section-sub">Distensibilidad VCI</div>
+    <div class="row cols2">
+      <div><label>VCI max inspiración (mm)</label><input type="number" id="st-vcimax" placeholder="15-25" step="0.1"></div>
+      <div><label>VCI min espiración (mm)</label><input type="number" id="st-vcimin" placeholder="" step="0.1"></div>
+    </div>
+    <div class="btn-row">
+      <button class="calc" onclick="calcSTARLING()">Calcular</button>
+      <button class="reset" onclick="document.querySelectorAll('#calc-vexus .card:last-child input[type=number]').forEach(e=>e.value='');document.getElementById('starling-result').style.display='none';">Limpiar</button>
+    </div>
+    <div class="multi-result" id="starling-result" style="display:none; margin-top:12px;">
+      <div class="mr-row"><span class="mr-label">Conversión PVC</span><span class="mr-val accent" id="st-conv">—</span></div>
+      <div class="divider"></div>
+      <div class="mr-row"><span class="mr-label">VPP</span><span class="mr-val accent" id="st-vpp">—</span></div>
+      <div class="mr-row"><span class="mr-label">Interpretación VPP</span><span class="mr-val" id="st-vppinterp">—</span></div>
+      <div class="divider"></div>
+      <div class="mr-row"><span class="mr-label">Distensibilidad VCI</span><span class="mr-val accent" id="st-vci">—</span></div>
+      <div class="mr-row"><span class="mr-label">Interpretación VCI</span><span class="mr-val" id="st-vciinterp">—</span></div>
+    </div>
+    <div class="info">VPP &gt;13%: responde a líquidos · VCI dist. &gt;18%: precarga dependiente · PVC: cmH2O / 1.36 = mmHg</div>
   </div>
 </div>
 
@@ -2628,25 +2804,26 @@ input.pat-synced:focus, select.pat-synced:focus {
 
 <div id="calc-tgas" class="calc-panel">
   <div class="card" style="margin-bottom:12px;padding:12px 16px;">
-    <div class="group-title" style="margin-bottom:4px;">Taller gasometría</div>
+    <div class="group-title" style="margin-bottom:4px;">Taller gasométrico para choque</div>
     <div class="group-desc">Interpretación paso a paso · AG y trastornos mixtos · Metas hemodinámicas · Lactato y transporte de O₂</div>
+    <div id="evid-wrap-tgas" style="margin-top:8px;"></div>
   </div>
 
   <div class="card" id="tgas-sec-interp">
     <div class="card-title">Interpretación de Gasometría — Paso a Paso</div>
     <div class="row cols3">
-      <div><label>pH</label><input type="number" id="tg-ph" placeholder="7.35-7.45" step="0.001"></div>
-      <div><label>pCO₂ (mmHg)</label><input type="number" id="tg-co2" placeholder="35-45" step="0.1"></div>
-      <div><label>HCO₃ (mEq/L)</label><input type="number" id="tg-hco3" placeholder="22-26" step="0.1"></div>
+      <div><label>pH</label><input type="number" id="tg-ph" placeholder="7.35-7.45" step="0.001" oninput="syncTgasFields('ph',this.value,this.id)"></div>
+      <div><label>pCO₂ (mmHg)</label><input type="number" id="tg-co2" placeholder="35-45" step="0.1" oninput="syncTgasFields('pco2',this.value,this.id)"></div>
+      <div><label>HCO₃ (mEq/L)</label><input type="number" id="tg-hco3" placeholder="22-26" step="0.1" oninput="syncTgasFields('hco3',this.value,this.id)"></div>
     </div>
     <div class="row cols3">
-      <div><label>Na (mEq/L)</label><input type="number" id="tg-na" placeholder="135-145"></div>
-      <div><label>Cl (mEq/L)</label><input type="number" id="tg-cl" placeholder="98-106"></div>
-      <div><label>Albúmina (g/dL)</label><input type="number" id="tg-alb" placeholder="3.5-5.0" step="0.1"></div>
+      <div><label>Na (mEq/L)</label><input type="number" id="tg-na" placeholder="135-145" oninput="syncTgasFields('na',this.value,this.id)"></div>
+      <div><label>Cl (mEq/L)</label><input type="number" id="tg-cl" placeholder="98-106" oninput="syncTgasFields('cl',this.value,this.id)"></div>
+      <div><label>Albúmina (g/dL)</label><input type="number" id="tg-alb" placeholder="3.5-5.0" step="0.1" oninput="syncTgasFields('alb',this.value,this.id)"></div>
     </div>
     <div class="row cols2">
-      <div><label>Lactato (mmol/L)</label><input type="number" id="tg-lac" placeholder="<2.0" step="0.1"></div>
-      <div><label>PaO₂ (mmHg)</label><input type="number" id="tg-pao2" placeholder="80-100" step="0.1"></div>
+      <div><label>Lactato (mmol/L)</label><input type="number" id="tg-lac" placeholder="<2.0" step="0.1" oninput="syncTgasFields('lactate',this.value,this.id)"></div>
+      <div><label>PaO₂ (mmHg)</label><input type="number" id="tg-pao2" placeholder="80-100" step="0.1" oninput="syncTgasFields('pao2',this.value,this.id)"></div>
     </div>
     <div class="btn-row">
       <button class="calc" onclick="calcTGasInterp()">Interpretar</button>
@@ -2666,19 +2843,19 @@ input.pat-synced:focus, select.pat-synced:focus {
   <div class="card" id="tgas-sec-mixtos">
     <div class="card-title">Trastornos Mixtos y Diagnóstico Diferencial del AG Elevado</div>
     <div class="row cols3">
-      <div><label>pH</label><input type="number" id="tm-ph" placeholder="7.35-7.45" step="0.001"></div>
-      <div><label>pCO₂ (mmHg)</label><input type="number" id="tm-co2" placeholder="35-45" step="0.1"></div>
-      <div><label>HCO₃ (mEq/L)</label><input type="number" id="tm-hco3" placeholder="22-26" step="0.1"></div>
+      <div><label>pH</label><input type="number" id="tm-ph" placeholder="7.35-7.45" step="0.001" oninput="syncTgasFields('ph',this.value,this.id)"></div>
+      <div><label>pCO₂ (mmHg)</label><input type="number" id="tm-co2" placeholder="35-45" step="0.1" oninput="syncTgasFields('pco2',this.value,this.id)"></div>
+      <div><label>HCO₃ (mEq/L)</label><input type="number" id="tm-hco3" placeholder="22-26" step="0.1" oninput="syncTgasFields('hco3',this.value,this.id)"></div>
     </div>
     <div class="row cols3">
-      <div><label>Na (mEq/L)</label><input type="number" id="tm-na" placeholder="135-145"></div>
-      <div><label>Cl (mEq/L)</label><input type="number" id="tm-cl" placeholder="98-106"></div>
-      <div><label>Albúmina (g/dL)</label><input type="number" id="tm-alb" placeholder="3.5-5.0" step="0.1"></div>
+      <div><label>Na (mEq/L)</label><input type="number" id="tm-na" placeholder="135-145" oninput="syncTgasFields('na',this.value,this.id)"></div>
+      <div><label>Cl (mEq/L)</label><input type="number" id="tm-cl" placeholder="98-106" oninput="syncTgasFields('cl',this.value,this.id)"></div>
+      <div><label>Albúmina (g/dL)</label><input type="number" id="tm-alb" placeholder="3.5-5.0" step="0.1" oninput="syncTgasFields('alb',this.value,this.id)"></div>
     </div>
     <div class="row cols3">
       <div><label>Glucosa (mg/dL)</label><input type="number" id="tm-glu" placeholder="70-110"></div>
       <div><label>BUN (mg/dL)</label><input type="number" id="tm-bun" placeholder="7-20"></div>
-      <div><label>Lactato (mmol/L)</label><input type="number" id="tm-lac" placeholder="<2.0" step="0.1"></div>
+      <div><label>Lactato (mmol/L)</label><input type="number" id="tm-lac" placeholder="<2.0" step="0.1" oninput="syncTgasFields('lactate',this.value,this.id)"></div>
     </div>
     <div class="btn-row">
       <button class="calc" onclick="calcTGasMixtos()">Analizar</button>
@@ -2724,12 +2901,12 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="row cols3">
       <div><label>Hb (g/dL)</label><input type="number" id="ox-hb" placeholder="12-16" step="0.1"></div>
       <div><label>SaO₂ (%)</label><input type="number" id="ox-sao2" placeholder="95-100" step="0.1"></div>
-      <div><label>PaO₂ (mmHg)</label><input type="number" id="ox-pao2" placeholder="80-100" step="0.1"></div>
+      <div><label>PaO₂ (mmHg)</label><input type="number" id="ox-pao2" placeholder="80-100" step="0.1" oninput="syncTgasFields('pao2',this.value,this.id)"></div>
     </div>
     <div class="row cols3">
       <div><label>SvO₂ / ScvO₂ (%)</label><input type="number" id="ox-svo2" placeholder="65-75" step="0.1"></div>
       <div><label>Gasto Cardíaco (L/min)</label><input type="number" id="ox-gc" placeholder="4-8" step="0.1"></div>
-      <div><label>Lactato (mmol/L)</label><input type="number" id="ox-lac" placeholder="<2.0" step="0.1"></div>
+      <div><label>Lactato (mmol/L)</label><input type="number" id="ox-lac" placeholder="<2.0" step="0.1" oninput="syncTgasFields('lactate',this.value,this.id)"></div>
     </div>
     <div class="row cols2">
       <div><label>FC (lpm)</label><input type="number" id="ox-fc" placeholder="60-100"></div>
@@ -2762,8 +2939,8 @@ input.pat-synced:focus, select.pat-synced:focus {
 
 <div id="calc-tvent" class="calc-panel">
   <div class="card" style="margin-bottom:12px;padding:12px 16px;">
-    <div class="group-title" style="margin-bottom:4px;">Taller ventilatorio</div>
-    <div class="group-desc">Modo según diagnóstico · SDRA Berlin · Destete / Tobin · PEEP y reclutamiento</div>
+    <div class="group-title" style="margin-bottom:4px;">Subcategoría: Destete ventilatorio y extubación</div>
+    <div class="group-desc">Modo según diagnóstico · SDRA Berlin · Predictores de extubación · PEEP y reclutamiento</div>
   </div>
 
   <div class="card" id="tvent-sec-modo">
@@ -2808,7 +2985,7 @@ input.pat-synced:focus, select.pat-synced:focus {
   </div>
 
   <div class="card" id="tvent-sec-destete">
-    <div class="card-title">Destete Ventilatorio — Índice de Tobin y Criterios de Extubación</div>
+    <div class="card-title">Destete Ventilatorio — Predicción de Extubación</div>
     <div class="section-sub">Índice de Tobin (FR/VT)</div>
     <div class="row cols3">
       <div><label>FR en respiración espontánea (rpm)</label><input type="number" id="tb-fr" placeholder="12-20"></div>
@@ -2819,6 +2996,11 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div><label>FiO₂ en prueba SBT (decimal)</label><input type="number" id="tb-fio2" placeholder="ej. 0.40" step="0.01"></div>
       <div><label>PEEP en SBT (cmH2O)</label><input type="number" id="tb-peep" placeholder="5-8"></div>
       <div><label>MIP / PiMáx (cmH2O)</label><input type="number" id="tb-mip" placeholder="meta &lt;-20" step="1"></div>
+    </div>
+    <div class="row cols3">
+      <div><label>Pico flujo tos (L/min)</label><input type="number" id="tb-cpf" placeholder=">60 favorable"></div>
+      <div><label>Cuff leak (%)</label><input type="number" id="tb-leak" placeholder=">10 favorable" step="0.1"></div>
+      <div><label>Secreciones por hora</label><input type="number" id="tb-sec-h" placeholder="<2 favorable" step="1"></div>
     </div>
     <div class="section-sub">Criterios clínicos</div>
     <div class="sofa-grid" style="gap:6px;">
@@ -3073,8 +3255,123 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div id="evid-wrap-tsr-modalidad" style="margin-top:0;"></div>
   </div>
 </div>
+<!-- ===== SEPSIS BUNDLE 3h/6h ===== -->
+<div id="calc-sepsis-bundle" class="calc-panel">
+  <div class="card">
+    <div class="card-title">Sepsis Bundle — Checklist SSC (Hora-1 / 3h / 6h)</div>
+    <div class="info" style="margin-bottom:14px;">
+      Checklist interactivo basado en las guías Surviving Sepsis Campaign 2021. Registra hora de inicio para monitorizar cumplimiento.
+    </div>
+
+    <div class="row cols2" style="margin-bottom:12px;">
+      <div><label>Hora de identificación (T0)</label><input type="time" id="sb-t0" onchange="updateBundleTimers()"></div>
+      <div><label>Hora actual</label><input type="time" id="sb-now" onchange="updateBundleTimers()"></div>
+    </div>
+    <div id="sb-timer" style="font-size:12px;color:var(--accent);font-family:var(--mono);margin-bottom:10px;"></div>
+
+    <div class="section-sub">Hora-1 Bundle (dentro de 60 min de T0)</div>
+    <div class="bundle-progress"><div class="bundle-progress-bar" id="sb-prog-1h" style="width:0%"></div></div>
+    <div id="sb-1h-items">
+      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Medir lactato</label>
+      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Hemocultivos (×2 sets) ANTES de antibióticos</label>
+      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Antibiótico empírico de amplio espectro</label>
+      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Cristaloides 30 mL/kg si hipotensión o lactato ≥4</label>
+      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Vasopresores si PAM &lt;65 durante o después de reanimación</label>
+    </div>
+
+    <div class="section-sub">3-hora (reevaluación)</div>
+    <div class="bundle-progress"><div class="bundle-progress-bar" id="sb-prog-3h" style="width:0%"></div></div>
+    <div id="sb-3h-items">
+      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Reevaluar volemia (exam clínico, USG POCUS, leg raise)</label>
+      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Repetir lactato si lactato inicial elevado</label>
+      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Evaluar respuesta a líquidos / titular vasopresores</label>
+    </div>
+
+    <div class="section-sub">6-hora (objetivos de resucitación)</div>
+    <div class="bundle-progress"><div class="bundle-progress-bar" id="sb-prog-6h" style="width:0%"></div></div>
+    <div id="sb-6h-items">
+      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> PAM ≥65 mmHg sostenida</label>
+      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Lactato en descenso (clearance ≥10%/h ideal)</label>
+      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Diuresis ≥0.5 mL/kg/h</label>
+      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Re-evaluar foco infeccioso → control de fuente si aplica</label>
+      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Considerar hidrocortisona si choque refractario a vasopresores</label>
+    </div>
+
+    <div class="multi-result" style="margin-top:14px;">
+      <div class="mr-row"><span class="mr-label">Cumplimiento global</span><span class="mr-val accent" id="sb-global">0 / 13</span></div>
+      <div class="mr-row"><span class="mr-label">Estado</span><span class="result-badge" id="sb-status-badge">Pendiente</span></div>
+    </div>
+    <div id="evid-wrap-sepsis-bundle" style="margin-top:0;"></div>
+  </div>
+</div>
+
+<!-- ===== PANEL METABÓLICO RÁPIDO ===== -->
+<div id="calc-metabolic" class="calc-panel">
+  <div class="card">
+    <div class="card-title">Panel Metabólico Rápido — AG / Osmol Gap / Delta-Delta</div>
+    <div class="info" style="margin-bottom:14px;">
+      Triage metabólico integrado: Anión Gap, brecha osmolar y delta-delta en una sola vista para orientar diagnóstico diferencial rápido.
+    </div>
+
+    <div class="section-sub">Electrolitos séricos</div>
+    <div class="row cols3">
+      <div><label>Na⁺ (mEq/L)</label><input type="number" id="mp-na" placeholder="135-145" oninput="calcMetabolic()"></div>
+      <div><label>Cl⁻ (mEq/L)</label><input type="number" id="mp-cl" placeholder="98-106" oninput="calcMetabolic()"></div>
+      <div><label>HCO₃⁻ (mEq/L)</label><input type="number" id="mp-hco3" placeholder="22-26" oninput="calcMetabolic()"></div>
+    </div>
+    <div class="row cols3">
+      <div><label>Albúmina (g/dL)</label><input type="number" id="mp-alb" placeholder="3.5-5.0" step="0.1" oninput="calcMetabolic()"></div>
+      <div><label>Glucosa (mg/dL)</label><input type="number" id="mp-glu" placeholder="70-110" oninput="calcMetabolic()"></div>
+      <div><label>BUN (mg/dL)</label><input type="number" id="mp-bun" placeholder="7-20" oninput="calcMetabolic()"></div>
+    </div>
+
+    <div class="section-sub">Osmolaridad</div>
+    <div class="row cols2">
+      <div><label>Osmolaridad medida (mOsm/kg)</label><input type="number" id="mp-osm-med" placeholder="ej. 310" oninput="calcMetabolic()"></div>
+      <div><label>Etanol (mg/dL) — opcional</label><input type="number" id="mp-etoh" placeholder="0" oninput="calcMetabolic()"></div>
+    </div>
+
+    <div class="section-sub">Lactato</div>
+    <div class="row cols2">
+      <div><label>Lactato (mmol/L)</label><input type="number" id="mp-lac" placeholder="ej. 2.0" step="0.1" oninput="calcMetabolic()"></div>
+    </div>
+
+    <div id="mp-result-box" style="display:none;margin-top:14px;">
+      <div class="multi-result">
+        <div class="mr-row"><span class="mr-label">Anión Gap (AG)</span><span class="mr-val accent" id="mp-ag">—</span></div>
+        <div class="mr-row"><span class="mr-label">AG corregido (albúmina)</span><span class="mr-val accent" id="mp-agc">—</span></div>
+        <div class="mr-row"><span class="mr-label">Interpretación AG</span><span class="result-badge" id="mp-ag-badge">—</span></div>
+        <div class="divider"></div>
+        <div class="mr-row"><span class="mr-label">Delta AG</span><span class="mr-val" id="mp-delta-ag">—</span></div>
+        <div class="mr-row"><span class="mr-label">Delta HCO₃</span><span class="mr-val" id="mp-delta-hco3">—</span></div>
+        <div class="mr-row"><span class="mr-label">Delta/Delta ratio</span><span class="mr-val accent" id="mp-dd">—</span></div>
+        <div class="mr-row"><span class="mr-label">Interpretación Δ/Δ</span><span class="result-badge" id="mp-dd-badge">—</span></div>
+        <div class="divider"></div>
+        <div class="mr-row"><span class="mr-label">Osmolaridad calculada</span><span class="mr-val" id="mp-osm-calc">—</span></div>
+        <div class="mr-row"><span class="mr-label">Brecha osmolar (OG)</span><span class="mr-val accent" id="mp-og">—</span></div>
+        <div class="mr-row"><span class="mr-label">Interpretación OG</span><span class="result-badge" id="mp-og-badge">—</span></div>
+        <div class="divider"></div>
+        <div class="mr-row"><span class="mr-label" style="font-size:12px;font-weight:600;">Diagnóstico diferencial sugerido</span></div>
+        <div class="mr-row"><span class="mr-val" id="mp-ddx" style="font-size:11px;line-height:1.6;max-width:100%;">—</span></div>
+      </div>
+    </div>
+    <div class="info" style="margin-top:12px;">AG normal: 12±4 · Delta/Delta &lt;1: AGMA + NAGMA coexistente · &gt;2: AGMA + alcalosis metabólica · Brecha osmolar &gt;10: sospechar tóxicos (metanol, etilenglicol, propilenglicol)</div>
+    <div id="evid-wrap-metabolic" style="margin-top:0;"></div>
+  </div>
+</div>
+
 </main>
 </div><!-- end app-body -->
+<footer class="app-footer">
+  <div class="footer-title">UCI Tools · UCI Siglo XXI</div>
+  <div class="footer-copy">© Christopher Godines. Todos los derechos reservados.</div>
+  <div class="footer-disclaimer">
+    <b>Aviso:</b> Herramienta exclusiva de apoyo clínico para profesionales de medicina crítica.
+    No sustituye el juicio médico, la valoración integral del paciente ni los protocolos institucionales.
+    Confirme siempre dosis, cálculos y decisiones terapéuticas con fuentes primarias y normativa vigente.
+    El autor no asume responsabilidad por el uso inadecuado de la información proporcionada.
+  </div>
+</footer>
 
 <script>
 
@@ -3105,11 +3402,16 @@ function buildEvid(id) {
       <div class="evid-interp">${d.interpretation}</div>
     </div>`;
   }
-  if (d.refs && d.refs.length) {
+  if (d.formula || (d.refs && d.refs.length)) {
     html += `<div class="evid-section"><div class="evid-section-title">Referencias</div>`;
-    d.refs.forEach(r => {
-      html += `<div class="evid-ref"><span class="evid-year">${r.year}</span> — <b>${r.authors}</b>. ${r.title}. <i>${r.journal}</i>${r.doi ? '. <a href="https://doi.org/'+r.doi+'" target="_blank" style="color:var(--accent);font-size:10px;">DOI</a>' : ''}.</div>`;
-    });
+    if (d.formula) {
+      html += `<div class="evid-ref"><span class="evid-year">Fórmula</span> — ${d.formula.replace(/\n/g, ' · ')}</div>`;
+    }
+    if (d.refs && d.refs.length) {
+      d.refs.forEach(r => {
+        html += `<div class="evid-ref"><span class="evid-year">${r.year}</span> — <b>${r.authors}</b>. ${r.title}. <i>${r.journal}</i>${r.doi ? '. <a href="https://doi.org/'+r.doi+'" target="_blank" style="color:var(--accent);font-size:10px;">DOI</a>' : ''}.</div>`;
+      });
+    }
     html += `</div>`;
   }
   html += `</div></div>`;
@@ -3117,6 +3419,71 @@ function buildEvid(id) {
 }
 
 const evidData = {
+  news2: {
+    formula: 'Suma de 6 variables fisiológicas + nivel de conciencia (AVPU)\nRango total: 0–20 puntos',
+    interpretation: '0–4: riesgo bajo · 5–6 o cualquier parámetro con 3 puntos: riesgo intermedio · ≥7: riesgo alto y respuesta urgente',
+    refs: [
+      {year:'2017', authors:'Royal College of Physicians', title:'National Early Warning Score (NEWS) 2', journal:'RCP London', doi:''},
+      {year:'2019', authors:'Pimentel MAF et al.', title:'Comparison of NEWS and NEWS2 for in-hospital mortality prediction', journal:'Resuscitation', doi:'10.1016/j.resuscitation.2019.02.017'},
+    ]
+  },
+  shock: {
+    formula: 'Integración clínica: PAM, FC, PVC, lactato, diuresis y ScvO2 según contexto',
+    interpretation: 'La clasificación final de choque requiere integrar clínica, hemodinamia y respuesta al tratamiento',
+    refs: [
+      {year:'2021', authors:'Evans L et al.', title:'Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021', journal:'Intensive Care Med', doi:'10.1007/s00134-021-06506-y'},
+      {year:'2014', authors:'Cecconi M et al.', title:'Consensus on circulatory shock and hemodynamic monitoring', journal:'Intensive Care Med', doi:'10.1007/s00134-014-3525-z'},
+    ]
+  },
+  hemodynamics: {
+    formula: 'CI = CO/BSA · SVR = (MAP−CVP)×80/CO · DO2 = (Hb×SaO2×1.34 + PaO2×0.003)×CO · VO2 = (SaO2−SvO2)×Hb×1.34×CO',
+    interpretation: 'Útil para perfusión global y fenotipo hemodinámico (distributivo, cardiogénico, hipovolémico)',
+    refs: [
+      {year:'2017', authors:'Cecconi M et al.', title:'Fluid challenges and hemodynamic monitoring in critical care', journal:'Intensive Care Med', doi:'10.1007/s00134-017-4810-2'},
+      {year:'2019', authors:'Vincent JL, De Backer D', title:'Circulatory shock', journal:'N Engl J Med', doi:'10.1056/NEJMra1208943'},
+    ]
+  },
+  gfr_dosing: {
+    formula: 'Estimación de TFG para ajuste farmacológico renal (según ecuación usada en el cálculo)',
+    interpretation: 'Recalcular cuando cambie creatinina o condición clínica para evitar infra/sobredosificación',
+    refs: [
+      {year:'2012', authors:'KDIGO CKD Work Group', title:'KDIGO 2012 Clinical Practice Guideline for CKD', journal:'Kidney Int Suppl', doi:'10.1038/kisup.2012.73'},
+      {year:'2009', authors:'Levey AS et al.', title:'A new equation to estimate glomerular filtration rate', journal:'Ann Intern Med', doi:'10.7326/0003-4819-150-9-200905050-00006'},
+    ]
+  },
+  abx_dosing: {
+    formula: 'Ajuste por TFG + modalidad de TSR (IHD/CRRT/SLED) + farmacocinética del antimicrobiano',
+    interpretation: 'En vancomicina y aminoglucósidos, idealmente complementar con monitorización terapéutica',
+    refs: [
+      {year:'2020', authors:'Rybak MJ et al.', title:'Therapeutic Monitoring of Vancomycin for Serious MRSA Infections', journal:'Am J Health Syst Pharm', doi:'10.1093/ajhp/zxaa036'},
+      {year:'2024', authors:'Roberts JA et al.', title:'Individualised antibiotic dosing for critically ill patients', journal:'Lancet Infect Dis', doi:'10.1016/S1473-3099(24)00058-9'},
+    ]
+  },
+  sedation: {
+    formula: 'Estrategia guiada por objetivo RASS y condición clínica del paciente',
+    interpretation: 'Priorizar mínima sedación efectiva con reevaluación frecuente para reducir delirium y días de VM',
+    refs: [
+      {year:'2018', authors:'Devlin JW et al.', title:'PADIS Guidelines in Adult ICU Patients', journal:'Crit Care Med', doi:'10.1097/CCM.0000000000003299'},
+      {year:'2012', authors:'Shehabi Y et al.', title:'Early goal-directed sedation versus standard sedation', journal:'JAMA', doi:'10.1001/jama.2012.13664'},
+    ]
+  },
+  transfusion: {
+    formula: 'Decisión transfusional por Hb, plaquetas, INR/fibrinógeno y escenario de sangrado',
+    interpretation: 'Estrategia restrictiva en paciente estable; protocolo masivo en hemorragia no controlada',
+    refs: [
+      {year:'2023', authors:'AABB', title:'Red blood cell transfusion: 2023 international guidelines', journal:'JAMA', doi:'10.1001/jama.2023.9515'},
+      {year:'2015', authors:'Holcomb JB et al.', title:'Plasma, Platelets, and Red Blood Cells in a 1:1:1 vs 1:1:2 Ratio', journal:'JAMA', doi:'10.1001/jama.2015.12'},
+    ]
+  },
+  tgas: {
+    formula: 'Análisis integrado: ácido-base (pH/pCO2/HCO3), anion gap corregido, delta-delta, lactato y transporte de O2 (DO2/VO2/ERO2)',
+    interpretation: 'Prioriza detección de hipoperfusión y trastornos mixtos; usar tendencias seriadas para guiar reanimación',
+    refs: [
+      {year:'2010', authors:'Emmett M, Narins RG', title:'Clinical use of the anion gap', journal:'Medicine (Baltimore)', doi:'10.1097/00005792-197701000-00002'},
+      {year:'2021', authors:'Evans L et al.', title:'Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021', journal:'Intensive Care Med', doi:'10.1007/s00134-021-06506-y'},
+      {year:'2001', authors:'Rivers E et al.', title:'Early Goal-Directed Therapy in the Treatment of Severe Sepsis and Septic Shock', journal:'N Engl J Med', doi:'10.1056/NEJMoa010307'},
+    ]
+  },
   sofa: {
     formula: 'Suma de 6 órganos (Resp, Coag, Hepático, CV, Neuro, Renal)\nCada órgano: 0–4 pts · Total: 0–24 pts',
     interpretation: '0–1: &lt;10% mortalidad · 7–9: ~20% · 10–12: ~40% · &gt;12: &gt;80%\nIncremento de ≥2 pts en 48h define disfunción orgánica en sepsis (Sepsis-3)',
@@ -3330,6 +3697,24 @@ const evidData = {
       {year:'2012', authors:'KDIGO AKI Work Group', title:'KDIGO Clinical Practice Guideline for Acute Kidney Injury — anticoagulation in CRRT', journal:'Kidney Int Suppl', doi:'10.1038/kisup.2012.1'},
     ]
   },
+  sepsis_bundle: {
+    formula: 'Checklist SSC: Hora-1 (lactato, hemocultivos, ATB, cristaloides 30mL/kg, vasopresores)\n3h: reevaluación volemia, repetir lactato\n6h: PAM ≥65, clearance lactato, diuresis, control fuente',
+    interpretation: 'El cumplimiento completo del bundle se asocia a reducción absoluta de mortalidad del 10-15% vs cumplimiento parcial.',
+    refs: [
+      {year:'2021', authors:'Evans L et al.', title:'Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021', journal:'Intensive Care Med', doi:'10.1007/s00134-021-06506-y'},
+      {year:'2018', authors:'Levy MM et al.', title:'The Surviving Sepsis Campaign Bundle: 2018 Update', journal:'Crit Care Med', doi:'10.1097/CCM.0000000000003119'},
+      {year:'2019', authors:'Seymour CW et al.', title:'Time to Treatment and Mortality during Mandated Emergency Care for Sepsis', journal:'N Engl J Med', doi:'10.1056/NEJMoa1703058'},
+    ]
+  },
+  metabolic: {
+    formula: 'AG = Na − (Cl + HCO₃)\nAG corregido = AG + 2.5 × (4.0 − Alb)\nΔ/Δ = (AG − 12) / (24 − HCO₃)\nOsm calc = 2×Na + Glu/18 + BUN/2.8 + EtOH/4.6\nOG = Osm medida − Osm calculada',
+    interpretation: 'AG >12 (corregido): acidosis metabólica con AG elevado · Δ/Δ <1: AGMA + NAGMA · Δ/Δ >2: AGMA + alcalosis metabólica · OG >10: sospechar alcoholes tóxicos.',
+    refs: [
+      {year:'2014', authors:'Kraut JA, Madias NE', title:'Lactic Acidosis', journal:'N Engl J Med', doi:'10.1056/NEJMra1309483'},
+      {year:'2007', authors:'Kellum JA', title:'Disorders of acid-base balance', journal:'Crit Care Med', doi:'10.1097/01.CCM.0000259722.63680.80'},
+      {year:'2017', authors:'Berend K et al.', title:'Physiological approach to assessment of acid-base disturbances', journal:'N Engl J Med', doi:'10.1056/NEJMra1003327'},
+    ]
+  },
 };
 
 // ══════════════════════════════════════════════════════
@@ -3432,8 +3817,6 @@ function updateClock() {
   const now = new Date();
   const h = now.getHours(), m = now.getMinutes();
   document.getElementById('clock').textContent = String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
-  const t = h>=7&&h<15 ? 'Matutino' : h>=15&&h<21 ? 'Vespertino' : 'Nocturno';
-  document.getElementById('turno-label').textContent = t;
 }
 
 // ============ NAV ============
@@ -4270,6 +4653,7 @@ function calcTransfusion() {
   const inr = parseFloat(document.getElementById('tf-inr').value);
   const fibrin = parseFloat(document.getElementById('tf-fibrin').value);
   const aptt = parseFloat(document.getElementById('tf-aptt').value);
+  const weight = parseFloat(document.getElementById('tf-weight').value) || 70;
   const scenario = document.getElementById('tf-scenario').value;
   const bleeding = document.getElementById('tf-bleeding').value;
 
@@ -4308,12 +4692,23 @@ function calcTransfusion() {
 
   // FFP indications
   result += '<br><b>Plasma Fresco Congelado (FFP):</b><br>';
+  let ffpInd = false;
   if (inr > 1.5 && bleeding !== 'no') {
+    ffpInd = true;
     result += `🔴 TRANSFUNDIR: INR ${inr} >1.5 + sangrado activo<br>`;
-    result += `   Dosis: 10–15 mL/kg (~1 unidad por 5–7 kg = ${Math.round(10 / 5)} unidades para 70 kg)<br>`;
+    const ffpMinMl = Math.round(weight * 10);
+    const ffpMaxMl = Math.round(weight * 15);
+    const ffpUnitsMin = Math.max(1, Math.round(ffpMinMl / 250));
+    const ffpUnitsMax = Math.max(ffpUnitsMin, Math.round(ffpMaxMl / 250));
+    result += `   Dosis: 10–15 mL/kg (~${ffpMinMl}-${ffpMaxMl} mL, aprox ${ffpUnitsMin}-${ffpUnitsMax} U)<br>`;
   } else if (inr > 1.8 && scenario === 'dic') {
+    ffpInd = true;
     result += `🔴 TRANSFUNDIR: INR ${inr} en contexto DIC<br>`;
-    result += `   Dosis: 10–15 mL/kg (~${Math.round(70 * 10 / 7)} mL o ~${Math.round(10 * 70 / 200)} unidades)<br>`;
+    const ffpMinMl = Math.round(weight * 10);
+    const ffpMaxMl = Math.round(weight * 15);
+    const ffpUnitsMin = Math.max(1, Math.round(ffpMinMl / 250));
+    const ffpUnitsMax = Math.max(ffpUnitsMin, Math.round(ffpMaxMl / 250));
+    result += `   Dosis: 10–15 mL/kg (~${ffpMinMl}-${ffpMaxMl} mL, aprox ${ffpUnitsMin}-${ffpUnitsMax} U)<br>`;
   } else if (inr > 2.0) {
     result += `🟡 CONSIDERAR: INR ${inr} (sin sangrado) - monitorizar<br>`;
   } else {
@@ -4323,22 +4718,62 @@ function calcTransfusion() {
   // Platelet transfusion
   result += '<br><b>Transfusión de Plaquetas:</b><br>';
   let plt_guidance = '';
+  let pltInd = false;
   if (plt < 10) plt_guidance = '🔴 PROFILAXIS: <10 K/uL (riesgo espontáneo de hemorragia)';
   else if (plt < 20 && (scenario === 'dic' || bleeding !== 'no')) plt_guidance = '🔴 TRANSFUNDIR: <20 K/uL + sangrado/coagulopatía';
   else if (plt < 50 && bleeding !== 'no') plt_guidance = '🟡 TRANSFUNDIR: <50 K/uL + sangrado activo';
   else if (plt < 50 && scenario === 'dic') plt_guidance = '🟡 TRANSFUNDIR: <50 K/uL en DIC';
   else plt_guidance = '🟢 SIN INDICACIÓN: Plaquetas ' + plt + ' K/uL (monitorizar si transfusión masiva)';
+  if (plt < 10 || (plt < 20 && (scenario === 'dic' || bleeding !== 'no')) || (plt < 50 && (bleeding !== 'no' || scenario === 'dic'))) pltInd = true;
   result += plt_guidance;
 
   // Cryoprecipitate
   result += '<br><br><b>Crioprecipitado:</b><br>';
+  let cryoInd = false;
   if (fibrin < 100 && bleeding !== 'no') {
+    cryoInd = true;
     result += `🔴 TRANSFUNDIR: Fibrinógeno ${fibrin} <100 mg/dL + sangrado<br>`;
-    result += '   Dosis: 1 unidad por 5 kg (~10 unidades para 70 kg = 2–3 g fibrinógeno añadido)<br>';
+    result += `   Dosis: 1 unidad por 5 kg (≈${Math.max(1, Math.round(weight/5))} U para ${weight.toFixed(0)} kg)<br>`;
   } else if (fibrin < 150 && scenario === 'dic') {
     result += `🟡 CONSIDERAR: Fibrinógeno ${fibrin} en DIC (mantener >100)<br>`;
   } else {
     result += `🟢 SIN INDICACIÓN: Fibrinógeno ${fibrin} mg/dL`;
+  }
+
+  // RBC indication for dose section
+  let rbcInd = false;
+  if (scenario === 'elective') rbcInd = hb < 7;
+  else if (scenario === 'bleeding' || scenario === 'uncontrolled') rbcInd = hb < 10;
+  else if (scenario === 'dic') rbcInd = hb < 10;
+
+  // Weight-based dose summary (only indicated components)
+  result += '<br><br><b>Dosis por peso — componentes indicados:</b><br>';
+  let hasAny = false;
+  if (rbcInd) {
+    hasAny = true;
+    const prbcUnits = Math.max(1, Math.ceil((scenario === 'elective' ? (7 - hb) : (10 - hb))));
+    result += `• PRBC: ${prbcUnits} U inicial(es) (≈1 U eleva Hb ~1 g/dL, reevaluar control)<br>`;
+  }
+  if (ffpInd) {
+    hasAny = true;
+    const ffpMinMl = Math.round(weight * 10);
+    const ffpMaxMl = Math.round(weight * 15);
+    const ffpUnitsMin = Math.max(1, Math.round(ffpMinMl / 250));
+    const ffpUnitsMax = Math.max(ffpUnitsMin, Math.round(ffpMaxMl / 250));
+    result += `• FFP: ${ffpMinMl}-${ffpMaxMl} mL (aprox ${ffpUnitsMin}-${ffpUnitsMax} U)<br>`;
+  }
+  if (pltInd) {
+    hasAny = true;
+    const pltPools = Math.max(1, Math.ceil(weight / 70));
+    result += `• Plaquetas: ${pltPools} pool(es) (o equivalente en aféresis)<br>`;
+  }
+  if (cryoInd) {
+    hasAny = true;
+    const cryoUnits = Math.max(1, Math.round(weight / 5));
+    result += `• Crioprecipitado: ~${cryoUnits} U<br>`;
+  }
+  if (!hasAny) {
+    result += '• Sin componentes transfusionales indicados con los datos actuales.<br>';
   }
 
   // DIC-specific guidance
@@ -4582,12 +5017,21 @@ const vasoDoseHints={
   DB:'5 (DB: 2.5-20)',
   PH:'1 (PH: 0.5-6)'
 };
+const vasoInterpByDrug={
+  NE:'Primera línea en choque distributivo/séptico. Titular para meta de PAM y perfusión.',
+  EP:'Útil cuando hay necesidad de inotropía + vasopresión (p. ej., choque refractario).',
+  VP:'Vasopresor no catecolaminérgico como coadyuvante para ahorrar norepinefrina.',
+  DA:'Reservar para escenarios seleccionados; mayor riesgo de taquiarritmias.',
+  DB:'Inotrópico predominante: útil en bajo gasto con presión relativamente preservada.',
+  PH:'Vasopresor alfa-puro: considerar cuando predomina vasoplejía con taquicardia.'
+};
 function updateVasoInfo() {
   const drug=elCached('vas-drug').value;
   elCached('vaso-ref').textContent=vasoRefs[drug];
   elCached('vaso-dose-label').textContent='Unidades: '+vasoUnits[drug];
   elCached('vas-dose').placeholder=vasoDoseHints[drug];
   elCached('vas-conc-unit').textContent = drug==='VP' ? 'U/mL' : 'mcg/mL';
+  elCached('vaso-interp').textContent = vasoInterpByDrug[drug];
 }
 function calcVASO() {
   if (!validate([{id:'vas-peso',label:'Peso'},{id:'vas-mg',label:'mg en bolsa'},{id:'vas-vol',label:'Volumen bolsa'},{id:'vas-dose',label:'Dosis'}])) return;
@@ -4614,6 +5058,21 @@ function calcVASO() {
   elCached('vas-unit-label').textContent=vasoUnits[drug];
   elCached('vas-conc').textContent = drug==='VP' ? (mg/vol).toFixed(3) : concMcg.toFixed(1);
   elCached('vas-conc-unit').textContent = drug==='VP' ? 'U/mL' : 'mcg/mL';
+  let doseMsg = '';
+  if (drug === 'VP') {
+    doseMsg = dose < 0.03 ? 'Dosis baja para vasopresina' : dose > 0.04 ? 'Dosis por encima del rango usual (0.03-0.04)' : 'Dosis en rango usual';
+  } else if (drug === 'NE') {
+    doseMsg = dose < 0.05 ? 'Dosis inicial-baja de norepinefrina' : dose > 1 ? 'Dosis alta, vigilar perfusión periférica y respuesta' : 'Dosis intermedia';
+  } else if (drug === 'EP') {
+    doseMsg = dose < 0.05 ? 'Dosis baja de epinefrina' : dose > 0.5 ? 'Dosis alta, vigilar lactato/taquiarritmia' : 'Dosis intermedia';
+  } else if (drug === 'DA') {
+    doseMsg = dose < 5 ? 'Rango dopaminérgico' : dose <= 10 ? 'Rango inotrópico' : 'Rango vasopresor';
+  } else if (drug === 'DB') {
+    doseMsg = dose < 5 ? 'Inicio inotrópico bajo' : dose > 15 ? 'Dosis alta, vigilar taquicardia' : 'Dosis intermedia';
+  } else if (drug === 'PH') {
+    doseMsg = dose < 1 ? 'Inicio bajo de fenilefrina' : dose > 4 ? 'Dosis alta, vigilar perfusión' : 'Dosis intermedia';
+  }
+  elCached('vaso-interp').textContent = vasoInterpByDrug[drug] + ' ' + doseMsg + '.';
   elCached('vaso-result').style.display='grid';
 }
 
@@ -5051,44 +5510,109 @@ function syncPatient() {
   const sexo   = document.getElementById('pat-sexo').value;
   const peso   = document.getElementById('pat-peso').value.trim();
   const talla  = document.getElementById('pat-talla').value.trim();
-  const dias   = document.getElementById('pat-dias').value.trim();
+  let   dias   = document.getElementById('pat-dias').value.trim();
   const dx     = document.getElementById('pat-dx').value.trim();
   const medico = document.getElementById('pat-medico').value.trim();
+  const fecha  = document.getElementById('pat-fecha').value;
 
-  // ── Previews ──────────────────────────────────────────
-  document.getElementById('pv-nombre').textContent = nombre || '—';
-  document.getElementById('pv-cama').textContent   = cama   || '—';
-  document.getElementById('pv-nss').textContent    = nss    || '—';
-  document.getElementById('pv-edad').textContent   = edad   || '—';
-  document.getElementById('pv-sexo').textContent   = sexo==='M'?'Masculino':sexo==='F'?'Femenino':'—';
-  document.getElementById('pv-peso').textContent   = peso   || '—';
-  document.getElementById('pv-talla').textContent  = talla  || '—';
-  document.getElementById('pv-dias').textContent   = dias   || '—';
-  document.getElementById('pv-dx').textContent     = dx     || '—';
+  // ── Auto-calc dias from fecha ingreso ───────────────
+  const diasAutoEl = document.getElementById('pat-dias-auto');
+  if (fecha) {
+    const diff = Math.floor((new Date() - new Date(fecha)) / 86400000);
+    if (diff >= 0) {
+      diasAutoEl.textContent = '(auto)';
+      if (!dias) {
+        document.getElementById('pat-dias').value = diff;
+        dias = String(diff);
+      }
+    }
+  } else {
+    diasAutoEl.textContent = '';
+  }
 
-  // ── Auto-fill: PESO ───────────────────────────────────
-  // Vasopresor, Balance, KDIGO, Harris-Benedict, Starling(no weight)
-  ['vas-peso','bal-peso','kd-peso','hb-peso','el-peso','tsr-peso','uf-peso','ac-peso','ox-peso'].forEach(id => forceVal(id, peso));
+  // ── Auto-fill: PESO (all calculators) ───────────────
+  ['vas-peso','bal-peso','kd-peso','hb-peso','el-peso','tsr-peso','uf-peso','ac-peso','ox-peso','sed-weight','tf-weight','hemo-weight','gfr-peso'].forEach(id => forceVal(id, peso));
 
-  // ── Auto-fill: TALLA ──────────────────────────────────
-  ['vt-tall','hb-tall'].forEach(id => forceVal(id, talla));
+  // ── Auto-fill: TALLA ────────────────────────────────
+  ['vt-tall','hb-tall','hemo-height'].forEach(id => forceVal(id, talla));
 
-  // ── Auto-fill: EDAD ───────────────────────────────────
-  forceVal('hb-edad', edad);
+  // ── Auto-fill: EDAD ─────────────────────────────────
+  ['hb-edad','gfr-edad'].forEach(id => forceVal(id, edad));
 
-  // ── Auto-fill: SEXO ───────────────────────────────────
-  if (sexo) { ['vt-sex','hb-sex'].forEach(id => forceSelect(id, sexo)); }
+  // ── Auto-fill: SEXO ─────────────────────────────────
+  if (sexo) { ['vt-sex','hb-sex','gfr-sexo'].forEach(id => forceSelect(id, sexo)); }
 
-  // ── Auto-fill: DIAS UCI → NUTRIC ──────────────────────
+  // ── Auto-fill: DIAS UCI → NUTRIC ────────────────────
   if (dias) {
     const nutDays = document.getElementById('nut-days');
     if (nutDays) nutDays.value = parseInt(dias) >= 2 ? '1' : '0';
   }
 
-  // ── Highlight filled fields (green border) ────────────
+  // ── Highlight filled fields ─────────────────────────
   highlightSyncedFields();
 
-  // ── Export / Print header ─────────────────────────────
+  // ── Sticky header (always visible — no display toggle) ──
+  document.getElementById('ps-name').textContent = nombre || '—';
+  document.getElementById('ps-cama').textContent = cama || '—';
+  document.getElementById('ps-peso').textContent = peso || '—';
+  document.getElementById('ps-dias').textContent = dias || '—';
+  document.getElementById('ps-dx').textContent   = dx || '—';
+
+  // ── Derived values (no display toggle — badges always reserve space) ──
+  const p = parseFloat(peso), t = parseFloat(talla);
+
+  const imcWrap = document.getElementById('db-imc-wrap');
+  const pciWrap = document.getElementById('db-pci-wrap');
+  const bsaWrap = document.getElementById('db-bsa-wrap');
+  const diasWrap = document.getElementById('db-dias-wrap');
+
+  if (p > 0 && t > 0) {
+    const imc = p / ((t/100) * (t/100));
+    document.getElementById('db-imc').textContent = imc.toFixed(1);
+    let imcCat, imcCls;
+    if (imc < 18.5)     { imcCat = 'Bajo peso'; imcCls = 'db-yellow'; }
+    else if (imc < 25)  { imcCat = 'Normal'; imcCls = 'db-green'; }
+    else if (imc < 30)  { imcCat = 'Sobrepeso'; imcCls = 'db-yellow'; }
+    else if (imc < 35)  { imcCat = 'Obesidad I'; imcCls = 'db-orange'; }
+    else                 { imcCat = 'Obesidad II+'; imcCls = 'db-red'; }
+    document.getElementById('db-imc-cat').textContent = imcCat;
+    imcWrap.className = 'derived-badge ' + imcCls;
+    const bsa = Math.sqrt(p * t / 3600);
+    document.getElementById('db-bsa').textContent = bsa.toFixed(2);
+    bsaWrap.className = 'derived-badge';
+  } else {
+    document.getElementById('db-imc').textContent = '—';
+    document.getElementById('db-imc-cat').textContent = '—';
+    imcWrap.className = 'derived-badge';
+    document.getElementById('db-bsa').textContent = '—';
+    bsaWrap.className = 'derived-badge';
+  }
+
+  if (t > 0 && sexo) {
+    const pci = sexo === 'M' ? 50 + 0.91 * (t - 152.4) : 45.5 + 0.91 * (t - 152.4);
+    document.getElementById('db-pci').textContent = Math.max(0, pci).toFixed(1);
+    pciWrap.className = 'derived-badge';
+  } else {
+    document.getElementById('db-pci').textContent = '—';
+    pciWrap.className = 'derived-badge';
+  }
+
+  if (dias) {
+    document.getElementById('db-dias').textContent = dias;
+    const d = parseInt(dias);
+    diasWrap.className = 'derived-badge ' + (d <= 3 ? 'db-green' : d <= 7 ? 'db-yellow' : d <= 14 ? 'db-orange' : 'db-red');
+    const badge = document.getElementById('pat-estancia-badge');
+    if (d <= 3)       badge.textContent = 'Estancia corta';
+    else if (d <= 7)  badge.textContent = 'Primera semana';
+    else if (d <= 14) badge.textContent = 'Estancia prolongada';
+    else              badge.textContent = 'Larga estancia (>' + d + 'd)';
+  } else {
+    document.getElementById('db-dias').textContent = '—';
+    diasWrap.className = 'derived-badge';
+    document.getElementById('pat-estancia-badge').textContent = 'días';
+  }
+
+  // ── Export / Print header ───────────────────────────
   document.getElementById('exp-nombre').textContent = nombre || 'Sin datos';
   document.getElementById('exp-cama').textContent   = cama   || '—';
   document.getElementById('exp-nss').textContent    = nss    || '—';
@@ -5103,10 +5627,17 @@ function syncPatient() {
   document.getElementById('ph-medico').textContent  = medico || '—';
   document.getElementById('ph-dx').textContent      = dx     || '—';
 
-  // ── Recalculate where possible ────────────────────────
+  // ── Recalculate where possible ──────────────────────
   if (peso && talla) calcVT();
   if (peso) calcBAL();
   if (peso && talla && edad) calcHARRIS();
+
+  // ── Persist to localStorage ─────────────────────────
+  try {
+    localStorage.setItem('uci-patient', JSON.stringify({
+      nombre, cama, edad, sexo, peso, talla, dias, dx, medico, fecha
+    }));
+  } catch(e) {}
 }
 const debouncedSyncPatient = debounce(syncPatient, 120);
 
@@ -5129,16 +5660,15 @@ function forceSelect(id, val) {
 }
 
 function highlightSyncedFields() {
-  // Remove old highlights first
   document.querySelectorAll('.pat-synced').forEach(el => el.classList.remove('pat-synced'));
   const peso  = document.getElementById('pat-peso').value.trim();
   const talla = document.getElementById('pat-talla').value.trim();
   const edad  = document.getElementById('pat-edad').value.trim();
   const sexo  = document.getElementById('pat-sexo').value;
-  if (peso)  ['vas-peso','bal-peso','kd-peso','hb-peso'].forEach(id => markSynced(id));
-  if (talla) ['vt-tall','hb-tall'].forEach(id => markSynced(id));
-  if (edad)  markSynced('hb-edad');
-  if (sexo)  ['vt-sex','hb-sex'].forEach(id => markSynced(id));
+  if (peso)  ['vas-peso','bal-peso','kd-peso','hb-peso','el-peso','tsr-peso','uf-peso','ac-peso','ox-peso','sed-weight','tf-weight','hemo-weight','gfr-peso'].forEach(id => markSynced(id));
+  if (talla) ['vt-tall','hb-tall','hemo-height'].forEach(id => markSynced(id));
+  if (edad)  ['hb-edad','gfr-edad'].forEach(id => markSynced(id));
+  if (sexo)  ['vt-sex','hb-sex','gfr-sexo'].forEach(id => markSynced(id));
 }
 function markSynced(id) {
   const el = document.getElementById(id);
@@ -5151,6 +5681,7 @@ function clearPatient() {
     if (el) el.value='';
   });
   document.getElementById('pat-sexo').value='';
+  try { localStorage.removeItem('uci-patient'); } catch(e) {}
   syncPatient();
 }
 
@@ -5160,7 +5691,7 @@ function updateExportPanel() {
   const ts = now.toLocaleDateString('es-MX',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) + ' · ' + String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
   document.getElementById('exp-timestamp').textContent = 'Generado: ' + ts;
   document.getElementById('ph-fecha').textContent = ts;
-  document.getElementById('ph-turno').textContent = document.getElementById('turno-label').textContent;
+  document.getElementById('ph-turno').textContent = '';
 
   // SOFA
   const sofaEl = document.getElementById('sofa-total');
@@ -5281,7 +5812,6 @@ function printViaBlob() {
   const now     = new Date();
   const fecha   = now.toLocaleDateString('es-MX',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   const hora    = String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
-  const turno   = document.getElementById('turno-label').textContent;
 
   // Collect all scores
   const scores = collectScores();
@@ -5308,12 +5838,12 @@ function printViaBlob() {
 </style></head><body>
 <div class="header">
   <div>
-    <h1>UCI Tools · IMSS Siglo XXI</h1>
+    <h1>UCI Tools · UCI Siglo XXI</h1>
     <div style="font-size:10px;color:#555;margin-top:2px;">Reporte de Scores — Medicina Crítica</div>
   </div>
   <div style="text-align:right;font-size:10px;color:#555;">
     <div>${fecha}</div>
-    <div>${hora} hrs · Turno ${turno}</div>
+    <div>${hora} hrs</div>
   </div>
 </div>
 <div class="pat-grid">
@@ -5324,7 +5854,7 @@ function printViaBlob() {
 </div>
 <div class="pat-field" style="margin-bottom:12px;"><label>Diagnóstico</label><b>${dx}</b></div>
 ${scores}
-<div class="footer">Nota generada con UCI Tools · IMSS Siglo XXI · ${fecha} ${hora}</div>
+<div class="footer">Nota generada con UCI Tools · UCI Siglo XXI · ${fecha} ${hora}</div>
 <div id="val-toast" class="val-toast"><span>⚠️</span><span id="val-toast-msg"></span></div>
 </body></html>`;
 
@@ -5640,7 +6170,6 @@ function generarNota() {
   const now = new Date();
   const fecha = now.toLocaleDateString('es-MX', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
   const hora  = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
-  const turno = document.getElementById('turno-label').textContent;
 
   // Datos paciente
   const nombre = document.getElementById('pat-nombre').value || 'NO ESPECIFICADO';
@@ -5697,10 +6226,10 @@ function generarNota() {
   const sexoStr = sexo === 'M' ? 'masculino' : sexo === 'F' ? 'femenino' : '—';
 
   const nota = `NOTA DE EVOLUCIÓN — MEDICINA CRÍTICA
-IMSS Siglo XXI — Unidad de Cuidados Intensivos
+UCI Siglo XXI — Unidad de Cuidados Intensivos
 ${'═'.repeat(55)}
 Fecha: ${fecha}
-Hora:  ${hora} hrs  |  Turno: ${turno}
+Hora:  ${hora} hrs
 ${'─'.repeat(55)}
 DATOS DEL PACIENTE
   Nombre:     ${nombre}
@@ -5752,7 +6281,7 @@ ${'═'.repeat(55)}
 Médico tratante: ${medico}
 Firma: ________________________   Cédula: ____________
 ${'─'.repeat(55)}
-Nota generada con UCI Tools · IMSS Siglo XXI`;
+Nota generada con UCI Tools · UCI Siglo XXI`;
 
   document.getElementById('nota-text').value = nota;
   document.getElementById('nota-output').style.display = 'block';
@@ -6111,6 +6640,27 @@ function stepBox(num, title, val, desc, note, cls) {
     <div class="tgas-step-desc">${desc}</div>
     ${note ? '<div class="tgas-step-note">'+note+'</div>' : ''}
   </div>`;
+}
+
+function syncTgasFields(key, value, sourceId) {
+  const map = {
+    ph: ['tg-ph', 'tm-ph'],
+    pco2: ['tg-co2', 'tm-co2'],
+    hco3: ['tg-hco3', 'tm-hco3'],
+    na: ['tg-na', 'tm-na'],
+    cl: ['tg-cl', 'tm-cl'],
+    alb: ['tg-alb', 'tm-alb'],
+    lactate: ['tg-lac', 'tm-lac', 'ox-lac'],
+    pao2: ['tg-pao2', 'ox-pao2']
+  };
+  const targets = map[key] || [];
+  for (let i = 0; i < targets.length; i++) {
+    const id = targets[i];
+    if (id === sourceId) continue;
+    const el = document.getElementById(id);
+    if (!el) continue;
+    el.value = value;
+  }
 }
 
 function calcTGasInterp() {
@@ -6616,6 +7166,9 @@ function calcDestete() {
   const fio2 = parseFloat(document.getElementById('tb-fio2').value);
   const peep = parseFloat(document.getElementById('tb-peep').value);
   const mip  = parseFloat(document.getElementById('tb-mip').value);
+  const cpf  = parseFloat(document.getElementById('tb-cpf').value);
+  const leak = parseFloat(document.getElementById('tb-leak').value);
+  const secH = parseFloat(document.getElementById('tb-sec-h').value);
   const crit = ['tb-c1','tb-c2','tb-c3','tb-c4','tb-c5','tb-c6','tb-c7'].reduce((s,id)=>s+parseInt(document.getElementById(id).value),0);
   const critTotal = 7;
 
@@ -6630,7 +7183,13 @@ function calcDestete() {
   if (!isNaN(pao2)&&!isNaN(fio2)) pafi = pao2/fio2;
 
   const critPct = Math.round((crit/critTotal)*100);
-  const apto = crit >= 5 && (tobin===null||tobin<=105) && (pafi===null||pafi>=150) && (isNaN(mip)||mip<=-20);
+  const apto = crit >= 5 &&
+    (tobin===null||tobin<=105) &&
+    (pafi===null||pafi>=150) &&
+    (isNaN(mip)||mip<=-20) &&
+    (isNaN(cpf)||cpf>=60) &&
+    (isNaN(leak)||leak>=10) &&
+    (isNaN(secH)||secH<=2);
 
   let html = '<div class="multi-result">';
   if (tobin !== null) {
@@ -6642,6 +7201,15 @@ function calcDestete() {
   if (pafi) {
     html += `<div class="mr-row"><span class="mr-label">PAFI en SBT</span><span class="result-badge ${pafi>=200?'badge-green':pafi>=150?'badge-yellow':'badge-red'}">${pafi.toFixed(0)} mmHg</span></div>`;
   }
+  if (!isNaN(cpf)) {
+    html += `<div class="mr-row"><span class="mr-label">Pico flujo de tos</span><span class="result-badge ${cpf>=60?'badge-green':cpf>=40?'badge-yellow':'badge-red'}">${cpf.toFixed(0)} L/min</span></div>`;
+  }
+  if (!isNaN(leak)) {
+    html += `<div class="mr-row"><span class="mr-label">Cuff leak</span><span class="result-badge ${leak>=10?'badge-green':'badge-red'}">${leak.toFixed(1)}%</span></div>`;
+  }
+  if (!isNaN(secH)) {
+    html += `<div class="mr-row"><span class="mr-label">Secreciones/hora</span><span class="result-badge ${secH<=2?'badge-green':secH<=4?'badge-yellow':'badge-red'}">${secH.toFixed(0)} /h</span></div>`;
+  }
   html += `<div class="mr-row"><span class="mr-label">Criterios clínicos</span><span class="mr-val">${crit}/${critTotal} (${critPct}%)</span></div>`;
   html += '<div class="divider"></div>';
   html += `<div class="mr-row"><span class="mr-label" style="font-size:13px;font-weight:600;">Veredicto</span><span class="result-badge ${apto?'badge-green':'badge-red'}" style="font-size:12px;">${apto?'✓ APTO para extubación':'✗ NO apto — continuar soporte'}</span></div>`;
@@ -6652,6 +7220,9 @@ function calcDestete() {
     if (tobin!==null&&tobin>105) problemas.push('Tobin >105: aún no tolera respiración espontánea');
     if (!isNaN(mip)&&mip>-20)   problemas.push('MIP insuficiente (<-20 cmH2O): fuerza muscular baja');
     if (pafi&&pafi<150)         problemas.push('PAFI <150: hipoxemia en SBT');
+    if (!isNaN(cpf)&&cpf<60)    problemas.push('Tos inefectiva (Pico flujo <60 L/min): mayor riesgo de fracaso');
+    if (!isNaN(leak)&&leak<10)  problemas.push('Cuff leak bajo (<10%): riesgo de edema postextubación');
+    if (!isNaN(secH)&&secH>2)   problemas.push('Secreciones abundantes (>2/h): depuración de vía aérea limitada');
     if (crit < 5)               problemas.push(`Solo ${crit}/7 criterios clínicos — resolver causa base`);
     if (problemas.length) {
       html += '<div class="info" style="margin-top:8px;border-left-color:var(--red);"><b>Puntos a resolver:</b><br>' + problemas.join('<br>') + '</div>';
@@ -6877,8 +7448,212 @@ function evalAEIOU() {
 }
 
 
+// ============ SEPSIS BUNDLE ============
+function updateBundleTimers() {
+  const t0 = document.getElementById('sb-t0').value;
+  const now = document.getElementById('sb-now').value;
+  if (!t0 || !now) { document.getElementById('sb-timer').textContent = ''; return; }
+  const [h0,m0] = t0.split(':').map(Number);
+  const [h1,m1] = now.split(':').map(Number);
+  let diff = (h1*60+m1) - (h0*60+m0);
+  if (diff < 0) diff += 1440;
+  const hh = Math.floor(diff/60); const mm = diff%60;
+  let msg = `⏱ Tiempo transcurrido desde T0: ${hh}h ${mm}min`;
+  if (diff <= 60) msg += ' — ✅ Dentro de ventana Hora-1';
+  else if (diff <= 180) msg += ' — 🟡 Ventana 3h';
+  else if (diff <= 360) msg += ' — 🟠 Ventana 6h';
+  else msg += ' — 🔴 Fuera de ventana 6h';
+  document.getElementById('sb-timer').textContent = msg;
+}
+
+function updateBundleProgress() {
+  const groups = [
+    { id: 'sb-1h-items', bar: 'sb-prog-1h' },
+    { id: 'sb-3h-items', bar: 'sb-prog-3h' },
+    { id: 'sb-6h-items', bar: 'sb-prog-6h' }
+  ];
+  let totalDone = 0, totalAll = 0;
+  groups.forEach(g => {
+    const checks = document.querySelectorAll('#' + g.id + ' input[type=checkbox]');
+    const done = [...checks].filter(c => c.checked).length;
+    totalDone += done; totalAll += checks.length;
+    document.getElementById(g.bar).style.width = (done/checks.length*100).toFixed(0) + '%';
+    checks.forEach(c => {
+      c.closest('.bundle-check').classList.toggle('done', c.checked);
+    });
+  });
+  document.getElementById('sb-global').textContent = totalDone + ' / ' + totalAll;
+  const badge = document.getElementById('sb-status-badge');
+  if (totalDone === totalAll) { badge.textContent = 'Completo ✓'; badge.className = 'result-badge badge-green'; }
+  else if (totalDone >= totalAll * 0.6) { badge.textContent = 'En progreso'; badge.className = 'result-badge badge-yellow'; }
+  else { badge.textContent = 'Pendiente'; badge.className = 'result-badge badge-orange'; }
+}
+
+// ============ PANEL METABÓLICO RÁPIDO ============
+function calcMetabolic() {
+  const na   = parseFloat(document.getElementById('mp-na').value);
+  const cl   = parseFloat(document.getElementById('mp-cl').value);
+  const hco3 = parseFloat(document.getElementById('mp-hco3').value);
+  const alb  = parseFloat(document.getElementById('mp-alb').value);
+  const glu  = parseFloat(document.getElementById('mp-glu').value);
+  const bun  = parseFloat(document.getElementById('mp-bun').value);
+  const osmMed = parseFloat(document.getElementById('mp-osm-med').value);
+  const etoh = parseFloat(document.getElementById('mp-etoh').value) || 0;
+  const lac  = parseFloat(document.getElementById('mp-lac').value) || 0;
+
+  if (isNaN(na) || isNaN(cl) || isNaN(hco3)) { document.getElementById('mp-result-box').style.display='none'; return; }
+
+  const ag = na - (cl + hco3);
+  let agc = ag;
+  if (!isNaN(alb)) agc = ag + 2.5 * (4.0 - alb);
+
+  document.getElementById('mp-ag').textContent = ag.toFixed(1) + ' mEq/L';
+  document.getElementById('mp-agc').textContent = (!isNaN(alb) ? agc.toFixed(1) : ag.toFixed(1)) + ' mEq/L';
+
+  const agBadge = document.getElementById('mp-ag-badge');
+  if (agc > 16) { agBadge.textContent = 'AG elevado'; agBadge.className = 'result-badge badge-red'; }
+  else if (agc > 12) { agBadge.textContent = 'AG límite alto'; agBadge.className = 'result-badge badge-yellow'; }
+  else { agBadge.textContent = 'AG normal'; agBadge.className = 'result-badge badge-green'; }
+
+  const deltaAG = agc - 12;
+  const deltaHCO3 = 24 - hco3;
+  const dd = deltaHCO3 !== 0 ? deltaAG / deltaHCO3 : 0;
+
+  document.getElementById('mp-delta-ag').textContent = deltaAG.toFixed(1);
+  document.getElementById('mp-delta-hco3').textContent = deltaHCO3.toFixed(1);
+  document.getElementById('mp-dd').textContent = dd.toFixed(2);
+
+  const ddBadge = document.getElementById('mp-dd-badge');
+  if (dd < 1) { ddBadge.textContent = 'AGMA + NAGMA coexistente'; ddBadge.className = 'result-badge badge-red'; }
+  else if (dd <= 2) { ddBadge.textContent = 'Acidosis metabólica pura AG'; ddBadge.className = 'result-badge badge-yellow'; }
+  else { ddBadge.textContent = 'AGMA + Alcalosis metabólica'; ddBadge.className = 'result-badge badge-orange'; }
+
+  let osmCalc = 'N/A', og = 'N/A';
+  if (!isNaN(glu) && !isNaN(bun)) {
+    const oc = 2*na + glu/18 + bun/2.8 + etoh/4.6;
+    osmCalc = oc.toFixed(0);
+    document.getElementById('mp-osm-calc').textContent = osmCalc + ' mOsm/kg';
+    if (!isNaN(osmMed)) {
+      const gap = osmMed - oc;
+      og = gap.toFixed(0);
+      document.getElementById('mp-og').textContent = og + ' mOsm/kg';
+      const ogBadge = document.getElementById('mp-og-badge');
+      if (gap > 10) { ogBadge.textContent = 'Elevada — sospechar tóxicos'; ogBadge.className = 'result-badge badge-red'; }
+      else { ogBadge.textContent = 'Normal'; ogBadge.className = 'result-badge badge-green'; }
+    } else {
+      document.getElementById('mp-og').textContent = '—';
+      document.getElementById('mp-og-badge').textContent = 'Falta osm medida';
+      document.getElementById('mp-og-badge').className = 'result-badge';
+    }
+  } else {
+    document.getElementById('mp-osm-calc').textContent = '—';
+    document.getElementById('mp-og').textContent = '—';
+    document.getElementById('mp-og-badge').textContent = 'Falta glucosa/BUN'; document.getElementById('mp-og-badge').className = 'result-badge';
+  }
+
+  let ddx = '';
+  if (agc > 12 && lac > 2) ddx += '• Acidosis láctica (sepsis, choque, isquemia, metformina)<br>';
+  if (agc > 12 && !isNaN(osmMed) && !isNaN(glu) && !isNaN(bun) && (osmMed - (2*na + glu/18 + bun/2.8 + etoh/4.6)) > 10) ddx += '• Brecha osmolar elevada: metanol, etilenglicol, propilenglicol, isopropanol<br>';
+  if (agc > 12) ddx += '• Considerar: cetoacidosis (DKA, alcohólica, inanición), uremia, salicilatos<br>';
+  if (dd < 1) ddx += '• NAGMA coexistente: diarrea, RTA, solución salina excesiva<br>';
+  if (dd > 2) ddx += '• Alcalosis metabólica concomitante: vómito, diuréticos, contracción de volumen<br>';
+  if (agc <= 12 && deltaHCO3 > 0) ddx += '• NAGMA pura: pérdida de HCO₃ (diarrea, RTA tipo 1/2/4, acetazolamida)<br>';
+  if (!ddx) ddx = '• Sin alteración metabólica significativa con los datos actuales.';
+  document.getElementById('mp-ddx').innerHTML = ddx;
+  document.getElementById('mp-result-box').style.display = 'block';
+}
+
+// ============ TRANSFUSION TABS ============
+function switchTfTab(tab, btn) {
+  document.querySelectorAll('#calc-transfusion .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tf-tab-electivo').classList.toggle('active', tab === 'electivo');
+  document.getElementById('tf-tab-sangrado').classList.toggle('active', tab === 'sangrado');
+  document.getElementById('tf-result-box').style.display = 'none';
+  document.getElementById('tf-result-bleed-box').style.display = 'none';
+  if (tab === 'electivo') calcTransfusion();
+  else calcTransfusionBleed();
+}
+
+function calcTransfusionBleed() {
+  const hb = parseFloat(document.getElementById('tf-hb').value);
+  const plt = parseFloat(document.getElementById('tf-plt').value);
+  const inr = parseFloat(document.getElementById('tf-inr').value);
+  const fibrin = parseFloat(document.getElementById('tf-fibrin').value);
+  const aptt = parseFloat(document.getElementById('tf-aptt').value);
+  const weight = parseFloat(document.getElementById('tf-weight').value) || 70;
+  const scenario = document.getElementById('tf-scenario-b').value;
+  const bleeding = document.getElementById('tf-bleeding-b').value;
+
+  if (!hb || !plt || !inr || !fibrin || !aptt || !scenario) {
+    document.getElementById('tf-result-bleed-box').style.display = 'none'; return;
+  }
+
+  let r = '';
+  r += `<b>Hb: ${hb} | Plaquetas: ${plt}K | INR: ${inr} | Fib: ${fibrin} | aPTT: ${aptt}</b><br><br>`;
+
+  if (bleeding === 'massive') {
+    r += '<b style="color:var(--red);">🔴 PROTOCOLO DE TRANSFUSIÓN MASIVA ACTIVADO</b><br>';
+    r += '• Ratio 1:1:1 (PRBC : FFP : Plaquetas)<br>';
+    r += `• Inicio: ${Math.max(4,Math.ceil(weight/15))} U PRBC + ${Math.max(4,Math.ceil(weight/15))} U FFP + 1 pool plaquetas<br>`;
+    r += '• Aviso inmediato a banco de sangre + quirófano<br>';
+    r += `• TXA: 1 g bolo IV + 1 g en 8h (si <3h del sangrado)<br>`;
+    r += '• Objetivos: Hb ≥10, Plt ≥50K, INR <1.5, Fib ≥100<br><br>';
+  }
+
+  r += '<b>Componentes indicados con dosis:</b><br>';
+  if (hb < 10) {
+    const u = Math.max(1, Math.ceil(10 - hb));
+    r += `🔴 PRBC: ${u} U (meta Hb ≥10 en sangrado, ~${weight ? Math.round(u*250) : '?'} mL)<br>`;
+  }
+  if (inr > 1.5) {
+    const ml = Math.round(weight * 15);
+    r += `🔴 FFP: ${ml} mL (15 mL/kg, ≈${Math.max(1,Math.round(ml/250))} U) — INR ${inr}<br>`;
+  }
+  if (plt < 50) {
+    r += `🔴 Plaquetas: ${Math.max(1,Math.ceil(weight/70))} pool — Plt ${plt}K + sangrado<br>`;
+  }
+  if (fibrin < 150) {
+    const cu = Math.max(1,Math.round(weight/5));
+    r += `🔴 Crioprecipitado: ~${cu} U (Fib ${fibrin} < 150 + sangrado)<br>`;
+  }
+  if (aptt > 50) {
+    r += `⚠️ aPTT ${aptt}: FFP adicional si >70 seg, descartar efecto heparina<br>`;
+  }
+
+  if (scenario === 'dic') {
+    r += '<br><b>⚠️ DIC:</b> Monitorizar c/4–6h: PT, aPTT, Plt, Fib, D-dímero. Tratar causa subyacente.<br>';
+  }
+
+  document.getElementById('tf-result-bleed-text').innerHTML = r;
+  document.getElementById('tf-result-bleed-box').style.display = 'block';
+}
+
+// ============ COPIAR RESUMEN POR MÓDULO ============
+function copyModuleResult(panelId) {
+  const panel = document.getElementById('calc-' + panelId);
+  if (!panel) return;
+  const results = panel.querySelectorAll('.multi-result, .result, [id$="-result-box"], [id$="-result-text"]');
+  let text = '';
+  results.forEach(r => {
+    if (r.style.display === 'none') return;
+    text += r.innerText + '\n';
+  });
+  if (!text.trim()) { showToast('Sin resultados para copiar'); return; }
+  navigator.clipboard.writeText(text.trim()).then(() => {
+    showToast('📋 Resultado copiado al portapapeles');
+  }).catch(() => { showToast('Error al copiar'); });
+}
+
 // ============ INIT ============
 const evidenceByCalc = {
+  news2: ['evid-wrap-news2', 'news2'],
+  shock: ['evid-wrap-shock', 'shock'],
+  hemodynamics: ['evid-wrap-hemodynamics', 'hemodynamics'],
+  'gfr-dosing': [['evid-wrap-gfr-dosing', 'gfr_dosing'], ['evid-wrap-abx-dosing', 'abx_dosing']],
+  sedation: ['evid-wrap-sedation', 'sedation'],
+  transfusion: ['evid-wrap-transfusion', 'transfusion'],
+  tgas: ['evid-wrap-tgas', 'tgas'],
   sofa: ['evid-wrap-sofa', 'sofa'],
   apache: ['evid-wrap-apache', 'apache'],
   saps: ['evid-wrap-saps', 'saps'],
@@ -6901,8 +7676,9 @@ const evidenceByCalc = {
   curb: ['evid-wrap-curb', 'curb'],
   rockall: ['evid-wrap-rockall', 'rockall'],
   rass: ['evid-wrap-rass', 'rass'],
-  kirby: ['evid-wrap-kirby', 'kirby']
-  ,
+  kirby: ['evid-wrap-kirby', 'kirby'],
+  'sepsis-bundle': ['evid-wrap-sepsis-bundle', 'sepsis_bundle'],
+  metabolic: ['evid-wrap-metabolic', 'metabolic'],
   'tsr-dosis': ['evid-wrap-tsr-dosis', 'kdigo_tsr'],
   'tsr-uf': ['evid-wrap-tsr-uf', 'kdigo_tsr'],
   'tsr-anticoag': ['evid-wrap-tsr-anticoag', 'tsr_anticoag'],
@@ -6928,6 +7704,22 @@ function ensureEvidenceForCalc(calcId) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Restore patient data from localStorage
+  try {
+    const saved = JSON.parse(localStorage.getItem('uci-patient'));
+    if (saved) {
+      const map = {
+        nombre:'pat-nombre', cama:'pat-cama', nss:'pat-nss',
+        edad:'pat-edad', peso:'pat-peso', talla:'pat-talla',
+        dias:'pat-dias', dx:'pat-dx', medico:'pat-medico', fecha:'pat-fecha'
+      };
+      Object.keys(map).forEach(k => {
+        if (saved[k]) { const el = document.getElementById(map[k]); if (el) el.value = saved[k]; }
+      });
+      if (saved.sexo) document.getElementById('pat-sexo').value = saved.sexo;
+    }
+  } catch(e) {}
+
   updateClock();
   setInterval(updateClock, 10000);
   updateVasoInfo();
@@ -6935,6 +7727,29 @@ document.addEventListener('DOMContentLoaded', function() {
   calcBAL();
   syncPatient();
   ensureEvidenceForCalc('sofa');
+
+  document.querySelectorAll('.calc-panel').forEach(panel => {
+    const id = panel.id.replace('calc-', '');
+    if (['paciente','exportar','nota'].includes(id)) return;
+    const firstCard = panel.querySelector('.card');
+    if (!firstCard) return;
+    const title = firstCard.querySelector('.card-title');
+    if (!title) return;
+    title.style.display = 'flex';
+    title.style.alignItems = 'center';
+    title.style.justifyContent = 'space-between';
+    const btn = document.createElement('button');
+    btn.className = 'btn-copy-module';
+    btn.textContent = '📋 Copiar';
+    btn.onclick = function(e) {
+      e.stopPropagation();
+      copyModuleResult(id);
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '📋 Copiar'; btn.classList.remove('copied'); }, 1500);
+    };
+    title.appendChild(btn);
+  });
 });
 </script>
 <script>
