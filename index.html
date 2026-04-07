@@ -862,6 +862,37 @@ input.pat-synced:focus, select.pat-synced:focus {
   .ai-panel { width: calc(100vw - 10px); right: 5px; bottom: 68px; }
 }
 @media print { .ai-fab, .ai-panel, .ai-config-overlay { display: none !important; } }
+
+/* UPDATE TOAST */
+#update-toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 9999;
+  background: var(--surface2); border: 1px solid var(--accent2); border-radius: 8px;
+  padding: 10px 16px; display: flex; align-items: center; gap: 12px;
+  font-size: 13px; color: var(--text); font-family: var(--sans);
+  box-shadow: 0 4px 20px rgba(0,0,0,.5); animation: toastIn .3s ease;
+}
+#update-toast button:first-of-type {
+  background: var(--accent); color: #000; border: none; border-radius: 4px;
+  padding: 5px 14px; font-size: 12px; font-weight: 600; cursor: pointer;
+}
+@keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+
+/* INPUT VALIDATION WARNINGS */
+.input-warn { border-color: #e6a817 !important; box-shadow: 0 0 0 1px rgba(230,168,23,.3); }
+.input-danger { border-color: #e63946 !important; box-shadow: 0 0 0 1px rgba(230,57,70,.3); }
+.input-range-hint { font-size: 9px; color: #e6a817; font-family: var(--mono); margin-top: 2px; line-height: 1.2; display: block; }
+.input-range-hint.danger { color: #e63946; }
+
+/* STICKY SCORE BADGES */
+.ps-score { font-size: 10px; font-weight: 600; padding: 1px 5px; border-radius: 3px; flex-shrink: 0; font-family: var(--mono); }
+.ps-score.score-green { background: rgba(0,180,100,.15); color: #00cc77; border: 1px solid rgba(0,180,100,.3); }
+.ps-score.score-yellow { background: rgba(230,168,23,.15); color: #e6a817; border: 1px solid rgba(230,168,23,.3); }
+.ps-score.score-orange { background: rgba(230,120,23,.15); color: #e67817; border: 1px solid rgba(230,120,23,.3); }
+.ps-score.score-red { background: rgba(230,57,70,.15); color: #e63946; border: 1px solid rgba(230,57,70,.3); }
+
+/* AI STREAMING CURSOR */
+.ai-stream-cursor { animation: blink 0.6s step-end infinite; color: var(--accent); }
+@keyframes blink { 50% { opacity: 0; } }
 </style>
 </head>
 <body>
@@ -888,39 +919,46 @@ input.pat-synced:focus, select.pat-synced:focus {
   <div class="nav-divider"></div>
 
   <div class="nav-group">
-    <div class="nav-group-header collapsed" onclick="toggleGroup('g-pronostico',this)">
-      <span class="nav-group-label">📊 Escalas Clínicas</span><span class="nav-chevron">▾</span>
+    <div class="nav-group-header collapsed" onclick="toggleGroup('g-admision',this)">
+      <span class="nav-group-label">🚨 Admisión y Tamizaje</span><span class="nav-chevron">▾</span>
     </div>
-    <div class="nav-group-items collapsed" id="g-pronostico">
+    <div class="nav-group-items collapsed" id="g-admision">
       <div class="nav-item" onclick="showCalc('news2',this)"><span class="nav-icon">·</span>NEWS2 — Alerta Temprana</div>
+      <div class="nav-item" onclick="showCalc('qsofa',this)"><span class="nav-icon">·</span>qSOFA — Sepsis Rápido</div>
+      <div class="nav-item" onclick="showCalc('gcs',this)"><span class="nav-icon">·</span>Glasgow Coma Scale</div>
+      <div class="nav-item" onclick="showCalc('padua',this)"><span class="nav-icon">·</span>PADUA — TEV</div>
+      <div class="nav-item" onclick="showCalc('curb',this)"><span class="nav-icon">·</span>CURB-65 — NAC</div>
+      <div class="nav-item" onclick="showCalc('rockall',this)"><span class="nav-icon">·</span>Rockall — HTDA</div>
+      <div class="nav-item" onclick="showCalc('wells',this)"><span class="nav-icon">·</span>Wells — TEP</div>
+    </div>
+  </div>
+
+  <div class="nav-divider"></div>
+
+  <div class="nav-group">
+    <div class="nav-group-header collapsed" onclick="toggleGroup('g-severidad',this)">
+      <span class="nav-group-label">📊 Pronóstico y Severidad</span><span class="nav-chevron">▾</span>
+    </div>
+    <div class="nav-group-items collapsed" id="g-severidad">
       <div class="nav-item" onclick="showCalc('sofa',this)"><span class="nav-icon">·</span>SOFA Score</div>
       <div class="nav-item" onclick="showCalc('apache',this)"><span class="nav-icon">·</span>APACHE II</div>
       <div class="nav-item" onclick="showCalc('saps',this)"><span class="nav-icon">·</span>SAPS II</div>
       <div class="nav-item" onclick="showCalc('nutric',this)"><span class="nav-icon">·</span>NUTRIC Score</div>
+      <div class="nav-item" onclick="showCalc('meld',this)"><span class="nav-icon">·</span>MELD — Hepático</div>
     </div>
   </div>
 
   <div class="nav-divider"></div>
 
   <div class="nav-group">
-    <div class="nav-group-header collapsed" onclick="toggleGroup('g-vent',this)">
-      <span class="nav-group-label">🫁 Ventilación</span><span class="nav-chevron">▾</span>
+    <div class="nav-group-header collapsed" onclick="toggleGroup('g-resp',this)">
+      <span class="nav-group-label">🫁 Respiratorio</span><span class="nav-chevron">▾</span>
     </div>
-    <div class="nav-group-items collapsed" id="g-vent">
+    <div class="nav-group-items collapsed" id="g-resp">
       <div class="nav-item" onclick="showCalc('vent-mec',this)"><span class="nav-icon">·</span>Mecánica Ventilatoria</div>
       <div class="nav-item" onclick="showCalc('kirby',this)"><span class="nav-icon">·</span>Índice de Kirby (SF/PF)</div>
-      <div class="nav-item" onclick="showCalc('tvent',this)"><span class="nav-icon">·</span>Destete ventilatorio / Extubación</div>
-    </div>
-  </div>
-
-  <div class="nav-divider"></div>
-
-  <div class="nav-group">
-    <div class="nav-group-header collapsed" onclick="toggleGroup('g-gas',this)">
-      <span class="nav-group-label">🧪 Gasometría / Oxigenación</span><span class="nav-chevron">▾</span>
-    </div>
-    <div class="nav-group-items collapsed" id="g-gas">
-      <div class="nav-item" onclick="showCalc('gas',this)"><span class="nav-icon">·</span>Gasometría</div>
+      <div class="nav-item" onclick="showCalc('tvent',this)"><span class="nav-icon">·</span>Destete / Extubación</div>
+      <div class="nav-item" onclick="showCalc('gas',this)"><span class="nav-icon">·</span>Gasometría Arterial</div>
       <div class="nav-item" onclick="showCalc('tgas',this)"><span class="nav-icon">·</span>Taller Gasométrico (Choque)</div>
       <div class="nav-item" onclick="showCalc('metabolic',this)"><span class="nav-icon">·</span>Panel Metabólico Rápido</div>
     </div>
@@ -930,7 +968,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 
   <div class="nav-group">
     <div class="nav-group-header collapsed" onclick="toggleGroup('g-hemo',this)">
-      <span class="nav-group-label">💉 Hemodinámica</span><span class="nav-chevron">▾</span>
+      <span class="nav-group-label">💉 Hemodinámica y Shock</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-hemo">
       <div class="nav-item" onclick="showCalc('shock',this)"><span class="nav-icon">·</span>Clasificación de Shock</div>
@@ -943,22 +981,8 @@ input.pat-synced:focus, select.pat-synced:focus {
   <div class="nav-divider"></div>
 
   <div class="nav-group">
-    <div class="nav-group-header collapsed" onclick="toggleGroup('g-manejo',this)">
-      <span class="nav-group-label">💊 Manejo Crítico</span><span class="nav-chevron">▾</span>
-    </div>
-    <div class="nav-group-items collapsed" id="g-manejo">
-      <div class="nav-item" onclick="showCalc('sepsis-bundle',this)"><span class="nav-icon">·</span>Sepsis Bundle (3h/6h)</div>
-      <div class="nav-item" onclick="showCalc('ppc',this)"><span class="nav-icon">·</span>Perf. Cerebral (PPC)</div>
-      <div class="nav-item" onclick="showCalc('sedation',this)"><span class="nav-icon">·</span>Sedación / Analgesia</div>
-      <div class="nav-item" onclick="showCalc('transfusion',this)"><span class="nav-icon">·</span>Transfusión — Decisión</div>
-    </div>
-  </div>
-
-  <div class="nav-divider"></div>
-
-  <div class="nav-group">
     <div class="nav-group-header collapsed" onclick="toggleGroup('g-renal',this)">
-      <span class="nav-group-label">🫘 Renal / Electrolitos</span><span class="nav-chevron">▾</span>
+      <span class="nav-group-label">🫘 Renal, Electrolitos y TSR</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-renal">
       <div class="nav-item" onclick="showCalc('kdigo',this)"><span class="nav-icon">·</span>KDIGO — LRA</div>
@@ -966,46 +990,37 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="nav-item" onclick="showCalc('gfr-dosing',this)"><span class="nav-icon">·</span>Dosificación Renal (TFG + ATB)</div>
       <div class="nav-item" onclick="showCalc('elec-uri',this)"><span class="nav-icon">·</span>Electrolitos Urinarios</div>
       <div class="nav-item" onclick="showCalc('electrolitos',this)"><span class="nav-icon">·</span>Reposición Electrolitos (incl. Ca)</div>
-    </div>
-  </div>
-
-  <div class="nav-divider"></div>
-
-  <div class="nav-group">
-    <div class="nav-group-header collapsed" onclick="toggleGroup('g-tsr',this)">
-      <span class="nav-group-label">💧 Terapia Sustitución Renal</span><span class="nav-chevron">▾</span>
-    </div>
-    <div class="nav-group-items collapsed" id="g-tsr">
       <div class="nav-item" onclick="showCalc('tsr-dosis',this)"><span class="nav-icon">·</span>Dosis Diálisis (Kt/V / CRRT)</div>
       <div class="nav-item" onclick="showCalc('tsr-uf',this)"><span class="nav-icon">·</span>Ultrafiltrado y Reposición</div>
-      <div class="nav-item" onclick="showCalc('tsr-anticoag',this)"><span class="nav-icon">·</span>Anticoagulación</div>
-      <div class="nav-item" onclick="showCalc('tsr-modalidad',this)"><span class="nav-icon">·</span>Modalidad e Indicaciones</div>
+      <div class="nav-item" onclick="showCalc('tsr-anticoag',this)"><span class="nav-icon">·</span>Anticoagulación TSR</div>
+      <div class="nav-item" onclick="showCalc('tsr-modalidad',this)"><span class="nav-icon">·</span>Modalidad e Indicaciones TSR</div>
     </div>
   </div>
 
   <div class="nav-divider"></div>
 
   <div class="nav-group">
-    <div class="nav-group-header collapsed" onclick="toggleGroup('g-nutri',this)">
-      <span class="nav-group-label">🍽️ Nutrición / Neurocrítico</span><span class="nav-chevron">▾</span>
+    <div class="nav-group-header collapsed" onclick="toggleGroup('g-neuro',this)">
+      <span class="nav-group-label">🧠 Neuro, Sedación y Analgesia</span><span class="nav-chevron">▾</span>
     </div>
-    <div class="nav-group-items collapsed" id="g-nutri">
-      <div class="nav-item" onclick="showCalc('harris',this)"><span class="nav-icon">·</span>Harris-Benedict</div>
-      <div class="nav-item" onclick="showCalc('camicu',this)"><span class="nav-icon">·</span>CAM-ICU Delirium</div>
-      <div class="nav-item" onclick="showCalc('rass',this)"><span class="nav-icon">·</span>RASS — Sedación</div>
+    <div class="nav-group-items collapsed" id="g-neuro">
+      <div class="nav-item" onclick="showCalc('sedation',this)"><span class="nav-icon">·</span>Sedación / Analgesia</div>
+      <div class="nav-item" onclick="showCalc('camicu',this)"><span class="nav-icon">·</span>CAM-ICU — Delirium</div>
+      <div class="nav-item" onclick="showCalc('rass',this)"><span class="nav-icon">·</span>RASS — Nivel de Sedación</div>
+      <div class="nav-item" onclick="showCalc('ppc',this)"><span class="nav-icon">·</span>Perfusión Cerebral (PPC)</div>
     </div>
   </div>
 
   <div class="nav-divider"></div>
 
   <div class="nav-group">
-    <div class="nav-group-header collapsed" onclick="toggleGroup('g-riesgo',this)">
-      <span class="nav-group-label">⚠️ Escalas de Riesgo</span><span class="nav-chevron">▾</span>
+    <div class="nav-group-header collapsed" onclick="toggleGroup('g-soporte',this)">
+      <span class="nav-group-label">💊 Soporte y Manejo</span><span class="nav-chevron">▾</span>
     </div>
-    <div class="nav-group-items collapsed" id="g-riesgo">
-      <div class="nav-item" onclick="showCalc('padua',this)"><span class="nav-icon">·</span>PADUA — TEV</div>
-      <div class="nav-item" onclick="showCalc('curb',this)"><span class="nav-icon">·</span>CURB-65 — NAC</div>
-      <div class="nav-item" onclick="showCalc('rockall',this)"><span class="nav-icon">·</span>Rockall — HTDA</div>
+    <div class="nav-group-items collapsed" id="g-soporte">
+      <div class="nav-item" onclick="showCalc('sepsis-bundle',this)"><span class="nav-icon">·</span>Sepsis Bundle (3h/6h)</div>
+      <div class="nav-item" onclick="showCalc('transfusion',this)"><span class="nav-icon">·</span>Transfusión — Decisión</div>
+      <div class="nav-item" onclick="showCalc('harris',this)"><span class="nav-icon">·</span>Harris-Benedict — Nutrición</div>
     </div>
   </div>
 
@@ -1025,6 +1040,9 @@ input.pat-synced:focus, select.pat-synced:focus {
   <span><b id="ps-peso">—</b> kg</span>
   <span class="ps-sep">|</span>
   <span>UCI día <b id="ps-dias">—</b></span>
+  <span class="ps-sep ps-score-sep" style="display:none;">|</span>
+  <span class="ps-score" id="ps-sofa" style="display:none;" title="SOFA Score"></span>
+  <span class="ps-score" id="ps-news2" style="display:none;" title="NEWS2"></span>
   <span class="ps-sep">|</span>
   <span class="ps-dx" id="ps-dx">—</span>
 </div>
@@ -1200,15 +1218,16 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- WELCOME -->
 <div id="calc-welcome" class="calc-panel active">
   <div class="card">
-    <div class="card-title">UCI Tools · Medicina Critica UCI Siglo XXI</div>
+    <div class="card-title">UCI Tools · Medicina Crítica UCI Siglo XXI</div>
     <div style="color:var(--muted2);font-size:13px;line-height:1.8;">
-      Selecciona una calculadora del menu lateral.<br><br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">PRONOSTICO</span> — SOFA · APACHE II · SAPS II · NUTRIC<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">VENTILACION</span> — Mecánica ventilatoria (VT, dP, MP, P:F) · Gasometria · Kirby<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">HEMODINAMICA</span> — Vasopresor · Balance Hidrico · Precarga · PPC<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">RENAL</span> — KDIGO · Osmolaridad · Ca corregido<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">NUTRICION</span> — Harris-Benedict · CAM-ICU<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">RIESGO</span> — PADUA · CURB-65 · Rockall
+      Selecciona una calculadora del menú lateral.<br><br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🚨 ADMISIÓN</span> — NEWS2 · qSOFA · GCS · PADUA · CURB-65 · Wells<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">📊 SEVERIDAD</span> — SOFA · APACHE II · SAPS II · NUTRIC · MELD<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫁 RESPIRATORIO</span> — Mecánica ventilatoria · Kirby · Destete · Gasometría · Taller gasométrico<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💉 HEMODINÁMICA</span> — Shock · Hemodinamia avanzada · Vasopresor · VExUS<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫘 RENAL & TSR</span> — KDIGO · Balance · Electrolitos · Diálisis · UF · Anticoagulación<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🧠 NEURO & SEDACIÓN</span> — Sedación · CAM-ICU · RASS · PPC<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💊 SOPORTE</span> — Sepsis Bundle · Transfusión · Harris-Benedict
     </div>
   </div>
 </div>
@@ -1224,32 +1243,43 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="section-sub">Parámetros vitales</div>
     <div class="row cols2">
       <div><label>Frecuencia respiratoria (resp/min)</label><input type="number" id="news2-fr" placeholder="ej. 22" oninput="calcNEWS2()"></div>
-      <div><label>SaO2 (%) — aire ambiente</label><input type="number" id="news2-sao2" placeholder="ej. 96" oninput="calcNEWS2()"></div>
+      <div><label>SpO₂ (%)</label><input type="number" id="news2-sao2" placeholder="ej. 96" oninput="calcNEWS2()"></div>
       <div><label>Temperatura corporal (°C)</label><input type="number" id="news2-temp" placeholder="ej. 37.5" step="0.1" oninput="calcNEWS2()"></div>
       <div><label>Presión arterial sistólica (mmHg)</label><input type="number" id="news2-sbs" placeholder="ej. 120" oninput="calcNEWS2()"></div>
       <div><label>Frecuencia cardíaca (lat/min)</label><input type="number" id="news2-fc" placeholder="ej. 85" oninput="calcNEWS2()"></div>
     </div>
-    <div class="section-sub">Estado de conciencia (AVPU)</div>
-    <div class="row">
-      <div><label>Nivel de alerta</label>
+    <div class="section-sub">Oxígeno y conciencia</div>
+    <div class="row cols2">
+      <div><label>¿Oxígeno suplementario?</label>
+        <select id="news2-o2" onchange="calcNEWS2()">
+          <option value="">Seleccionar</option>
+          <option value="0">No (aire ambiente)</option>
+          <option value="2">Sí (con O₂ suplementario)</option>
+        </select>
+      </div>
+      <div><label>Nivel de alerta (AVPU / Confusión)</label>
         <select id="news2-avpu" onchange="calcNEWS2()">
           <option value="">Seleccionar</option>
-          <option value="0">A — Alerta (despierto)</option>
+          <option value="0">A — Alerta</option>
           <option value="3">V — Responde a voz</option>
           <option value="3">P — Responde al dolor</option>
           <option value="3">U — Inconsciente</option>
+          <option value="3">Confusión de novo</option>
         </select>
       </div>
     </div>
-
+    <div class="btn-row" style="margin-top:12px;">
+      <button class="calc" onclick="calcNEWS2()">Calcular</button>
+      <button class="reset" onclick="resetPanel('calc-news2')">Limpiar</button>
+    </div>
     <div class="result" id="news2-result" style="display:none;">
       <div class="result-val" id="news2-total">0</div>
       <div class="result-unit">puntos</div>
       <div class="result-label" id="news2-interp">—</div>
       <div class="result-badge" id="news2-badge"></div>
     </div>
-    <div id="evid-wrap-news2" style="margin-top:0;"></div>
     <div class="info" id="news2-action">Completa todos los campos para calcular</div>
+    <div id="evid-wrap-news2" style="margin-top:0;"></div>
   </div>
 </div>
 
@@ -1280,6 +1310,10 @@ input.pat-synced:focus, select.pat-synced:focus {
         </select>
       </div>
     </div>
+    <div class="btn-row" style="margin-top:12px;">
+      <button class="calc" onclick="calcShock()">Calcular</button>
+      <button class="reset" onclick="resetPanel('calc-shock')">Limpiar</button>
+    </div>
 
     <div class="result" id="shock-result" style="display:none;">
       <div class="result-label" id="shock-type" style="font-size:13px;font-weight:600;margin-bottom:10px;">—</div>
@@ -1291,7 +1325,6 @@ input.pat-synced:focus, select.pat-synced:focus {
       Completa los parámetros para ver recomendaciones
     </div>
 
-    <div class="info" id="shock-note" style="margin-top:12px;"></div>
     <div id="evid-wrap-shock" style="margin-top:0;"></div>
   </div>
 </div>
@@ -1323,7 +1356,7 @@ input.pat-synced:focus, select.pat-synced:focus {
           <div style="font-size:10px;color:var(--muted2);" id="gfr-stage">—</div>
         </div>
         <div style="flex:1;padding:10px;background:rgba(0,200,255,0.06);border-radius:4px;">
-          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Estadío ERC</div>
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Estadio ERC</div>
           <div style="font-size:16px;font-weight:600;color:var(--accent);" id="gfr-stage-num">—</div>
           <div style="font-size:10px;color:var(--muted2);" id="gfr-stage-desc">—</div>
         </div>
@@ -1475,7 +1508,6 @@ input.pat-synced:focus, select.pat-synced:focus {
       Ingresa todos los parámetros para interpretar
     </div>
 
-    <div class="info" style="margin-top:12px;">💡 <b>Fórmulas:</b> CI = CO/BSA · SVR = (MAP-CVP)×80/CO · DO₂ = (Hb×SaO₂×1.34 + PaO2×0.003)×CO · VO₂ = (SaO₂-SvO₂)×Hb×1.34×CO</div>
     <div id="evid-wrap-hemodynamics" style="margin-top:0;"></div>
   </div>
 </div>
@@ -1538,7 +1570,6 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div style="font-size:12px;color:var(--text);line-height:1.8;" id="sed-result-text">—</div>
     </div>
 
-    <div class="info" style="margin-top:12px;">💡 <b>Meta RASS:</b> Equilibrio entre seguridad (no sobre-sedación) y confort · TBI: RASS -1 a 0 para examen neuro · SDRA grave: RASS -2 a -3 para sincronización VM</div>
     <div id="evid-wrap-sedation" style="margin-top:0;"></div>
   </div>
 </div>
@@ -1617,7 +1648,6 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div style="font-size:12px;color:var(--text);line-height:1.8;" id="tf-result-text">—</div>
     </div>
 
-    <div class="info" style="margin-top:12px;">💡 <b>Umbrales restrictos:</b> Hb ≥7 en paciente estable · Hb ≥10 en sangrado activo/cardiopatía · <b>Massive Transfusion:</b> Activar si >4 unidades PRBCs en 1 hora (ratio 1:1:1)</div>
     <div id="evid-wrap-transfusion" style="margin-top:0;"></div>
   </div>
 </div>
@@ -1637,7 +1667,7 @@ input.pat-synced:focus, select.pat-synced:focus {
         <div class="sofa-score" id="s-resp">0</div>
       </div>
       <div class="sofa-item">
-        <div class="sofa-name">Coagulacion<br><span style="font-size:10px;color:var(--muted)">Plaquetas K/uL</span></div>
+        <div class="sofa-name">Coagulación<br><span style="font-size:10px;color:var(--muted)">Plaquetas K/uL</span></div>
         <select id="sofa-coa" onchange="calcSOFA()">
           <option value="0">≥ 150 → 0 pts</option><option value="1">100–149 → 1 pt</option>
           <option value="2">50–99 → 2 pts</option><option value="3">20–49 → 3 pts</option>
@@ -1646,7 +1676,7 @@ input.pat-synced:focus, select.pat-synced:focus {
         <div class="sofa-score" id="s-coa">0</div>
       </div>
       <div class="sofa-item">
-        <div class="sofa-name">Hepatico<br><span style="font-size:10px;color:var(--muted)">Bilirrubina mg/dL</span></div>
+        <div class="sofa-name">Hepático<br><span style="font-size:10px;color:var(--muted)">Bilirrubina mg/dL</span></div>
         <select id="sofa-hep" onchange="calcSOFA()">
           <option value="0">&lt; 1.2 → 0 pts</option><option value="1">1.2–1.9 → 1 pt</option>
           <option value="2">2.0–5.9 → 2 pts</option><option value="3">6.0–11.9 → 3 pts</option>
@@ -1666,7 +1696,7 @@ input.pat-synced:focus, select.pat-synced:focus {
         <div class="sofa-score" id="s-cv">0</div>
       </div>
       <div class="sofa-item">
-        <div class="sofa-name">Neurologico<br><span style="font-size:10px;color:var(--muted)">GCS</span></div>
+        <div class="sofa-name">Neurológico<br><span style="font-size:10px;color:var(--muted)">GCS</span></div>
         <select id="sofa-neu" onchange="calcSOFA()">
           <option value="0">GCS 15 → 0 pts</option><option value="1">GCS 13–14 → 1 pt</option>
           <option value="2">GCS 10–12 → 2 pts</option><option value="3">GCS 6–9 → 3 pts</option>
@@ -1684,15 +1714,17 @@ input.pat-synced:focus, select.pat-synced:focus {
         <div class="sofa-score" id="s-ren">0</div>
       </div>
     </div>
+    <div class="btn-row" style="margin-top:12px;">
+      <button class="calc" onclick="calcSOFA()">Calcular</button>
+      <button class="reset" onclick="resetPanel('calc-sofa')">Limpiar</button>
+    </div>
     <div class="result">
       <div class="result-val" id="sofa-total">0</div>
       <div class="result-unit">pts</div>
       <div class="result-label" id="sofa-interp">Selecciona los valores</div>
       <div class="result-badge" id="sofa-badge"></div>
     </div>
-    
-<div id="evid-wrap-sofa" style="margin-top:0;"></div>
-<div class="info">Mortalidad: 0 pts &lt;10% · 7–9 ~20% · 10–12 ~40% · &gt;12 &gt;80%</div>
+    <div id="evid-wrap-sofa" style="margin-top:0;"></div>
   </div>
 </div>
 
@@ -1700,7 +1732,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <div id="calc-apache" class="calc-panel">
   <div class="card">
     <div class="card-title">APACHE II Score</div>
-    <div class="section-sub">Variables fisiologicas agudas</div>
+    <div class="section-sub">Variables fisiológicas agudas</div>
     <div class="row cols2">
       <div><label>Temp rectal (°C)</label>
         <select id="ap-temp"><option value="4">≥41</option><option value="3">39–40.9</option><option value="1">38.5–38.9</option><option value="0" selected>36–38.4</option><option value="1">34–35.9</option><option value="2">32–33.9</option><option value="3">30–31.9</option><option value="4">&lt;30</option></select>
@@ -1718,7 +1750,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       </div>
     </div>
     <div class="row cols2">
-      <div><label>Oxigenacion</label>
+      <div><label>Oxigenación</label>
         <select id="ap-ox"><option value="0" selected>FiO2&lt;0.5: PaO2≥70</option><option value="1">FiO2&lt;0.5: PaO2 61–70</option><option value="3">FiO2&lt;0.5: PaO2 55–60</option><option value="4">FiO2&lt;0.5: PaO2&lt;55</option><option value="0">FiO2≥0.5: AaDO2&lt;200</option><option value="2">FiO2≥0.5: AaDO2 200–349</option><option value="3">FiO2≥0.5: AaDO2 350–499</option><option value="4">FiO2≥0.5: AaDO2≥500</option></select>
       </div>
       <div><label>pH arterial</label>
@@ -1749,12 +1781,12 @@ input.pat-synced:focus, select.pat-synced:focus {
         <select id="ap-gcs"><option value="0" selected>15</option><option value="1">14</option><option value="2">13</option><option value="3">12</option><option value="4">11</option><option value="5">10</option><option value="6">9</option><option value="7">8</option><option value="8">7</option><option value="9">6</option><option value="10">5</option><option value="11">4</option><option value="12">3</option></select>
       </div>
     </div>
-    <div class="section-sub">Edad y enfermedad cronica</div>
+    <div class="section-sub">Edad y enfermedad crónica</div>
     <div class="row cols2">
       <div><label>Edad</label>
         <select id="ap-age"><option value="0" selected>&lt;44</option><option value="2">45–54</option><option value="3">55–64</option><option value="5">65–74</option><option value="6">≥75</option></select>
       </div>
-      <div><label>Enfermedad cronica severa</label>
+      <div><label>Enfermedad crónica severa</label>
         <select id="ap-chr"><option value="0" selected>Ninguna</option><option value="2">No qx o qx urgente</option><option value="5">Qx electivo</option></select>
       </div>
     </div>
@@ -1801,12 +1833,12 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div class="row cols2">
       <div><label>Leucocitos (K/uL)</label><select id="saps-leu"><option value="12">&lt;1.0</option><option value="0">1.0–19.9</option><option value="3">≥20</option></select></div>
-      <div><label>Tipo de ingreso</label><select id="saps-adm"><option value="0">Qx electivo</option><option value="6">Medico</option><option value="8">Qx urgente</option></select></div>
+      <div><label>Tipo de ingreso</label><select id="saps-adm"><option value="0">Qx electivo</option><option value="6">Médico</option><option value="8">Qx urgente</option></select></div>
     </div>
     <div class="row cols3">
-      <div><label>Cancer hematologico</label><select id="saps-hem"><option value="0">No</option><option value="10">Si</option></select></div>
-      <div><label>Cancer metastasico</label><select id="saps-met"><option value="0">No</option><option value="9">Si</option></select></div>
-      <div><label>Sida</label><select id="saps-aids"><option value="0">No</option><option value="17">Si</option></select></div>
+      <div><label>Cáncer hematológico</label><select id="saps-hem"><option value="0">No</option><option value="10">Sí</option></select></div>
+      <div><label>Cáncer metastásico</label><select id="saps-met"><option value="0">No</option><option value="9">Sí</option></select></div>
+      <div><label>SIDA</label><select id="saps-aids"><option value="0">No</option><option value="17">Sí</option></select></div>
     </div>
     <div class="btn-row">
       <button class="calc" onclick="calcSAPS()">Calcular</button>
@@ -1834,20 +1866,19 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div><label>Comorbilidades</label><select id="nut-com"><option value="0">0–1</option><option value="1">≥2</option></select></div>
     </div>
     <div class="row cols2">
-      <div><label>Dias hosp. pre-UCI</label><select id="nut-days"><option value="0">0–1</option><option value="1">≥2</option></select></div>
+      <div><label>Días hosp. pre-UCI</label><select id="nut-days"><option value="0">0–1</option><option value="1">≥2</option></select></div>
       <div><label>IL-6</label><select id="nut-il6"><option value="0">No disponible / &lt;400</option><option value="1">≥400</option></select></div>
     </div>
     <div class="btn-row">
       <button class="calc" onclick="calcNUTRIC()">Calcular</button>
+      <button class="reset" onclick="resetPanel('calc-nutric')">Limpiar</button>
     </div>
     <div class="result" id="nutric-result" style="display:none">
       <div class="result-val" id="nutric-total">0</div><div class="result-unit">pts</div>
       <div class="result-label" id="nutric-interp"></div>
       <div class="result-badge" id="nutric-badge"></div>
     </div>
-    
-<div id="evid-wrap-nutric" style="margin-top:0;"></div>
-<div class="info">≥5 pts → Alto riesgo: iniciar soporte nutricional &lt;48h. &lt;5 pts → Bajo riesgo.</div>
+    <div id="evid-wrap-nutric" style="margin-top:0;"></div>
   </div>
 </div>
 
@@ -1859,7 +1890,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <div id="calc-vent-mec" class="calc-panel">
   <div class="card" style="margin-bottom:12px;padding:12px 16px;">
     <div class="group-title" style="margin-bottom:4px;">Mecánica ventilatoria</div>
-    <div class="group-desc">Peso predicho — VT protector · Driving pressure · Poder mecánico · PAFI (P:F)</div>
+    <div class="group-desc">Peso predicho — VT protector · Driving pressure · Poder Mecánico · PAFI (P:F)</div>
   </div>
 
   <div class="card" id="vent-sec-vt">
@@ -1881,7 +1912,6 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     
 <div id="evid-wrap-vt" style="margin-top:0;"></div>
-<div class="info">Ajusta VT según peso predicho y reevalúa con P meseta y driving pressure para proteger pulmón.</div>
   </div>
 
   <div class="card" id="vent-sec-dp">
@@ -1899,12 +1929,11 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="result-label">dP = Pplat - PEEP</div>
       <div class="result-badge" id="dp-badge"></div>
     </div>
-    <div class="info">Meta: dP ≤15 cmH2O · &gt;15 cmH2O asociado a mayor mortalidad (Amato et al. NEJM 2015)</div>
-<div id="evid-wrap-dp"></div>
+<div id="evid-wrap-dp" style="margin-top:0;"></div>
   </div>
 
   <div class="card" id="vent-sec-mp">
-    <div class="card-title">Poder Mecanico</div>
+    <div class="card-title">Poder Mecánico</div>
     <div class="row cols3">
       <div><label>FR (rpm)</label><input type="number" id="mp-fr" placeholder="12-20"></div>
       <div><label>VT (mL)</label><input type="number" id="mp-vt" placeholder="350-500"></div>
@@ -1920,12 +1949,11 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div class="result" id="mp-result" style="display:none">
       <div class="result-val" id="mp-val">—</div><div class="result-unit">J/min</div>
-      <div class="result-label">Mechanical Power</div>
+      <div class="result-label">Poder Mecánico</div>
       <div class="result-badge" id="mp-badge"></div>
     </div>
     
 <div id="evid-wrap-mp" style="margin-top:0;"></div>
-<div class="info">Meta práctica: mantener poder mecánico bajo, idealmente &lt;17 J/min cuando sea posible.</div>
   </div>
 
   <div class="card" id="vent-sec-pafi">
@@ -1945,14 +1973,13 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     
 <div id="evid-wrap-pafi" style="margin-top:0;"></div>
-<div class="info">SDRA Berlin: Leve 200–300 · Moderado 100–200 · Grave &lt;100 (con PEEP ≥5)</div>
   </div>
 </div>
 
 <!-- GASOMETRIA -->
 <div id="calc-gas" class="calc-panel">
   <div class="card">
-    <div class="card-title">Interpretacion de Gasometria Arterial</div>
+    <div class="card-title">Interpretación de Gasometría Arterial</div>
     <div class="row cols3">
       <div><label>pH</label><input type="number" id="gas-ph" placeholder="7.35-7.45" step="0.001"></div>
       <div><label>pCO2 (mmHg)</label><input type="number" id="gas-co2" placeholder="35-45" step="0.1"></div>
@@ -1975,7 +2002,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div id="gas-result" style="display:none; margin-top:12px;">
       <div class="gas-result-grid">
         <div class="gas-box"><div class="gas-box-title">Trastorno primario</div><div class="gas-box-val" id="gas-prim" style="font-size:14px;"></div></div>
-        <div class="gas-box"><div class="gas-box-title">Compensacion</div><div class="gas-box-val" id="gas-comp" style="font-size:12px;font-weight:400;color:var(--text)"></div></div>
+        <div class="gas-box"><div class="gas-box-title">Compensación</div><div class="gas-box-val" id="gas-comp" style="font-size:12px;font-weight:400;color:var(--text)"></div></div>
         <div class="gas-box"><div class="gas-box-title">PAFI</div><div class="gas-box-val" id="gas-pafi-r" style="color:var(--accent)"></div></div>
         <div class="gas-box"><div class="gas-box-title">Anion Gap (corr. Alb)</div><div class="gas-box-val" id="gas-ag" style="color:var(--yellow)"></div></div>
       </div>
@@ -2016,11 +2043,12 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div id="vaso-dose-label" style="font-size:11px;color:var(--muted);margin-bottom:8px;"></div>
     <div class="btn-row">
       <button class="calc" onclick="calcVASO()">Calcular</button>
+      <button class="reset" onclick="resetPanel('calc-vaso')">Limpiar</button>
     </div>
     <div class="vaso-result-grid" id="vaso-result" style="display:none">
       <div class="vaso-box"><div class="vaso-box-label">Velocidad</div><div class="vaso-box-val" id="vas-rate">—</div><div style="font-size:10px;color:var(--muted)">mL/hr</div></div>
       <div class="vaso-box"><div class="vaso-box-label">Dosis</div><div class="vaso-box-val" id="vas-dosis-ok">—</div><div style="font-size:10px;color:var(--muted)" id="vas-unit-label">mcg/kg/min</div></div>
-      <div class="vaso-box"><div class="vaso-box-label">Concentracion</div><div class="vaso-box-val" id="vas-conc">—</div><div style="font-size:10px;color:var(--muted)" id="vas-conc-unit">mcg/mL</div></div>
+      <div class="vaso-box"><div class="vaso-box-label">Concentración</div><div class="vaso-box-val" id="vas-conc">—</div><div style="font-size:10px;color:var(--muted)" id="vas-conc-unit">mcg/mL</div></div>
     </div>
     <div id="vaso-interp" style="margin-top:10px;padding:10px;border:1px solid var(--border);border-radius:6px;background:rgba(0,200,255,0.06);font-size:11px;line-height:1.6;color:var(--text);"></div>
     <div class="info" id="vaso-ref"></div>
@@ -2031,15 +2059,15 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- BALANCE HIDRICO -->
 <div id="calc-balance" class="calc-panel">
   <div class="card">
-    <div class="card-title">Balance Hidrico</div>
+    <div class="card-title">Balance Hídrico</div>
     <table class="balance-table">
       <thead><tr><th>INGRESOS</th><th>mL</th><th>EGRESOS</th><th>mL</th></tr></thead>
       <tbody>
         <tr><td>Soluciones IV</td><td><input type="number" id="bi-sol" placeholder="0" oninput="calcBAL()"></td><td>Uresis</td><td><input type="number" id="be-uri" placeholder="0" oninput="calcBAL()"></td></tr>
         <tr><td>Medicamentos IV</td><td><input type="number" id="bi-med" placeholder="0" oninput="calcBAL()"></td><td>Drenes</td><td><input type="number" id="be-dre" placeholder="0" oninput="calcBAL()"></td></tr>
-        <tr><td>Nutricion enteral</td><td><input type="number" id="bi-ne" placeholder="0" oninput="calcBAL()"></td><td>Aspirado gastrico</td><td><input type="number" id="be-asp" placeholder="0" oninput="calcBAL()"></td></tr>
-        <tr><td>Nutricion parenteral</td><td><input type="number" id="bi-np" placeholder="0" oninput="calcBAL()"></td><td>Heces</td><td><input type="number" id="be-hec" placeholder="0" oninput="calcBAL()"></td></tr>
-        <tr><td>Hemoderivados</td><td><input type="number" id="bi-hem" placeholder="0" oninput="calcBAL()"></td><td>Perdidas insensibles</td><td><input type="number" id="be-ins" placeholder="0" oninput="calcBAL()"></td></tr>
+        <tr><td>Nutrición enteral</td><td><input type="number" id="bi-ne" placeholder="0" oninput="calcBAL()"></td><td>Aspirado gástrico</td><td><input type="number" id="be-asp" placeholder="0" oninput="calcBAL()"></td></tr>
+        <tr><td>Nutrición parenteral</td><td><input type="number" id="bi-np" placeholder="0" oninput="calcBAL()"></td><td>Heces</td><td><input type="number" id="be-hec" placeholder="0" oninput="calcBAL()"></td></tr>
+        <tr><td>Hemoderivados</td><td><input type="number" id="bi-hem" placeholder="0" oninput="calcBAL()"></td><td>Pérdidas insensibles</td><td><input type="number" id="be-ins" placeholder="0" oninput="calcBAL()"></td></tr>
         <tr><td>Otros</td><td><input type="number" id="bi-ot" placeholder="0" oninput="calcBAL()"></td><td>Otros</td><td><input type="number" id="be-ot" placeholder="0" oninput="calcBAL()"></td></tr>
       </tbody>
     </table>
@@ -2331,8 +2359,7 @@ input.pat-synced:focus, select.pat-synced:focus {
         </table>
       </div>
     </div>
-    <div class="info" style="margin-top:10px;">VExUS validado por Beaubien-Souligny 2020 · VExUS 3 asociado a LRA y mayor mortalidad en UCI · Complementa balance hídrico y KDIGO</div>
-<div id="evid-wrap-vexus"></div>
+<div id="evid-wrap-vexus" style="margin-top:0;"></div>
   </div>
 
   <!-- PRECARGA / VPP / VCI integrado -->
@@ -2444,7 +2471,6 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     
 <div id="evid-wrap-elec-uri" style="margin-top:0;"></div>
-<div class="info">EFNa = (NaU×CrS)/(NaS×CrU) × 100 · EFUrea = (UreaU×CrS)/(UreaS×CrU) × 100 · TTKG = (KU×OsmS)/(KS×OsmU) · AGU = NaU+KU−ClU</div>
   </div>
 </div>
 
@@ -2454,7 +2480,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- KDIGO -->
 <div id="calc-kdigo" class="calc-panel">
   <div class="card">
-    <div class="card-title">KDIGO — Lesion Renal Aguda</div>
+    <div class="card-title">KDIGO — Lesión Renal Aguda</div>
     <div class="row cols2">
       <div><label>Creatinina basal (mg/dL)</label><input type="number" id="kd-base" placeholder="0.7-1.2" step="0.01"></div>
       <div><label>Creatinina actual (mg/dL)</label><input type="number" id="kd-curr" placeholder="0.7-1.2" step="0.01"></div>
@@ -2479,7 +2505,6 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     
 <div id="evid-wrap-kdigo" style="margin-top:0;"></div>
-<div class="info">Cr: +0.3 en 48h · x1.5 basal en 7d · Uresis &lt;0.5 mL/kg/h por ≥6h</div>
   </div>
 </div>
 
@@ -2541,7 +2566,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- HARRIS-BENEDICT -->
 <div id="calc-harris" class="calc-panel">
   <div class="card">
-    <div class="card-title">Requerimiento Calorico — Harris-Benedict</div>
+    <div class="card-title">Requerimiento Calórico — Harris-Benedict</div>
     <div class="row cols3">
       <div><label>Sexo</label><select id="hb-sex"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
       <div><label>Peso actual (kg)</label><input type="number" id="hb-peso" placeholder=""></div>
@@ -2549,9 +2574,9 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div class="row cols2">
       <div><label>Edad (años)</label><input type="number" id="hb-edad" placeholder=""></div>
-      <div><label>Factor de estres</label>
+      <div><label>Factor de estrés</label>
         <select id="hb-factor">
-          <option value="1.0">1.0 — Sin estres</option><option value="1.2">1.2 — Cirugia menor</option>
+          <option value="1.0">1.0 — Sin estrés</option><option value="1.2">1.2 — Cirugía menor</option>
           <option value="1.35" selected>1.35 — Sepsis moderada</option><option value="1.5">1.5 — Trauma/qx mayor</option>
           <option value="1.6">1.6 — Sepsis grave</option><option value="1.8">1.8 — Gran quemado</option>
         </select>
@@ -2564,36 +2589,35 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="multi-result" id="harris-result" style="display:none; margin-top:12px;">
       <div class="mr-row"><span class="mr-label">GEB (basal)</span><span class="mr-val" id="hb-geb">—</span></div>
       <div class="divider"></div>
-      <div class="mr-row"><span class="mr-label">GET (con factor estres)</span><span class="mr-val accent" id="hb-get">—</span></div>
-      <div class="mr-row"><span class="mr-label">Proteinas (1.5 g/kg)</span><span class="mr-val" id="hb-prot">—</span></div>
+      <div class="mr-row"><span class="mr-label">GET (con factor estrés)</span><span class="mr-val accent" id="hb-get">—</span></div>
+      <div class="mr-row"><span class="mr-label">Proteínas (1.5 g/kg)</span><span class="mr-val" id="hb-prot">—</span></div>
     </div>
     
 <div id="evid-wrap-harris" style="margin-top:0;"></div>
-<div class="info">H: 66.5 + 13.75×P + 5.003×T - 6.775×E · M: 655.1 + 9.563×P + 1.85×T - 4.676×E</div>
   </div>
 </div>
 
 <!-- CAM-ICU -->
 <div id="calc-camicu" class="calc-panel">
   <div class="card">
-    <div class="card-title">CAM-ICU — Evaluacion de Delirium</div>
+    <div class="card-title">CAM-ICU — Evaluación de Delirium</div>
     <div class="info" style="margin-bottom:14px;">Requiere RASS ≥ -3 para ser valorable.</div>
     <div class="sofa-grid">
       <div class="sofa-item" style="grid-template-columns:1fr auto;">
-        <div><div class="sofa-name">1. Cambio agudo o fluctuante del estado mental</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Cambio del basal O fluctuacion en RASS/GCS en 24h</div></div>
-        <select id="cam1" style="width:80px;"><option value="0">No</option><option value="1">Si</option></select>
+        <div><div class="sofa-name">1. Cambio agudo o fluctuante del estado mental</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Cambio del basal O fluctuación en RASS/GCS en 24h</div></div>
+        <select id="cam1" style="width:80px;"><option value="0">No</option><option value="1">Sí</option></select>
       </div>
       <div class="sofa-item" style="grid-template-columns:1fr auto;">
         <div><div class="sofa-name">2. Inatención</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Errores >2 en prueba de letras SAVEAHAART</div></div>
-        <select id="cam2" style="width:80px;"><option value="0">No</option><option value="1">Si</option></select>
+        <select id="cam2" style="width:80px;"><option value="0">No</option><option value="1">Sí</option></select>
       </div>
       <div class="sofa-item" style="grid-template-columns:1fr auto;">
         <div><div class="sofa-name">3. Nivel de conciencia alterado</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">RASS diferente de 0</div></div>
-        <select id="cam3" style="width:80px;"><option value="0">No</option><option value="1">Si</option></select>
+        <select id="cam3" style="width:80px;"><option value="0">No</option><option value="1">Sí</option></select>
       </div>
       <div class="sofa-item" style="grid-template-columns:1fr auto;">
-        <div><div class="sofa-name">4. Pensamiento desorganizado</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Errores >1 en preguntas Si/No o comandos</div></div>
-        <select id="cam4" style="width:80px;"><option value="0">No</option><option value="1">Si</option></select>
+        <div><div class="sofa-name">4. Pensamiento desorganizado</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Errores >1 en preguntas Sí/No o comandos</div></div>
+        <select id="cam4" style="width:80px;"><option value="0">No</option><option value="1">Sí</option></select>
       </div>
     </div>
     <div class="btn-row" style="margin-top:12px;">
@@ -2605,8 +2629,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="result-label" id="cam-interp"></div>
       <div class="result-badge" id="cam-badge"></div>
     </div>
-    <div class="info">POSITIVO: Criterios 1 Y 2, MAS (3 O 4) — Sensibilidad 80%, Especificidad 96%</div>
-<div id="evid-wrap-camicu"></div>
+<div id="evid-wrap-camicu" style="margin-top:0;"></div>
   </div>
 </div>
 
@@ -2617,19 +2640,19 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- PADUA -->
 <div id="calc-padua" class="calc-panel">
   <div class="card">
-    <div class="card-title">PADUA — Riesgo Tromboembolico</div>
+    <div class="card-title">PADUA — Riesgo Tromboembólico</div>
     <div class="sofa-grid">
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Cancer activo</div><div style="font-size:10px;color:var(--muted)">Metastasis o QT/RT ultimos 6 meses</div></div><select id="pad1" style="width:80px;"><option value="0">No (0)</option><option value="3">Si (+3)</option></select></div>
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">TEV previo</div><div style="font-size:10px;color:var(--muted)">Excepto trombosis superficial</div></div><select id="pad2" style="width:80px;"><option value="0">No (0)</option><option value="3">Si (+3)</option></select></div>
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Movilidad reducida</div><div style="font-size:10px;color:var(--muted)">Reposo ≥3 dias</div></div><select id="pad3" style="width:80px;"><option value="0">No (0)</option><option value="3">Si (+3)</option></select></div>
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Trombofilia conocida</div></div><select id="pad4" style="width:80px;"><option value="0">No (0)</option><option value="3">Si (+3)</option></select></div>
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Trauma o cirugia reciente ≤1 mes</div></div><select id="pad5" style="width:80px;"><option value="0">No (0)</option><option value="2">Si (+2)</option></select></div>
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Edad ≥70 anos</div></div><select id="pad6" style="width:80px;"><option value="0">No (0)</option><option value="1">Si (+1)</option></select></div>
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Insuficiencia cardiaca o respiratoria</div></div><select id="pad7" style="width:80px;"><option value="0">No (0)</option><option value="1">Si (+1)</option></select></div>
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">IAM o EVC</div></div><select id="pad8" style="width:80px;"><option value="0">No (0)</option><option value="1">Si (+1)</option></select></div>
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Infeccion aguda o enf. reumatologica</div></div><select id="pad9" style="width:80px;"><option value="0">No (0)</option><option value="1">Si (+1)</option></select></div>
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Obesidad (IMC ≥30)</div></div><select id="pad10" style="width:80px;"><option value="0">No (0)</option><option value="1">Si (+1)</option></select></div>
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Tratamiento hormonal activo</div></div><select id="pad11" style="width:80px;"><option value="0">No (0)</option><option value="1">Si (+1)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Cáncer activo</div><div style="font-size:10px;color:var(--muted)">Metástasis o QT/RT últimos 6 meses</div></div><select id="pad1" style="width:80px;"><option value="0">No (0)</option><option value="3">Sí (+3)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">TEV previo</div><div style="font-size:10px;color:var(--muted)">Excepto trombosis superficial</div></div><select id="pad2" style="width:80px;"><option value="0">No (0)</option><option value="3">Sí (+3)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Movilidad reducida</div><div style="font-size:10px;color:var(--muted)">Reposo ≥3 días</div></div><select id="pad3" style="width:80px;"><option value="0">No (0)</option><option value="3">Sí (+3)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Trombofilia conocida</div></div><select id="pad4" style="width:80px;"><option value="0">No (0)</option><option value="3">Sí (+3)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Trauma o cirugía reciente ≤1 mes</div></div><select id="pad5" style="width:80px;"><option value="0">No (0)</option><option value="2">Sí (+2)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Edad ≥70 anos</div></div><select id="pad6" style="width:80px;"><option value="0">No (0)</option><option value="1">Sí (+1)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Insuficiencia cardiaca o respiratoria</div></div><select id="pad7" style="width:80px;"><option value="0">No (0)</option><option value="1">Sí (+1)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">IAM o EVC</div></div><select id="pad8" style="width:80px;"><option value="0">No (0)</option><option value="1">Sí (+1)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Infección aguda o enf. reumatológica</div></div><select id="pad9" style="width:80px;"><option value="0">No (0)</option><option value="1">Sí (+1)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Obesidad (IMC ≥30)</div></div><select id="pad10" style="width:80px;"><option value="0">No (0)</option><option value="1">Sí (+1)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">Tratamiento hormonal activo</div></div><select id="pad11" style="width:80px;"><option value="0">No (0)</option><option value="1">Sí (+1)</option></select></div>
     </div>
     <div class="btn-row" style="margin-top:12px;">
       <button class="calc" onclick="calcPADUA()">Calcular</button>
@@ -2642,7 +2665,6 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     
 <div id="evid-wrap-padua" style="margin-top:0;"></div>
-<div class="info">Alto riesgo: ≥4 pts → Indicada HBPM si sin contraindicacion</div>
   </div>
 </div>
 
@@ -2651,11 +2673,11 @@ input.pat-synced:focus, select.pat-synced:focus {
   <div class="card">
     <div class="card-title">CURB-65 — Severidad de NAC</div>
     <div class="sofa-grid">
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">C — Confusion nueva</div></div><select id="curb1" style="width:80px;"><option value="0">No (0)</option><option value="1">Si (+1)</option></select></div>
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">U — BUN &gt;19 mg/dL</div></div><select id="curb2" style="width:80px;"><option value="0">No (0)</option><option value="1">Si (+1)</option></select></div>
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">R — FR ≥30 rpm</div></div><select id="curb3" style="width:80px;"><option value="0">No (0)</option><option value="1">Si (+1)</option></select></div>
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">B — PAS &lt;90 o PAD ≤60 mmHg</div></div><select id="curb4" style="width:80px;"><option value="0">No (0)</option><option value="1">Si (+1)</option></select></div>
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">65 — Edad ≥65 anos</div></div><select id="curb5" style="width:80px;"><option value="0">No (0)</option><option value="1">Si (+1)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">C — Confusión nueva</div></div><select id="curb1" style="width:80px;"><option value="0">No (0)</option><option value="1">Sí (+1)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">U — BUN &gt;19 mg/dL</div></div><select id="curb2" style="width:80px;"><option value="0">No (0)</option><option value="1">Sí (+1)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">R — FR ≥30 rpm</div></div><select id="curb3" style="width:80px;"><option value="0">No (0)</option><option value="1">Sí (+1)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">B — PAS &lt;90 o PAD ≤60 mmHg</div></div><select id="curb4" style="width:80px;"><option value="0">No (0)</option><option value="1">Sí (+1)</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">65 — Edad ≥65 años</div></div><select id="curb5" style="width:80px;"><option value="0">No (0)</option><option value="1">Sí (+1)</option></select></div>
     </div>
     <div class="btn-row" style="margin-top:12px;">
       <button class="calc" onclick="calcCURB()">Calcular</button>
@@ -2668,7 +2690,6 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     
 <div id="evid-wrap-curb" style="margin-top:0;"></div>
-<div class="info">0–1: Ambulatorio · 2: Hospitalizacion · 3–5: UCI</div>
   </div>
 </div>
 
@@ -2678,9 +2699,9 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="card-title">Score de Rockall — HTDA</div>
     <div class="sofa-grid">
       <div class="sofa-item"><div class="sofa-name">Edad</div><select id="rock1"><option value="0">&lt;60 → 0</option><option value="1">60–79 → 1</option><option value="2">≥80 → 2</option></select><div class="sofa-score" id="r-age">0</div></div>
-      <div class="sofa-item"><div class="sofa-name">Choque</div><select id="rock2"><option value="0">Sin choque → 0</option><option value="1">Taquicardia (FC≥100, PAS≥100) → 1</option><option value="2">Hipotension (PAS&lt;100) → 2</option></select><div class="sofa-score" id="r-shock">0</div></div>
-      <div class="sofa-item"><div class="sofa-name">Comorbilidades</div><select id="rock3"><option value="0">Sin comorbilidades → 0</option><option value="2">ICC, CI, enf. mayor → 2</option><option value="3">Falla renal/hepatica/cancer → 3</option></select><div class="sofa-score" id="r-comor">0</div></div>
-      <div class="sofa-item"><div class="sofa-name">Diagnostico</div><select id="rock4"><option value="0">Mallory-Weiss / sin lesion → 0</option><option value="1">Ulcera peptica/erosion → 1</option><option value="2">Cancer TDA u otros → 2</option></select><div class="sofa-score" id="r-diag">0</div></div>
+      <div class="sofa-item"><div class="sofa-name">Choque</div><select id="rock2"><option value="0">Sin choque → 0</option><option value="1">Taquicardia (FC≥100, PAS≥100) → 1</option><option value="2">Hipotensión (PAS&lt;100) → 2</option></select><div class="sofa-score" id="r-shock">0</div></div>
+      <div class="sofa-item"><div class="sofa-name">Comorbilidades</div><select id="rock3"><option value="0">Sin comorbilidades → 0</option><option value="2">ICC, CI, enf. mayor → 2</option><option value="3">Falla renal/hepática/cáncer → 3</option></select><div class="sofa-score" id="r-comor">0</div></div>
+      <div class="sofa-item"><div class="sofa-name">Diagnóstico</div><select id="rock4"><option value="0">Mallory-Weiss / sin lesión → 0</option><option value="1">Úlcera péptica/erosión → 1</option><option value="2">Cáncer TDA u otros → 2</option></select><div class="sofa-score" id="r-diag">0</div></div>
       <div class="sofa-item"><div class="sofa-name">Estigmas sangrado reciente</div><select id="rock5"><option value="0">Sin estigmas/punto negro → 0</option><option value="2">Sangre, coagulo adherido, vaso visible → 2</option></select><div class="sofa-score" id="r-stig">0</div></div>
     </div>
     <div class="btn-row" style="margin-top:12px;">
@@ -2694,7 +2715,6 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     
 <div id="evid-wrap-rockall" style="margin-top:0;"></div>
-<div class="info">0–2: Mortalidad &lt;5% · 3–4: ~10–20% · ≥5: &gt;40% — UCI, endoscopia urgente</div>
   </div>
 </div>
 
@@ -2751,7 +2771,6 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="result-badge" id="rass-badge"></div>
     </div>
     <div id="evid-wrap-rass" style="margin-top:0;"></div>
-    <div class="info" style="margin-top:10px;">Meta sedación UCI: RASS -2 a 0 (sin delirium) · CAM-ICU válido con RASS ≥ -3 · RASS -4/-5: valorar SAS (Riker)</div>
   </div>
 </div>
 
@@ -2784,7 +2803,6 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     
 <div id="evid-wrap-kirby" style="margin-top:0;"></div>
-<div class="info">SF ratio: &gt;315 normal · 235-315 SDRA leve · 150-235 moderado · &lt;150 grave · Correlaciona con PF ratio (Nellcor formula)</div>
   </div>
 </div>
 
@@ -2914,7 +2932,6 @@ input.pat-synced:focus, select.pat-synced:focus {
       </div>
     </div>
     <div id="evid-wrap-electrolitos" style="margin-top:0;"></div>
-    <div class="info">Velocidades máximas IV: K⁺ 10–20 mEq/h periférica / 40 mEq/h central · MgSO₄ 1–2 g/h · Ca gluconato 1 g en 10 min urgencia</div>
   </div>
 </div>
 
@@ -3325,7 +3342,6 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="mr-row"><span class="mr-label">Reducción urea (%URR)</span><span class="mr-val" id="tsr-urr">—</span></div>
       <div class="mr-row"><span class="mr-label">Fracción de filtración</span><span class="mr-val" id="tsr-ff-val">—</span></div>
     </div>
-    <div class="info">CRRT meta: 20-25 mL/kg/h (efluente) · IHD meta Kt/V ≥1.2 por sesión · FF &lt;25%: reducir riesgo coagulación del filtro · SLED: Kt/V ≥1.0 por sesión</div>
     <div id="evid-wrap-tsr-dosis" style="margin-top:0;"></div>
   </div>
 </div>
@@ -3362,7 +3378,6 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="divider"></div>
       <div class="mr-row"><span class="mr-label">Balance neto proyectado en 24h</span><span class="mr-val" id="uf-bal-proy">—</span></div>
     </div>
-    <div class="info">UF neta = (balance a corregir ÷ horas) + ingresos horarios · FF = Qf / (Qb × (1 − HTO)) · FF &gt;25% → riesgo de coagulación del filtro</div>
     <div id="evid-wrap-tsr-uf" style="margin-top:0;"></div>
   </div>
 </div>
@@ -3496,7 +3511,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="section-sub">3-hora (reevaluación)</div>
     <div class="bundle-progress"><div class="bundle-progress-bar" id="sb-prog-3h" style="width:0%"></div></div>
     <div id="sb-3h-items">
-      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Reevaluar volemia (exam clínico, USG POCUS, leg raise)</label>
+      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Reevaluar volemia (examen clínico, USG POCUS, leg raise)</label>
       <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Repetir lactato si lactato inicial elevado</label>
       <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Evaluar respuesta a líquidos / titular vasopresores</label>
     </div>
@@ -3523,9 +3538,6 @@ input.pat-synced:focus, select.pat-synced:focus {
 <div id="calc-metabolic" class="calc-panel">
   <div class="card">
     <div class="card-title">Panel Metabólico Rápido — AG / Osmol Gap / Delta-Delta</div>
-    <div class="info" style="margin-bottom:14px;">
-      Triage metabólico integrado: Anión Gap, brecha osmolar y delta-delta en una sola vista para orientar diagnóstico diferencial rápido.
-    </div>
 
     <div class="section-sub">Electrolitos séricos</div>
     <div class="row cols3">
@@ -3549,6 +3561,10 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="row cols2">
       <div><label>Lactato (mmol/L)</label><input type="number" id="mp-lac" placeholder="ej. 2.0" step="0.1" oninput="calcMetabolic()"></div>
     </div>
+    <div class="btn-row" style="margin-top:12px;">
+      <button class="calc" onclick="calcMetabolic()">Calcular</button>
+      <button class="reset" onclick="resetPanel('calc-metabolic')">Limpiar</button>
+    </div>
 
     <div id="mp-result-box" style="display:none;margin-top:14px;">
       <div class="multi-result">
@@ -3569,8 +3585,179 @@ input.pat-synced:focus, select.pat-synced:focus {
         <div class="mr-row"><span class="mr-val" id="mp-ddx" style="font-size:11px;line-height:1.6;max-width:100%;">—</span></div>
       </div>
     </div>
-    <div class="info" style="margin-top:12px;">AG normal: 12±4 · Delta/Delta &lt;1: AGMA + NAGMA coexistente · &gt;2: AGMA + alcalosis metabólica · Brecha osmolar &gt;10: sospechar tóxicos (metanol, etilenglicol, propilenglicol)</div>
     <div id="evid-wrap-metabolic" style="margin-top:0;"></div>
+  </div>
+</div>
+
+<!-- ===== GLASGOW COMA SCALE ===== -->
+<div id="calc-gcs" class="calc-panel">
+  <div class="card">
+    <div class="card-title">Glasgow Coma Scale (GCS)</div>
+    <div><label>Apertura ocular (E)</label>
+      <select id="gcs-e" onchange="calcGCS()">
+        <option value="">Seleccionar</option>
+        <option value="4">4 — Espontánea</option>
+        <option value="3">3 — A la voz</option>
+        <option value="2">2 — Al dolor</option>
+        <option value="1">1 — Ninguna</option>
+      </select>
+    </div>
+    <div style="margin-top:8px;"><label>Respuesta verbal (V)</label>
+      <select id="gcs-v" onchange="calcGCS()">
+        <option value="">Seleccionar</option>
+        <option value="5">5 — Orientada</option>
+        <option value="4">4 — Confusa</option>
+        <option value="3">3 — Palabras inapropiadas</option>
+        <option value="2">2 — Sonidos incomprensibles</option>
+        <option value="1">1 — Ninguna</option>
+      </select>
+    </div>
+    <div style="margin-top:8px;"><label>Respuesta motora (M)</label>
+      <select id="gcs-m" onchange="calcGCS()">
+        <option value="">Seleccionar</option>
+        <option value="6">6 — Obedece órdenes</option>
+        <option value="5">5 — Localiza dolor</option>
+        <option value="4">4 — Retira al dolor</option>
+        <option value="3">3 — Flexión anormal (decorticación)</option>
+        <option value="2">2 — Extensión (descerebración)</option>
+        <option value="1">1 — Ninguna</option>
+      </select>
+    </div>
+    <div class="btn-row" style="margin-top:12px;"><button class="calc" onclick="calcGCS()">Calcular</button><button class="reset" onclick="resetPanel('calc-gcs')">Limpiar</button></div>
+    <div class="result" id="gcs-result" style="display:none;">
+      <div class="result-val" id="gcs-total">0</div>
+      <div class="result-unit">/ 15</div>
+      <div class="result-badge badge-gray" id="gcs-badge">—</div>
+    </div>
+    <div class="result" id="gcs-detail" style="display:none;flex-direction:column;gap:4px;">
+      <div class="result-label" id="gcs-interp" style="font-size:12px;"></div>
+      <div class="result-label" id="gcs-components" style="font-size:11px;color:var(--muted2);"></div>
+    </div>
+    <div id="evid-wrap-gcs" style="margin-top:0;"></div>
+  </div>
+</div>
+
+<!-- ===== qSOFA ===== -->
+<div id="calc-qsofa" class="calc-panel">
+  <div class="card">
+    <div class="card-title">qSOFA — Quick SOFA</div>
+    <div><label>Presión arterial sistólica ≤100 mmHg</label>
+      <select id="qsofa-pas" onchange="calcQSOFA()">
+        <option value="">Seleccionar</option>
+        <option value="0">No (PAS &gt;100)</option>
+        <option value="1">Sí (PAS ≤100)</option>
+      </select>
+    </div>
+    <div style="margin-top:8px;"><label>Frecuencia respiratoria ≥22/min</label>
+      <select id="qsofa-fr" onchange="calcQSOFA()">
+        <option value="">Seleccionar</option>
+        <option value="0">No (FR &lt;22)</option>
+        <option value="1">Sí (FR ≥22)</option>
+      </select>
+    </div>
+    <div style="margin-top:8px;"><label>Alteración del estado mental (GCS &lt;15)</label>
+      <select id="qsofa-gcs" onchange="calcQSOFA()">
+        <option value="">Seleccionar</option>
+        <option value="0">No (alerta, GCS 15)</option>
+        <option value="1">Sí (confuso o GCS &lt;15)</option>
+      </select>
+    </div>
+    <div class="result" id="qsofa-result" style="display:none;">
+      <div class="result-val" id="qsofa-total">0</div>
+      <div class="result-unit">/ 3</div>
+      <div class="result-badge badge-gray" id="qsofa-badge">—</div>
+    </div>
+    <div class="result" id="qsofa-detail" style="display:none;">
+      <div class="result-label" id="qsofa-interp"></div>
+    </div>
+    <div class="btn-row"><button class="calc" onclick="calcQSOFA()">Calcular</button><button class="reset" onclick="resetPanel('calc-qsofa')">Limpiar</button></div>
+    <div id="evid-wrap-qsofa" style="margin-top:0;"></div>
+  </div>
+</div>
+
+<!-- ===== WELLS — TEP ===== -->
+<div id="calc-wells" class="calc-panel">
+  <div class="card">
+    <div class="card-title">Wells Score — Tromboembolia Pulmonar</div>
+    <div><label>Signos/síntomas clínicos de TVP</label>
+      <select id="wells-tvp" onchange="calcWells()">
+        <option value="0">No</option><option value="3">Sí (+3)</option>
+      </select>
+    </div>
+    <div style="margin-top:8px;"><label>TEP es el diagnóstico más probable</label>
+      <select id="wells-alt" onchange="calcWells()">
+        <option value="0">No</option><option value="3">Sí (+3)</option>
+      </select>
+    </div>
+    <div style="margin-top:8px;"><label>FC &gt;100 lpm</label>
+      <select id="wells-fc" onchange="calcWells()">
+        <option value="0">No</option><option value="1.5">Sí (+1.5)</option>
+      </select>
+    </div>
+    <div style="margin-top:8px;"><label>Inmovilización ≥3 días o cirugía en últimas 4 semanas</label>
+      <select id="wells-inmov" onchange="calcWells()">
+        <option value="0">No</option><option value="1.5">Sí (+1.5)</option>
+      </select>
+    </div>
+    <div style="margin-top:8px;"><label>TVP o TEP previo</label>
+      <select id="wells-prev" onchange="calcWells()">
+        <option value="0">No</option><option value="1.5">Sí (+1.5)</option>
+      </select>
+    </div>
+    <div style="margin-top:8px;"><label>Hemoptisis</label>
+      <select id="wells-hemo" onchange="calcWells()">
+        <option value="0">No</option><option value="1">Sí (+1)</option>
+      </select>
+    </div>
+    <div style="margin-top:8px;"><label>Cáncer activo (tratamiento en últimos 6 meses)</label>
+      <select id="wells-cancer" onchange="calcWells()">
+        <option value="0">No</option><option value="1">Sí (+1)</option>
+      </select>
+    </div>
+    <div class="result" id="wells-result" style="display:none;">
+      <div class="result-val" id="wells-total">0</div>
+      <div class="result-unit">pts</div>
+      <div class="result-badge badge-gray" id="wells-badge">—</div>
+    </div>
+    <div class="result" id="wells-detail" style="display:none;flex-direction:column;gap:4px;">
+      <div class="result-label" id="wells-interp"></div>
+      <div class="result-label" id="wells-action" style="font-size:11px;color:var(--muted2);"></div>
+    </div>
+    <div class="btn-row"><button class="calc" onclick="calcWells()">Calcular</button><button class="reset" onclick="resetPanel('calc-wells')">Limpiar</button></div>
+    <div id="evid-wrap-wells" style="margin-top:0;"></div>
+  </div>
+</div>
+
+<!-- ===== MELD ===== -->
+<div id="calc-meld" class="calc-panel">
+  <div class="card">
+    <div class="card-title">MELD Score — Enfermedad Hepática Terminal</div>
+    <div class="row cols3">
+      <div><label>Bilirrubina total (mg/dL)</label><input type="number" id="meld-bili" placeholder="ej. 2.5" step="0.1" oninput="calcMELD()"></div>
+      <div><label>Creatinina sérica (mg/dL)</label><input type="number" id="meld-cr" placeholder="ej. 1.2" step="0.1" oninput="calcMELD()"></div>
+      <div><label>INR</label><input type="number" id="meld-inr" placeholder="ej. 1.5" step="0.1" oninput="calcMELD()"></div>
+    </div>
+    <div class="row cols2" style="margin-top:8px;">
+      <div><label>Sodio sérico (mEq/L) — para MELD-Na</label><input type="number" id="meld-na" placeholder="ej. 137" oninput="calcMELD()"></div>
+      <div><label>¿En hemodiálisis (≥2/sem)?</label>
+        <select id="meld-hd" onchange="calcMELD()">
+          <option value="0">No</option><option value="1">Sí (Cr se fija en 4.0)</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-row" style="margin-top:12px;"><button class="calc" onclick="calcMELD()">Calcular</button><button class="reset" onclick="resetPanel('calc-meld')">Limpiar</button></div>
+    <div class="result" id="meld-result" style="display:none;">
+      <div class="result-val" id="meld-total">0</div>
+      <div class="result-unit">pts</div>
+      <div class="result-badge badge-gray" id="meld-badge">—</div>
+    </div>
+    <div class="multi-result" id="meld-detail" style="display:none;">
+      <div class="mr-row"><span class="mr-label">MELD clásico</span><span class="mr-val" id="meld-classic">—</span></div>
+      <div class="mr-row"><span class="mr-label">MELD-Na</span><span class="mr-val" id="meld-na-val">—</span></div>
+      <div class="mr-row"><span class="mr-label">Mortalidad estimada a 3 meses</span><span class="mr-val" id="meld-mort">—</span></div>
+      <div class="mr-row"><span class="mr-label">Interpretación</span><span class="mr-val" id="meld-interp">—</span></div>
+    </div>
+    <div id="evid-wrap-meld" style="margin-top:0;"></div>
   </div>
 </div>
 
@@ -3929,6 +4116,38 @@ const evidData = {
       {year:'2017', authors:'Berend K et al.', title:'Physiological approach to assessment of acid-base disturbances', journal:'N Engl J Med', doi:'10.1056/NEJMra1003327'},
     ]
   },
+  gcs: {
+    formula: 'GCS = E (1–4) + V (1–5) + M (1–6)\nRango: 3–15',
+    interpretation: '13–15: leve · 9–12: moderado · 6–8: grave (considerar intubación) · 3–5: muy grave (intubar, TAC urgente)',
+    refs: [
+      {year:'1974', authors:'Teasdale G, Jennett B', title:'Assessment of coma and impaired consciousness: a practical scale', journal:'Lancet', doi:'10.1016/S0140-6736(74)91639-0'},
+      {year:'2014', authors:'Teasdale G et al.', title:'The Glasgow Coma Scale at 40 years: standing the test of time', journal:'Lancet Neurol', doi:'10.1016/S1474-4422(14)70120-6'},
+    ]
+  },
+  qsofa: {
+    formula: 'qSOFA = PAS ≤100 (1 pt) + FR ≥22 (1 pt) + GCS <15 (1 pt)\nRango: 0–3',
+    interpretation: '0: bajo riesgo · 1: vigilar · ≥2: alta sospecha de sepsis — completar SOFA, lactato, hemocultivos y considerar ATB empírico.',
+    refs: [
+      {year:'2016', authors:'Seymour CW et al.', title:'Assessment of Clinical Criteria for Sepsis (Sepsis-3)', journal:'JAMA', doi:'10.1001/jama.2016.0288'},
+      {year:'2016', authors:'Singer M et al.', title:'The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3)', journal:'JAMA', doi:'10.1001/jama.2016.0287'},
+    ]
+  },
+  wells: {
+    formula: 'Signos TVP (+3) + TEP dx más probable (+3) + FC >100 (+1.5) + Inmovilización/cirugía (+1.5) + TEV previo (+1.5) + Hemoptisis (+1) + Cáncer (+1)',
+    interpretation: '≤1: baja probabilidad (~1.3%) → dímero D · 2–4: moderada (~16%) → dímero D, si + → angioTAC · >4: alta (~41%) → angioTAC directo',
+    refs: [
+      {year:'2000', authors:'Wells PS et al.', title:'Derivation of a Simple Clinical Model to Categorize Patients Probability of Pulmonary Embolism', journal:'Thromb Haemost', doi:'10.1055/s-0037-1613938'},
+      {year:'2006', authors:'van Belle A et al.', title:'Effectiveness of managing suspected pulmonary embolism using an algorithm combining clinical probability, D-dimer testing, and CT', journal:'JAMA', doi:'10.1001/jama.295.2.172'},
+    ]
+  },
+  meld: {
+    formula: 'MELD = 10 × (0.957×ln(Cr) + 0.378×ln(Bili) + 1.120×ln(INR) + 0.643)\nMELD-Na = MELD + 1.32×(137−Na) − 0.033×MELD×(137−Na)',
+    interpretation: '<10: compensada · 10–19: moderada · 20–29: severa, listar para trasplante · ≥30: falla terminal, urgencia',
+    refs: [
+      {year:'2001', authors:'Kamath PS et al.', title:'A model to predict survival in patients with end-stage liver disease', journal:'Hepatology', doi:'10.1053/jhep.2001.22172'},
+      {year:'2006', authors:'Kim WR et al.', title:'Hyponatremia and Mortality among Patients on the Liver-Transplant Waiting List', journal:'N Engl J Med', doi:'10.1056/NEJMoa062034'},
+    ]
+  },
 };
 
 // ══════════════════════════════════════════════════════
@@ -4071,50 +4290,54 @@ function calcNEWS2() {
   const sbs = parseFloat(document.getElementById('news2-sbs').value);
   const fc = parseFloat(document.getElementById('news2-fc').value);
   const avpu = document.getElementById('news2-avpu').value;
+  const o2sup = document.getElementById('news2-o2').value;
 
-  // Validar que todos los campos estén completos
-  if (!fr || !sao2 || !temp || !sbs || !fc || avpu === '') {
+  if (isNaN(fr) || isNaN(sao2) || isNaN(temp) || isNaN(sbs) || isNaN(fc) || avpu === '' || o2sup === '') {
     document.getElementById('news2-result').style.display = 'none';
     document.getElementById('news2-action').textContent = 'Completa todos los campos para calcular';
     return;
   }
 
+  var useScale2 = parseInt(o2sup) === 2;
   let score = 0;
-  // Frecuencia respiratoria (respiraciones/min)
+
   if (fr >= 12 && fr <= 20) score += 0;
   else if (fr >= 9 && fr <= 11) score += 1;
   else if (fr >= 21 && fr <= 24) score += 2;
-  else if (fr >= 25 && fr <= 35) score += 3;
-  else if (fr < 8 || fr > 35) score += 3;
+  else if (fr <= 8 || fr >= 25) score += 3;
 
-  // SaO2 (%)
-  if (sao2 >= 96) score += 0;
-  else if (sao2 >= 94 && sao2 < 96) score += 1;
-  else if (sao2 >= 92 && sao2 < 94) score += 2;
-  else if (sao2 < 92) score += 3;
+  if (useScale2) {
+    if (sao2 >= 97) score += 3;
+    else if (sao2 >= 95 && sao2 <= 96) score += 2;
+    else if (sao2 >= 93 && sao2 <= 94) score += 1;
+    else if (sao2 >= 88 && sao2 <= 92) score += 0;
+    else if (sao2 < 88) score += 3;
+  } else {
+    if (sao2 >= 96) score += 0;
+    else if (sao2 >= 94) score += 1;
+    else if (sao2 >= 92) score += 2;
+    else score += 3;
+  }
 
-  // Temperatura (°C)
+  score += parseInt(o2sup);
+
   if (temp >= 36.1 && temp <= 38) score += 0;
   else if ((temp >= 35.1 && temp <= 36) || (temp >= 38.1 && temp <= 39)) score += 1;
   else if (temp >= 39.1 && temp <= 40) score += 2;
-  else if (temp < 35.1 || temp > 40) score += 3;
+  else score += 3;
 
-  // Presión arterial sistólica (mmHg)
   if (sbs >= 111 && sbs <= 219) score += 0;
   else if (sbs >= 101 && sbs <= 110) score += 1;
   else if (sbs >= 91 && sbs <= 100) score += 2;
-  else if (sbs <= 90 || sbs >= 220) score += 3;
+  else score += 3;
 
-  // Frecuencia cardíaca (lat/min)
   if (fc >= 51 && fc <= 90) score += 0;
   else if ((fc >= 41 && fc <= 50) || (fc >= 91 && fc <= 110)) score += 1;
   else if (fc >= 111 && fc <= 130) score += 2;
-  else if (fc < 40 || fc > 130) score += 3;
+  else score += 3;
 
-  // AVPU: si no es "Alert" (0), suma 3 puntos
-  if (avpu !== '0') score += 3;
+  score += parseInt(avpu);
 
-  // Mostrar resultado
   document.getElementById('news2-total').textContent = score;
   let interp, cls, action;
 
@@ -4138,6 +4361,7 @@ function calcNEWS2() {
   badge.className = 'result-badge ' + cls;
   badge.textContent = score + ' pts';
   document.getElementById('news2-result').style.display = 'flex';
+  updateStickyScore('news2', score);
 }
 
 // ============ SHOCK CLASSIFICATION ============
@@ -5022,14 +5246,15 @@ function calcSOFA() {
   });
   document.getElementById('sofa-total').textContent = total;
   let interp, cls;
-  if (total <= 1)       { interp='Sin disfuncion significativa — Mortalidad <10%'; cls='badge-green'; }
-  else if (total <= 6)  { interp='Disfuncion leve-moderada — Mortalidad ~10-20%'; cls='badge-yellow'; }
-  else if (total <= 9)  { interp='Disfuncion moderada — Mortalidad ~20-40%'; cls='badge-orange'; }
-  else if (total <= 12) { interp='Disfuncion grave — Mortalidad ~40-60%'; cls='badge-red'; }
-  else                  { interp='Falla organica multiple — Mortalidad >80%'; cls='badge-red'; }
+  if (total <= 1)       { interp='Sin disfunción significativa — Mortalidad <10%'; cls='badge-green'; }
+  else if (total <= 6)  { interp='Disfunción leve-moderada — Mortalidad ~10-20%'; cls='badge-yellow'; }
+  else if (total <= 9)  { interp='Disfunción moderada — Mortalidad ~20-40%'; cls='badge-orange'; }
+  else if (total <= 12) { interp='Disfunción grave — Mortalidad ~40-60%'; cls='badge-red'; }
+  else                  { interp='Falla orgánica múltiple — Mortalidad >80%'; cls='badge-red'; }
   document.getElementById('sofa-interp').textContent = interp;
   const b = document.getElementById('sofa-badge');
   b.className = 'result-badge '+cls; b.textContent = total+' pts';
+  updateStickyScore('sofa', total);
 }
 
 // ============ APACHE II ============
@@ -5098,7 +5323,7 @@ function calcDP() {
   const peep = parseFloat(document.getElementById('dp-peep').value);
   const dp = plat-peep;
   document.getElementById('dp-val').textContent = dp.toFixed(1);
-  if (dp<=13) setBadge('dp-badge','badge-green','Optimo');
+  if (dp<=13) setBadge('dp-badge','badge-green','Óptimo');
   else if (dp<=15) setBadge('dp-badge','badge-yellow','En limite');
   else setBadge('dp-badge','badge-red','Reducir');
   document.getElementById('dp-result').style.display='flex';
@@ -5178,13 +5403,13 @@ function calcGAS() {
   if (ph<7.35) {
     if (co2>45){ prim='Acidosis Respiratoria'; color='var(--red)';
       const e=24+0.1*(co2-40); comp='HCO3 esperado: '+e.toFixed(1)+' — Actual: '+hco3+' → '+(Math.abs(hco3-e)<3?'Compensada':'No compensada'); }
-    else if (hco3<22){ prim='Acidosis Metabolica'; color='var(--red)';
+    else if (hco3<22){ prim='Acidosis Metabólica'; color='var(--red)';
       const e=1.5*hco3+8; comp='pCO2 esperado: '+e.toFixed(1)+' +/-2 — Actual: '+co2+' → '+(Math.abs(co2-e)<3?'Compensada':'No compensada'); }
     else { prim='Acidemia mixta o compleja'; color='var(--orange)'; comp='Evaluar ambos componentes'; }
   } else if (ph>7.45) {
     if (co2<35){ prim='Alcalosis Respiratoria'; color='var(--yellow)';
       const e=24-0.2*(40-co2); comp='HCO3 esperado: '+e.toFixed(1)+' — Actual: '+hco3+' → '+(Math.abs(hco3-e)<3?'Compensada':'No compensada'); }
-    else if (hco3>26){ prim='Alcalosis Metabolica'; color='var(--yellow)';
+    else if (hco3>26){ prim='Alcalosis Metabólica'; color='var(--yellow)';
       const e=0.7*hco3+21; comp='pCO2 esperado: '+e.toFixed(1)+' +/-2 — Actual: '+co2+' → '+(Math.abs(co2-e)<3?'Compensada':'No compensada'); }
     else { prim='Alcalemia mixta o compleja'; color='var(--orange)'; comp='Evaluar ambos componentes'; }
   } else { prim='pH Normal'; color='var(--green)'; comp=co2<35&&hco3<22?'Posible mixta compensada':'Sin trastorno aparente'; }
@@ -8093,6 +8318,116 @@ function copyModuleResult(panelId) {
 }
 
 // ============ INIT ============
+// ============ GCS ============
+function calcGCS() {
+  const e = parseInt(document.getElementById('gcs-e').value);
+  const v = parseInt(document.getElementById('gcs-v').value);
+  const m = parseInt(document.getElementById('gcs-m').value);
+  if (isNaN(e) || isNaN(v) || isNaN(m)) {
+    document.getElementById('gcs-result').style.display = 'none';
+    document.getElementById('gcs-detail').style.display = 'none';
+    return;
+  }
+  const total = e + v + m;
+  document.getElementById('gcs-total').textContent = total;
+  document.getElementById('gcs-components').textContent = `E${e} V${v} M${m}`;
+  let interp, cls;
+  if (total >= 13)      { interp = 'Leve — Paciente alerta o mínimamente alterado'; cls = 'badge-green'; }
+  else if (total >= 9)  { interp = 'Moderado — Considerar vigilancia estrecha'; cls = 'badge-yellow'; }
+  else if (total >= 6)  { interp = 'Grave — Proteger vía aérea, considerar intubación'; cls = 'badge-orange'; }
+  else                  { interp = 'Muy grave — Intubar, TAC urgente, neurocirugía'; cls = 'badge-red'; }
+  document.getElementById('gcs-interp').textContent = interp;
+  const b = document.getElementById('gcs-badge');
+  b.className = 'result-badge ' + cls; b.textContent = total + ' / 15';
+  document.getElementById('gcs-result').style.display = 'flex';
+  document.getElementById('gcs-detail').style.display = 'flex';
+  ensureEvidenceForCalc('gcs');
+}
+
+// ============ qSOFA ============
+function calcQSOFA() {
+  const pas = document.getElementById('qsofa-pas').value;
+  const fr = document.getElementById('qsofa-fr').value;
+  const gcs = document.getElementById('qsofa-gcs').value;
+  if (pas === '' || fr === '' || gcs === '') {
+    document.getElementById('qsofa-result').style.display = 'none';
+    document.getElementById('qsofa-detail').style.display = 'none';
+    return;
+  }
+  const total = parseInt(pas) + parseInt(fr) + parseInt(gcs);
+  document.getElementById('qsofa-total').textContent = total;
+  let interp, cls;
+  if (total === 0)      { interp = 'Bajo riesgo — No cumple criterios de sepsis por qSOFA'; cls = 'badge-green'; }
+  else if (total === 1) { interp = 'Intermedio — Monitorizar, reevaluar en 1h'; cls = 'badge-yellow'; }
+  else                  { interp = '≥2 criterios — Alta sospecha de sepsis. Iniciar SOFA completo, lactato y hemocultivos. Considerar antibiótico empírico.'; cls = 'badge-red'; }
+  document.getElementById('qsofa-interp').textContent = interp;
+  const b = document.getElementById('qsofa-badge');
+  b.className = 'result-badge ' + cls; b.textContent = total + ' / 3';
+  document.getElementById('qsofa-result').style.display = 'flex';
+  document.getElementById('qsofa-detail').style.display = 'flex';
+  ensureEvidenceForCalc('qsofa');
+}
+
+// ============ WELLS — TEP ============
+function calcWells() {
+  const ids = ['wells-tvp','wells-alt','wells-fc','wells-inmov','wells-prev','wells-hemo','wells-cancer'];
+  const total = ids.reduce((s, id) => s + parseFloat(document.getElementById(id).value || 0), 0);
+  document.getElementById('wells-total').textContent = total;
+  let interp, action, cls;
+  if (total <= 1)       { interp = 'Baja probabilidad (~1.3% TEP)'; action = 'Solicitar dímero D. Si negativo, excluye TEP.'; cls = 'badge-green'; }
+  else if (total <= 4)  { interp = 'Probabilidad moderada (~16% TEP)'; action = 'Solicitar dímero D. Si positivo → angioTAC.'; cls = 'badge-yellow'; }
+  else                  { interp = 'Alta probabilidad (~41% TEP)'; action = 'AngioTAC directa. No esperar dímero D. Considerar anticoagulación empírica.'; cls = 'badge-red'; }
+  document.getElementById('wells-interp').textContent = interp;
+  document.getElementById('wells-action').textContent = action;
+  const b = document.getElementById('wells-badge');
+  b.className = 'result-badge ' + cls; b.textContent = total + ' pts';
+  document.getElementById('wells-result').style.display = 'flex';
+  document.getElementById('wells-detail').style.display = 'flex';
+  ensureEvidenceForCalc('wells');
+}
+
+// ============ MELD ============
+function calcMELD() {
+  let bili = parseFloat(document.getElementById('meld-bili').value);
+  let cr   = parseFloat(document.getElementById('meld-cr').value);
+  const inr = parseFloat(document.getElementById('meld-inr').value);
+  const na  = parseFloat(document.getElementById('meld-na').value);
+  const hd  = document.getElementById('meld-hd').value === '1';
+  if (isNaN(bili) || isNaN(cr) || isNaN(inr)) {
+    document.getElementById('meld-result').style.display = 'none';
+    document.getElementById('meld-detail').style.display = 'none';
+    return;
+  }
+  if (hd) cr = 4.0;
+  bili = Math.max(bili, 1); cr = Math.max(cr, 1);
+  const inrC = Math.max(inr, 1);
+  const meld = Math.round(10 * (0.957 * Math.log(cr) + 0.378 * Math.log(bili) + 1.120 * Math.log(inrC) + 0.643));
+  const meldClamped = Math.min(Math.max(meld, 6), 40);
+  let meldNa = meldClamped;
+  if (!isNaN(na)) {
+    const naClamped = Math.min(Math.max(na, 125), 137);
+    meldNa = Math.round(meldClamped + 1.32 * (137 - naClamped) - (0.033 * meldClamped * (137 - naClamped)));
+    meldNa = Math.max(meldNa, 6);
+  }
+  const displayScore = !isNaN(na) ? meldNa : meldClamped;
+  document.getElementById('meld-total').textContent = displayScore;
+  document.getElementById('meld-classic').textContent = meldClamped + ' pts';
+  document.getElementById('meld-na-val').textContent = !isNaN(na) ? meldNa + ' pts' : 'Ingrese Na para calcular';
+  let mort, interp, cls;
+  if (displayScore < 10)      { mort = '<2%'; interp = 'Enfermedad compensada'; cls = 'badge-green'; }
+  else if (displayScore < 20) { mort = '~6%'; interp = 'Moderada — Evaluar trasplante'; cls = 'badge-yellow'; }
+  else if (displayScore < 30) { mort = '~20%'; interp = 'Severa — Lista de trasplante'; cls = 'badge-orange'; }
+  else if (displayScore < 40) { mort = '~50–70%'; interp = 'Muy severa — Urgencia de trasplante'; cls = 'badge-red'; }
+  else                        { mort = '>70%'; interp = 'Falla hepática terminal'; cls = 'badge-red'; }
+  document.getElementById('meld-mort').textContent = mort;
+  document.getElementById('meld-interp').textContent = interp;
+  const b = document.getElementById('meld-badge');
+  b.className = 'result-badge ' + cls; b.textContent = displayScore + ' pts';
+  document.getElementById('meld-result').style.display = 'flex';
+  document.getElementById('meld-detail').style.display = 'block';
+  ensureEvidenceForCalc('meld');
+}
+
 const evidenceByCalc = {
   news2: ['evid-wrap-news2', 'news2'],
   shock: ['evid-wrap-shock', 'shock'],
@@ -8124,6 +8459,10 @@ const evidenceByCalc = {
   rockall: ['evid-wrap-rockall', 'rockall'],
   rass: ['evid-wrap-rass', 'rass'],
   kirby: ['evid-wrap-kirby', 'kirby'],
+  gcs: ['evid-wrap-gcs', 'gcs'],
+  qsofa: ['evid-wrap-qsofa', 'qsofa'],
+  wells: ['evid-wrap-wells', 'wells'],
+  meld: ['evid-wrap-meld', 'meld'],
   'sepsis-bundle': ['evid-wrap-sepsis-bundle', 'sepsis_bundle'],
   metabolic: ['evid-wrap-metabolic', 'metabolic'],
   'tsr-dosis': ['evid-wrap-tsr-dosis', 'kdigo_tsr'],
@@ -8194,15 +8533,165 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     btnRow.appendChild(btn);
   });
+
+  // ── Input Validation: physiological range warnings ──
+  const PHYS_RANGES = {
+    'pat-edad':  { warn:[0,120],  danger:[0,150] },
+    'pat-peso':  { warn:[2,250],  danger:[0.5,400] },
+    'pat-talla': { warn:[40,220], danger:[20,250] },
+    'vt-tall':   { warn:[40,220], danger:[20,250] },
+    'pat-dias':  { warn:[0,365],  danger:[0,730] },
+    'nota-uri':  { warn:[0,6000], danger:[0,10000] },
+  };
+  const PHYS_PATTERNS = [
+    { match: /\b(fr|resp)\b/i,          warn:[6,40],    danger:[1,60] },
+    { match: /\b(fc|card)\b/i,          warn:[40,180],  danger:[20,250] },
+    { match: /\bsao2\b|spo2|sat/i,      warn:[70,100],  danger:[50,100] },
+    { match: /\bsbs\b|sistol|pas\b/i,   warn:[60,250],  danger:[30,300] },
+    { match: /\bpam\b|media/i,          warn:[50,150],  danger:[20,200] },
+    { match: /temp/i,                    warn:[34,42],   danger:[25,45] },
+    { match: /ph\b/i,                    warn:[6.8,7.8], danger:[6.5,8.0] },
+    { match: /pao2|po2/i,               warn:[30,500],  danger:[10,700] },
+    { match: /paco2|pco2/i,             warn:[15,80],   danger:[5,120] },
+    { match: /hco3|bicarbonato/i,       warn:[5,45],    danger:[1,60] },
+    { match: /creatinina|cr\b/i,        warn:[0.2,15],  danger:[0.1,30] },
+    { match: /\bna\b|sodio/i,           warn:[120,160], danger:[100,180] },
+    { match: /\bk\b|potasio/i,          warn:[2.5,6.5], danger:[1,10] },
+    { match: /lactato|lac\b/i,          warn:[0,4],     danger:[0,20] },
+    { match: /glucosa|gluc/i,           warn:[40,400],  danger:[10,1000] },
+    { match: /bilirrubina|bili/i,       warn:[0,20],    danger:[0,50] },
+    { match: /albumina|alb\b/i,        warn:[1,6],     danger:[0.5,8] },
+    { match: /hemoglobina|hb\b|hgb/i,  warn:[4,20],    danger:[2,25] },
+    { match: /plaquetas|plt/i,          warn:[20,600],  danger:[5,1500] },
+    { match: /fio2/i,                    warn:[0.21,1],  danger:[0.15,1.1] },
+    { match: /peep/i,                    warn:[0,25],    danger:[0,35] },
+    { match: /\bvt\b|tidal/i,           warn:[200,800], danger:[50,1200] },
+    { match: /peso.?pred|ibw|pbw/i,     warn:[30,120],  danger:[20,150] },
+  ];
+
+  function getRange(input) {
+    if (PHYS_RANGES[input.id]) return PHYS_RANGES[input.id];
+    var label = (input.previousElementSibling && input.previousElementSibling.tagName === 'LABEL')
+                ? input.previousElementSibling.textContent : '';
+    var searchStr = (input.id || '') + ' ' + label + ' ' + (input.placeholder || '');
+    for (var i = 0; i < PHYS_PATTERNS.length; i++) {
+      if (PHYS_PATTERNS[i].match.test(searchStr)) return PHYS_PATTERNS[i];
+    }
+    return null;
+  }
+
+  function validateInput(input) {
+    var hint = input.parentElement && input.parentElement.querySelector('.input-range-hint');
+    input.classList.remove('input-warn', 'input-danger');
+    if (hint) hint.remove();
+    var v = parseFloat(input.value);
+    if (isNaN(v) || input.value === '') return;
+    var range = getRange(input);
+    if (!range) return;
+    var level = null;
+    if (v < range.danger[0] || v > range.danger[1]) level = 'danger';
+    else if (v < range.warn[0] || v > range.warn[1]) level = 'warn';
+    if (!level) return;
+    input.classList.add(level === 'danger' ? 'input-danger' : 'input-warn');
+    var span = document.createElement('span');
+    span.className = 'input-range-hint' + (level === 'danger' ? ' danger' : '');
+    span.textContent = (level === 'danger' ? '⚠ Fuera de rango fisiológico' : '⚠ Verifique valor') +
+                        ' (' + range.warn[0] + '–' + range.warn[1] + ')';
+    if (input.parentElement) input.parentElement.appendChild(span);
+  }
+
+  document.addEventListener('input', function(e) {
+    if (e.target.type === 'number') validateInput(e.target);
+  }, true);
+
+  // ── Nota de Evolución: auto-save / restore ──
+  var NOTA_FIELDS = [
+    'nota-sv','nota-vent','nota-vaso','nota-uri','nota-labs','nota-gaso',
+    'nota-plan','nota-obs',
+    'ning-motivo','ning-padecimiento','ning-antecedentes',
+    'ning-ef','ning-sv','ning-labs','ning-gabinete','ning-dx','ning-plan'
+  ];
+
+  function saveNotaFields() {
+    var data = {};
+    NOTA_FIELDS.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && el.value) data[id] = el.value;
+    });
+    try { localStorage.setItem('uci-nota-fields', JSON.stringify(data)); } catch(e) {}
+  }
+
+  (function restoreNotaFields() {
+    try {
+      var saved = JSON.parse(localStorage.getItem('uci-nota-fields'));
+      if (!saved) return;
+      NOTA_FIELDS.forEach(function(id) {
+        if (saved[id]) { var el = document.getElementById(id); if (el) el.value = saved[id]; }
+      });
+    } catch(e) {}
+  })();
+
+  var _notaTimer = null;
+  var notaPanel = document.getElementById('calc-nota');
+  if (notaPanel) notaPanel.addEventListener('input', function() {
+    clearTimeout(_notaTimer);
+    _notaTimer = setTimeout(saveNotaFields, 500);
+  });
 });
 </script>
 <script>
+// ── Sticky header score badges ──
+function updateStickyScore(calcId, score) {
+  var el = document.getElementById('ps-' + calcId);
+  var sep = document.querySelector('.ps-score-sep');
+  if (!el) return;
+  var colorClass = 'score-green';
+  if (calcId === 'sofa') {
+    if (score >= 10) colorClass = 'score-red';
+    else if (score >= 7) colorClass = 'score-orange';
+    else if (score >= 2) colorClass = 'score-yellow';
+  } else if (calcId === 'news2') {
+    if (score >= 7) colorClass = 'score-red';
+    else if (score >= 5) colorClass = 'score-yellow';
+  }
+  el.textContent = calcId.toUpperCase() + ' ' + score;
+  el.className = 'ps-score ' + colorClass;
+  el.style.display = '';
+  if (sep) sep.style.display = '';
+}
+</script>
+<script>
+// ── Service Worker with update detection ──
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register(new URL('sw.js', location.href))
-      .then(function(reg) { console.log('[UCI Tools] SW registrado:', reg.scope); })
+      .then(function(reg) {
+        console.log('[UCI Tools] SW registrado:', reg.scope);
+        reg.addEventListener('updatefound', function() {
+          var newSW = reg.installing;
+          if (newSW) {
+            newSW.addEventListener('statechange', function() {
+              if (newSW.state === 'activated' && navigator.serviceWorker.controller) {
+                showUpdateToast();
+              }
+            });
+          }
+        });
+      })
       .catch(function(err) { console.warn('[UCI Tools] SW error:', err); });
   });
+  navigator.serviceWorker.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'SW_UPDATED') {
+      showUpdateToast();
+    }
+  });
+}
+function showUpdateToast() {
+  if (document.getElementById('update-toast')) return;
+  var toast = document.createElement('div');
+  toast.id = 'update-toast';
+  toast.innerHTML = '<span>Nueva versión disponible</span><button onclick="location.reload()">Actualizar</button><button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--muted2);font-size:16px;cursor:pointer;padding:2px 6px;">✕</button>';
+  document.body.appendChild(toast);
 }
 </script>
 
@@ -8289,6 +8778,46 @@ const uciKB = {
   padua: {
     keys: ['padua','tev','tromboembolismo','tvp','tep','anticoagulación profiláctica','enoxaparina'],
     answer: '**Score de Padua** (riesgo de TEV):\n≥4: alto riesgo → tromboprofilaxis farmacológica\n<4: bajo riesgo → movilización temprana\nProfilaxis: Enoxaparina 40 mg SC/día o HNF 5000 UI SC c/8–12h.\nContraindicaciones: sangrado activo, plaquetas <50,000, procedimiento reciente.'
+  },
+  codigo_azul: {
+    keys: ['código azul','paro','rcp','reanimación','acls','paro cardíaco','fibrilación ventricular','asistolia','aesp','desfibrilación'],
+    answer: '**Código Azul / RCP (ACLS 2020)**\nRitmos desfibrilables (FV/TV sin pulso):\n1. Desfibrilación 200J bifásico → RCP 2min\n2. Epinefrina 1mg IV c/3-5min (tras 2° descarga)\n3. Amiodarona 300mg IV bolo → 150mg (o Lidocaína 1-1.5mg/kg)\nRitmos NO desfibrilables (Asistolia/AESP):\n1. RCP + Epinefrina 1mg IV c/3-5min inmediata\n2. Buscar causas reversibles (5H/5T)\n**5H**: Hipovolemia, Hipoxia, H+ (acidosis), Hipo/Hiperkalemia, Hipotermia\n**5T**: Tensión (neumotórax), Taponamiento, Tóxicos, TEP, Trombosis coronaria\nPost-RCP: TTM 32-36°C 24h, coronariografía si sospecha SCA, evitar hipertermia.'
+  },
+  crisis_hipertensiva: {
+    keys: ['crisis hipertensiva','emergencia hipertensiva','urgencia hipertensiva','hipertensión severa','pas >180','pad >120','nitroprusiato','labetalol','nicardipino'],
+    answer: '**Crisis hipertensiva**\n**Emergencia** (daño a órgano blanco): reducir PAM 20-25% en 1h, luego a 160/100 en 2-6h.\n• Encefalopatía/EVC: Nicardipino 5-15mg/h o Labetalol 0.5-2mg/min\n• Disección aórtica: Esmolol + Nitroprusiato, meta PAS <120 en 20min\n• Eclampsia: MgSO4 4g IV + Labetalol o Hidralazina\n• EAP: Nitroglicerina 5-200mcg/min + furosemida\n**Urgencia** (sin daño a órgano): reducción gradual en 24-48h, VO.\n• Captopril 25mg SL/VO o Amlodipino 5-10mg VO'
+  },
+  status_epileptico: {
+    keys: ['status epiléptico','crisis convulsiva','convulsión','epilepsia','benzodiacepina','fenitoína','levetiracetam'],
+    answer: '**Status Epiléptico — Protocolo escalonado**\n**0-5 min (estabilización)**: ABC, O2, glucosa capilar, vía IV, tiamina 100mg si sospecha etilismo\n**5-20 min (1ª línea)**: Diazepam 10mg IV (puede repetir ×1) o Midazolam 10mg IM\n**20-40 min (2ª línea)**:\n• Levetiracetam 60mg/kg IV (máx 4500mg) en 15min, O\n• Fenitoína 20mg/kg IV a ≤50mg/min, O\n• Valproato 40mg/kg IV en 10min\n**>40 min (status refractario)**: Midazolam 0.2mg/kg bolo → 0.1-2mg/kg/h o Propofol 2mg/kg → 1-5mg/kg/h. Monitoreo EEG continuo.'
+  },
+  insulina: {
+    keys: ['insulina','cetoacidosis','cad','estado hiperosmolar','ehh','hiperglucemia','dka','infusión insulina','glucosa control'],
+    answer: '**Insulina en UCI**\n**CAD**: Insulina regular 0.1 U/kg/h IV. Meta: ↓glucosa 50-70 mg/dL/h. Cuando glucosa <200: reducir a 0.02-0.05 U/kg/h + Dx5%. Cerrar brecha aniónica antes de transición a SC.\n**EHH**: Igual dosis, pero priorizar reposición hídrica agresiva (SF 0.9% 1L/h × 2h).\n**Infusión en paciente crítico**: Meta glucosa 140-180 mg/dL (NICE-SUGAR). Protocolo: iniciar 1-2 U/h, titular c/1-2h según glucometría.\n**Hiperkalemia**: Insulina regular 10 U + Dx50% 50mL IV (efecto en 15-30min, dura 4-6h).'
+  },
+  intubacion: {
+    keys: ['intubación','vía aérea','secuencia rápida','rsi','laringoscopia','videolaringoscopio','tubo endotraqueal','vía aérea difícil','mallampati','preoxigenación'],
+    answer: '**Intubación en UCI — Secuencia Rápida (RSI)**\n**Preparación**: Equipo listo, Plan B (bougie, mascarilla laríngea), aspiración, monitoreo.\n**Preoxigenación**: FiO2 100% × 3-5min. VNI/CNAF si SpO2 <93%.\n**Inducción + Bloqueo NM** (push-push):\n• Ketamina 1-2mg/kg (hemodinámicamente estable) o Etomidato 0.3mg/kg o Propofol 1-2mg/kg\n• Succinilcolina 1.5mg/kg (inicio 45s) o Rocuronio 1.2mg/kg (inicio 60s)\n**Posintubación**: Verificar EtCO2, Rx, iniciar sedoanalgesia.\n**Vía aérea difícil**: ≥2 intentos fallidos → mascarilla laríngea → cricotirotomía si CICO.'
+  },
+  glasgow: {
+    keys: ['glasgow','gcs','coma','nivel de consciencia','escala de coma'],
+    answer: '**Glasgow Coma Scale (GCS)**\nE: Apertura ocular (1-4) · V: Respuesta verbal (1-5) · M: Respuesta motora (1-6)\nTotal: 3-15\n• 13-15: leve\n• 9-12: moderado\n• 6-8: grave → proteger vía aérea, considerar intubación\n• 3-5: muy grave → intubar, TAC urgente\nReportar siempre desglosado: E_V_M (ej. E3V4M5 = 12).\nEn paciente intubado: reportar como E_VT_M.'
+  },
+  wells_kb: {
+    keys: ['wells','tep','embolia pulmonar','tromboembolia pulmonar','dímero d','angiotac'],
+    answer: '**Score de Wells para TEP**\nBaja (≤1): dímero D → si negativo, excluye TEP.\nModerada (2-4): dímero D → si positivo, angioTAC.\nAlta (>4): angioTAC directo, considerar anticoagulación empírica.\nAnticoagulación empírica: Heparina NF 80 U/kg bolo + 18 U/kg/h o Enoxaparina 1mg/kg c/12h.\nTEP masivo (inestabilidad): trombolisis con Alteplasa 100mg IV en 2h.'
+  },
+  meld_kb: {
+    keys: ['meld','hepático','cirrosis','insuficiencia hepática','trasplante hepático','child-pugh','falla hepática'],
+    answer: '**MELD Score**\nFórmula: 10 × (0.957×ln(Cr) + 0.378×ln(Bili) + 1.120×ln(INR) + 0.643)\n<10: compensada (<2% mortalidad 3m)\n10-19: moderada (~6%)\n20-29: severa (~20%) — listar para trasplante\n30-39: muy severa (~50-70%)\n≥40: falla terminal (>70%)\nMELD-Na mejora predicción al incorporar hiponatremia dilucional.\nUso principal: priorización de trasplante hepático y pronóstico en hepatopatía crónica descompensada.'
+  },
+  profilaxis_ulcera: {
+    keys: ['profilaxis úlcera','sangrado digestivo','estrés','omeprazol','pantoprazol','ranitidina','sucralfato','hemorragia digestiva'],
+    answer: '**Profilaxis de úlcera por estrés en UCI**\nIndicaciones (factores de riesgo altos):\n• VM >48h\n• Coagulopatía (INR >1.5, plaquetas <50,000)\n• Antecedente de HDA\n• TEC, quemados, politrauma\nFármacos: Pantoprazol 40mg IV c/24h (preferido) u Omeprazol 40mg IV c/24h.\nSi bajo riesgo: no dar profilaxis (riesgo de NAV y C. difficile).\nSuspender al tolerar vía oral y sin factores de riesgo activos.'
+  },
+  dolor_sedacion: {
+    keys: ['dolor','analgesia','sedación profunda','escala dolor','cpot','bas','eva','pain','opioides','protocolo sedación'],
+    answer: '**Dolor y Sedación en UCI (PADIS 2018)**\nEvaluar dolor primero: CPOT (no comunicativo) o EVA/NRS (comunicativo).\n**Analgesia primero** (analgosedación):\n• Fentanilo 25-100mcg/h IV o Morfina 2-4mg IV c/2-4h\n• Paracetamol 1g IV c/6h como coadyuvante\n**Sedación** solo si necesario post-analgesia:\n• Leve (RASS 0 a -2): Dexmedetomidina 0.2-1.5mcg/kg/h (preserva respiración)\n• Moderada (RASS -3): Propofol 5-50mcg/kg/min\n• Profunda (RASS -4/-5): Midazolam 0.02-0.1mg/kg/h (evitar si posible)\nProtocolo ABC: Awakening + Breathing + Coordination trial diario.'
   }
 };
 
@@ -8405,18 +8934,19 @@ Días UCI: ${ctx.patient.dias || '?'} · Dx: ${ctx.patient.dx || 'no especificad
   return sys;
 }
 
-async function sendToAI(messages, ctx) {
+async function sendToAI(messages, ctx, onChunk) {
   const cfg = getAIConfig();
   if (!cfg.key) throw new Error('NO_KEY');
 
   const model = cfg.model || 'gpt-4o-mini';
   const sysPr = buildSystemPrompt(ctx);
   const apiMessages = [{ role: 'system', content: sysPr }, ...messages];
+  const useStream = typeof onChunk === 'function';
 
   const resp = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.key },
-    body: JSON.stringify({ model, messages: apiMessages, max_tokens: 800, temperature: 0.3 })
+    body: JSON.stringify({ model, messages: apiMessages, max_tokens: 800, temperature: 0.3, stream: useStream })
   });
 
   if (!resp.ok) {
@@ -8426,8 +8956,34 @@ async function sendToAI(messages, ctx) {
     throw new Error(err.error?.message || `Error ${resp.status}`);
   }
 
-  const data = await resp.json();
-  return data.choices?.[0]?.message?.content || 'Sin respuesta.';
+  if (!useStream) {
+    const data = await resp.json();
+    return data.choices?.[0]?.message?.content || 'Sin respuesta.';
+  }
+
+  const reader = resp.body.getReader();
+  const decoder = new TextDecoder();
+  let full = '';
+  let buffer = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop();
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed.startsWith('data: ')) continue;
+      const payload = trimmed.slice(6);
+      if (payload === '[DONE]') break;
+      try {
+        const json = JSON.parse(payload);
+        const delta = json.choices?.[0]?.delta?.content;
+        if (delta) { full += delta; onChunk(full); }
+      } catch(e) {}
+    }
+  }
+  return full || 'Sin respuesta.';
 }
 
 // ── Chat Features ───────────────────────────────────
@@ -8483,9 +9039,14 @@ async function handleUserMessage(text) {
     }
   } else {
     try {
-      const response = await sendToAI(aiChatHistory.slice(-10), ctx);
       removeTyping();
-      appendMsg('bot', formatAIResponse(response));
+      const streamEl = appendMsg('bot', '<span class="ai-stream-cursor">▊</span>');
+      const container = document.getElementById('ai-messages');
+      const response = await sendToAI(aiChatHistory.slice(-10), ctx, function(partial) {
+        streamEl.innerHTML = formatAIResponse(partial) + '<span class="ai-stream-cursor">▊</span>';
+        container.scrollTop = container.scrollHeight;
+      });
+      streamEl.innerHTML = formatAIResponse(response);
       aiChatHistory.push({ role: 'assistant', content: response });
     } catch(e) {
       removeTyping();
