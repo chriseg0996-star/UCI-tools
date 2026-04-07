@@ -992,12 +992,11 @@ input.pat-synced:focus, select.pat-synced:focus {
 
   <div class="nav-group">
     <div class="nav-group-header collapsed" onclick="toggleGroup('g-acid',this)">
-      <span class="nav-group-label">🧪 Gasometría y equilibrio</span><span class="nav-chevron">▾</span>
+      <span class="nav-group-label">🧪 Ácido-base y hemodinámica</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-acid">
-      <div class="nav-item" id="nav-gas" onclick="showCalc('gas',this)"><span class="nav-icon">·</span>Gasometría Arterial</div>
-      <div class="nav-item" onclick="showCalc('tgas',this)"><span class="nav-icon">·</span>Taller Gasométrico (Choque)</div>
-      <div class="nav-item" onclick="showCalc('metabolic',this)"><span class="nav-icon">·</span>Panel Metabólico Rápido</div>
+      <div class="nav-item" id="nav-gas-met" onclick="showCalc('gas-met',this)"><span class="nav-icon">·</span>Gasometría y análisis metabólico</div>
+      <div class="nav-item" id="nav-o2-transport" onclick="showCalc('o2-transport',this)"><span class="nav-icon">·</span>Oxigenación y transporte de O₂</div>
     </div>
   </div>
 
@@ -2097,6 +2096,161 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div id="evid-wrap-vent-monitor" style="margin-top:0;"></div>
     <div id="evid-wrap-dp" style="margin-top:0;"></div>
     <div id="evid-wrap-mp" style="margin-top:0;"></div>
+  </div>
+</div>
+
+<!-- GASOMETRIA + METABOLICO UNIFICADO -->
+<div id="calc-gas-met" class="calc-panel">
+  <div class="card">
+    <div class="card-title">Gasometría y análisis metabólico</div>
+    <div class="section-sub">Gasometría arterial</div>
+    <div class="row cols4">
+      <div><label>pH</label><input type="number" id="gm-ph" placeholder="7.35 – 7.45" step="0.001"></div>
+      <div><label>PaCO₂ (mmHg)</label><input type="number" id="gm-pco2" placeholder="35 – 45" step="0.1"></div>
+      <div><label>HCO₃ (mEq/L)</label><input type="number" id="gm-hco3" placeholder="22 – 26" step="0.1"></div>
+      <div><label>BE</label><input type="number" id="gm-be" placeholder="-2 – +2" step="0.1"></div>
+    </div>
+    <div class="row cols4">
+      <div><label>PaO₂ (mmHg)</label><input type="number" id="gm-pao2" placeholder="80 – 100" step="0.1"></div>
+      <div><label>FiO₂ (decimal)</label><input type="number" id="gm-fio2" placeholder="0.21 – 0.40" step="0.01"></div>
+      <div><label>SaO₂ (%)</label><input type="number" id="gm-sao2" placeholder="95 – 100" step="0.1"></div>
+      <div><label>Lactato (mmol/L)</label><input type="number" id="gm-lac" placeholder="0.5 – 2.0" step="0.1"></div>
+    </div>
+    <div class="section-sub">Química sérica</div>
+    <div class="row cols4">
+      <div><label>Na⁺ (mEq/L)</label><input type="number" id="gm-na" placeholder="136 – 145" step="0.1"></div>
+      <div><label>Cl⁻ (mEq/L)</label><input type="number" id="gm-cl" placeholder="98 – 106" step="0.1"></div>
+      <div><label>K⁺ (mEq/L)</label><input type="number" id="gm-k" placeholder="3.5 – 5.0" step="0.1"></div>
+      <div><label>Albúmina (g/dL)</label><input type="number" id="gm-alb" placeholder="3.5 – 5.0" step="0.1"></div>
+    </div>
+    <div class="row cols3">
+      <div><label>Glucosa (mg/dL)</label><input type="number" id="gm-glu" placeholder="70 – 110" step="0.1"></div>
+      <div><label>BUN (mg/dL)</label><input type="number" id="gm-bun" placeholder="7 – 20" step="0.1"></div>
+      <div><label>Osmolaridad medida (mOsm/kg) — opcional</label><input type="number" id="gm-osm-med" placeholder="275 – 295" step="0.1"></div>
+    </div>
+    <div class="btn-row">
+      <button class="calc" onclick="calcGasMet()">Analizar</button>
+      <button class="reset" onclick="resetPanel('calc-gas-met')">Limpiar</button>
+    </div>
+
+    <div class="multi-result" id="gm-res-acid" style="display:none;margin-top:12px;">
+      <div class="card-title" style="margin:0 0 6px 0;">Análisis ácido-base</div>
+      <div class="mr-row"><span class="mr-label">Trastorno primario</span><span class="mr-val" id="gm-prim">—</span></div>
+      <div class="mr-row"><span class="mr-label">Compensación esperada</span><span class="mr-val" id="gm-comp">—</span></div>
+      <div class="mr-row"><span class="mr-label">Trastorno mixto / terciario</span><span class="mr-val" id="gm-mix">—</span></div>
+      <div class="mr-row"><span class="mr-label">BE estimado</span><span class="mr-val" id="gm-be-est">—</span></div>
+    </div>
+
+    <div class="multi-result" id="gm-res-ag" style="display:none;margin-top:12px;">
+      <div class="card-title" style="margin:0 0 6px 0;">Anion Gap</div>
+      <div class="mr-row"><span class="mr-label">AG = Na − (Cl + HCO₃)</span><span class="mr-val" id="gm-ag">—</span></div>
+      <div class="mr-row"><span class="mr-label">AG corregido por albúmina</span><span class="mr-val" id="gm-agc">—</span></div>
+      <div class="mr-row"><span class="mr-label">Delta-Delta</span><span class="mr-val" id="gm-dd">—</span></div>
+      <div class="mr-row"><span class="mr-label">Interpretación Delta-Delta</span><span class="mr-val" id="gm-dd-int">—</span></div>
+    </div>
+
+    <div class="multi-result" id="gm-res-ox" style="display:none;margin-top:12px;">
+      <div class="card-title" style="margin:0 0 6px 0;">Oxigenación</div>
+      <div class="mr-row"><span class="mr-label">PAFI</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="gm-pafi">—</span><span class="result-badge" id="gm-pafi-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">PiO₂ (PB=587)</span><span class="mr-val" id="gm-pio2">—</span></div>
+      <div class="mr-row"><span class="mr-label">PAO₂</span><span class="mr-val" id="gm-pao2-alv">—</span></div>
+      <div class="mr-row"><span class="mr-label">Gradiente A-a</span><span class="mr-val" id="gm-aa">—</span></div>
+    </div>
+
+    <div class="multi-result" id="gm-res-met" style="display:none;margin-top:12px;">
+      <div class="card-title" style="margin:0 0 6px 0;">Perfil metabólico</div>
+      <div class="mr-row"><span class="mr-label">Osmolaridad calculada</span><span class="mr-val" id="gm-osm-calc">—</span></div>
+      <div class="mr-row"><span class="mr-label">Brecha osmolar</span><span class="mr-val" id="gm-osm-gap">—</span></div>
+      <div class="mr-row"><span class="mr-label">Glucosa</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="gm-glu-v">—</span><span class="result-badge" id="gm-glu-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">Lactato</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="gm-lac-v">—</span><span class="result-badge" id="gm-lac-b"></span></span></div>
+    </div>
+
+    <div class="multi-result" id="gm-res-int" style="display:none;margin-top:12px;">
+      <div class="card-title" style="margin:0 0 6px 0;">Interpretación y recomendación</div>
+      <div class="mr-row"><span class="mr-label">Resumen</span><span class="mr-val" id="gm-int-text" style="max-width:70%;text-align:right;">—</span></div>
+      <div class="mr-row"><span class="mr-label">Severidad global</span><span class="result-badge" id="gm-int-badge"></span></div>
+    </div>
+
+    <div class="evid-panel" style="margin-top:10px;">
+      <div class="evid-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
+        <span>📚 Bibliografía y Evidencia</span><span class="evid-arrow">▾</span>
+      </div>
+      <div class="evid-body">
+        <div class="evid-section">
+          <div class="evid-ref"><span class="evid-year">2000</span> — <b>Kellum JA</b>. Diagnosis and treatment of acid-base disorders. <i>Crit Care Med</i>.</div>
+          <div class="evid-ref"><span class="evid-year">2003</span> — <b>Corey HE</b>. Stewart and beyond: new models of acid-base balance. <i>Kidney Int</i>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OXIGENACION Y TRANSPORTE DE O2 -->
+<div id="calc-o2-transport" class="calc-panel">
+  <div class="card">
+    <div class="card-title">Oxigenación y transporte de O₂</div>
+    <div class="row cols4">
+      <div><label>Hb (g/dL)</label><input type="number" id="ot-hb" placeholder="12 – 16" step="0.1"></div>
+      <div><label>SaO₂ (%)</label><input type="number" id="ot-sao2" placeholder="95 – 100" step="0.1"></div>
+      <div><label>SvO₂ (%)</label><input type="number" id="ot-svo2" placeholder="65 – 75" step="0.1"></div>
+      <div><label>PaO₂ (mmHg)</label><input type="number" id="ot-pao2" placeholder="80 – 100" step="0.1"></div>
+    </div>
+    <div class="row cols4">
+      <div><label>PvO₂ (mmHg)</label><input type="number" id="ot-pvo2" placeholder="35 – 45" step="0.1"></div>
+      <div><label>GC (L/min)</label><input type="number" id="ot-gc" placeholder="4 – 8" step="0.1"></div>
+      <div><label>FC (lpm)</label><input type="number" id="ot-fc" placeholder="60 – 100" step="1"></div>
+      <div><label>PAM (mmHg)</label><input type="number" id="ot-pam" placeholder="70 – 105" step="0.1"></div>
+    </div>
+    <div class="row cols4">
+      <div><label>PVC (mmHg)</label><input type="number" id="ot-pvc" placeholder="8 – 12" step="0.1"></div>
+      <div><label>PAPM (mmHg)</label><input type="number" id="ot-papm" placeholder="10 – 20" step="0.1"></div>
+      <div><label>POAP (mmHg)</label><input type="number" id="ot-poap" placeholder="6 – 12" step="0.1"></div>
+      <div><label>PAD (mmHg)</label><input type="number" id="ot-pad" placeholder="60 – 90" step="0.1"></div>
+    </div>
+    <div class="row cols4">
+      <div><label>SC (m²)</label><input type="number" id="ot-sc" placeholder="1.7 – 2.0" step="0.01"></div>
+      <div><label>FiO₂ (decimal)</label><input type="number" id="ot-fio2" placeholder="0.21 – 0.40" step="0.01"></div>
+      <div><label>PaCO₂ (mmHg)</label><input type="number" id="ot-paco2" placeholder="35 – 45" step="0.1"></div>
+      <div style="display:flex;align-items:end;"><button class="reset" type="button" style="width:100%;padding:8px 10px;" onclick="calcOTSc()">Calcular SC</button></div>
+    </div>
+    <div class="btn-row">
+      <button class="calc" onclick="calcO2Transport()">Calcular todo</button>
+      <button class="reset" onclick="resetPanel('calc-o2-transport')">Limpiar</button>
+    </div>
+    <div class="multi-result" id="ot-result" style="display:none;margin-top:12px;">
+      <div class="mr-row"><span class="mr-label">CcO₂</span><span class="mr-val" id="ot-cco2">—</span></div>
+      <div class="mr-row"><span class="mr-label">CaO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-cao2">—</span><span class="result-badge" id="ot-cao2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">CvO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-cvo2">—</span><span class="result-badge" id="ot-cvo2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">DavO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-davo2">—</span><span class="result-badge" id="ot-davo2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">Qs/Qt</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-qsqt">—</span><span class="result-badge" id="ot-qsqt-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">DO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-do2">—</span><span class="result-badge" id="ot-do2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">VO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-vo2">—</span><span class="result-badge" id="ot-vo2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">IEO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-ieo2">—</span><span class="result-badge" id="ot-ieo2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">VS</span><span class="mr-val" id="ot-vs">—</span></div>
+      <div class="mr-row"><span class="mr-label">VSI</span><span class="mr-val" id="ot-vsi">—</span></div>
+      <div class="mr-row"><span class="mr-label">IC</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-ic">—</span><span class="result-badge" id="ot-ic-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">RVS</span><span class="mr-val" id="ot-rvs">—</span></div>
+      <div class="mr-row"><span class="mr-label">RVSI</span><span class="mr-val" id="ot-rvsi">—</span></div>
+      <div class="mr-row"><span class="mr-label">RVP</span><span class="mr-val" id="ot-rvp">—</span></div>
+      <div class="mr-row"><span class="mr-label">RVPI</span><span class="mr-val" id="ot-rvpi">—</span></div>
+      <div class="mr-row"><span class="mr-label">TLVI</span><span class="mr-val" id="ot-tlvi">—</span></div>
+      <div class="mr-row"><span class="mr-label">TLVD</span><span class="mr-val" id="ot-tlvd">—</span></div>
+      <div class="mr-row"><span class="mr-label">PiO₂</span><span class="mr-val" id="ot-pio2">—</span></div>
+      <div class="mr-row"><span class="mr-label">PAO₂</span><span class="mr-val" id="ot-pao2alv">—</span></div>
+      <div class="mr-row"><span class="mr-label">P(A-a)O₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-aa">—</span><span class="result-badge" id="ot-aa-b"></span></span></div>
+    </div>
+    <div class="info" style="margin-top:10px;">*Presión barométrica CDMX: 587 mmHg · Presión de vapor de agua: 47 mmHg</div>
+    <div class="evid-panel" style="margin-top:10px;">
+      <div class="evid-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
+        <span>📚 Bibliografía y Evidencia</span><span class="evid-arrow">▾</span>
+      </div>
+      <div class="evid-body">
+        <div class="evid-section">
+          <div class="evid-ref"><span class="evid-year">Fick</span> — Principio de Fick para VO₂/DO₂ y extracción periférica.</div>
+          <div class="evid-ref"><span class="evid-year">Swan-Ganz</span> — Monitoreo hemodinámico por catéter de arteria pulmonar para resistencias y trabajo ventricular.</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -5744,6 +5898,207 @@ function calcVentMonitor() {
   ensureEvidenceForCalc('vent-mec');
 }
 
+function calcGasMet() {
+  const ph = parseFloat(document.getElementById('gm-ph').value);
+  const pco2 = parseFloat(document.getElementById('gm-pco2').value);
+  const hco3 = parseFloat(document.getElementById('gm-hco3').value);
+  const pao2 = parseFloat(document.getElementById('gm-pao2').value);
+  const fio2 = parseFloat(document.getElementById('gm-fio2').value);
+  const lac = parseFloat(document.getElementById('gm-lac').value);
+  const na = parseFloat(document.getElementById('gm-na').value);
+  const cl = parseFloat(document.getElementById('gm-cl').value);
+  const alb = parseFloat(document.getElementById('gm-alb').value);
+  const glu = parseFloat(document.getElementById('gm-glu').value);
+  const bun = parseFloat(document.getElementById('gm-bun').value);
+  const osmMed = parseFloat(document.getElementById('gm-osm-med').value);
+  const beInput = parseFloat(document.getElementById('gm-be').value);
+
+  if ([ph,pco2,hco3,pao2,fio2,na,cl,alb,glu,lac].some(v => isNaN(v))) {
+    alert('Complete los campos obligatorios de gasometría y química sérica.');
+    return;
+  }
+  const beEst = isNaN(beInput) ? (hco3 - 24 + 16.2 * (ph - 7.4)) : beInput;
+  let prim = 'Indeterminado', comp = '—', mixed = 'Sin datos concluyentes';
+  if (ph < 7.35) {
+    if (hco3 < 22) {
+      prim = 'Acidosis metabólica';
+      const exp = 1.5 * hco3 + 8;
+      comp = `Winter: PaCO₂ esperada ${exp.toFixed(1)} ±2, actual ${pco2.toFixed(1)}`;
+      if (pco2 > exp + 2) mixed = 'Componente respiratorio ácido agregado';
+      else if (pco2 < exp - 2) mixed = 'Componente respiratorio alcalino agregado';
+      else mixed = 'Compensación respiratoria apropiada';
+    } else if (pco2 > 45) {
+      prim = 'Acidosis respiratoria';
+      const exp = 24 + 0.1 * (pco2 - 40);
+      comp = `HCO₃ esperada (aguda) ${exp.toFixed(1)}, actual ${hco3.toFixed(1)}`;
+      if (hco3 > exp + 2) mixed = 'Componente metabólico alcalino agregado';
+      if (hco3 < exp - 2) mixed = 'Componente metabólico ácido agregado';
+    }
+  } else if (ph > 7.45) {
+    if (hco3 > 26) {
+      prim = 'Alcalosis metabólica';
+      const exp = 0.7 * hco3 + 21;
+      comp = `PaCO₂ esperada ${exp.toFixed(1)} ±2, actual ${pco2.toFixed(1)}`;
+      if (pco2 < exp - 2) mixed = 'Alcalosis respiratoria agregada';
+      else if (pco2 > exp + 2) mixed = 'Acidosis respiratoria agregada';
+      else mixed = 'Compensación respiratoria apropiada';
+    } else if (pco2 < 35) {
+      prim = 'Alcalosis respiratoria';
+      const exp = 24 - 0.2 * (40 - pco2);
+      comp = `HCO₃ esperada ${exp.toFixed(1)}, actual ${hco3.toFixed(1)}`;
+      if (hco3 < exp - 2) mixed = 'Componente metabólico ácido agregado';
+      if (hco3 > exp + 2) mixed = 'Componente metabólico alcalino agregado';
+    }
+  } else {
+    prim = 'pH cercano a normal';
+    mixed = 'Posible trastorno mixto compensado';
+    comp = 'Interpretar con AG, delta-delta y contexto clínico';
+  }
+
+  const ag = na - (cl + hco3);
+  const agc = ag + 2.5 * (4 - alb);
+  const dd = (24 - hco3) !== 0 ? (agc - 12) / (24 - hco3) : null;
+  let ddInt = 'No interpretable';
+  if (dd !== null) {
+    if (dd < 0.4) ddInt = '<0.4: acidosis metabólica sin AG';
+    else if (dd < 1) ddInt = '0.4–1: mixta (AG + sin AG)';
+    else if (dd <= 2) ddInt = '1–2: acidosis metabólica con AG pura';
+    else ddInt = '>2: mixta (AG + alcalosis metabólica)';
+  }
+
+  const pafi = pao2 / fio2;
+  const pio2 = (587 - 47) * fio2;
+  const pao2Alv = pio2 - (pco2 / 0.8);
+  const aa = pao2Alv - pao2;
+  let pafiTxt = 'Normal', pafiCls = 'badge-green';
+  if (pafi < 100) { pafiTxt = 'SDRA grave'; pafiCls = 'badge-red'; }
+  else if (pafi < 200) { pafiTxt = 'SDRA moderado'; pafiCls = 'badge-orange'; }
+  else if (pafi <= 300) { pafiTxt = 'SDRA leve'; pafiCls = 'badge-yellow'; }
+
+  const osmCalc = !isNaN(bun) ? (2 * na + glu / 18 + bun / 2.8) : null;
+  const osmGap = (!isNaN(osmMed) && osmCalc !== null) ? (osmMed - osmCalc) : null;
+
+  if (glu >= 70 && glu <= 110) setBadge('gm-glu-b', 'badge-green', 'Normal');
+  else if (glu <= 180) setBadge('gm-glu-b', 'badge-yellow', 'Hiperglucemia leve');
+  else if (glu > 180) setBadge('gm-glu-b', 'badge-orange', 'Hiperglucemia significativa');
+  else setBadge('gm-glu-b', 'badge-red', 'Hipoglucemia');
+
+  if (lac < 2) setBadge('gm-lac-b', 'badge-green', 'Normal');
+  else if (lac <= 4) setBadge('gm-lac-b', 'badge-yellow', 'Elevado');
+  else setBadge('gm-lac-b', 'badge-red', 'Crítico — choque');
+  setBadge('gm-pafi-b', pafiCls, pafiTxt);
+
+  const hints = [];
+  let sev = 'NORMAL', sevCls = 'badge-green';
+  if (prim.includes('Acidosis metabólica') && agc > 12) {
+    hints.push('Acidosis metabólica con AG elevado: considerar MUDPILES (metanol, uremia, CAD, propilenglicol, isoniazida, lactato, etilenglicol, salicilatos).');
+    sev = 'ALTERACIÓN MODERADA'; sevCls = 'badge-orange';
+  }
+  if (prim.includes('Alcalosis metabólica')) hints.push('Alcalosis metabólica: evaluar pérdidas GI/renales, diuréticos y reposición de cloro/potasio.');
+  if (prim.includes('Acidosis respiratoria')) hints.push('Acidosis respiratoria: evaluar ventilación minuto, fatiga y estrategia ventilatoria.');
+  if (mixed.includes('agregad')) { sev = 'ALTERACIÓN GRAVE'; sevCls = 'badge-red'; }
+  if (aa > 20 || pafi < 200 || lac > 4) { sev = 'ALTERACIÓN GRAVE'; sevCls = 'badge-red'; }
+  else if (sev === 'NORMAL' && (lac >= 2 || pafi <= 300 || agc > 12)) { sev = 'ALTERACIÓN LEVE'; sevCls = 'badge-yellow'; }
+
+  document.getElementById('gm-prim').textContent = prim;
+  document.getElementById('gm-comp').textContent = comp;
+  document.getElementById('gm-mix').textContent = mixed;
+  document.getElementById('gm-be-est').textContent = beEst.toFixed(1) + ' mEq/L';
+  document.getElementById('gm-ag').textContent = ag.toFixed(1);
+  document.getElementById('gm-agc').textContent = agc.toFixed(1);
+  document.getElementById('gm-dd').textContent = dd === null ? '—' : dd.toFixed(2);
+  document.getElementById('gm-dd-int').textContent = ddInt;
+  document.getElementById('gm-pafi').textContent = pafi.toFixed(0) + ' mmHg';
+  document.getElementById('gm-pio2').textContent = pio2.toFixed(1) + ' mmHg';
+  document.getElementById('gm-pao2-alv').textContent = pao2Alv.toFixed(1) + ' mmHg';
+  document.getElementById('gm-aa').textContent = aa.toFixed(1) + ' mmHg';
+  document.getElementById('gm-osm-calc').textContent = osmCalc === null ? 'Requiere BUN' : osmCalc.toFixed(1) + ' mOsm/kg';
+  document.getElementById('gm-osm-gap').textContent = osmGap === null ? '—' : osmGap.toFixed(1);
+  document.getElementById('gm-glu-v').textContent = glu.toFixed(1) + ' mg/dL';
+  document.getElementById('gm-lac-v').textContent = lac.toFixed(1) + ' mmol/L';
+  document.getElementById('gm-int-text').textContent = [prim, mixed, ...hints].join(' · ');
+  setBadge('gm-int-badge', sevCls, sev);
+
+  ['gm-res-acid','gm-res-ag','gm-res-ox','gm-res-met','gm-res-int'].forEach(id => document.getElementById(id).style.display = 'grid');
+}
+
+function calcOTSc() {
+  const peso = parseFloat(document.getElementById('pat-peso').value);
+  const talla = parseFloat(document.getElementById('pat-talla').value);
+  const scEl = document.getElementById('ot-sc');
+  if (isNaN(peso) || isNaN(talla) || peso <= 0 || talla <= 0) {
+    alert('Capture peso y talla en el perfil del paciente.');
+    return;
+  }
+  scEl.value = Math.sqrt((peso * talla) / 3600).toFixed(2);
+}
+
+function calcO2Transport() {
+  const hb = parseFloat(document.getElementById('ot-hb').value);
+  const sao2 = parseFloat(document.getElementById('ot-sao2').value);
+  const svo2 = parseFloat(document.getElementById('ot-svo2').value);
+  const pao2 = parseFloat(document.getElementById('ot-pao2').value);
+  const pvo2 = parseFloat(document.getElementById('ot-pvo2').value);
+  const gc = parseFloat(document.getElementById('ot-gc').value);
+  const fc = parseFloat(document.getElementById('ot-fc').value);
+  const pam = parseFloat(document.getElementById('ot-pam').value);
+  const pvc = parseFloat(document.getElementById('ot-pvc').value);
+  const papm = parseFloat(document.getElementById('ot-papm').value);
+  const poap = parseFloat(document.getElementById('ot-poap').value);
+  const sc = parseFloat(document.getElementById('ot-sc').value);
+  const pad = parseFloat(document.getElementById('ot-pad').value);
+  const fio2 = parseFloat(document.getElementById('ot-fio2').value);
+  const paco2 = parseFloat(document.getElementById('ot-paco2').value);
+
+  if ([hb,sao2,svo2,pao2,pvo2,gc,fc,pam,pvc,papm,poap,sc,pad,fio2,paco2].some(v => isNaN(v) || v === 0)) {
+    alert('Complete todos los campos para calcular transporte de O₂.');
+    return;
+  }
+
+  const cco2 = (hb * 1.34) + (0.0031 * pao2);
+  const cao2 = (hb * 1.34 * (sao2/100)) + (0.0031 * pao2);
+  const cvo2 = (hb * 1.34 * (svo2/100)) + (0.0031 * pvo2);
+  const davo2 = cao2 - cvo2;
+  const qsqt = ((cco2 - cao2) / (cco2 - cvo2)) * 100;
+  const do2 = gc * 10 * cao2;
+  const vo2 = gc * 10 * davo2;
+  const ieo2 = ((cao2 - cvo2) / cao2) * 100;
+  const vs = (gc / fc) * 1000;
+  const vsi = vs / sc;
+  const ic = gc / sc;
+  const rvs = ((pam - pvc) * 80) / gc;
+  const rvsi = rvs * sc;
+  const rvp = ((papm - poap) * 80) / gc;
+  const rvpi = rvp * sc;
+  const tlvi = vs * (pam - poap) * 0.0136;
+  const tlvd = vs * (papm - pad) * 0.0136;
+  const pio2 = (587 - 47) * fio2;
+  const pao2alv = pio2 - (paco2 / 0.8);
+  const aa = pao2alv - pao2;
+
+  const badgeRange = (id, v, min, max) => setBadge(id, (v>=min && v<=max) ? 'badge-green' : (v<min ? 'badge-yellow' : 'badge-orange'), (v>=min && v<=max) ? 'Normal' : (v<min ? 'Bajo' : 'Alto'));
+  badgeRange('ot-cao2-b', cao2, 17, 20);
+  badgeRange('ot-cvo2-b', cvo2, 12, 15);
+  badgeRange('ot-davo2-b', davo2, 4, 6);
+  setBadge('ot-qsqt-b', qsqt < 15 ? 'badge-green' : 'badge-red', qsqt < 15 ? 'Normal' : 'Elevado');
+  badgeRange('ot-do2-b', do2, 950, 1150);
+  badgeRange('ot-vo2-b', vo2 / sc, 200, 250);
+  badgeRange('ot-ieo2-b', ieo2, 20, 30);
+  badgeRange('ot-ic-b', ic, 2.5, 4.0);
+  setBadge('ot-aa-b', (aa>=10 && aa<=20) ? 'badge-green' : 'badge-yellow', (aa>=10 && aa<=20) ? 'Normal' : 'Alterado');
+
+  const put = (id, v, unit='') => document.getElementById(id).textContent = v.toFixed(2) + (unit ? ' ' + unit : '');
+  put('ot-cco2', cco2, 'mL/dL'); put('ot-cao2', cao2, 'mL/dL'); put('ot-cvo2', cvo2, 'mL/dL');
+  put('ot-davo2', davo2, 'mL/dL'); put('ot-qsqt', qsqt, '%'); put('ot-do2', do2, 'mL/min');
+  put('ot-vo2', vo2/sc, 'mL/min/m²'); put('ot-ieo2', ieo2, '%'); put('ot-vs', vs, 'mL/lat');
+  put('ot-vsi', vsi, 'mL/m²/lat'); put('ot-ic', ic, 'L/min/m²'); put('ot-rvs', rvs, 'dyn·s/cm⁵');
+  put('ot-rvsi', rvsi, 'dyn·s/cm⁵/m²'); put('ot-rvp', rvp, 'dyn·s/cm⁵'); put('ot-rvpi', rvpi, 'dyn·s/cm⁵/m²');
+  put('ot-tlvi', tlvi, 'g·m/lat'); put('ot-tlvd', tlvd, 'g·m/lat'); put('ot-pio2', pio2, 'mmHg');
+  put('ot-pao2alv', pao2alv, 'mmHg'); put('ot-aa', aa, 'mmHg');
+
+  document.getElementById('ot-result').style.display = 'grid';
+}
+
 // ============ GASOMETRIA ============
 function calcGAS() {
   if (!validate([{id:'gas-ph',label:'pH'},{id:'gas-co2',label:'pCO₂'},{id:'gas-hco3',label:'HCO₃'}])) return;
@@ -6346,16 +6701,16 @@ function syncPatient() {
   }
 
   // ── Auto-fill: PESO (all calculators) ───────────────
-  ['vas-peso','bal-peso','kd-peso','hb-peso','el-peso','tsr-peso','uf-peso','ac-peso','ox-peso','sed-weight','tf-weight','hemo-weight','gfr-peso'].forEach(id => forceVal(id, peso));
+  ['vas-peso','bal-peso','kd-peso','hb-peso','el-peso','tsr-peso','uf-peso','ac-peso','ox-peso','sed-weight','tf-weight','hemo-weight','gfr-peso','vp-peso','ot-sc'].forEach(id => forceVal(id, peso));
 
   // ── Auto-fill: TALLA ────────────────────────────────
-  ['vt-tall','hb-tall','hemo-height'].forEach(id => forceVal(id, talla));
+  ['vt-tall','hb-tall','hemo-height','vp-talla'].forEach(id => forceVal(id, talla));
 
   // ── Auto-fill: EDAD ─────────────────────────────────
-  ['hb-edad','gfr-edad'].forEach(id => forceVal(id, edad));
+  ['hb-edad','gfr-edad','ap-age','saps-age','nut-age'].forEach(id => forceVal(id, edad));
 
   // ── Auto-fill: SEXO ─────────────────────────────────
-  if (sexo) { ['vt-sex','hb-sex','gfr-sexo'].forEach(id => forceSelect(id, sexo)); }
+  if (sexo) { ['vt-sex','hb-sex','gfr-sexo','vp-sexo'].forEach(id => forceSelect(id, sexo)); }
 
   // ── Auto-fill: DIAS UCI → NUTRIC ────────────────────
   if (dias) {
@@ -6446,6 +6801,16 @@ function syncPatient() {
   if (peso && talla) calcVT();
   if (peso) calcBAL();
   if (peso && talla && edad) calcHARRIS();
+  if (peso && talla) updateVentParamsPIC();
+  if (peso && talla) {
+    const sc = Math.sqrt(parseFloat(peso) * parseFloat(talla) / 3600);
+    const scEl = document.getElementById('ot-sc');
+    if (scEl) scEl.classList.remove('pat-synced');
+    if (scEl && !scEl.classList.contains('pat-synced')) {
+      scEl.value = sc.toFixed(2);
+      scEl.classList.add('pat-synced');
+    }
+  }
 
   // ── Persist to localStorage ─────────────────────────
   try {
@@ -6480,10 +6845,10 @@ function highlightSyncedFields() {
   const talla = document.getElementById('pat-talla').value.trim();
   const edad  = document.getElementById('pat-edad').value.trim();
   const sexo  = document.getElementById('pat-sexo').value;
-  if (peso)  ['vas-peso','bal-peso','kd-peso','hb-peso','el-peso','tsr-peso','uf-peso','ac-peso','ox-peso','sed-weight','tf-weight','hemo-weight','gfr-peso'].forEach(id => markSynced(id));
-  if (talla) ['vt-tall','hb-tall','hemo-height'].forEach(id => markSynced(id));
-  if (edad)  ['hb-edad','gfr-edad'].forEach(id => markSynced(id));
-  if (sexo)  ['vt-sex','hb-sex','gfr-sexo'].forEach(id => markSynced(id));
+  if (peso)  ['vas-peso','bal-peso','kd-peso','hb-peso','el-peso','tsr-peso','uf-peso','ac-peso','ox-peso','sed-weight','tf-weight','hemo-weight','gfr-peso','vp-peso'].forEach(id => markSynced(id));
+  if (talla) ['vt-tall','hb-tall','hemo-height','vp-talla'].forEach(id => markSynced(id));
+  if (edad)  ['hb-edad','gfr-edad','ap-age','saps-age','nut-age'].forEach(id => markSynced(id));
+  if (sexo)  ['vt-sex','hb-sex','gfr-sexo','vp-sexo'].forEach(id => markSynced(id));
 }
 function markSynced(id) {
   const el = document.getElementById(id);
