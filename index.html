@@ -205,6 +205,33 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 input[type=number]:focus, input[type=text]:focus, input[type=date]:focus, select:focus { border-color: var(--accent2); }
 select option { background: var(--surface2); }
 
+textarea {
+  width: 100%; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 4px; color: var(--text); font-family: var(--sans);
+  font-size: 12px; padding: 8px; outline: none; resize: vertical;
+  transition: border-color 0.15s;
+}
+textarea:focus { border-color: var(--accent2); }
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text);
+  box-shadow: 0 0 0 1000px var(--bg) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+#calc-paciente input[type=text],
+#calc-paciente input[type=number],
+#calc-paciente input[type=date],
+#calc-nota input[type=text],
+#calc-nota input[type=number] {
+  background: var(--bg);
+  color: var(--text);
+  border-color: var(--border);
+}
+
 /* BUTTONS */
 .btn-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
 button.calc {
@@ -951,14 +978,24 @@ input.pat-synced:focus, select.pat-synced:focus {
   <div class="nav-divider"></div>
 
   <div class="nav-group">
-    <div class="nav-group-header collapsed" onclick="toggleGroup('g-resp',this)">
-      <span class="nav-group-label">🫁 Respiratorio</span><span class="nav-chevron">▾</span>
+    <div class="nav-group-header collapsed" onclick="toggleGroup('g-vent',this)">
+      <span class="nav-group-label">🫁 Ventilación mecánica</span><span class="nav-chevron">▾</span>
     </div>
-    <div class="nav-group-items collapsed" id="g-resp">
-      <div class="nav-item" onclick="showCalc('vent-mec',this)"><span class="nav-icon">·</span>Mecánica Ventilatoria</div>
-      <div class="nav-item" onclick="showCalc('kirby',this)"><span class="nav-icon">·</span>Índice de Kirby (SF/PF)</div>
-      <div class="nav-item" onclick="showCalc('tvent',this)"><span class="nav-icon">·</span>Destete / Extubación</div>
-      <div class="nav-item" onclick="showCalc('gas',this)"><span class="nav-icon">·</span>Gasometría Arterial</div>
+    <div class="nav-group-items collapsed" id="g-vent">
+      <div class="nav-item" id="nav-vent-mec" onclick="showCalc('vent-mec',this)"><span class="nav-icon">·</span>Mecánica y monitor</div>
+      <div class="nav-item" id="nav-kirby" onclick="showCalc('kirby',this)"><span class="nav-icon">·</span>Oxigenación</div>
+      <div class="nav-item" id="nav-tvent" onclick="showCalc('tvent',this)"><span class="nav-icon">·</span>Destete / Extubación</div>
+    </div>
+  </div>
+
+  <div class="nav-divider"></div>
+
+  <div class="nav-group">
+    <div class="nav-group-header collapsed" onclick="toggleGroup('g-acid',this)">
+      <span class="nav-group-label">🧪 Gasometría y equilibrio</span><span class="nav-chevron">▾</span>
+    </div>
+    <div class="nav-group-items collapsed" id="g-acid">
+      <div class="nav-item" id="nav-gas" onclick="showCalc('gas',this)"><span class="nav-icon">·</span>Gasometría Arterial</div>
       <div class="nav-item" onclick="showCalc('tgas',this)"><span class="nav-icon">·</span>Taller Gasométrico (Choque)</div>
       <div class="nav-item" onclick="showCalc('metabolic',this)"><span class="nav-icon">·</span>Panel Metabólico Rápido</div>
     </div>
@@ -972,7 +1009,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div class="nav-group-items collapsed" id="g-hemo">
       <div class="nav-item" onclick="showCalc('shock',this)"><span class="nav-icon">·</span>Clasificación de Shock</div>
-      <div class="nav-item" onclick="showCalc('hemodynamics',this)"><span class="nav-icon">·</span>Cálculos Hemodinámicos</div>
+      <div class="nav-item" onclick="showCalc('hemodynamics',this)"><span class="nav-icon">·</span>DO₂ / VO₂ / SVR / IC</div>
       <div class="nav-item" onclick="showCalc('vaso',this)"><span class="nav-icon">·</span>Vasopresor</div>
       <div class="nav-item" onclick="showCalc('vexus',this)"><span class="nav-icon">·</span>VExUS — Congestión Venosa</div>
     </div>
@@ -1159,7 +1196,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 
     <!-- VENTILACION -->
     <div class="export-section">
-      <div class="export-section-title">🫁 Ventilación Mecánica</div>
+      <div class="export-section-title">🫁 Ventilación mecánica</div>
       <div class="score-grid">
         <div class="score-card"><span class="score-card-name">PAFI / P:F</span><span class="score-card-val" id="ex-pafi">—</span><span class="score-card-badge result-badge" id="ex-pafi-b"></span></div>
         <div class="score-card"><span class="score-card-name">Driving Pressure</span><span class="score-card-val" id="ex-dp">—</span><span class="score-card-badge result-badge" id="ex-dp-b"></span></div>
@@ -1223,8 +1260,9 @@ input.pat-synced:focus, select.pat-synced:focus {
       Selecciona una calculadora del menú lateral.<br><br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🚨 ADMISIÓN</span> — NEWS2 · qSOFA · GCS · PADUA · CURB-65 · Wells<br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">📊 SEVERIDAD</span> — SOFA · APACHE II · SAPS II · NUTRIC · MELD<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫁 RESPIRATORIO</span> — Mecánica ventilatoria · Kirby · Destete · Gasometría · Taller gasométrico<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💉 HEMODINÁMICA</span> — Shock · Hemodinamia avanzada · Vasopresor · VExUS<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫁 VENTILACIÓN</span> — Mecánica/monitor · Oxigenación · Destete<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🧪 GAS / ÁCIDO-BASE</span> — Gasometría · Taller gasométrico · Panel metabólico<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💉 HEMODINÁMICA</span> — Shock · DO₂/VO₂/SVR · Vasopresor · VExUS<br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫘 RENAL & TSR</span> — KDIGO · Balance · Electrolitos · Diálisis · UF · Anticoagulación<br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🧠 NEURO & SEDACIÓN</span> — Sedación · CAM-ICU · RASS · PPC<br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💊 SOPORTE</span> — Sepsis Bundle · Transfusión · Harris-Benedict
@@ -1476,6 +1514,10 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div><label>Altura (cm) - para BSA</label><input type="number" id="hemo-height" placeholder="ej. 170" oninput="calcHemodynamics()"></div>
       <div><label>Peso (kg) - para BSA</label><input type="number" id="hemo-weight" placeholder="ej. 70" oninput="calcHemodynamics()"></div>
       <div><label>SvO2 (%) — venoso mixto</label><input type="number" id="hemo-svo2" placeholder="ej. 65" oninput="calcHemodynamics()"></div>
+    </div>
+    <div class="btn-row" style="margin-top:12px;">
+      <button class="calc" onclick="calcHemodynamics()">Calcular</button>
+      <button class="reset" onclick="resetPanel('calc-hemodynamics'); document.getElementById('hemo-interpretation').innerHTML='Ingresa todos los parámetros para interpretar';">Limpiar</button>
     </div>
 
     <div class="result" id="hemo-result" style="display:none;">
@@ -1886,11 +1928,11 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- VENTILACION -->
 <!-- ============================================================ -->
 
-<!-- MECANICA VENTILATORIA (VT + dP + MP + PAFI) -->
+<!-- MECANICA VENTILATORIA (VT + PAFI + monitor: dP/PM + derivados) -->
 <div id="calc-vent-mec" class="calc-panel">
   <div class="card" style="margin-bottom:12px;padding:12px 16px;">
-    <div class="group-title" style="margin-bottom:4px;">Mecánica ventilatoria</div>
-    <div class="group-desc">Peso predicho — VT protector · Driving pressure · Poder Mecánico · PAFI (P:F)</div>
+    <div class="group-title" style="margin-bottom:4px;">Mecánica y monitor</div>
+    <div class="group-desc">Peso predicho — VT protector · Compliance / Raw / WOB · dP y poder mecánico (PAFI y SF en «Oxigenación»)</div>
   </div>
 
   <div class="card" id="vent-sec-vt">
@@ -1914,65 +1956,77 @@ input.pat-synced:focus, select.pat-synced:focus {
 <div id="evid-wrap-vt" style="margin-top:0;"></div>
   </div>
 
-  <div class="card" id="vent-sec-dp">
-    <div class="card-title">Driving Pressure (dP)</div>
-    <div class="row cols2">
-      <div><label>P Meseta (Pplat) cmH2O</label><input type="number" id="dp-plat" placeholder="≤30"></div>
-      <div><label>PEEP total (cmH2O)</label><input type="number" id="dp-peep" placeholder="5-20"></div>
+  <div class="card" id="vent-sec-monitor">
+    <div class="card-title">Datos del ventilador y derivados (monitor)</div>
+    <div class="info" style="font-size:10.5px;line-height:1.65;font-family:var(--mono);margin-bottom:12px;">
+      <b>Fórmulas (referencia servicio)</b> — mismo criterio que la hoja de monitoreo:<br>
+      1) <b>Cstat</b> = VTe / (Ppl − PEEPt) · 2) <b>Cdin</b> = VTe / (Pp − PEEPt)<br>
+      3) <b>IF</b> = [(Pp − ½Ppl) × 0,33] / Pdiafr · 4) <b>WOB</b> = [(Pp − ½Ppl) / 10] × VTe · 5) <b>WOB<sub>min</sub></b> = WOB × FR<br>
+      6) <b>Raw</b> = (Pp − Ppl) / flujo (L/s) · 7) <b>Índ. ventilación</b> = VE / PaCO₂ · 8) <b>Vd/Vt</b> ≈ (PaCO₂ − PETCO₂) / PaCO₂<br>
+      9) <b>VA</b> = VE × (1 − Vd/Vt) L/min (equivalente a restar ventilación de espacio muerto)<br>
+      10) <b>PM</b> = 0,098 × FR × VC(L) × (Pp − ΔP/2) con ΔP = Ppl − PEEPt (Gattinoni).<br>
+      <span style="color:var(--muted2);font-size:10px;">Nota: en algunas hojas la línea 1 aparece como «índice» pero corresponde a <b>distensibilidad estática</b>. El OI pediátrico (FiO₂×MAP×100/PaO₂) está en «Oxigenación».</span>
     </div>
-    <div class="btn-row">
-      <button class="calc" onclick="calcDP()">Calcular</button>
-      <button class="reset" onclick="resetPanel('vent-sec-dp')">Limpiar</button>
-    </div>
-    <div class="result" id="dp-result" style="display:none">
-      <div class="result-val" id="dp-val">—</div><div class="result-unit">cmH2O</div>
-      <div class="result-label">dP = Pplat - PEEP</div>
-      <div class="result-badge" id="dp-badge"></div>
-    </div>
-<div id="evid-wrap-dp" style="margin-top:0;"></div>
-  </div>
-
-  <div class="card" id="vent-sec-mp">
-    <div class="card-title">Poder Mecánico</div>
     <div class="row cols3">
-      <div><label>FR (rpm)</label><input type="number" id="mp-fr" placeholder="12-20"></div>
-      <div><label>VT (mL)</label><input type="number" id="mp-vt" placeholder="350-500"></div>
-      <div><label>PEEP (cmH2O)</label><input type="number" id="mp-peep" placeholder="5-20"></div>
+      <div><label>VTe exhalado (mL)</label><input type="number" id="vm-vte" placeholder="ej. 488" step="1"></div>
+      <div><label>FR (rpm)</label><input type="number" id="vm-fr" placeholder="ej. 22" step="1"></div>
+      <div><label>PEEP total (cmH₂O)</label><input type="number" id="vm-peep" placeholder="ej. 6" step="0.1"></div>
+    </div>
+    <div class="row cols3">
+      <div><label>P pico (cmH₂O)</label><input type="number" id="vm-ppico" placeholder="ej. 17" step="0.1"></div>
+      <div><label>P meseta (cmH₂O)</label><input type="number" id="vm-pplat" placeholder="ej. 15" step="0.1"></div>
+      <div><label>Flujo inspiratorio</label><input type="number" id="vm-flujo" placeholder="ej. 56" step="0.1"></div>
     </div>
     <div class="row cols2">
-      <div><label>P Pico (cmH2O)</label><input type="number" id="mp-ppico" placeholder="<35"></div>
-      <div><label>P Meseta (cmH2O)</label><input type="number" id="mp-pplat" placeholder="≤30"></div>
+      <div><label>Unidad del flujo</label>
+        <select id="vm-flujo-unit">
+          <option value="Lmin" selected>L/min</option>
+          <option value="Ls">L/s</option>
+        </select>
+      </div>
+      <div><label>P diafragma (cmH₂O) — opcional (índice fatiga)</label><input type="number" id="vm-pdiaf" placeholder="esofágica" step="0.1"></div>
     </div>
-    <div class="btn-row">
-      <button class="calc" onclick="calcMP()">Calcular</button>
-      <button class="reset" onclick="resetPanel('vent-sec-mp')">Limpiar</button>
+    <div class="section-sub">Gasometría / ventilación minuto (opcional)</div>
+    <div class="row cols3">
+      <div><label>VE (L/min)</label><input type="number" id="vm-ve" placeholder="ej. 10.7" step="0.1"></div>
+      <div><label>PaCO₂ (mmHg)</label><input type="number" id="vm-paco2" placeholder="ej. 44" step="0.1"></div>
+      <div><label>PETCO₂ (mmHg)</label><input type="number" id="vm-petco2" placeholder="ej. 32" step="0.1"></div>
     </div>
-    <div class="result" id="mp-result" style="display:none">
-      <div class="result-val" id="mp-val">—</div><div class="result-unit">J/min</div>
-      <div class="result-label">Poder Mecánico</div>
-      <div class="result-badge" id="mp-badge"></div>
+    <div class="btn-row" style="margin-top:12px;">
+      <button class="calc" onclick="calcVentMonitor()">Calcular</button>
+      <button class="reset" onclick="resetPanel('vent-sec-monitor')">Limpiar</button>
     </div>
-    
-<div id="evid-wrap-mp" style="margin-top:0;"></div>
-  </div>
-
-  <div class="card" id="vent-sec-pafi">
-    <div class="card-title">PAFI / P:F Ratio</div>
-    <div class="row cols2">
-      <div><label>PaO2 (mmHg)</label><input type="number" id="pafi-pao2" placeholder="80-100"></div>
-      <div><label>FiO2 (decimal: 0.21–1.0)</label><input type="number" id="pafi-fio2" placeholder="ej. 0.40" step="0.01"></div>
+    <div class="multi-result" id="vm-result-wrap" style="display:none;margin-top:12px;">
+      <div class="mr-row" style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:space-between;">
+        <span class="mr-label">Driving pressure (Pplat − PEEP)</span>
+        <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span class="mr-val accent" id="vm-dp">—</span>
+          <span class="result-badge" id="vm-dp-badge"></span>
+        </span>
+      </div>
+      <div class="mr-row"><span class="mr-label">Distensibilidad estática Cstat = VTe/(Ppl−PEEP)</span><span class="mr-val" id="vm-cstat">—</span></div>
+      <div class="mr-row"><span class="mr-label">Distensibilidad dinámica Cdin = VTe/(Pp−PEEP)</span><span class="mr-val" id="vm-cdyn">—</span></div>
+      <div class="mr-row"><span class="mr-label">Resistencia Raw = (Pp−Ppl)/flujo</span><span class="mr-val" id="vm-raw">—</span></div>
+      <div class="divider"></div>
+      <div class="mr-row"><span class="mr-label">WOB [(Pp−½Pplat)/10]×VTe</span><span class="mr-val" id="vm-wob">—</span></div>
+      <div class="mr-row"><span class="mr-label">WOB minuto (WOB×FR)</span><span class="mr-val" id="vm-wobmin">—</span></div>
+      <div class="mr-row"><span class="mr-label">Índice fatiga</span><span class="mr-val" id="vm-ifat">—</span></div>
+      <div class="divider"></div>
+      <div class="mr-row"><span class="mr-label">Índice ventilación VE/PaCO₂</span><span class="mr-val" id="vm-vi">—</span></div>
+      <div class="mr-row"><span class="mr-label">Vd/Vt (PaCO₂−PETCO₂)/PaCO₂</span><span class="mr-val" id="vm-vdvt">—</span></div>
+      <div class="mr-row"><span class="mr-label">VA (L/min) = VE×(1−Vd/Vt)</span><span class="mr-val" id="vm-va">—</span></div>
+      <div class="divider"></div>
+      <div class="mr-row" style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:space-between;">
+        <span class="mr-label">Poder mecánico PM = 0.098×FR×VC(L)×(Pp−ΔP/2)</span>
+        <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span class="mr-val accent" id="vm-pm">—</span>
+          <span class="result-badge" id="vm-mp-badge"></span>
+        </span>
+      </div>
     </div>
-    <div class="btn-row">
-      <button class="calc" onclick="calcPAFI()">Calcular</button>
-      <button class="reset" onclick="resetPanel('vent-sec-pafi')">Limpiar</button>
-    </div>
-    <div class="result" id="pafi-result" style="display:none">
-      <div class="result-val" id="pafi-val">—</div><div class="result-unit">mmHg</div>
-      <div class="result-label" id="pafi-interp"></div>
-      <div class="result-badge" id="pafi-badge"></div>
-    </div>
-    
-<div id="evid-wrap-pafi" style="margin-top:0;"></div>
+    <div id="evid-wrap-vent-monitor" style="margin-top:0;"></div>
+    <div id="evid-wrap-dp" style="margin-top:0;"></div>
+    <div id="evid-wrap-mp" style="margin-top:0;"></div>
   </div>
 </div>
 
@@ -2394,6 +2448,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="mr-row"><span class="mr-label">Interpretación VCI</span><span class="mr-val" id="st-vciinterp">—</span></div>
     </div>
     <div class="info">VPP &gt;13%: responde a líquidos · VCI dist. &gt;18%: precarga dependiente · PVC: cmH2O / 1.36 = mmHg</div>
+    <div id="evid-wrap-starling" style="margin-top:0;"></div>
   </div>
 </div>
 
@@ -2774,35 +2829,83 @@ input.pat-synced:focus, select.pat-synced:focus {
   </div>
 </div>
 
-<!-- ===== KIRBY ===== -->
+<!-- ===== OXIGENACIÓN: PAFI + OI + KIRBY (SF/PF) — sin duplicar PAFI en mecánica ===== -->
 <div id="calc-kirby" class="calc-panel">
+  <div class="card" style="margin-bottom:12px;padding:12px 16px;">
+    <div class="group-title" style="margin-bottom:4px;">Oxigenación (monitor / gas)</div>
+    <div class="group-desc">P:F (arterial) · Índice de oxigenación (OI) · SpO₂/FiO₂ (Kirby) — un solo bloque; volúmenes y monitor van en «Mecánica y monitor».</div>
+  </div>
+
   <div class="card">
-    <div class="card-title">Índice de Kirby — FiO₂ Requerida y Eficiencia Pulmonar</div>
-    <div class="row cols3">
+    <div class="card-title">Mapa — hoja de monitoreo ventilatorio (referencia)</div>
+    <div class="info" style="font-size:11px;line-height:1.75;">
+      <b>Volúmenes / presiones / mecánica (VTe, FR, PEEP, Pp, Pplat, dP, Cstat, Raw, WOB, PM):</b>
+      <button type="button" class="reset" style="display:inline;padding:4px 10px;margin:0 4px;font-size:10px;vertical-align:middle;" onclick="showCalc('vent-mec', document.getElementById('nav-vent-mec'))">Ir a mecánica y monitor</button><br>
+      <b>Gasometría (pH, PaCO₂, HCO₃, lactato…):</b>
+      <button type="button" class="reset" style="display:inline;padding:4px 10px;margin:0 4px;font-size:10px;vertical-align:middle;" onclick="showCalc('gas', document.getElementById('nav-gas'))">Gasometría arterial</button><br>
+      <b>Destete / Tobin (FR/VT) / SBT:</b>
+      <button type="button" class="reset" style="display:inline;padding:4px 10px;margin:0 4px;font-size:10px;vertical-align:middle;" onclick="showCalc('tvent', document.getElementById('nav-tvent'))">Destete / extubación</button>
+    </div>
+  </div>
+
+  <div class="card" id="vent-sec-pafi">
+    <div class="card-title">PAFI / P:F (PaO₂/FiO₂)</div>
+    <div class="row cols2">
+      <div><label>PaO₂ (mmHg)</label><input type="number" id="pafi-pao2" placeholder="80-100"></div>
+      <div><label>FiO₂ (decimal: 0.21–1.0)</label><input type="number" id="pafi-fio2" placeholder="ej. 0.40" step="0.01"></div>
+    </div>
+    <div class="btn-row">
+      <button class="calc" onclick="calcPAFI()">Calcular PAFI</button>
+      <button class="reset" onclick="resetPanel('vent-sec-pafi')">Limpiar bloque PAFI</button>
+    </div>
+    <div class="result" id="pafi-result" style="display:none">
+      <div class="result-val" id="pafi-val">—</div><div class="result-unit">mmHg</div>
+      <div class="result-label" id="pafi-interp"></div>
+      <div class="result-badge" id="pafi-badge"></div>
+    </div>
+    <div id="evid-wrap-pafi" style="margin-top:0;"></div>
+  </div>
+
+  <div class="card" id="vent-sec-oi">
+    <div class="card-title">Índice de oxigenación (OI)</div>
+    <div class="info" style="margin-bottom:8px;font-size:11px;">OI = (FiO₂ × MAP × 100) / PaO₂ — usa FiO₂ y PaO₂ del bloque PAFI y la presión media en vía aérea (Paw / MAP) del monitor.</div>
+    <div class="row cols2">
+      <div><label>MAP / Paw media (cmH₂O)</label><input type="number" id="oi-paw" placeholder="ej. 12" step="0.1"></div>
+    </div>
+    <div class="btn-row">
+      <button class="calc" onclick="calcOI()">Calcular OI</button>
+      <button class="reset" onclick="resetPanel('vent-sec-oi')">Limpiar OI</button>
+    </div>
+    <div class="result" id="oi-result" style="display:none">
+      <div class="result-val" id="oi-val">—</div>
+      <div class="result-unit">OI</div>
+      <div class="result-label" id="oi-interp"></div>
+    </div>
+    <div id="evid-wrap-oi" style="margin-top:0;"></div>
+  </div>
+
+  <div class="card" id="vent-sec-kirby">
+    <div class="card-title">Índice de Kirby — SpO₂/FiO₂ (SF ratio)</div>
+    <div class="info" style="margin-bottom:8px;font-size:11px;">FiO₂ para el SF ratio es el mismo que en el bloque PAFI (arriba). No se repite el cálculo de P:F aquí.</div>
+    <div class="row cols2">
       <div><label>SpO₂ actual (%)</label><input type="number" id="kb-spo2" placeholder="94-100" step="0.1" max="100"></div>
-      <div><label>FiO₂ actual (decimal: 0.21–1.0)</label><input type="number" id="kb-fio2" placeholder="ej. 0.40" step="0.01"></div>
-      <div><label>PaO₂ actual (mmHg)</label><input type="number" id="kb-pao2" placeholder="80-100" step="0.1"></div>
     </div>
     <div class="row cols2">
       <div><label>SpO₂ deseada (%)</label><input type="number" id="kb-spo2-meta" placeholder="94-100" step="0.1" max="100"></div>
       <div><label>FiO₂ deseada (cálculo inverso)</label><input type="number" id="kb-fio2-meta" placeholder="" step="0.01"></div>
     </div>
     <div class="btn-row">
-      <button class="calc" onclick="calcKIRBY()">Calcular</button>
-      <button class="reset" onclick="resetPanel('calc-kirby')">Limpiar</button>
+      <button class="calc" onclick="calcKIRBY()">Calcular SF</button>
+      <button class="reset" onclick="resetPanel('vent-sec-kirby')">Limpiar Kirby</button>
     </div>
     <div class="multi-result" id="kirby-result" style="display:none; margin-top:12px;">
-      <div class="mr-row"><span class="mr-label">PAFI (PaO₂/FiO₂)</span><span class="mr-val accent" id="kb-pafi">—</span></div>
-      <div class="mr-row"><span class="mr-label">Clasificación SDRA</span><span class="result-badge" id="kb-sdra-b">—</span></div>
-      <div class="divider"></div>
       <div class="mr-row"><span class="mr-label">Índice SpO₂/FiO₂ (SF ratio)</span><span class="mr-val accent" id="kb-sf">—</span></div>
       <div class="mr-row"><span class="mr-label">Interpretación SF</span><span class="mr-val" id="kb-sf-interp">—</span></div>
       <div class="divider"></div>
       <div class="mr-row"><span class="mr-label">FiO₂ requerida para SpO₂ meta</span><span class="mr-val green" id="kb-fio2-req">—</span></div>
       <div class="mr-row"><span class="mr-label">SpO₂ esperada con FiO₂ deseada</span><span class="mr-val" id="kb-spo2-exp">—</span></div>
     </div>
-    
-<div id="evid-wrap-kirby" style="margin-top:0;"></div>
+    <div id="evid-wrap-kirby" style="margin-top:0;"></div>
   </div>
 </div>
 
@@ -3170,8 +3273,8 @@ input.pat-synced:focus, select.pat-synced:focus {
 
 <div id="calc-tvent" class="calc-panel">
   <div class="card" style="margin-bottom:12px;padding:12px 16px;">
-    <div class="group-title" style="margin-bottom:4px;">Subcategoría: Destete ventilatorio y extubación</div>
-    <div class="group-desc">Modo según diagnóstico · SDRA Berlin · Predictores de extubación · PEEP y reclutamiento</div>
+    <div class="group-title" style="margin-bottom:4px;">Destete, SDRA y estrategia</div>
+    <div class="group-desc">1) Modo sugerido por patología · 2) Clasificación Berlin / P:F · 3) Prueba de extubación (Tobin, SBT) · 4) PEEP / tabla ARDSnet</div>
   </div>
 
   <div class="card" id="tvent-sec-modo">
@@ -3213,6 +3316,55 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div id="sdra-output" style="display:none; margin-top:14px;"></div>
     <div class="info">Berlin 2012: Leve P:F 200-300 + PEEP≥5 · Moderado 100-200 + PEEP≥5 · Grave &lt;100 + PEEP≥5 — todos con inicio ≤7d, imagen bilateral, no causa cardiogénica</div>
+  </div>
+
+  <div class="card" id="tvent-sec-expres">
+    <div class="card-title">ExPreS — Extubation Predictive Score</div>
+    <div class="info" style="margin-bottom:10px;font-size:11px;">Datos durante la prueba de respiración espontánea (SBT). RSBI en resp/min/L. MRC: suma 0–60 (6 grupos × 0–5). GCS estimado (escala modificada).</div>
+    <div class="row cols3">
+      <div><label>RSBI en SBT (resp/min/L)</label><input type="number" id="exp-rsbi" placeholder="ej. 45" step="0.1"></div>
+      <div><label>Compliance dinámica (mL/cmH₂O)</label><input type="number" id="exp-cdyn" placeholder="ej. 55" step="0.1"></div>
+      <div><label>Días de VM</label><input type="number" id="exp-vm-d" placeholder="días" step="1" min="1"></div>
+    </div>
+    <div class="row cols3">
+      <div><label>GCS estimado (puntos)</label><input type="number" id="exp-egcs" placeholder="ej. 12.5" step="0.1"></div>
+      <div><label>MRC total (0–60)</label><input type="number" id="exp-mrc" placeholder="suma 6 grupos" step="1" min="0" max="60"></div>
+      <div><label>Hematocrito (%)</label><input type="number" id="exp-hct" placeholder="ej. 35" step="0.1"></div>
+    </div>
+    <div class="row cols2">
+      <div><label>Creatinina (mg/dL)</label><input type="number" id="exp-cr" placeholder="ej. 1.1" step="0.01"></div>
+      <div><label>Comorbilidad neurológica</label>
+        <select id="exp-neuro">
+          <option value="">—</option>
+          <option value="no">No</option>
+          <option value="yes">Sí</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="calc" onclick="calcExPreS()">Calcular ExPreS</button>
+      <button class="reset" onclick="resetPanel('tvent-sec-expres')">Limpiar</button>
+    </div>
+    <div class="multi-result" id="expres-result-wrap" style="display:none;margin-top:12px;">
+      <div class="mr-row"><span class="mr-label">RSBI</span><span class="mr-val" id="expres-pts-rsbi">—</span></div>
+      <div class="mr-row"><span class="mr-label">Compliance dinámica</span><span class="mr-val" id="expres-pts-cdyn">—</span></div>
+      <div class="mr-row"><span class="mr-label">Días VM</span><span class="mr-val" id="expres-pts-days">—</span></div>
+      <div class="mr-row"><span class="mr-label">GCS estimado</span><span class="mr-val" id="expres-pts-gcs">—</span></div>
+      <div class="mr-row"><span class="mr-label">MRC</span><span class="mr-val" id="expres-pts-mrc">—</span></div>
+      <div class="mr-row"><span class="mr-label">Hematocrito</span><span class="mr-val" id="expres-pts-hct">—</span></div>
+      <div class="mr-row"><span class="mr-label">Creatinina</span><span class="mr-val" id="expres-pts-cr">—</span></div>
+      <div class="mr-row"><span class="mr-label">Comorbilidad neurológica</span><span class="mr-val" id="expres-pts-neuro">—</span></div>
+      <div class="divider"></div>
+      <div class="mr-row" style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:space-between;">
+        <span class="mr-label" style="font-size:13px;font-weight:600;">Total ExPreS</span>
+        <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span class="mr-val accent" id="expres-total">—</span>
+          <span class="result-badge" id="expres-badge"></span>
+        </span>
+      </div>
+      <div class="mr-row"><span class="mr-label">Interpretación</span><span class="mr-val" id="expres-interp" style="font-size:14px;text-align:right;max-width:70%;">—</span></div>
+    </div>
+    <div id="evid-wrap-expres" style="margin-top:0;"></div>
   </div>
 
   <div class="card" id="tvent-sec-destete">
@@ -3943,6 +4095,20 @@ const evidData = {
       {year:'2012', authors:'ARDS Definition Task Force', title:'Acute Respiratory Distress Syndrome: The Berlin Definition', journal:'JAMA', doi:'10.1001/jama.2012.5669'},
     ]
   },
+  vent_monitor: {
+    formula: 'Cstat = VTe/(Ppl−PEEPt) · Cdin = VTe/(Pp−PEEPt) · Raw = (Pp−Ppl)/flujo(L/s)\nWOB = [(Pp−½Ppl)/10]×VTe · WOBmin = WOB×FR · IF = [(Pp−½Ppl)×0.33]/Pdiafr\nVI = VE/PaCO₂ · Vd/Vt ≈ (PaCO₂−PETCO₂)/PaCO₂ · VA = VE×(1−Vd/Vt)\nPM = 0.098×FR×VC(L)×(Pp−ΔP/2) — ΔP = Ppl−PEEP (Gattinoni)',
+    interpretation: 'Alineado a la hoja de fórmulas del servicio (Pp=pico, Ppl=meseta). Modo, trigger y auto-PEEP modifican el significado clínico. OI (FiO₂×MAP×100/PaO₂) va en «Oxigenación».',
+    refs: [
+      {year:'2016', authors:'Gattinoni L et al.', title:'Mechanical Power of Ventilation', journal:'Crit Care', doi:'10.1186/s13054-017-1750-x'},
+    ]
+  },
+  expres: {
+    formula: 'Suma 0–100 pts (Fig. 3 Baptistella 2021). RSBI en SBT (resp/min/L): ≤42→25 · ≤54→20 · ≤76→10 · ≤90→5 · ≥91→0. Compliance dinámica (mL/cmH₂O): ≥63→15 · ≥51→10 · ≥43→7 · ≥32→3 · &lt;32→0. Días VM: ≤3→10 · ≤5→7 · ≤8→4 · ≤10→1 · &gt;10→0. GCS estimado: ≥13.5→10 · ≥11.7→6 · ≥8.9→3 · &lt;8.9→0. MRC (0–60): ≥49→10 · ≥37→7 · ≥25→4 · ≥13→1 · &lt;13→0. Hematocrito (%): ≥37→10 · ≥32→7 · ≥26→3 · ≥22→1 · &lt;22→0. Creatinina (mg/dL): ≤0.99→10 · ≤1.2→7 · ≤1.5→4 · ≤2.9→1 · &gt;2.9→0. Comorbilidad neurológica: ausente→10 · presente→0.\nFig. 3: https://journals.plos.org/plosone/article/figure/image?size=original&id=10.1371/journal.pone.0248868.g003 · Fig. 5: https://journals.plos.org/plosone/article/figure/image?size=original&id=10.1371/journal.pone.0248868.g005',
+    interpretation: 'Total ≤44: baja probabilidad de éxito (derivación ~57.1% éxito; ver Fig. 5). 45–58: intermedia (~83.3%). ≥59: alta (~98.7%). AUC informada 0,875. No sustituye juicio clínico ni prueba de tolerancia.',
+    refs: [
+      {year:'2021', authors:'Baptistella AR et al.', title:'Prediction of extubation outcome in mechanically ventilated patients: Development and validation of the Extubation Predictive Score (ExPreS)', journal:'PLoS ONE', doi:'10.1371/journal.pone.0248868'},
+    ]
+  },
   gas: {
     formula: 'AG = Na − (Cl + HCO₃) · AG corregido = AG + 2.5×(4 − Alb)\nDelta-Delta = (AG−12) / (24−HCO₃)\nBE ≈ HCO₃ − 24 + 16.2×(pH − 7.4)',
     interpretation: 'AG normal ≤12 mEq/L · Delta-delta 1–2: acidosis pura · &lt;1 o &gt;2: trastorno mixto\nCompensación ácido-base: Winter (AM), regla 1-4 (AR)',
@@ -3967,11 +4133,18 @@ const evidData = {
     ]
   },
   kirby: {
-    formula: 'SF ratio = SpO₂ (%) / FiO₂\nFiO₂ requerida = SpO₂ meta / SF ratio actual\nPF ratio = PaO₂ / FiO₂',
+    formula: 'SF ratio = SpO₂ (%) / FiO₂\nFiO₂ requerida = SpO₂ meta / SF ratio actual\nP:F (PaO₂/FiO₂) se calcula solo en el bloque PAFI del mismo panel (misma FiO₂).',
     interpretation: 'SF &gt;315: normal · 235–315: SDRA leve · 150–235: moderado · &lt;150: grave\nSF ratio correlaciona con PF ratio (Rice TW, 2007)',
     refs: [
       {year:'2007', authors:'Rice TW et al.', title:'Comparison of the SpO2/FiO2 ratio and the PaO2/FiO2 ratio in patients with acute lung injury or ARDS', journal:'Chest', doi:'10.1378/chest.07-0617'},
       {year:'2012', authors:'Bongard FS, Sue DY', title:'Current Diagnosis and Treatment: Critical Care', journal:'McGraw-Hill', doi:''},
+    ]
+  },
+  oxygen_index: {
+    formula: 'OI = (FiO₂ × MAP × 100) / PaO₂\nFiO₂ decimal · MAP = presión media en vía aérea (cmH₂O) · PaO₂ en mmHg',
+    interpretation: 'Índice de oxigenación clásico en pediatría y criterios de ECMO; en adultos usar como apoyo junto con P/F y SF. Umbrales de decisión varían por protocolo (ELSO, institucional).',
+    refs: [
+      {year:'2017', authors:'ELSO', title:'Extracorporeal Life Support Organization — Guidelines', journal:'', doi:''},
     ]
   },
   kdigo: {
@@ -4374,8 +4547,7 @@ function calcShock() {
   const scvo2 = parseFloat(document.getElementById('shock-scvo2').value) || null;
   const context = document.getElementById('shock-context').value;
 
-  // Validar inputs críticos
-  if (!map || !fc || cvp === '' || !diuresis || !lactato || context === '') {
+  if (isNaN(map) || isNaN(fc) || isNaN(cvp) || isNaN(diuresis) || isNaN(lactato) || context === '') {
     document.getElementById('shock-result').style.display = 'none';
     document.getElementById('shock-management').textContent = 'Completa los parámetros para ver recomendaciones';
     return;
@@ -4710,8 +4882,7 @@ function calcHemodynamics() {
   const weight = parseFloat(document.getElementById('hemo-weight').value);
   const svo2 = parseFloat(document.getElementById('hemo-svo2').value);
 
-  // Validar inputs
-  if (!co || !map || cvp === '' || !hb || !sao2 || !pao2 || !height || !weight || svo2 === '') {
+  if (isNaN(co) || isNaN(map) || isNaN(cvp) || isNaN(hb) || isNaN(sao2) || isNaN(pao2) || isNaN(height) || isNaN(weight) || isNaN(svo2)) {
     document.getElementById('hemo-result').style.display = 'none';
     document.getElementById('hemo-interpretation').textContent = 'Ingresa todos los parámetros para interpretar';
     return;
@@ -5316,36 +5487,6 @@ function calcVT() {
   document.getElementById('vt-result').style.display='grid';
 }
 
-// ============ DRIVING PRESSURE ============
-function calcDP() {
-  if (!validate([{id:'dp-plat',label:'P Meseta'},{id:'dp-peep',label:'PEEP'}])) return;
-  const plat = parseFloat(document.getElementById('dp-plat').value);
-  const peep = parseFloat(document.getElementById('dp-peep').value);
-  const dp = plat-peep;
-  document.getElementById('dp-val').textContent = dp.toFixed(1);
-  if (dp<=13) setBadge('dp-badge','badge-green','Óptimo');
-  else if (dp<=15) setBadge('dp-badge','badge-yellow','En limite');
-  else setBadge('dp-badge','badge-red','Reducir');
-  document.getElementById('dp-result').style.display='flex';
-}
-
-// ============ PODER MECANICO ============
-function calcMP() {
-  if (!validate([{id:'mp-fr',label:'FR'},{id:'mp-vt',label:'VT'},{id:'mp-peep',label:'PEEP'},{id:'mp-ppico',label:'P Pico'},{id:'mp-pplat',label:'P Meseta'}])) return;
-  const fr=parseFloat(document.getElementById('mp-fr').value);
-  const vt=parseFloat(document.getElementById('mp-vt').value)/1000;
-  const peep=parseFloat(document.getElementById('mp-peep').value);
-  const ppico=parseFloat(document.getElementById('mp-ppico').value);
-  const pplat=parseFloat(document.getElementById('mp-pplat').value);
-  const dp=pplat-peep;
-  const mp=0.098*fr*vt*(ppico-dp/2);
-  document.getElementById('mp-val').textContent=mp.toFixed(1);
-  if (mp<12) setBadge('mp-badge','badge-green','Bajo riesgo');
-  else if (mp<17) setBadge('mp-badge','badge-yellow','Moderado');
-  else setBadge('mp-badge','badge-red','VILI');
-  document.getElementById('mp-result').style.display='flex';
-}
-
 // ============ PAFI ============
 function calcPAFI() {
   if (!validate([{id:'pafi-pao2',label:'PaO₂'},{id:'pafi-fio2',label:'FiO₂'}])) return;
@@ -5366,6 +5507,100 @@ function calcPAFI() {
   document.getElementById('pafi-interp').textContent=interp;
   setBadge('pafi-badge', cls, interp);
   document.getElementById('pafi-result').style.display='flex';
+}
+
+// ============ ÍNDICE DE OXIGENACIÓN (OI) ============
+function calcOI() {
+  if (!validate([{id:'pafi-pao2',label:'PaO₂'},{id:'pafi-fio2',label:'FiO₂'},{id:'oi-paw',label:'MAP/Paw'}])) return;
+  if (!validateRanges([
+    {id:'pafi-pao2', label:'PaO₂', min:20, max:600},
+    {id:'pafi-fio2', label:'FiO₂', min:0.21, max:1.0},
+    {id:'oi-paw', label:'MAP', min:0, max:80}
+  ])) return;
+  const pao2 = parseFloat(document.getElementById('pafi-pao2').value);
+  const fio2 = parseFloat(document.getElementById('pafi-fio2').value);
+  const map = parseFloat(document.getElementById('oi-paw').value);
+  if (pao2 <= 0 || fio2 <= 0) return;
+  const oi = (fio2 * map * 100) / pao2;
+  document.getElementById('oi-val').textContent = oi.toFixed(1);
+  let interp;
+  if (oi < 15) interp = 'Orientativamente bajo; correlacionar con P/F y clínica (umbrales dependen del protocolo).';
+  else if (oi < 25) interp = 'Rango intermedio — seguimiento estrecho.';
+  else interp = 'OI elevado — correlacionar con criterios de gravedad / ECMO según protocolo.';
+  document.getElementById('oi-interp').textContent = interp;
+  document.getElementById('oi-result').style.display = 'flex';
+  ensureEvidenceForCalc('kirby');
+}
+
+function calcVentMonitor() {
+  const vte = parseFloat(document.getElementById('vm-vte').value);
+  const ppico = parseFloat(document.getElementById('vm-ppico').value);
+  const pplat = parseFloat(document.getElementById('vm-pplat').value);
+  const peep = parseFloat(document.getElementById('vm-peep').value);
+  const fr = parseFloat(document.getElementById('vm-fr').value);
+  const flujo = parseFloat(document.getElementById('vm-flujo').value);
+  const unit = document.getElementById('vm-flujo-unit').value;
+  if (isNaN(vte) || isNaN(ppico) || isNaN(pplat) || isNaN(peep) || isNaN(fr) || isNaN(flujo)) {
+    document.getElementById('vm-result-wrap').style.display = 'none';
+    return;
+  }
+  const dp = pplat - peep;
+  const denS = pplat - peep;
+  const denD = ppico - peep;
+  if (denS <= 0 || denD <= 0) {
+    alert('Pplat y Ppico deben ser mayores que PEEP total.');
+    document.getElementById('vm-result-wrap').style.display = 'none';
+    return;
+  }
+  const flowLs = unit === 'Ls' ? flujo : flujo / 60;
+  if (flowLs <= 0) {
+    alert('Flujo debe ser mayor que 0.');
+    document.getElementById('vm-result-wrap').style.display = 'none';
+    return;
+  }
+  const cstat = vte / denS;
+  const cdyn = vte / denD;
+  const raw = (ppico - pplat) / flowLs;
+  const wob = ((ppico - 0.5 * pplat) / 10) * vte;
+  const wobmin = wob * fr;
+  const pdiaf = parseFloat(document.getElementById('vm-pdiaf').value);
+  let ifat = '— (indique P diafragma)';
+  if (!isNaN(pdiaf) && pdiaf !== 0) {
+    ifat = ((((ppico - 0.5 * pplat) * 0.33) / pdiaf)).toFixed(3);
+  }
+  const ve = parseFloat(document.getElementById('vm-ve').value);
+  const paco2 = parseFloat(document.getElementById('vm-paco2').value);
+  const petco2 = parseFloat(document.getElementById('vm-petco2').value);
+  let vi = '—';
+  if (!isNaN(ve) && !isNaN(paco2) && paco2 > 0) vi = (ve / paco2).toFixed(3);
+  let vdvt = '—';
+  let va = '—';
+  if (!isNaN(paco2) && paco2 > 0 && !isNaN(petco2)) {
+    const r = (paco2 - petco2) / paco2;
+    vdvt = r.toFixed(3);
+    if (!isNaN(ve)) va = (ve * (1 - r)).toFixed(2) + ' L/min';
+  }
+  const vtL = vte / 1000;
+  const pm = 0.098 * fr * vtL * (ppico - dp / 2);
+  document.getElementById('vm-dp').textContent = dp.toFixed(1) + ' cmH₂O';
+  if (dp <= 13) setBadge('vm-dp-badge', 'badge-green', 'Óptimo');
+  else if (dp <= 15) setBadge('vm-dp-badge', 'badge-yellow', 'En límite');
+  else setBadge('vm-dp-badge', 'badge-red', 'Reducir');
+  if (pm < 12) setBadge('vm-mp-badge', 'badge-green', 'Bajo riesgo');
+  else if (pm < 17) setBadge('vm-mp-badge', 'badge-yellow', 'Moderado');
+  else setBadge('vm-mp-badge', 'badge-red', 'VILI');
+  document.getElementById('vm-cstat').textContent = cstat.toFixed(1) + ' mL/cmH₂O';
+  document.getElementById('vm-cdyn').textContent = cdyn.toFixed(1) + ' mL/cmH₂O';
+  document.getElementById('vm-raw').textContent = raw.toFixed(2) + ' cmH₂O·s/L';
+  document.getElementById('vm-wob').textContent = wob.toFixed(2);
+  document.getElementById('vm-wobmin').textContent = wobmin.toFixed(1);
+  document.getElementById('vm-ifat').textContent = ifat;
+  document.getElementById('vm-vi').textContent = vi;
+  document.getElementById('vm-vdvt').textContent = vdvt;
+  document.getElementById('vm-va').textContent = va;
+  document.getElementById('vm-pm').textContent = pm.toFixed(1) + ' J/min';
+  document.getElementById('vm-result-wrap').style.display = 'grid';
+  ensureEvidenceForCalc('vent-mec');
 }
 
 // ============ GASOMETRIA ============
@@ -6153,13 +6388,21 @@ function updateExportPanel() {
   const pafiR = document.getElementById('pafi-result');
   if (pafiR && pafiR.style.display!=='none') { document.getElementById('ex-pafi').textContent = document.getElementById('pafi-val').textContent; copyBadge(document.getElementById('pafi-badge'),'ex-pafi-b'); }
 
-  // Driving Pressure
-  const dpR = document.getElementById('dp-result');
-  if (dpR && dpR.style.display!=='none') { document.getElementById('ex-dp').textContent = document.getElementById('dp-val').textContent+' cmH2O'; copyBadge(document.getElementById('dp-badge'),'ex-dp-b'); }
-
-  // Poder Mecanico
-  const mpR = document.getElementById('mp-result');
-  if (mpR && mpR.style.display!=='none') { document.getElementById('ex-mp').textContent = document.getElementById('mp-val').textContent+' J/min'; copyBadge(document.getElementById('mp-badge'),'ex-mp-b'); }
+  // Driving pressure y poder mecánico (panel unificado vent-mec / monitor)
+  const vmWrap = document.getElementById('vm-result-wrap');
+  if (vmWrap && vmWrap.style.display !== 'none') {
+    document.getElementById('ex-dp').textContent = document.getElementById('vm-dp').textContent;
+    copyBadge(document.getElementById('vm-dp-badge'), 'ex-dp-b');
+    document.getElementById('ex-mp').textContent = document.getElementById('vm-pm').textContent;
+    copyBadge(document.getElementById('vm-mp-badge'), 'ex-mp-b');
+  } else {
+    document.getElementById('ex-dp').textContent = '—';
+    document.getElementById('ex-mp').textContent = '—';
+    const exDpB = document.getElementById('ex-dp-b');
+    const exMpB = document.getElementById('ex-mp-b');
+    if (exDpB) { exDpB.className = 'score-card-badge result-badge'; exDpB.textContent = ''; }
+    if (exMpB) { exMpB.className = 'score-card-badge result-badge'; exMpB.textContent = ''; }
+  }
 
   // VT
   const vtR = document.getElementById('vt-result');
@@ -6316,8 +6559,8 @@ function collectScores() {
     ]},
     {title:'Ventilación', items:[
       {name:'PAFI (P:F)', val:()=>{ const r=document.getElementById('pafi-result'); return r&&r.style.display!=='none'?document.getElementById('pafi-val').textContent+' mmHg':'—';}, badge:()=>document.getElementById('pafi-badge')},
-      {name:'Driving Pressure', val:()=>{ const r=document.getElementById('dp-result'); return r&&r.style.display!=='none'?document.getElementById('dp-val').textContent+' cmH2O':'—';}, badge:()=>document.getElementById('dp-badge')},
-      {name:'Poder Mecánico', val:()=>{ const r=document.getElementById('mp-result'); return r&&r.style.display!=='none'?document.getElementById('mp-val').textContent+' J/min':'—';}, badge:()=>document.getElementById('mp-badge')},
+      {name:'Driving Pressure', val:()=>{ const r=document.getElementById('vm-result-wrap'); return r&&r.style.display!=='none'?document.getElementById('vm-dp').textContent:'—';}, badge:()=>document.getElementById('vm-dp-badge')},
+      {name:'Poder Mecánico', val:()=>{ const r=document.getElementById('vm-result-wrap'); return r&&r.style.display!=='none'?document.getElementById('vm-pm').textContent:'—';}, badge:()=>document.getElementById('vm-mp-badge')},
       {name:'VT Protector', val:()=>{ const r=document.getElementById('vt-result'); return r&&r.style.display!=='none'?document.getElementById('vt-calc').textContent:'—';}, badge:()=>null},
     ]},
     {title:'Hemodinámica', items:[
@@ -6382,54 +6625,44 @@ function selectRASS(val, el) {
   }
 }
 
-// ============ KIRBY ============
+// ============ KIRBY (SF ratio; FiO₂ compartido con bloque PAFI) ============
 function calcKIRBY() {
-  if (!validate([{id:'kb-spo2',label:'SpO₂'},{id:'kb-fio2',label:'FiO₂'}])) return;
+  if (!validate([{id:'kb-spo2',label:'SpO₂'},{id:'pafi-fio2',label:'FiO₂'}])) return;
+  if (!validateRanges([
+    {id:'kb-spo2', label:'SpO₂', min:40, max:100},
+    {id:'pafi-fio2', label:'FiO₂', min:0.21, max:1.0}
+  ])) return;
   const spo2 = parseFloat(document.getElementById('kb-spo2').value);
-  const fio2 = parseFloat(document.getElementById('kb-fio2').value);
-  const pao2 = parseFloat(document.getElementById('kb-pao2').value);
+  const fio2 = parseFloat(document.getElementById('pafi-fio2').value);
   const spo2m = parseFloat(document.getElementById('kb-spo2-meta').value);
   const fio2m = parseFloat(document.getElementById('kb-fio2-meta').value);
 
-  // SF ratio (SpO2/FiO2)
   const sf = spo2 / fio2;
   document.getElementById('kb-sf').textContent = sf.toFixed(0);
-  let sfInterp, sfCls;
-  if      (sf > 315)  { sfInterp='Normal (>315)';         sfCls='badge-green'; }
-  else if (sf > 235)  { sfInterp='SDRA leve (235–315)';   sfCls='badge-yellow'; }
-  else if (sf > 150)  { sfInterp='SDRA moderado (150–235)';sfCls='badge-orange'; }
-  else                { sfInterp='SDRA grave (<150)';      sfCls='badge-red'; }
+  let sfInterp;
+  if      (sf > 315)  { sfInterp='Normal (>315)'; }
+  else if (sf > 235)  { sfInterp='SDRA leve (235–315)'; }
+  else if (sf > 150)  { sfInterp='SDRA moderado (150–235)'; }
+  else                { sfInterp='SDRA grave (<150)'; }
   document.getElementById('kb-sf-interp').textContent = sfInterp;
 
-  // PF ratio si hay PaO2
-  if (!isNaN(pao2) && pao2 > 0) {
-    const pf = pao2 / fio2;
-    document.getElementById('kb-pafi').textContent = pf.toFixed(0) + ' mmHg';
-    let sdra, sdraCls;
-    if      (pf > 300)  { sdra='Normal';           sdraCls='badge-green'; }
-    else if (pf > 200)  { sdra='SDRA Leve';        sdraCls='badge-yellow'; }
-    else if (pf > 100)  { sdra='SDRA Moderado';    sdraCls='badge-orange'; }
-    else                { sdra='SDRA Grave';        sdraCls='badge-red'; }
-    const sb = document.getElementById('kb-sdra-b');
-    sb.className = 'result-badge ' + sdraCls; sb.textContent = sdra;
-  } else {
-    document.getElementById('kb-pafi').textContent = 'Ingresar PaO₂';
-  }
-
-  // FiO2 requerida para SpO2 meta (método SF ratio)
   if (!isNaN(spo2m) && spo2m > 0) {
     const sfCurrent = spo2 / fio2;
     const fio2Req = Math.min(1.0, spo2m / sfCurrent);
     document.getElementById('kb-fio2-req').textContent = (fio2Req * 100).toFixed(0) + '% (' + fio2Req.toFixed(2) + ')';
+  } else {
+    document.getElementById('kb-fio2-req').textContent = '—';
   }
-  // SpO2 esperada con FiO2 deseada
   if (!isNaN(fio2m) && fio2m > 0) {
     const sfCurrent = spo2 / fio2;
     const spo2Exp = Math.min(100, sfCurrent * fio2m);
     document.getElementById('kb-spo2-exp').textContent = spo2Exp.toFixed(1) + '%';
+  } else {
+    document.getElementById('kb-spo2-exp').textContent = '—';
   }
 
   document.getElementById('kirby-result').style.display = 'grid';
+  ensureEvidenceForCalc('kirby');
 }
 
 // ============ ELECTROLITOS ============
@@ -6654,8 +6887,8 @@ function _notaData() {
     saps: scoreVal('saps-result', 'saps-total', ' pts'),
     nutric: scoreVal('nutric-result', 'nutric-total', ' pts'),
     pafi: scoreVal('pafi-result', 'pafi-val', ' mmHg'),
-    dp: scoreVal('dp-result', 'dp-val', ' cmH2O'),
-    mp: scoreVal('mp-result', 'mp-val', ' J/min'),
+    dp: (() => { const r = document.getElementById('vm-result-wrap'); return r && r.style.display !== 'none' ? document.getElementById('vm-dp').textContent.trim() : 'No calculado'; })(),
+    mp: (() => { const r = document.getElementById('vm-result-wrap'); return r && r.style.display !== 'none' ? document.getElementById('vm-pm').textContent.trim() : 'No calculado'; })(),
     kdigo: scoreVal('kdigo-result', 'kd-final', ''),
     padua: (() => { const r = document.getElementById('padua-result'); return r && r.style.display !== 'none' ? pf('padua-total') + ' pts — ' + pf('padua-badge') : 'No calculado'; })(),
     cam: scoreVal('cam-result', 'cam-val', ''),
@@ -7830,6 +8063,125 @@ function calcSDRA() {
   document.getElementById('sdra-output').style.display = 'block';
 }
 
+// ExPreS — Baptistella et al. 2021 (PLoS ONE e0248868)
+function scoreExPreSRSBI(x) {
+  if (isNaN(x) || x < 0) return null;
+  if (x <= 42) return 25;
+  if (x <= 54) return 20;
+  if (x <= 76) return 10;
+  if (x <= 90) return 5;
+  return 0;
+}
+function scoreExPreSCdyn(x) {
+  if (isNaN(x) || x < 0) return null;
+  if (x >= 63) return 15;
+  if (x >= 51) return 10;
+  if (x >= 43) return 7;
+  if (x >= 32) return 3;
+  return 0;
+}
+function scoreExPreSDays(d) {
+  if (isNaN(d) || d < 1) return null;
+  if (d <= 3) return 10;
+  if (d <= 5) return 7;
+  if (d <= 8) return 4;
+  if (d <= 10) return 1;
+  return 0;
+}
+function scoreExPreSGCS(g) {
+  if (isNaN(g)) return null;
+  if (g >= 13.5) return 10;
+  if (g >= 11.7) return 6;
+  if (g >= 8.9) return 3;
+  return 0;
+}
+function scoreExPreSMRC(m) {
+  if (isNaN(m) || m < 0) return null;
+  if (m > 60) return null;
+  if (m >= 49) return 10;
+  if (m >= 37) return 7;
+  if (m >= 25) return 4;
+  if (m >= 13) return 1;
+  return 0;
+}
+function scoreExPreSHct(h) {
+  if (isNaN(h)) return null;
+  if (h >= 37) return 10;
+  if (h >= 32) return 7;
+  if (h >= 26) return 3;
+  if (h >= 22) return 1;
+  return 0;
+}
+function scoreExPreSCr(c) {
+  if (isNaN(c) || c < 0) return null;
+  if (c <= 0.99) return 10;
+  if (c <= 1.2) return 7;
+  if (c <= 1.5) return 4;
+  if (c <= 2.9) return 1;
+  return 0;
+}
+
+function calcExPreS() {
+  const rsbi = parseFloat(document.getElementById('exp-rsbi').value);
+  const cdyn = parseFloat(document.getElementById('exp-cdyn').value);
+  const days = parseFloat(document.getElementById('exp-vm-d').value);
+  const egcs = parseFloat(document.getElementById('exp-egcs').value);
+  const mrc = parseFloat(document.getElementById('exp-mrc').value);
+  const hct = parseFloat(document.getElementById('exp-hct').value);
+  const cr = parseFloat(document.getElementById('exp-cr').value);
+  const neuro = document.getElementById('exp-neuro').value;
+
+  if (neuro !== 'yes' && neuro !== 'no') {
+    alert('Seleccione comorbilidad neurológica (Sí/No).');
+    return;
+  }
+  const pRsbi = scoreExPreSRSBI(rsbi);
+  const pCdyn = scoreExPreSCdyn(cdyn);
+  const pDays = scoreExPreSDays(days);
+  const pGcs = scoreExPreSGCS(egcs);
+  const pMrc = scoreExPreSMRC(mrc);
+  const pHct = scoreExPreSHct(hct);
+  const pCr = scoreExPreSCr(cr);
+  const pNeuro = neuro === 'no' ? 10 : 0;
+
+  if (pRsbi === null || pCdyn === null || pDays === null || pGcs === null || pMrc === null || pHct === null || pCr === null) {
+    alert('Complete todos los campos numéricos con valores válidos (MRC 0–60, días VM ≥1).');
+    return;
+  }
+
+  const fmt = (n, pts) => pts + ' pts';
+  document.getElementById('expres-pts-rsbi').textContent = fmt(rsbi, pRsbi);
+  document.getElementById('expres-pts-cdyn').textContent = fmt(cdyn, pCdyn);
+  document.getElementById('expres-pts-days').textContent = fmt(days, pDays);
+  document.getElementById('expres-pts-gcs').textContent = fmt(egcs, pGcs);
+  document.getElementById('expres-pts-mrc').textContent = fmt(mrc, pMrc);
+  document.getElementById('expres-pts-hct').textContent = fmt(hct, pHct);
+  document.getElementById('expres-pts-cr').textContent = fmt(cr, pCr);
+  document.getElementById('expres-pts-neuro').textContent = (neuro === 'no' ? 'No' : 'Sí') + ' — ' + pNeuro + ' pts';
+
+  const total = pRsbi + pCdyn + pDays + pGcs + pMrc + pHct + pCr + pNeuro;
+  document.getElementById('expres-total').textContent = total + ' / 100';
+
+  let interp, cls;
+  if (total >= 59) {
+    interp = 'Probabilidad de éxito de extubación alta (estudio: ~98.7% tasa de éxito en ese estrato).';
+    cls = 'badge-green';
+  } else if (total >= 45) {
+    interp = 'Probabilidad intermedia (cohorte derivación: ~83.3% éxito en 45–58 pts). Valorar factores de riesgo y plan de VMNI si aplica.';
+    cls = 'badge-yellow';
+  } else {
+    interp = 'Probabilidad baja (estudio: ~57% éxito si ≤44). Reevaluar causa, fuerza, secreciones y criterios de destete.';
+    cls = 'badge-red';
+  }
+  document.getElementById('expres-interp').textContent = interp;
+  const b = document.getElementById('expres-badge');
+  b.className = 'result-badge ' + cls;
+  b.textContent = total <= 44 ? 'Baja' : total >= 59 ? 'Alta' : 'Intermedia';
+
+  document.getElementById('expres-result-wrap').style.display = 'grid';
+  ensureEvidenceForCalc('tvent');
+}
+
 // DESTETE / TOBIN
 function calcDestete() {
   const fr   = parseFloat(document.getElementById('tb-fr').value);
@@ -8440,13 +8792,13 @@ const evidenceByCalc = {
   apache: ['evid-wrap-apache', 'apache'],
   saps: ['evid-wrap-saps', 'saps'],
   nutric: ['evid-wrap-nutric', 'nutric'],
-  'vent-mec': [['evid-wrap-vt', 'vt'], ['evid-wrap-dp', 'dp'], ['evid-wrap-mp', 'mp'], ['evid-wrap-pafi', 'pafi']],
+  'vent-mec': [['evid-wrap-vt', 'vt'], ['evid-wrap-vent-monitor', 'vent_monitor'], ['evid-wrap-dp', 'dp'], ['evid-wrap-mp', 'mp']],
+  tvent: ['evid-wrap-expres', 'expres'],
   gas: ['evid-wrap-gas', 'gas'],
   vaso: ['evid-wrap-vaso', 'vaso'],
   balance: ['evid-wrap-balance', 'balance'],
-  starling: ['evid-wrap-starling', 'starling'],
   ppc: ['evid-wrap-ppc', 'ppc'],
-  vexus: ['evid-wrap-vexus', 'vexus'],
+  vexus: [['evid-wrap-vexus', 'vexus'], ['evid-wrap-starling', 'starling']],
   'elec-uri': ['evid-wrap-elec-uri', 'elec_uri'],
   electrolitos: ['evid-wrap-electrolitos', 'electrolitos'],
   kdigo: ['evid-wrap-kdigo', 'kdigo'],
@@ -8458,7 +8810,7 @@ const evidenceByCalc = {
   curb: ['evid-wrap-curb', 'curb'],
   rockall: ['evid-wrap-rockall', 'rockall'],
   rass: ['evid-wrap-rass', 'rass'],
-  kirby: ['evid-wrap-kirby', 'kirby'],
+  kirby: [['evid-wrap-pafi', 'pafi'], ['evid-wrap-oi', 'oxygen_index'], ['evid-wrap-kirby', 'kirby']],
   gcs: ['evid-wrap-gcs', 'gcs'],
   qsofa: ['evid-wrap-qsofa', 'qsofa'],
   wells: ['evid-wrap-wells', 'wells'],
