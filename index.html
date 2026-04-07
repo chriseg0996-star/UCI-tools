@@ -2302,81 +2302,118 @@ input.pat-synced:focus, select.pat-synced:focus {
 <div id="calc-bombas" class="calc-panel">
   <div class="card">
     <div class="card-title">Bombas de infusión</div>
-    <div class="section-sub">Selección de fármaco</div>
-    <div class="row cols2">
-      <div>
-        <label>Grupo farmacológico</label>
-        <select id="bom-grupo" onchange="updateBombaGrupo()">
-          <option value="vaso">Vasopresores</option>
-          <option value="sed">Sedación / Analgesia</option>
-          <option value="bnm">Bloqueador neuromuscular</option>
-          <option value="neuro">Neuroprotección</option>
-          <option value="otros">Otros UCI</option>
-        </select>
-      </div>
+    <div class="tab-bar" id="bom-cat-bar">
+      <button class="tab-btn active"
+        onclick="setBombaCategoria('vaso',this)">
+        Vasopresores
+      </button>
+      <button class="tab-btn"
+        onclick="setBombaCategoria('sed',this)">
+        Sedación / Analgesia
+      </button>
+      <button class="tab-btn"
+        onclick="setBombaCategoria('esp',this)">
+        Infusiones especiales
+      </button>
+    </div>
+    <div class="row" style="margin-bottom:8px;">
       <div>
         <label>Fármaco</label>
-        <select id="bom-farmaco" onchange="updateBombaFarmaco()"></select>
-      </div>
-    </div>
-
-    <div class="section-sub">Información del fármaco</div>
-    <div class="info" style="border-left:3px solid var(--accent);">
-      <div><b>Indicación:</b> <span id="bom-indicacion">—</span></div>
-      <div><b>Unidades:</b> <span id="bom-unidades">—</span></div>
-      <div><b>Rango terapéutico:</b> <span id="bom-rango">—</span></div>
-      <div><b>Dosis máxima:</b> <span id="bom-dosis-max">—</span></div>
-      <div><b>Notas clínicas:</b> <span id="bom-notas">—</span></div>
-    </div>
-
-    <div class="section-sub">Calculadora</div>
-    <div class="nota-format-toggle">
-      <button class="nota-format-btn active" onclick="setBombaMode('dosis',this)">Velocidad → Dosis</button>
-      <button class="nota-format-btn" onclick="setBombaMode('vel',this)">Dosis → Velocidad</button>
-    </div>
-    <div class="row cols3">
-      <div><label>Peso (kg)</label><input type="number" id="bom-peso" placeholder=""></div>
-      <div><label>Concentración</label><input type="number" id="bom-conc" placeholder="concentración estándar" step="0.001"></div>
-      <div><label>Unidades concentración</label>
-        <select id="bom-conc-unit">
-          <option value="mg/mL">mg/mL</option>
-          <option value="mcg/mL">mcg/mL</option>
-          <option value="UI/mL">UI/mL</option>
-          <option value="mg/250mL">mg/250mL</option>
-          <option value="mg/500mL">mg/500mL</option>
+        <select id="bom-farmaco"
+          onchange="updateBombaFarmaco()"
+          style="width:100%;">
         </select>
       </div>
     </div>
-
-    <div id="bom-mode-dosis">
-      <div class="row cols2">
-        <div><label>Velocidad de infusión (mL/h)</label><input type="number" id="bom-vel" placeholder="velocidad actual en bomba" step="0.1"></div>
+    <div id="bom-info-bar" style="
+      display:flex; flex-wrap:wrap; gap:5px;
+      padding:7px 10px; margin-bottom:10px;
+      background:rgba(0,200,255,0.04);
+      border-left:2px solid var(--accent2);
+      border-radius:0 4px 4px 0;">
+      <span id="bom-badge-unit" class="result-badge"
+        style="background:rgba(0,200,255,0.1);
+        color:var(--accent);
+        border:1px solid rgba(0,200,255,0.2);">—</span>
+      <span id="bom-badge-rango" class="result-badge badge-green">—</span>
+      <span id="bom-badge-max" class="result-badge badge-red">—</span>
+      <span id="bom-indicacion" style="
+        font-size:11px; color:var(--muted2);
+        font-style:italic; width:100%;
+        margin-top:2px;">—</span>
+    </div>
+    <div class="nota-format-toggle" style="margin-bottom:8px;">
+      <button class="nota-format-btn active"
+        onclick="setBombaMode('dosis',this)">
+        Velocidad → Dosis
+      </button>
+      <button class="nota-format-btn"
+        onclick="setBombaMode('vel',this)">
+        Dosis → Velocidad
+      </button>
+    </div>
+    <div class="row cols4" style="margin-bottom:8px;">
+      <div>
+        <label>Peso (kg)</label>
+        <input type="number" id="bom-peso"
+          placeholder="60 – 100" step="0.1">
       </div>
-      <div class="btn-row"><button class="calc" onclick="calcBombaDosis()">Calcular dosis</button></div>
-    </div>
-
-    <div id="bom-mode-vel" style="display:none;">
-      <div class="row cols2">
-        <div><label>Dosis deseada</label><input type="number" id="bom-dosis-in" placeholder="dosis objetivo" step="0.001"></div>
-        <div><label>Unidades dosis</label>
-          <select id="bom-dosis-unit">
-            <option value="mcg/kg/min">mcg/kg/min</option>
-          </select>
-        </div>
+      <div>
+        <label>Concentración</label>
+        <input type="number" id="bom-conc"
+          step="0.001">
       </div>
-      <div class="btn-row"><button class="calc" onclick="calcBombaVel()">Calcular velocidad</button></div>
+      <div>
+        <label>Unidades conc.</label>
+        <select id="bom-conc-unit">
+          <option>mg/mL</option>
+          <option>mcg/mL</option>
+          <option>UI/mL</option>
+        </select>
+      </div>
+      <div id="bom-input-principal">
+        <label id="bom-input-label">Velocidad (mL/h)</label>
+        <input type="number" id="bom-valor-input"
+          placeholder="velocidad en bomba" step="0.1">
+      </div>
     </div>
-    <div class="btn-row"><button class="reset" onclick="resetPanel('calc-bombas')">Limpiar</button></div>
-
-    <div class="multi-result" id="bom-result" style="display:none; margin-top:12px;">
-      <div class="mr-row"><span class="mr-label">Dosis calculada</span><span class="mr-val" id="bom-out-dosis">—</span></div>
-      <div class="mr-row"><span class="mr-label">Velocidad calculada</span><span class="mr-val" id="bom-out-vel">—</span></div>
-      <div class="mr-row"><span class="mr-label">Rango terapéutico</span><span class="mr-val" id="bom-out-rango">—</span></div>
-      <div class="mr-row"><span class="mr-label">Estado</span><span class="result-badge" id="bom-out-badge">—</span></div>
+    <div style="display:flex;align-items:center;
+      gap:8px;margin-bottom:8px;">
+      <button class="calc" onclick="calcBomba()">
+        Calcular
+      </button>
+      <button class="reset" onclick="resetBombas()">
+        Limpiar
+      </button>
+      <div id="bom-result-inline" style="
+        display:none; flex:1;
+        background:var(--bg);
+        border:1px solid var(--border2);
+        border-radius:5px;
+        padding:6px 12px;
+        align-items:baseline; gap:8px;">
+        <span id="bom-out-val" style="
+          font-family:var(--mono);font-size:22px;
+          font-weight:700;color:var(--accent);">—</span>
+        <span id="bom-out-unit" style="
+          font-size:11px;color:var(--muted);
+          font-family:var(--mono);">—</span>
+        <span id="bom-out-vel" style="
+          font-size:10px;color:var(--muted2);
+          font-family:var(--mono);">—</span>
+        <span id="bom-out-badge"
+          class="result-badge"
+          style="margin-left:auto;">—</span>
+      </div>
     </div>
-
-    <div class="section-sub">Referencia rápida de dilución</div>
-    <div class="info" id="bom-dilucion">—</div>
+    <div id="bom-dilucion" style="
+      font-size:10px; color:var(--muted);
+      font-family:var(--mono);
+      padding:5px 8px;
+      border-left:1px solid var(--border);">
+      <span style="color:var(--accent2);">Dilución: </span>
+      <span id="bom-dilucion-txt">—</span>
+    </div>
   </div>
 </div>
 
@@ -6626,17 +6663,161 @@ const FARMACOS = {
   heparina:{nombre:'Heparina no fraccionada',grupo:'otros',indicacion:'Anticoagulación en TEP, trombosis, CRRT',unidades:'UI/h',rangoMin:500,rangoMax:2000,dosisMax:5000,concStd:25000,concStdDesc:'25,000 UI en 250 mL SSN (100 UI/mL)',concUnit:'UI/mL',notas:'Titular por TTPa (1.5-2.5× control). Carga: 80 UI/kg IV. Monitorizar plaquetas (TIH).',dilucion:'25,000 UI en 250 mL SSN = 100 UI/mL'}
 };
 
-function updateBombaGrupo() {
-  const grupo = document.getElementById('bom-grupo').value;
+Object.keys(FARMACOS).forEach(k => delete FARMACOS[k]);
+Object.assign(FARMACOS, {
+  norepinefrina: {
+    nombre: 'Norepinefrina', grupo: 'vaso',
+    indicacion: 'Vasopresor de elección en sepsis. Titular por PAM ≥65. Acceso central recomendado.',
+    unidades: 'mcg/kg/min', rangoMin: 0.01, rangoMax: 0.5, dosisMax: 1.0,
+    concStd: 0.08, concUnit: 'mg/mL',
+    dilucion: '4 mg en 50 mL SSN = 0.08 mg/mL = 80 mcg/mL'
+  },
+  epinefrina: {
+    nombre: 'Epinefrina', grupo: 'vaso',
+    indicacion: 'Choque anafiláctico / cardiogénico. Efectos α y β. Monitorizar lactato.',
+    unidades: 'mcg/kg/min', rangoMin: 0.01, rangoMax: 0.5, dosisMax: 1.0,
+    concStd: 0.08, concUnit: 'mg/mL',
+    dilucion: '4 mg en 50 mL SSN = 0.08 mg/mL = 80 mcg/mL'
+  },
+  vasopresina: {
+    nombre: 'Vasopresina', grupo: 'vaso',
+    indicacion: 'Choque séptico refractario — adyuvante NE. Dosis fija. No titular.',
+    unidades: 'UI/h', rangoMin: 0.9, rangoMax: 2.4, dosisMax: 2.4,
+    concStd: 0.4, concUnit: 'UI/mL',
+    dilucion: '20 UI en 50 mL SSN = 0.4 UI/mL'
+  },
+  dopamina: {
+    nombre: 'Dopamina', grupo: 'vaso',
+    indicacion: '<5: dopaminérgico · 5-10: β predomina · >10: α predomina. Mayor riesgo arritmias.',
+    unidades: 'mcg/kg/min', rangoMin: 2, rangoMax: 20, dosisMax: 20,
+    concStd: 4, concUnit: 'mg/mL',
+    dilucion: '200 mg en 50 mL SSN = 4 mg/mL = 4000 mcg/mL'
+  },
+  dobutamina: {
+    nombre: 'Dobutamina', grupo: 'vaso',
+    indicacion: 'Choque cardiogénico / disfunción sistólica. Inotrópico β1. Combinar con vasopresor si PAM baja.',
+    unidades: 'mcg/kg/min', rangoMin: 2, rangoMax: 20, dosisMax: 40,
+    concStd: 5, concUnit: 'mg/mL',
+    dilucion: '250 mg en 50 mL SSN = 5 mg/mL = 5000 mcg/mL'
+  },
+  fenilefrina: {
+    nombre: 'Fenilefrina', grupo: 'vaso',
+    indicacion: 'Hipotensión vasopléjica sin taquicardia. Vasoconstrictor puro α1.',
+    unidades: 'mcg/kg/min', rangoMin: 0.5, rangoMax: 5, dosisMax: 10,
+    concStd: 0.4, concUnit: 'mg/mL',
+    dilucion: '100 mg en 250 mL SSN = 0.4 mg/mL = 400 mcg/mL'
+  },
+  midazolam: {
+    nombre: 'Midazolam', grupo: 'sed',
+    indicacion: 'Sedación en VM. Riesgo acumulación. Evaluar diariamente necesidad.',
+    unidades: 'mcg/kg/min', rangoMin: 0.02, rangoMax: 0.1, dosisMax: 0.2,
+    concStd: 1, concUnit: 'mg/mL',
+    dilucion: '50 mg en 50 mL SSN = 1 mg/mL'
+  },
+  propofol: {
+    nombre: 'Propofol', grupo: 'sed',
+    indicacion: 'Sedación en VM — agente de elección. Vigilar síndrome infusión >48h. Aporta 1.1 kcal/mL.',
+    unidades: 'mcg/kg/min', rangoMin: 5, rangoMax: 50, dosisMax: 80,
+    concStd: 10, concUnit: 'mg/mL',
+    dilucion: 'Sin diluir: 10 mg/mL. 50 mL = 500 mg'
+  },
+  dexmedetomidina: {
+    nombre: 'Dexmedetomidina', grupo: 'sed',
+    indicacion: 'Sedación ligera α2. No deprime respiración. Vigilar bradicardia e hipotensión.',
+    unidades: 'mcg/kg/h', rangoMin: 0.2, rangoMax: 1.5, dosisMax: 1.5,
+    concStd: 4, concUnit: 'mcg/mL',
+    dilucion: '200 mcg en 50 mL SSN = 4 mcg/mL'
+  },
+  ketamina: {
+    nombre: 'Ketamina', grupo: 'sed',
+    indicacion: 'Sedoanalgesia disociativa. Broncodilatador. Mantiene reflejos de vía aérea.',
+    unidades: 'mcg/kg/min', rangoMin: 0.5, rangoMax: 4, dosisMax: 10,
+    concStd: 10, concUnit: 'mg/mL',
+    dilucion: '500 mg en 50 mL SSN = 10 mg/mL'
+  },
+  fentanilo: {
+    nombre: 'Fentanilo', grupo: 'sed',
+    indicacion: 'Analgesia en VM — opioide de elección. Estrategia analgesia-primero.',
+    unidades: 'mcg/kg/h', rangoMin: 0.5, rangoMax: 2, dosisMax: 10,
+    concStd: 10, concUnit: 'mcg/mL',
+    dilucion: '0.5 mg en 50 mL SSN = 10 mcg/mL'
+  },
+  morfina: {
+    nombre: 'Morfina', grupo: 'sed',
+    indicacion: 'Analgesia con efecto venodilatador. Útil en EAP. Cuidado en insuficiencia renal.',
+    unidades: 'mg/h', rangoMin: 1, rangoMax: 10, dosisMax: 20,
+    concStd: 1, concUnit: 'mg/mL',
+    dilucion: '50 mg en 50 mL SSN = 1 mg/mL'
+  },
+  remifentanilo: {
+    nombre: 'Remifentanilo', grupo: 'sed',
+    indicacion: 'Analgesia ultra corta duración. Metabolismo por esterasas — no acumula en IR/IH.',
+    unidades: 'mcg/kg/min', rangoMin: 0.05, rangoMax: 0.2, dosisMax: 2,
+    concStd: 20, concUnit: 'mcg/mL',
+    dilucion: '1 mg en 50 mL SSN = 20 mcg/mL'
+  },
+  insulina: {
+    nombre: 'Insulina regular', grupo: 'esp',
+    indicacion: 'Control glucémico UCI — meta 140–180 mg/dL. Titular horario. Vigilar hipoglucemia.',
+    unidades: 'UI/h', rangoMin: 0.5, rangoMax: 10, dosisMax: 50,
+    concStd: 1, concUnit: 'UI/mL',
+    dilucion: '50 UI en 50 mL SSN = 1 UI/mL'
+  },
+  heparina: {
+    nombre: 'Heparina no fraccionada', grupo: 'esp',
+    indicacion: 'Anticoagulación TEP/trombosis/CRRT. Titular por TTPa 1.5–2.5×. Vigilar TIH.',
+    unidades: 'UI/h', rangoMin: 500, rangoMax: 2000, dosisMax: 5000,
+    concStd: 100, concUnit: 'UI/mL',
+    dilucion: '25,000 UI en 250 mL SSN = 100 UI/mL'
+  },
+  amiodarona: {
+    nombre: 'Amiodarona', grupo: 'esp',
+    indicacion: 'Arritmias ventriculares / FA. Carga 150 mg en 10 min. Solo en SG5%.',
+    unidades: 'mg/h', rangoMin: 15, rangoMax: 60, dosisMax: 1200,
+    concStd: 1.2, concUnit: 'mg/mL',
+    dilucion: '300 mg en 250 mL SG5% = 1.2 mg/mL'
+  },
+  nimodipino: {
+    nombre: 'Nimodipino', grupo: 'esp',
+    indicacion: 'Vasoespasmo en HSA. Equipo especial (no PVC). Vigilar hipotensión. 21 días.',
+    unidades: 'mg/h', rangoMin: 1, rangoMax: 2, dosisMax: 2,
+    concStd: 0.2, concUnit: 'mg/mL',
+    dilucion: 'Solución lista 0.2 mg/mL — no diluir'
+  },
+  cisatracurio: {
+    nombre: 'Cisatracurio', grupo: 'esp',
+    indicacion: 'BNM en SDRA grave / asincronía. Eliminación Hofmann. Monitorizar TOF.',
+    unidades: 'mcg/kg/min', rangoMin: 0.5, rangoMax: 3, dosisMax: 10,
+    concStd: 0.4, concUnit: 'mg/mL',
+    dilucion: '40 mg en 100 mL SSN = 0.4 mg/mL = 400 mcg/mL'
+  },
+  labetalol: {
+    nombre: 'Labetalol', grupo: 'esp',
+    indicacion: 'Crisis hipertensiva α+β. Contraindicado en asma, ICC, BAV.',
+    unidades: 'mg/h', rangoMin: 20, rangoMax: 160, dosisMax: 300,
+    concStd: 1, concUnit: 'mg/mL',
+    dilucion: '200 mg en 200 mL SSN = 1 mg/mL'
+  },
+  nitroprusiato: {
+    nombre: 'Nitroprusiato', grupo: 'esp',
+    indicacion: 'Crisis HTA grave. Riesgo toxicidad cianuro >72h. Proteger de luz.',
+    unidades: 'mcg/kg/min', rangoMin: 0.3, rangoMax: 10, dosisMax: 10,
+    concStd: 0.2, concUnit: 'mg/mL',
+    dilucion: '50 mg en 250 mL SG5% = 0.2 mg/mL = 200 mcg/mL'
+  }
+});
+
+function setBombaCategoria(grupo, btn) {
+  document.querySelectorAll('#bom-cat-bar .tab-btn')
+    .forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
   const sel = document.getElementById('bom-farmaco');
-  if (!sel) return;
   sel.innerHTML = '';
   Object.entries(FARMACOS).forEach(([key, f]) => {
     if (f.grupo === grupo) {
-      const opt = document.createElement('option');
-      opt.value = key;
-      opt.textContent = f.nombre;
-      sel.appendChild(opt);
+      const o = document.createElement('option');
+      o.value = key; o.textContent = f.nombre;
+      sel.appendChild(o);
     }
   });
   updateBombaFarmaco();
@@ -6646,73 +6827,122 @@ function updateBombaFarmaco() {
   const key = document.getElementById('bom-farmaco').value;
   const f = FARMACOS[key];
   if (!f) return;
-  document.getElementById('bom-indicacion').textContent = f.indicacion;
-  document.getElementById('bom-unidades').textContent = f.unidades;
-  document.getElementById('bom-rango').textContent = f.rangoMin + ' – ' + f.rangoMax + ' ' + f.unidades;
-  document.getElementById('bom-dosis-max').textContent = f.dosisMax + ' ' + f.unidades;
-  document.getElementById('bom-conc').value = (f.concStd / 50).toFixed(3);
-  document.getElementById('bom-notas').textContent = f.notas;
-  document.getElementById('bom-dilucion').textContent = f.dilucion;
-  const unitSel = document.getElementById('bom-dosis-unit');
-  unitSel.innerHTML = '<option value="' + f.unidades + '">' + f.unidades + '</option>';
+  document.getElementById('bom-badge-unit').textContent =
+    f.unidades;
+  document.getElementById('bom-badge-rango').textContent =
+    'Rango: ' + f.rangoMin + ' – ' + f.rangoMax + ' ' + f.unidades;
+  document.getElementById('bom-badge-max').textContent =
+    'Máx: ' + f.dosisMax + ' ' + f.unidades;
+  document.getElementById('bom-indicacion').textContent =
+    f.indicacion;
+  document.getElementById('bom-conc').value =
+    f.concStd.toFixed(3);
+  const unitSel = document.getElementById('bom-conc-unit');
+  for (let o of unitSel.options) {
+    if (o.value === f.concUnit) {
+      unitSel.value = o.value; break;
+    }
+  }
+  document.getElementById('bom-dilucion-txt').textContent =
+    f.dilucion;
+  document.getElementById('bom-result-inline').style.display =
+    'none';
 }
 
 function setBombaMode(mode, btn) {
-  document.querySelectorAll('#calc-bombas .nota-format-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nota-format-btn')
+    .forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
-  document.getElementById('bom-mode-dosis').style.display = mode === 'dosis' ? 'block' : 'none';
-  document.getElementById('bom-mode-vel').style.display = mode === 'vel' ? 'block' : 'none';
+  const label = document.getElementById('bom-input-label');
+  const input = document.getElementById('bom-valor-input');
+  if (mode === 'dosis') {
+    label.textContent = 'Velocidad (mL/h)';
+    input.placeholder = 'velocidad en bomba';
+  } else {
+    label.textContent = 'Dosis deseada';
+    input.placeholder = 'dosis objetivo';
+  }
+  document.getElementById('bom-result-inline').style.display =
+    'none';
 }
 
-function calcBombaDosis() {
+function calcBomba() {
   const key = document.getElementById('bom-farmaco').value;
   const f = FARMACOS[key];
-  const peso = parseFloat(document.getElementById('bom-peso').value);
-  const conc = parseFloat(document.getElementById('bom-conc').value);
-  const vel = parseFloat(document.getElementById('bom-vel').value);
-  if (!peso || !conc || !vel) { showToast('Ingresa peso, concentración y velocidad'); return; }
-  let dosis;
-  const unidad = f.unidades;
-  if (unidad === 'mcg/kg/min') dosis = (conc * 1000 * vel) / (60 * peso);
-  else if (unidad === 'mcg/kg/h') dosis = (conc * 1000 * vel) / peso;
-  else if (unidad === 'mg/kg/h') dosis = (conc * vel) / peso;
-  else if (unidad === 'UI/h' || unidad === 'mg/h' || unidad === 'mcg/h') dosis = conc * vel;
-  else if (unidad === 'UI/kg/h') dosis = (conc * vel) / peso;
-  mostrarResultadoBomba(dosis, vel, f);
-}
+  const peso = parseFloat(
+    document.getElementById('bom-peso').value);
+  const conc = parseFloat(
+    document.getElementById('bom-conc').value);
+  const val = parseFloat(
+    document.getElementById('bom-valor-input').value);
+  const modeActivo = document.querySelector(
+    '.nota-format-btn.active').textContent.includes('Velocidad');
 
-function calcBombaVel() {
-  const key = document.getElementById('bom-farmaco').value;
-  const f = FARMACOS[key];
-  const peso = parseFloat(document.getElementById('bom-peso').value);
-  const conc = parseFloat(document.getElementById('bom-conc').value);
-  const dosis = parseFloat(document.getElementById('bom-dosis-in').value);
-  if (!peso || !conc || !dosis) { showToast('Ingresa peso, concentración y dosis'); return; }
-  let vel;
-  const unidad = f.unidades;
-  if (unidad === 'mcg/kg/min') vel = (dosis * 60 * peso) / (conc * 1000);
-  else if (unidad === 'mcg/kg/h') vel = (dosis * peso) / (conc * 1000);
-  else if (unidad === 'mg/kg/h') vel = (dosis * peso) / conc;
-  else if (unidad === 'UI/h' || unidad === 'mg/h' || unidad === 'mcg/h') vel = dosis / conc;
-  else if (unidad === 'UI/kg/h') vel = (dosis * peso) / conc;
-  mostrarResultadoBomba(dosis, vel, f);
-}
+  if (!validate([
+    {id:'bom-peso', label:'Peso'},
+    {id:'bom-conc', label:'Concentración'},
+    {id:'bom-valor-input', label: modeActivo ?
+      'Velocidad' : 'Dosis'}
+  ])) return;
 
-function mostrarResultadoBomba(dosis, vel, f) {
-  const wrap = document.getElementById('bom-result');
-  wrap.style.display = 'block';
-  document.getElementById('bom-out-dosis').textContent = dosis.toFixed(3) + ' ' + f.unidades;
-  document.getElementById('bom-out-vel').textContent = vel.toFixed(1) + ' mL/h';
-  document.getElementById('bom-out-rango').textContent = f.rangoMin + ' – ' + f.rangoMax + ' ' + f.unidades;
+  const u = f.unidades;
+  let dosis, vel;
+
+  if (modeActivo) {
+    vel = val;
+    if (u === 'mcg/kg/min')
+      dosis = (conc * 1000 * vel) / (60 * peso);
+    else if (u === 'mcg/kg/h')
+      dosis = (conc * 1000 * vel) / peso;
+    else if (u === 'mg/kg/h')
+      dosis = (conc * vel) / peso;
+    else
+      dosis = conc * vel;
+  } else {
+    dosis = val;
+    if (u === 'mcg/kg/min')
+      vel = (dosis * 60 * peso) / (conc * 1000);
+    else if (u === 'mcg/kg/h')
+      vel = (dosis * peso) / (conc * 1000);
+    else if (u === 'mg/kg/h')
+      vel = (dosis * peso) / conc;
+    else
+      vel = dosis / conc;
+  }
+
+  const wrap = document.getElementById('bom-result-inline');
+  wrap.style.display = 'flex';
+  document.getElementById('bom-out-val').textContent =
+    dosis.toFixed(3);
+  document.getElementById('bom-out-unit').textContent = u;
+  document.getElementById('bom-out-vel').textContent =
+    '· ' + vel.toFixed(1) + ' mL/h';
+
   const badge = document.getElementById('bom-out-badge');
-  if (dosis < f.rangoMin) { badge.className = 'result-badge badge-yellow'; badge.textContent = 'Dosis subterapéutica'; }
-  else if (dosis > f.dosisMax) { badge.className = 'result-badge badge-red'; badge.textContent = '⚠ Dosis máxima excedida'; }
-  else if (dosis > f.rangoMax) { badge.className = 'result-badge badge-orange'; badge.textContent = 'Sobre rango habitual'; }
-  else { badge.className = 'result-badge badge-green'; badge.textContent = 'Dentro de rango terapéutico'; }
+  if (dosis > f.dosisMax) {
+    badge.className = 'result-badge badge-red';
+    badge.textContent = '⚠ Dosis máxima excedida';
+  } else if (dosis > f.rangoMax) {
+    badge.className = 'result-badge badge-orange';
+    badge.textContent = 'Sobre rango habitual';
+  } else if (dosis < f.rangoMin) {
+    badge.className = 'result-badge badge-yellow';
+    badge.textContent = 'Subterapéutico';
+  } else {
+    badge.className = 'result-badge badge-green';
+    badge.textContent = 'En rango';
+  }
+}
+
+function resetBombas() {
+  document.getElementById('bom-valor-input').value = '';
+  document.getElementById('bom-result-inline').style.display =
+    'none';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  updateBombaGrupo();
+  setBombaCategoria('vaso',
+    document.querySelector('#bom-cat-bar .tab-btn'));
 });
 
 // ============ VASOPRESOR ============
