@@ -979,7 +979,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 
   <div class="nav-group">
     <div class="nav-group-header collapsed" onclick="toggleGroup('g-vent',this)">
-      <span class="nav-group-label">🫁 Ventilación mecánica</span><span class="nav-chevron">▾</span>
+      <span class="nav-group-label">🫁 Ventilación</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-vent">
       <div class="nav-item" id="nav-vent-params" onclick="showCalc('vent-params',this)"><span class="nav-icon">·</span>Parámetros ventilatorios</div>
@@ -1004,13 +1004,13 @@ input.pat-synced:focus, select.pat-synced:focus {
 
   <div class="nav-group">
     <div class="nav-group-header collapsed" onclick="toggleGroup('g-hemo',this)">
-      <span class="nav-group-label">💉 Hemodinámica y Shock</span><span class="nav-chevron">▾</span>
+      <span class="nav-group-label">💉 Hemodinámica</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-hemo">
-      <div class="nav-item" onclick="showCalc('shock',this)"><span class="nav-icon">·</span>Clasificación de Shock</div>
-      <div class="nav-item" onclick="showCalc('hemodynamics',this)"><span class="nav-icon">·</span>DO₂ / VO₂ / SVR / IC</div>
-      <div class="nav-item" onclick="showCalc('vaso',this)"><span class="nav-icon">·</span>Vasopresor</div>
-      <div class="nav-item" onclick="showCalc('vexus',this)"><span class="nav-icon">·</span>VExUS — Congestión Venosa</div>
+      <div class="nav-item" id="nav-perfil-hemo" onclick="showCalc('perfil-hemo',this)"><span class="nav-icon">·</span>Perfil hemodinámico</div>
+      <div class="nav-item" id="nav-us-hemo" onclick="showCalc('us-hemo',this)"><span class="nav-icon">·</span>Ultrasonido hemodinámico</div>
+      <div class="nav-item" id="nav-bombas" onclick="showCalc('bombas',this)"><span class="nav-icon">·</span>Bombas de infusión</div>
+      <div class="nav-item" id="nav-vexus" onclick="showCalc('vexus',this)"><span class="nav-icon">·</span>VExUS — Congestión venosa</div>
     </div>
   </div>
 
@@ -2298,6 +2298,251 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- ============================================================ -->
 <!-- HEMODINAMICA -->
 <!-- ============================================================ -->
+
+<div id="calc-bombas" class="calc-panel">
+  <div class="card">
+    <div class="card-title">Bombas de infusión</div>
+    <div class="section-sub">Selección de fármaco</div>
+    <div class="row cols2">
+      <div>
+        <label>Grupo farmacológico</label>
+        <select id="bom-grupo" onchange="updateBombaGrupo()">
+          <option value="vaso">Vasopresores</option>
+          <option value="sed">Sedación / Analgesia</option>
+          <option value="bnm">Bloqueador neuromuscular</option>
+          <option value="neuro">Neuroprotección</option>
+          <option value="otros">Otros UCI</option>
+        </select>
+      </div>
+      <div>
+        <label>Fármaco</label>
+        <select id="bom-farmaco" onchange="updateBombaFarmaco()"></select>
+      </div>
+    </div>
+
+    <div class="section-sub">Información del fármaco</div>
+    <div class="info" style="border-left:3px solid var(--accent);">
+      <div><b>Indicación:</b> <span id="bom-indicacion">—</span></div>
+      <div><b>Unidades:</b> <span id="bom-unidades">—</span></div>
+      <div><b>Rango terapéutico:</b> <span id="bom-rango">—</span></div>
+      <div><b>Dosis máxima:</b> <span id="bom-dosis-max">—</span></div>
+      <div><b>Notas clínicas:</b> <span id="bom-notas">—</span></div>
+    </div>
+
+    <div class="section-sub">Calculadora</div>
+    <div class="nota-format-toggle">
+      <button class="nota-format-btn active" onclick="setBombaMode('dosis',this)">Velocidad → Dosis</button>
+      <button class="nota-format-btn" onclick="setBombaMode('vel',this)">Dosis → Velocidad</button>
+    </div>
+    <div class="row cols3">
+      <div><label>Peso (kg)</label><input type="number" id="bom-peso" placeholder=""></div>
+      <div><label>Concentración</label><input type="number" id="bom-conc" placeholder="concentración estándar" step="0.001"></div>
+      <div><label>Unidades concentración</label>
+        <select id="bom-conc-unit">
+          <option value="mg/mL">mg/mL</option>
+          <option value="mcg/mL">mcg/mL</option>
+          <option value="UI/mL">UI/mL</option>
+          <option value="mg/250mL">mg/250mL</option>
+          <option value="mg/500mL">mg/500mL</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="bom-mode-dosis">
+      <div class="row cols2">
+        <div><label>Velocidad de infusión (mL/h)</label><input type="number" id="bom-vel" placeholder="velocidad actual en bomba" step="0.1"></div>
+      </div>
+      <div class="btn-row"><button class="calc" onclick="calcBombaDosis()">Calcular dosis</button></div>
+    </div>
+
+    <div id="bom-mode-vel" style="display:none;">
+      <div class="row cols2">
+        <div><label>Dosis deseada</label><input type="number" id="bom-dosis-in" placeholder="dosis objetivo" step="0.001"></div>
+        <div><label>Unidades dosis</label>
+          <select id="bom-dosis-unit">
+            <option value="mcg/kg/min">mcg/kg/min</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row"><button class="calc" onclick="calcBombaVel()">Calcular velocidad</button></div>
+    </div>
+    <div class="btn-row"><button class="reset" onclick="resetPanel('calc-bombas')">Limpiar</button></div>
+
+    <div class="multi-result" id="bom-result" style="display:none; margin-top:12px;">
+      <div class="mr-row"><span class="mr-label">Dosis calculada</span><span class="mr-val" id="bom-out-dosis">—</span></div>
+      <div class="mr-row"><span class="mr-label">Velocidad calculada</span><span class="mr-val" id="bom-out-vel">—</span></div>
+      <div class="mr-row"><span class="mr-label">Rango terapéutico</span><span class="mr-val" id="bom-out-rango">—</span></div>
+      <div class="mr-row"><span class="mr-label">Estado</span><span class="result-badge" id="bom-out-badge">—</span></div>
+    </div>
+
+    <div class="section-sub">Referencia rápida de dilución</div>
+    <div class="info" id="bom-dilucion">—</div>
+  </div>
+</div>
+
+<div id="calc-perfil-hemo" class="calc-panel">
+  <div class="card">
+    <div class="card-title">Perfil hemodinámico</div>
+    <div class="section-sub">Clasificación de choque</div>
+    <div class="row cols3">
+      <div><label>PAM (mmHg)</label><input type="number" id="ph-pam" placeholder="70 – 105"></div>
+      <div><label>FC (lpm)</label><input type="number" id="ph-fc" placeholder="60 – 100"></div>
+      <div><label>PVC (mmHg)</label><input type="number" id="ph-pvc" placeholder="8 – 12"></div>
+    </div>
+    <div class="row cols3">
+      <div><label>GC (L/min)</label><input type="number" id="ph-gc" placeholder="4 – 8" step="0.1"></div>
+      <div><label>IC (L/min/m²)</label><input type="number" id="ph-ic" placeholder="2.5 – 4.0" step="0.1"></div>
+      <div><label>RVS (dynas·s/cm⁵)</label><input type="number" id="ph-rvs" placeholder="1000 – 1500"></div>
+    </div>
+    <div class="row cols3">
+      <div><label>SvO₂ (%)</label><input type="number" id="ph-svo2" placeholder="65 – 75" step="0.1"></div>
+      <div><label>Lactato (mmol/L)</label><input type="number" id="ph-lac" placeholder="0.5 – 2.0" step="0.1"></div>
+      <div><label>Temperatura (°C)</label><input type="number" id="ph-temp" placeholder="36.0 – 37.5" step="0.1"></div>
+    </div>
+    <div class="btn-row">
+      <button class="calc" onclick="calcPerfilHemo()">Clasificar</button>
+      <button class="reset" onclick="resetPanel('calc-perfil-hemo')">Limpiar</button>
+    </div>
+    <div class="multi-result" id="ph-shock-result" style="display:none;margin-top:12px;">
+      <div class="mr-row" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+        <span class="mr-label">Fenotipo de choque</span><span class="result-badge" id="ph-shock-badge">—</span>
+      </div>
+      <div class="mr-row"><span class="mr-label">Descripción</span><span class="mr-val" id="ph-shock-desc" style="max-width:70%;text-align:right;">—</span></div>
+    </div>
+
+    <div class="section-sub">Transporte y consumo de O₂</div>
+    <div class="row cols4">
+      <div><label>Hb (g/dL)</label><input type="number" id="ph-hb" placeholder="12 – 16" step="0.1"></div>
+      <div><label>SaO₂ (%)</label><input type="number" id="ph-sao2" placeholder="95 – 100" step="0.1"></div>
+      <div><label>PaO₂ (mmHg)</label><input type="number" id="ph-pao2" placeholder="80 – 100" step="0.1"></div>
+      <div><label>PvO₂ (mmHg)</label><input type="number" id="ph-pvo2" placeholder="35 – 45" step="0.1"></div>
+    </div>
+    <div class="row cols2">
+      <div><label>SC (m²)</label><input type="number" id="ph-sc" placeholder="1.7 – 2.0" step="0.01"></div>
+      <div><label>RVS calculada</label><input type="number" id="ph-rvs-calc" readonly placeholder="auto" style="background:rgba(0,200,255,0.05);"></div>
+    </div>
+    <div class="multi-result" id="ph-ox-result" style="display:none;margin-top:12px;">
+      <div class="mr-row"><span class="mr-label">CaO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-cao2">—</span><span class="result-badge" id="ph-cao2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">CvO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-cvo2">—</span><span class="result-badge" id="ph-cvo2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">DavO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-davo2">—</span><span class="result-badge" id="ph-davo2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">DO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-do2">—</span><span class="result-badge" id="ph-do2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">VO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-vo2">—</span><span class="result-badge" id="ph-vo2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">IEO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-ieo2">—</span><span class="result-badge" id="ph-ieo2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">RVS = [(PAM−PVC)×80]/GC</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-rvs-out">—</span><span class="result-badge" id="ph-rvs-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">IC = GC/SC</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-ic-out">—</span><span class="result-badge" id="ph-ic-b"></span></span></div>
+    </div>
+
+    <div class="evid-panel" style="margin-top:10px;">
+      <div class="evid-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
+        <span>📚 Bibliografía y Evidencia</span><span class="evid-arrow">▾</span>
+      </div>
+      <div class="evid-body">
+        <div class="evid-ref"><span class="evid-year">2008</span> — <b>Vincent JL</b>. Understanding cardiac output. <i>Crit Care</i>.</div>
+        <div class="evid-ref"><span class="evid-year">2017</span> — <b>Rhodes A et al.</b> Surviving Sepsis Campaign 2016. <i>Intensive Care Med</i>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="calc-us-hemo" class="calc-panel">
+  <div class="card">
+    <div class="card-title">Ultrasonido hemodinámico</div>
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('us','sistolica',this)">Función sistólica</button>
+      <button class="tab-btn" onclick="switchTab('us','diastolica',this)">Función diastólica</button>
+      <button class="tab-btn" onclick="switchTab('us','derecha',this)">Función derecha</button>
+      <button class="tab-btn" onclick="switchTab('us','precarga',this)">Precarga y GC</button>
+    </div>
+
+    <div class="tab-content active" id="us-tab-sistolica">
+      <div class="row cols3">
+        <div><label>FEVI (%)</label><input type="number" id="ush-fevi" placeholder="55 – 70"></div>
+        <div><label>MAPSE (mm)</label><input type="number" id="ush-mapse" placeholder="≥ 10" step="0.1"></div>
+        <div><label>S' mitral (cm/s)</label><input type="number" id="ush-smit" placeholder="≥ 8" step="0.1"></div>
+      </div>
+      <div class="row cols3">
+        <div><label>Fracción acortamiento (%)</label><input type="number" id="ush-fac" placeholder="25 – 45" step="0.1"></div>
+        <div><label>Diámetro VI sistólico (mm)</label><input type="number" id="ush-dvis" placeholder="25 – 42" step="0.1"></div>
+        <div><label>Diámetro VI diastólico (mm)</label><input type="number" id="ush-dvid" placeholder="42 – 58" step="0.1"></div>
+      </div>
+      <div class="btn-row"><button class="calc" onclick="calcUshSistolica()">Evaluar</button></div>
+      <div class="multi-result" id="ush-sis-res" style="display:none;margin-top:10px;">
+        <div class="mr-row"><span class="mr-label">FA calculada</span><span class="mr-val" id="ush-fa-calc">—</span></div>
+        <div class="mr-row"><span class="mr-label">Interpretación</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ush-sis-int">—</span><span class="result-badge" id="ush-sis-b"></span></span></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="us-tab-diastolica">
+      <div class="row cols3">
+        <div><label>Onda E mitral (cm/s)</label><input type="number" id="ush-e" placeholder="60 – 100"></div>
+        <div><label>Onda A mitral (cm/s)</label><input type="number" id="ush-a" placeholder="40 – 80"></div>
+        <div><label>T desaceleración E (ms)</label><input type="number" id="ush-tde" placeholder="160 – 240"></div>
+      </div>
+      <div class="row cols2">
+        <div><label>e' lateral (cm/s)</label><input type="number" id="ush-eprim" placeholder="≥ 10" step="0.1"></div>
+        <div><label>e' septal (cm/s)</label><input type="number" id="ush-eprims" placeholder="≥ 7" step="0.1"></div>
+      </div>
+      <div class="btn-row"><button class="calc" onclick="calcUshDiastolica()">Evaluar</button></div>
+      <div class="multi-result" id="ush-dia-res" style="display:none;margin-top:10px;">
+        <div class="mr-row"><span class="mr-label">Relación E/A</span><span class="mr-val" id="ush-ea">—</span></div>
+        <div class="mr-row"><span class="mr-label">E/e' promedio</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ush-ee">—</span><span class="result-badge" id="ush-ee-b"></span></span></div>
+        <div class="mr-row"><span class="mr-label">Clasificación</span><span class="mr-val" id="ush-dia-int">—</span></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="us-tab-derecha">
+      <div class="row cols3">
+        <div><label>TAPSE (mm)</label><input type="number" id="ush-tapse" placeholder="≥ 17"></div>
+        <div><label>S' tricuspídeo (cm/s)</label><input type="number" id="ush-stric" placeholder="≥ 9.5" step="0.1"></div>
+        <div><label>FAC-VD (%)</label><input type="number" id="ush-facvd" placeholder="35 – 55"></div>
+      </div>
+      <div class="row cols2">
+        <div><label>Velocidad IT (m/s)</label><input type="number" id="ush-vit" placeholder="2.0 – 2.8" step="0.1"></div>
+        <div><label>PVC estimada (mmHg)</label><input type="number" id="ush-pvc-eco" placeholder="8 – 12"></div>
+      </div>
+      <div class="btn-row"><button class="calc" onclick="calcUshDerecha()">Evaluar</button></div>
+      <div class="multi-result" id="ush-der-res" style="display:none;margin-top:10px;">
+        <div class="mr-row"><span class="mr-label">PSAP</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ush-psap">—</span><span class="result-badge" id="ush-psap-b"></span></span></div>
+        <div class="mr-row"><span class="mr-label">Interpretación</span><span class="mr-val" id="ush-der-int">—</span></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="us-tab-precarga">
+      <div class="row cols3">
+        <div><label>VTI TSVI (cm)</label><input type="number" id="ush-vti" placeholder="18 – 22" step="0.1"></div>
+        <div><label>DTSVI (cm)</label><input type="number" id="ush-dtsvi" placeholder="1.8 – 2.2" step="0.1"></div>
+        <div><label>FC (lpm)</label><input type="number" id="ush-fc-eco" placeholder="60 – 100"></div>
+      </div>
+      <div class="row cols3">
+        <div><label>Variabilidad VTI (%)</label><input type="number" id="ush-varvti" placeholder="< 12" step="0.1"></div>
+        <div><label>VCI inspiración (mm)</label><input type="number" id="ush-vcii" placeholder="< 12" step="0.1"></div>
+        <div><label>VCI espiración (mm)</label><input type="number" id="ush-vcie" placeholder="15 – 25" step="0.1"></div>
+      </div>
+      <div class="row cols2">
+        <div><label>Variabilidad transmitral E (%)</label><input type="number" id="ush-varE" placeholder="< 12" step="0.1"></div>
+      </div>
+      <div class="btn-row"><button class="calc" onclick="calcUshPrecarga()">Calcular</button></div>
+      <div class="multi-result" id="ush-pre-res" style="display:none;margin-top:10px;">
+        <div class="mr-row"><span class="mr-label">VS</span><span class="mr-val" id="ush-vs">—</span></div>
+        <div class="mr-row"><span class="mr-label">GC</span><span class="mr-val" id="ush-gc">—</span></div>
+        <div class="mr-row"><span class="mr-label">Índice colapsabilidad VCI</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ush-coll">—</span><span class="result-badge" id="ush-coll-b"></span></span></div>
+        <div class="mr-row"><span class="mr-label">Respuesta a fluidos</span><span class="result-badge" id="ush-fluid-b">—</span></div>
+        <div class="mr-row"><span class="mr-label">Interpretación final</span><span class="mr-val" id="ush-pre-int">—</span></div>
+      </div>
+    </div>
+
+    <div class="evid-panel" style="margin-top:10px;">
+      <div class="evid-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
+        <span>📚 Bibliografía y Evidencia</span><span class="evid-arrow">▾</span>
+      </div>
+      <div class="evid-body">
+        <div class="evid-ref"><span class="evid-year">2015</span> — <b>Lang RM et al.</b> Cardiac chamber quantification. <i>JASE</i>.</div>
+        <div class="evid-ref"><span class="evid-year">2016</span> — <b>Nagueh SF et al.</b> LV diastolic function. <i>JASE</i>.</div>
+        <div class="evid-ref"><span class="evid-year">2007</span> — <b>Lamia B et al.</b> Echo prediction of fluid responsiveness. <i>Intensive Care Med</i>.</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- VASOPRESOR -->
 <div id="calc-vaso" class="calc-panel">
@@ -5732,6 +5977,13 @@ function fillVentParamsVT() {
   document.getElementById('vp-vt').value = Math.round(pic * 6);
 }
 function calcVentParams() {
+  if (!validate([
+    {id:'vp-talla', label:'Talla'},
+    {id:'vp-fio2', label:'FiO2'},
+    {id:'vp-peep', label:'PEEP'},
+    {id:'vp-fr', label:'Frecuencia respiratoria'},
+    {id:'vp-vt', label:'Volumen tidal'}
+  ])) return;
   const pic = updateVentParamsPIC();
   const vt = parseFloat(document.getElementById('vp-vt').value);
   const fr = parseFloat(document.getElementById('vp-fr').value);
@@ -5739,12 +5991,9 @@ function calcVentParams() {
   const fio2 = parseFloat(document.getElementById('vp-fio2').value);
   const peep = parseFloat(document.getElementById('vp-peep').value);
 
-  if (pic === null || isNaN(vt) || isNaN(fr) || isNaN(fio2) || isNaN(peep)) {
-    alert('Complete talla/sexo y los parámetros ventilatorios obligatorios.');
-    return;
-  }
+  if (pic === null || isNaN(vt) || isNaN(fr) || isNaN(fio2) || isNaN(peep)) return;
   if (fio2 < 21 || fio2 > 100 || peep < 3 || peep > 20 || fr < 10 || fr > 35) {
-    alert('Verifique rangos: FiO2 21?100, PEEP 3?20, FR 10?35.');
+    showToast('Verifique rangos: FiO2 21-100, PEEP 3-20, FR 10-35.');
     return;
   }
   const vtKg = vt / pic;
@@ -5811,6 +6060,14 @@ function calcOI() {
 }
 
 function calcVentMonitor() {
+  if (!validate([
+    {id:'vm-ppico', label:'Ppico'},
+    {id:'vm-pplat', label:'Pplat'},
+    {id:'vm-peep', label:'PEEPt'},
+    {id:'vm-vte', label:'Vte'},
+    {id:'vm-flujo', label:'Flujo inspiratorio'},
+    {id:'vm-fr', label:'Frecuencia respiratoria'}
+  ])) return;
   const vte = parseFloat(document.getElementById('vm-vte').value);
   const ppico = parseFloat(document.getElementById('vm-ppico').value);
   const pplat = parseFloat(document.getElementById('vm-pplat').value);
@@ -5822,12 +6079,9 @@ function calcVentMonitor() {
   const petco2 = parseFloat(document.getElementById('vm-petco2').value);
   const pdiaf = parseFloat(document.getElementById('vm-pdiaf').value);
 
-  if (isNaN(vte) || isNaN(ppico) || isNaN(pplat) || isNaN(peep) || isNaN(fr) || isNaN(flujoLmin)) {
-    alert('Complete Ppico, Pplat, PEEPt, Vte, flujo y FR.');
-    return;
-  }
+  if (isNaN(vte) || isNaN(ppico) || isNaN(pplat) || isNaN(peep) || isNaN(fr) || isNaN(flujoLmin)) return;
   if (ppico <= peep || pplat <= peep || flujoLmin <= 0) {
-    alert('Verifique que Ppico y Pplat sean mayores que PEEPt y flujo > 0.');
+    showToast('Verifique que Ppico y Pplat sean mayores que PEEPt y flujo > 0.');
     return;
   }
 
@@ -5899,6 +6153,11 @@ function calcVentMonitor() {
 }
 
 function calcGasMet() {
+  if (!validate([
+    {id:'gm-ph', label:'pH'},
+    {id:'gm-pco2', label:'PaCO2'},
+    {id:'gm-hco3', label:'HCO3'}
+  ])) return;
   const ph = parseFloat(document.getElementById('gm-ph').value);
   const pco2 = parseFloat(document.getElementById('gm-pco2').value);
   const hco3 = parseFloat(document.getElementById('gm-hco3').value);
@@ -5913,10 +6172,7 @@ function calcGasMet() {
   const osmMed = parseFloat(document.getElementById('gm-osm-med').value);
   const beInput = parseFloat(document.getElementById('gm-be').value);
 
-  if ([ph,pco2,hco3,pao2,fio2,na,cl,alb,glu,lac].some(v => isNaN(v))) {
-    alert('Complete los campos obligatorios de gasometría y química sérica.');
-    return;
-  }
+  if ([ph,pco2,hco3,pao2,fio2,na,cl,alb,glu,lac].some(v => isNaN(v))) return;
   const beEst = isNaN(beInput) ? (hco3 - 24 + 16.2 * (ph - 7.4)) : beInput;
   let prim = 'Indeterminado', comp = '—', mixed = 'Sin datos concluyentes';
   if (ph < 7.35) {
@@ -6034,6 +6290,12 @@ function calcOTSc() {
 }
 
 function calcO2Transport() {
+  if (!validate([
+    {id:'ot-hb', label:'Hb'},
+    {id:'ot-sao2', label:'SaO2'},
+    {id:'ot-svo2', label:'SvO2'},
+    {id:'ot-gc', label:'GC'}
+  ])) return;
   const hb = parseFloat(document.getElementById('ot-hb').value);
   const sao2 = parseFloat(document.getElementById('ot-sao2').value);
   const svo2 = parseFloat(document.getElementById('ot-svo2').value);
@@ -6050,10 +6312,7 @@ function calcO2Transport() {
   const fio2 = parseFloat(document.getElementById('ot-fio2').value);
   const paco2 = parseFloat(document.getElementById('ot-paco2').value);
 
-  if ([hb,sao2,svo2,pao2,pvo2,gc,fc,pam,pvc,papm,poap,sc,pad,fio2,paco2].some(v => isNaN(v) || v === 0)) {
-    alert('Complete todos los campos para calcular transporte de O₂.');
-    return;
-  }
+  if ([hb,sao2,svo2,pao2,pvo2,gc,fc,pam,pvc,papm,poap,sc,pad,fio2,paco2].some(v => isNaN(v) || v === 0)) return;
 
   const cco2 = (hb * 1.34) + (0.0031 * pao2);
   const cao2 = (hb * 1.34 * (sao2/100)) + (0.0031 * pao2);
@@ -6097,6 +6356,180 @@ function calcO2Transport() {
   put('ot-pao2alv', pao2alv, 'mmHg'); put('ot-aa', aa, 'mmHg');
 
   document.getElementById('ot-result').style.display = 'grid';
+}
+
+function calcPerfilHemo() {
+  const pam = parseFloat(document.getElementById('ph-pam').value);
+  const fc = parseFloat(document.getElementById('ph-fc').value);
+  const pvc = parseFloat(document.getElementById('ph-pvc').value);
+  const gc = parseFloat(document.getElementById('ph-gc').value);
+  const ic = parseFloat(document.getElementById('ph-ic').value);
+  const rvsIn = parseFloat(document.getElementById('ph-rvs').value);
+  const svo2 = parseFloat(document.getElementById('ph-svo2').value);
+  const lac = parseFloat(document.getElementById('ph-lac').value);
+  if (!validate([
+    {id:'ph-pam', label:'PAM'},
+    {id:'ph-gc', label:'GC'},
+    {id:'ph-pvc', label:'PVC'},
+    {id:'ph-rvs', label:'RVS'},
+    {id:'ph-svo2', label:'SvO₂'},
+    {id:'ph-lac', label:'Lactato'}
+  ])) return;
+  let shock='Choque mixto', desc='Patrón no concluyente — evaluar componentes', cls='badge-yellow';
+  if (gc >= 4 && rvsIn < 1000 && svo2 >= 70 && lac >= 2) { shock='Choque distributivo'; desc='GC↑ RVS↓ — Patrón hiperdinámico. Considerar: sepsis, anafilaxia, SIRS'; cls='badge-red'; }
+  else if (gc < 4 && ic < 2.5 && rvsIn > 1500 && svo2 < 65) { shock='Choque cardiogénico'; desc='GC↓ RVS↑ — Patrón hipodinámico. Considerar: IAM, miocarditis, arritmia'; cls='badge-red'; }
+  else if (gc < 4 && pvc < 8 && rvsIn > 1500 && svo2 < 65) { shock='Choque hipovolémico'; desc='GC↓ PVC↓ RVS↑ — Precarga reducida. Considerar: hemorragia, deshidratación severa'; cls='badge-orange'; }
+  else if (gc < 4 && pvc > 12 && rvsIn > 1500 && svo2 < 65) { shock='Choque obstructivo'; desc='GC↓ PVC↑ — Obstrucción al flujo. Considerar: TEP masivo, taponamiento, neumotórax'; cls='badge-orange'; }
+  setBadge('ph-shock-badge', cls, shock);
+  document.getElementById('ph-shock-desc').textContent = desc;
+  document.getElementById('ph-shock-result').style.display = 'grid';
+
+  const hb = parseFloat(document.getElementById('ph-hb').value);
+  const sao2 = parseFloat(document.getElementById('ph-sao2').value);
+  const pao2 = parseFloat(document.getElementById('ph-pao2').value);
+  const pvo2 = parseFloat(document.getElementById('ph-pvo2').value);
+  const sc = parseFloat(document.getElementById('ph-sc').value);
+  if (!isNaN(hb) && !isNaN(sao2) && !isNaN(pao2) && !isNaN(pvo2) && !isNaN(sc) && !isNaN(gc)) {
+    const cao2 = (hb*1.34*(sao2/100)) + (0.0031*pao2);
+    const cvo2 = (hb*1.34*(svo2/100)) + (0.0031*pvo2);
+    const davo2 = cao2 - cvo2;
+    const do2 = gc*10*cao2;
+    const vo2 = gc*10*davo2;
+    const ieo2 = ((cao2-cvo2)/cao2)*100;
+    const rvs = ((pam-pvc)*80)/gc;
+    const icCalc = gc/sc;
+    document.getElementById('ph-rvs-calc').value = rvs.toFixed(0);
+    const put=(id,v,u='')=>document.getElementById(id).textContent=v.toFixed(2)+(u?(' '+u):'');
+    put('ph-cao2',cao2,'mL/dL'); put('ph-cvo2',cvo2,'mL/dL'); put('ph-davo2',davo2,'mL/dL');
+    put('ph-do2',do2,'mL/min'); put('ph-vo2',vo2,'mL/min'); put('ph-ieo2',ieo2,'%'); put('ph-rvs-out',rvs,'dyn·s/cm⁵'); put('ph-ic-out',icCalc,'L/min/m²');
+    const badge=(id,v,min,max)=>setBadge(id,(v>=min&&v<=max)?'badge-green':(v<min?'badge-yellow':'badge-red'),(v>=min&&v<=max)?'Normal':(v<min?'Bajo':'Alto'));
+    badge('ph-cao2-b',cao2,17,20); badge('ph-cvo2-b',cvo2,12,15); badge('ph-davo2-b',davo2,4,6); badge('ph-do2-b',do2,950,1150);
+    badge('ph-vo2-b',vo2,200,250); badge('ph-ieo2-b',ieo2,20,30); badge('ph-rvs-b',rvs,1000,1500); badge('ph-ic-b',icCalc,2.5,4.0);
+    document.getElementById('ph-ox-result').style.display = 'grid';
+  }
+}
+
+function calcUshSistolica() {
+  if (!validate([{id:'ush-fevi', label:'FEVI'}])) return;
+  const fevi = parseFloat(document.getElementById('ush-fevi').value);
+  const mapse = parseFloat(document.getElementById('ush-mapse').value);
+  const smit = parseFloat(document.getElementById('ush-smit').value);
+  const fac = parseFloat(document.getElementById('ush-fac').value);
+  const dvis = parseFloat(document.getElementById('ush-dvis').value);
+  const dvid = parseFloat(document.getElementById('ush-dvid').value);
+  let faCalc = null;
+  if (!isNaN(dvis) && !isNaN(dvid) && dvid > 0) {
+    faCalc = ((dvid - dvis) / dvid) * 100;
+    document.getElementById('ush-fa-calc').textContent = faCalc.toFixed(1) + ' %';
+  } else if (!isNaN(fac)) {
+    faCalc = fac;
+    document.getElementById('ush-fa-calc').textContent = fac.toFixed(1) + ' % (ingresada)';
+  } else {
+    document.getElementById('ush-fa-calc').textContent = 'Sin datos';
+  }
+  let txt='Función sistólica VI conservada', cls='badge-green';
+  if (fevi < 30) { txt='Disfunción sistólica grave — considerar soporte inotrópico'; cls='badge-red'; }
+  else if (fevi < 40) { txt='Disfunción sistólica significativa — considerar soporte inotrópico'; cls='badge-orange'; }
+  else if (fevi < 55) { txt='Disfunción sistólica leve — monitorizar'; cls='badge-yellow'; }
+  if (!isNaN(mapse) && mapse < 10 && cls === 'badge-green') cls = 'badge-yellow';
+  if (!isNaN(smit) && smit < 8 && cls === 'badge-green') cls = 'badge-yellow';
+  if (faCalc !== null && faCalc < 25 && cls === 'badge-green') cls = 'badge-yellow';
+  document.getElementById('ush-sis-int').textContent = txt;
+  setBadge('ush-sis-b', cls, fevi.toFixed(0) + '%');
+  document.getElementById('ush-sis-res').style.display = 'grid';
+}
+
+function calcUshDiastolica() {
+  if (!validate([
+    {id:'ush-e', label:'Onda E'},
+    {id:'ush-a', label:'Onda A'},
+    {id:'ush-eprim', label:"e' lateral"},
+    {id:'ush-eprims', label:"e' septal"}
+  ])) return;
+  const E = parseFloat(document.getElementById('ush-e').value);
+  const A = parseFloat(document.getElementById('ush-a').value);
+  const ep = parseFloat(document.getElementById('ush-eprim').value);
+  const eps = parseFloat(document.getElementById('ush-eprims').value);
+  if ([E,A,ep,eps].some(v => isNaN(v) || v === 0)) return;
+  const ea = E / A;
+  const ee = E / ((ep + eps) / 2);
+  document.getElementById('ush-ea').textContent = ea.toFixed(2);
+  document.getElementById('ush-ee').textContent = ee.toFixed(2);
+  if (ee < 8) setBadge('ush-ee-b','badge-green','Presión llenado normal');
+  else if (ee <= 14) setBadge('ush-ee-b','badge-yellow','Indeterminado');
+  else setBadge('ush-ee-b','badge-red','Presión llenado elevada');
+  let txt='Función diastólica normal';
+  if (ea < 0.8) txt='Disfunción diastólica grado I (relajación alterada)';
+  else if (ea <= 2.0 && ee > 14) txt='Disfunción diastólica grado II (pseudonormal)';
+  else if (ea > 2.0) txt='Disfunción diastólica grado III (restrictivo)';
+  document.getElementById('ush-dia-int').textContent = txt;
+  document.getElementById('ush-dia-res').style.display = 'grid';
+}
+
+function calcUshDerecha() {
+  if (!validate([
+    {id:'ush-tapse', label:'TAPSE'},
+    {id:'ush-vit', label:'Velocidad IT'},
+    {id:'ush-pvc-eco', label:'PVC estimada'}
+  ])) return;
+  const tapse = parseFloat(document.getElementById('ush-tapse').value);
+  const str = parseFloat(document.getElementById('ush-stric').value);
+  const facvd = parseFloat(document.getElementById('ush-facvd').value);
+  const vit = parseFloat(document.getElementById('ush-vit').value);
+  const pvc = parseFloat(document.getElementById('ush-pvc-eco').value);
+  if ([tapse,str,facvd,vit,pvc].some(v => isNaN(v))) return;
+  const psap = 4 * vit * vit + pvc;
+  document.getElementById('ush-psap').textContent = psap.toFixed(1) + ' mmHg';
+  if (psap < 35) setBadge('ush-psap-b','badge-green','Normal');
+  else if (psap <= 50) setBadge('ush-psap-b','badge-yellow','HTP leve');
+  else setBadge('ush-psap-b','badge-red','HTP moderada-grave');
+  let txt='Función VD conservada';
+  if (tapse < 17 && facvd < 35) txt='Disfunción VD significativa';
+  if (psap > 50) txt += ' — Hipertensión pulmonar, evaluar causa';
+  document.getElementById('ush-der-int').textContent = txt;
+  document.getElementById('ush-der-res').style.display = 'grid';
+}
+
+function calcUshPrecarga() {
+  if (!validate([
+    {id:'ush-vti', label:'VTI TSVI'},
+    {id:'ush-dtsvi', label:'DTSVI'},
+    {id:'ush-fc-eco', label:'FC'}
+  ])) return;
+  const vti = parseFloat(document.getElementById('ush-vti').value);
+  const d = parseFloat(document.getElementById('ush-dtsvi').value);
+  const fc = parseFloat(document.getElementById('ush-fc-eco').value);
+  const varVti = parseFloat(document.getElementById('ush-varvti').value);
+  const vcii = parseFloat(document.getElementById('ush-vcii').value);
+  const vcie = parseFloat(document.getElementById('ush-vcie').value);
+  const varE = parseFloat(document.getElementById('ush-varE').value);
+  if ([vti,d,fc,vcii,vcie].some(v => isNaN(v) || v === 0)) return;
+  const vs = 0.785 * d * d * vti;
+  const gc = (vs * fc) / 1000;
+  const coll = ((vcie - vcii) / vcie) * 100;
+  document.getElementById('ush-vs').textContent = vs.toFixed(1) + ' mL';
+  document.getElementById('ush-gc').textContent = gc.toFixed(2) + ' L/min';
+  document.getElementById('ush-coll').textContent = coll.toFixed(1) + ' %';
+  if (coll > 50) setBadge('ush-coll-b','badge-yellow','Hipovolemia probable');
+  else if (coll < 15) setBadge('ush-coll-b','badge-yellow','Sobrecarga probable');
+  else setBadge('ush-coll-b','badge-green','Zona gris');
+  if (!isNaN(varVti) && varVti > 12) setBadge('ush-fluid-b','badge-green','Responde a volumen');
+  else if (!isNaN(varVti)) setBadge('ush-fluid-b','badge-yellow','No responde a volumen');
+  else if (!isNaN(varE) && varE > 12) setBadge('ush-fluid-b','badge-green','Responde a volumen (FA)');
+  else setBadge('ush-fluid-b','badge-yellow','Sin dato dinámico');
+  let txt='Precarga adecuada — normovolemia';
+  if (coll > 50 && ((!isNaN(varVti) && varVti > 12) || (!isNaN(varE) && varE > 12))) txt='Hipovolemia probable — considerar resucitación';
+  else if (coll < 15 && !(!isNaN(varVti) && varVti > 12)) txt='Sobrecarga — evaluar diuresis/ultrafiltración';
+  document.getElementById('ush-pre-int').textContent = txt;
+  document.getElementById('ush-pre-res').style.display = 'grid';
+}
+
+function switchTab(prefix, tab, btn) {
+  document.querySelectorAll('#calc-' + prefix + '-hemo .tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#calc-' + prefix + '-hemo .tab-btn').forEach(b => b.classList.remove('active'));
+  const el = document.getElementById(prefix + '-tab-' + tab);
+  if (el) el.classList.add('active');
+  if (btn) btn.classList.add('active');
 }
 
 // ============ GASOMETRIA ============
@@ -6168,6 +6601,119 @@ function calcGAS() {
   gasConclEl.textContent=concl;
   gasResultEl.style.display='block';
 }
+
+const FARMACOS = {
+  norepinefrina:{nombre:'Norepinefrina',grupo:'vaso',indicacion:'Choque distributivo / séptico de primera línea',unidades:'mcg/kg/min',rangoMin:0.01,rangoMax:0.5,dosisMax:1.0,concStd:4,concStdDesc:'4 mg en 50 mL SSN (0.08 mg/mL)',concUnit:'mg/mL',notas:'Vasopresor de elección en sepsis. Titular por PAM ≥65. Acceso central recomendado.',dilucion:'4 mg en 50 mL SSN = 0.08 mg/mL = 80 mcg/mL'},
+  epinefrina:{nombre:'Epinefrina',grupo:'vaso',indicacion:'Choque anafiláctico / cardiogénico / PCR',unidades:'mcg/kg/min',rangoMin:0.01,rangoMax:0.5,dosisMax:1.0,concStd:4,concStdDesc:'4 mg en 50 mL SSN (0.08 mg/mL)',concUnit:'mg/mL',notas:'Efectos alfa y beta. A dosis bajas efecto β predomina. Monitorizar lactato.',dilucion:'4 mg en 50 mL SSN = 0.08 mg/mL = 80 mcg/mL'},
+  vasopresina:{nombre:'Vasopresina',grupo:'vaso',indicacion:'Choque séptico refractario — adyuvante NE',unidades:'UI/h',rangoMin:0.01,rangoMax:0.03,dosisMax:0.04,concStd:20,concStdDesc:'20 UI en 50 mL SSN (0.4 UI/mL)',concUnit:'UI/mL',notas:'Dosis fija 0.03 UI/min (1.8 UI/h). No titular. Efecto vasoconstrictor puro.',dilucion:'20 UI en 50 mL SSN = 0.4 UI/mL'},
+  dopamina:{nombre:'Dopamina',grupo:'vaso',indicacion:'Soporte inotrópico / vasopresor (uso limitado)',unidades:'mcg/kg/min',rangoMin:2,rangoMax:20,dosisMax:20,concStd:200,concStdDesc:'200 mg en 50 mL SSN (4 mg/mL)',concUnit:'mg/mL',notas:'<5 mcg/kg/min: efecto dopaminérgico. 5-10: β predomina. >10: α predomina. Mayor riesgo arritmias vs NE.',dilucion:'200 mg en 50 mL SSN = 4 mg/mL = 4000 mcg/mL'},
+  dobutamina:{nombre:'Dobutamina',grupo:'vaso',indicacion:'Choque cardiogénico / disfunción sistólica',unidades:'mcg/kg/min',rangoMin:2,rangoMax:20,dosisMax:40,concStd:250,concStdDesc:'250 mg en 50 mL SSN (5 mg/mL)',concUnit:'mg/mL',notas:'Inotrópico β1. Puede causar hipotensión. Combinar con vasopresor si PAM baja.',dilucion:'250 mg en 50 mL SSN = 5 mg/mL = 5000 mcg/mL'},
+  fenilefrina:{nombre:'Fenilefrina',grupo:'vaso',indicacion:'Hipotensión vasopléjica sin taquicardia',unidades:'mcg/kg/min',rangoMin:0.5,rangoMax:5,dosisMax:10,concStd:100,concStdDesc:'100 mg en 250 mL SSN (0.4 mg/mL)',concUnit:'mg/mL',notas:'Vasoconstrictor puro α1. Puede reducir GC. Útil en taquicardia refleja no deseada.',dilucion:'100 mg en 250 mL SSN = 0.4 mg/mL = 400 mcg/mL'},
+  midazolam:{nombre:'Midazolam',grupo:'sed',indicacion:'Sedación en VM — benzodiacepina',unidades:'mcg/kg/min',rangoMin:0.02,rangoMax:0.1,dosisMax:0.2,concStd:50,concStdDesc:'50 mg en 50 mL SSN (1 mg/mL)',concUnit:'mg/mL',notas:'Riesgo de acumulación. Preferir RASS -2 a 0. Evaluar diariamente necesidad.',dilucion:'50 mg en 50 mL SSN = 1 mg/mL'},
+  propofol:{nombre:'Propofol',grupo:'sed',indicacion:'Sedación en VM — agente de elección',unidades:'mcg/kg/min',rangoMin:5,rangoMax:50,dosisMax:80,concStd:10,concStdDesc:'Presentación lista 10 mg/mL (ampolleta)',concUnit:'mg/mL',notas:'Vigilar síndrome de infusión de propofol (>48h, >5mg/kg/h). Aporta 1.1 kcal/mL.',dilucion:'Usar sin diluir: 10 mg/mL. 50 mL = 500 mg'},
+  dexmedetomidina:{nombre:'Dexmedetomidina',grupo:'sed',indicacion:'Sedación ligera — agente α2 sin deprimir respiración',unidades:'mcg/kg/h',rangoMin:0.2,rangoMax:1.5,dosisMax:1.5,concStd:200,concStdDesc:'200 mcg en 50 mL SSN (4 mcg/mL)',concUnit:'mcg/mL',notas:'No requiere intubación. Reduce delirium. Vigilar bradicardia e hipotensión.',dilucion:'200 mcg en 50 mL SSN = 4 mcg/mL'},
+  ketamina:{nombre:'Ketamina',grupo:'sed',indicacion:'Sedoanalgesia — disociativo broncodilatador',unidades:'mcg/kg/min',rangoMin:0.5,rangoMax:4,dosisMax:10,concStd:500,concStdDesc:'500 mg en 50 mL SSN (10 mg/mL)',concUnit:'mg/mL',notas:'Mantiene reflejos de vía aérea. Útil en broncoespasmo. Puede aumentar secreciones.',dilucion:'500 mg en 50 mL SSN = 10 mg/mL'},
+  fentanilo:{nombre:'Fentanilo',grupo:'sed',indicacion:'Analgesia en VM — opioide de elección',unidades:'mcg/kg/h',rangoMin:0.5,rangoMax:2,dosisMax:10,concStd:0.5,concStdDesc:'0.5 mg en 50 mL SSN (10 mcg/mL)',concUnit:'mcg/mL',notas:'Titular por escala de dolor (BPS/NRS). Estrategia analgesia-primero. Vigilar rigidez torácica.',dilucion:'0.5 mg (500 mcg) en 50 mL SSN = 10 mcg/mL'},
+  morfina:{nombre:'Morfina',grupo:'sed',indicacion:'Analgesia — opioide con efecto venodilatador',unidades:'mg/h',rangoMin:1,rangoMax:10,dosisMax:20,concStd:50,concStdDesc:'50 mg en 50 mL SSN (1 mg/mL)',concUnit:'mg/mL',notas:'Útil en edema pulmonar agudo. Acumulación en IR. Vigilar histaminoliberación.',dilucion:'50 mg en 50 mL SSN = 1 mg/mL'},
+  remifentanilo:{nombre:'Remifentanilo',grupo:'sed',indicacion:'Analgesia/sedación — ultra corta duración',unidades:'mcg/kg/min',rangoMin:0.05,rangoMax:0.2,dosisMax:2,concStd:1,concStdDesc:'1 mg en 50 mL SSN (20 mcg/mL)',concUnit:'mcg/mL',notas:'Metabolismo por esterasas plasmáticas — no acumula en IR/IH. Ideal para destete.',dilucion:'1 mg en 50 mL SSN = 20 mcg/mL'},
+  cisatracurio:{nombre:'Cisatracurio',grupo:'bnm',indicacion:'Bloqueo neuromuscular en SDRA grave / asincronía',unidades:'mcg/kg/min',rangoMin:0.5,rangoMax:3,dosisMax:10,concStd:40,concStdDesc:'40 mg en 100 mL SSN (0.4 mg/mL)',concUnit:'mg/mL',notas:'Eliminación de Hofmann — no acumula en IR/IH. Monitorizar TOF. Usar con sedación profunda.',dilucion:'40 mg en 100 mL SSN = 0.4 mg/mL = 400 mcg/mL'},
+  nimodipino:{nombre:'Nimodipino',grupo:'neuro',indicacion:'Prevención vasoespasmo en HSA',unidades:'mg/h',rangoMin:1,rangoMax:2,dosisMax:2,concStd:0.2,concStdDesc:'Solución lista 0.2 mg/mL — no diluir',concUnit:'mg/mL',notas:'Iniciar 0.5 mg/h x1h, luego 1-2 mg/h. Vigilar hipotensión. Usar equipo especial (no PVC). Duración 21 días.',dilucion:'Solución lista 0.2 mg/mL. 50 mL/h = 10 mg/h — ajustar según tolerancia'},
+  insulina:{nombre:'Insulina regular',grupo:'otros',indicacion:'Control glucémico en UCI — meta 140-180 mg/dL',unidades:'UI/h',rangoMin:0.5,rangoMax:10,dosisMax:50,concStd:50,concStdDesc:'50 UI en 50 mL SSN (1 UI/mL)',concUnit:'UI/mL',notas:'Titular según glucemia horaria. Meta 140-180 mg/dL UCI. Vigilar hipoglucemia.',dilucion:'50 UI insulina regular en 50 mL SSN = 1 UI/mL'},
+  amiodarona:{nombre:'Amiodarona',grupo:'otros',indicacion:'Arritmias ventriculares / FA con respuesta ventricular rápida',unidades:'mg/h',rangoMin:15,rangoMax:60,dosisMax:1200,concStd:300,concStdDesc:'300 mg en 250 mL SG5% (1.2 mg/mL)',concUnit:'mg/mL',notas:'Carga: 150 mg en 10 min. Mantenimiento: 1 mg/min x6h, luego 0.5 mg/min. Solo en SG5%.',dilucion:'300 mg en 250 mL SG5% = 1.2 mg/mL'},
+  labetalol:{nombre:'Labetalol',grupo:'otros',indicacion:'Crisis hipertensiva — α y β bloqueador',unidades:'mg/h',rangoMin:20,rangoMax:160,dosisMax:300,concStd:200,concStdDesc:'200 mg en 200 mL SSN (1 mg/mL)',concUnit:'mg/mL',notas:'Inicio: 20 mg IV bolo, luego infusión. Contraindicado en asma, ICC descompensada, BAV.',dilucion:'200 mg en 200 mL SSN = 1 mg/mL'},
+  nitroglicerina:{nombre:'Nitroglicerina',grupo:'otros',indicacion:'Crisis hipertensiva / isquemia miocárdica / EAP',unidades:'mcg/kg/min',rangoMin:0.1,rangoMax:10,dosisMax:20,concStd:50,concStdDesc:'50 mg en 250 mL SG5% (0.2 mg/mL)',concUnit:'mg/mL',notas:'Usar equipo no absorbente. Vigilar hipotensión. Taquifilaxia con uso prolongado.',dilucion:'50 mg en 250 mL SG5% = 0.2 mg/mL = 200 mcg/mL'},
+  nitroprusiato:{nombre:'Nitroprusiato',grupo:'otros',indicacion:'Crisis hipertensiva grave — vasodilatador potente',unidades:'mcg/kg/min',rangoMin:0.3,rangoMax:10,dosisMax:10,concStd:50,concStdDesc:'50 mg en 250 mL SG5% — proteger de luz',concUnit:'mg/mL',notas:'Riesgo toxicidad por cianuro >72h o >10mcg/kg/min. Proteger de luz. Monitorizar tiocianatos.',dilucion:'50 mg en 250 mL SG5% = 0.2 mg/mL = 200 mcg/mL'},
+  heparina:{nombre:'Heparina no fraccionada',grupo:'otros',indicacion:'Anticoagulación en TEP, trombosis, CRRT',unidades:'UI/h',rangoMin:500,rangoMax:2000,dosisMax:5000,concStd:25000,concStdDesc:'25,000 UI en 250 mL SSN (100 UI/mL)',concUnit:'UI/mL',notas:'Titular por TTPa (1.5-2.5× control). Carga: 80 UI/kg IV. Monitorizar plaquetas (TIH).',dilucion:'25,000 UI en 250 mL SSN = 100 UI/mL'}
+};
+
+function updateBombaGrupo() {
+  const grupo = document.getElementById('bom-grupo').value;
+  const sel = document.getElementById('bom-farmaco');
+  if (!sel) return;
+  sel.innerHTML = '';
+  Object.entries(FARMACOS).forEach(([key, f]) => {
+    if (f.grupo === grupo) {
+      const opt = document.createElement('option');
+      opt.value = key;
+      opt.textContent = f.nombre;
+      sel.appendChild(opt);
+    }
+  });
+  updateBombaFarmaco();
+}
+
+function updateBombaFarmaco() {
+  const key = document.getElementById('bom-farmaco').value;
+  const f = FARMACOS[key];
+  if (!f) return;
+  document.getElementById('bom-indicacion').textContent = f.indicacion;
+  document.getElementById('bom-unidades').textContent = f.unidades;
+  document.getElementById('bom-rango').textContent = f.rangoMin + ' – ' + f.rangoMax + ' ' + f.unidades;
+  document.getElementById('bom-dosis-max').textContent = f.dosisMax + ' ' + f.unidades;
+  document.getElementById('bom-conc').value = (f.concStd / 50).toFixed(3);
+  document.getElementById('bom-notas').textContent = f.notas;
+  document.getElementById('bom-dilucion').textContent = f.dilucion;
+  const unitSel = document.getElementById('bom-dosis-unit');
+  unitSel.innerHTML = '<option value="' + f.unidades + '">' + f.unidades + '</option>';
+}
+
+function setBombaMode(mode, btn) {
+  document.querySelectorAll('#calc-bombas .nota-format-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.getElementById('bom-mode-dosis').style.display = mode === 'dosis' ? 'block' : 'none';
+  document.getElementById('bom-mode-vel').style.display = mode === 'vel' ? 'block' : 'none';
+}
+
+function calcBombaDosis() {
+  const key = document.getElementById('bom-farmaco').value;
+  const f = FARMACOS[key];
+  const peso = parseFloat(document.getElementById('bom-peso').value);
+  const conc = parseFloat(document.getElementById('bom-conc').value);
+  const vel = parseFloat(document.getElementById('bom-vel').value);
+  if (!peso || !conc || !vel) { showToast('Ingresa peso, concentración y velocidad'); return; }
+  let dosis;
+  const unidad = f.unidades;
+  if (unidad === 'mcg/kg/min') dosis = (conc * 1000 * vel) / (60 * peso);
+  else if (unidad === 'mcg/kg/h') dosis = (conc * 1000 * vel) / peso;
+  else if (unidad === 'mg/kg/h') dosis = (conc * vel) / peso;
+  else if (unidad === 'UI/h' || unidad === 'mg/h' || unidad === 'mcg/h') dosis = conc * vel;
+  else if (unidad === 'UI/kg/h') dosis = (conc * vel) / peso;
+  mostrarResultadoBomba(dosis, vel, f);
+}
+
+function calcBombaVel() {
+  const key = document.getElementById('bom-farmaco').value;
+  const f = FARMACOS[key];
+  const peso = parseFloat(document.getElementById('bom-peso').value);
+  const conc = parseFloat(document.getElementById('bom-conc').value);
+  const dosis = parseFloat(document.getElementById('bom-dosis-in').value);
+  if (!peso || !conc || !dosis) { showToast('Ingresa peso, concentración y dosis'); return; }
+  let vel;
+  const unidad = f.unidades;
+  if (unidad === 'mcg/kg/min') vel = (dosis * 60 * peso) / (conc * 1000);
+  else if (unidad === 'mcg/kg/h') vel = (dosis * peso) / (conc * 1000);
+  else if (unidad === 'mg/kg/h') vel = (dosis * peso) / conc;
+  else if (unidad === 'UI/h' || unidad === 'mg/h' || unidad === 'mcg/h') vel = dosis / conc;
+  else if (unidad === 'UI/kg/h') vel = (dosis * peso) / conc;
+  mostrarResultadoBomba(dosis, vel, f);
+}
+
+function mostrarResultadoBomba(dosis, vel, f) {
+  const wrap = document.getElementById('bom-result');
+  wrap.style.display = 'block';
+  document.getElementById('bom-out-dosis').textContent = dosis.toFixed(3) + ' ' + f.unidades;
+  document.getElementById('bom-out-vel').textContent = vel.toFixed(1) + ' mL/h';
+  document.getElementById('bom-out-rango').textContent = f.rangoMin + ' – ' + f.rangoMax + ' ' + f.unidades;
+  const badge = document.getElementById('bom-out-badge');
+  if (dosis < f.rangoMin) { badge.className = 'result-badge badge-yellow'; badge.textContent = 'Dosis subterapéutica'; }
+  else if (dosis > f.dosisMax) { badge.className = 'result-badge badge-red'; badge.textContent = '⚠ Dosis máxima excedida'; }
+  else if (dosis > f.rangoMax) { badge.className = 'result-badge badge-orange'; badge.textContent = 'Sobre rango habitual'; }
+  else { badge.className = 'result-badge badge-green'; badge.textContent = 'Dentro de rango terapéutico'; }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateBombaGrupo();
+});
 
 // ============ VASOPRESOR ============
 const vasoRefs={
@@ -6701,7 +7247,7 @@ function syncPatient() {
   }
 
   // ── Auto-fill: PESO (all calculators) ───────────────
-  ['vas-peso','bal-peso','kd-peso','hb-peso','el-peso','tsr-peso','uf-peso','ac-peso','ox-peso','sed-weight','tf-weight','hemo-weight','gfr-peso','vp-peso','ot-sc'].forEach(id => forceVal(id, peso));
+  ['vas-peso','bal-peso','kd-peso','hb-peso','el-peso','tsr-peso','uf-peso','ac-peso','ox-peso','sed-weight','tf-weight','hemo-weight','gfr-peso','vp-peso','ot-sc','bom-peso'].forEach(id => forceVal(id, peso));
 
   // ── Auto-fill: TALLA ────────────────────────────────
   ['vt-tall','hb-tall','hemo-height','vp-talla'].forEach(id => forceVal(id, talla));
