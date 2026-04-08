@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon-apple.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -71,6 +71,16 @@ header {
 }
 .logo { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; }
 .logo span { color: var(--muted2); }
+.brand-mark {
+  width: 36px; height: 36px; object-fit: contain; object-position: center; display: block; flex-shrink: 0;
+  border-radius: 8px; background: transparent; border: none; padding: 0; box-shadow: none;
+}
+.welcome-brand { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.welcome-brand-mark {
+  width: 72px; height: 72px; object-fit: contain; object-position: center; display: block;
+  border-radius: 12px; background: transparent; border: none; padding: 0; box-shadow: none;
+}
+.welcome-brand-text { font-family: var(--mono); font-size: 11px; color: var(--muted2); letter-spacing: 0.1em; text-transform: uppercase; }
 .header-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
 .turno-pill {
   font-family: var(--mono); font-size: 10px; font-weight: 600;
@@ -702,6 +712,8 @@ input.pat-synced:focus, select.pat-synced:focus {
   /* header compacto */
   header { gap: 8px; padding: 0 10px; overflow: hidden; }
   .logo { font-size: 11px; white-space: nowrap; }
+  .brand-mark { width: 32px; height: 32px; }
+  .welcome-brand-mark { width: 64px; height: 64px; }
   .logo span:last-child { display: none; }
   .header-right { gap: 8px; }
   .clock { font-size: 11px; }
@@ -927,14 +939,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <header>
   <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
   <div class="logo" style="display:flex;align-items:center;gap:10px;">
-    <svg width="28" height="28" viewBox="0 0 120 120" style="flex-shrink:0;">
-      <rect width="120" height="120" rx="26" fill="#080c12"/>
-      <polygon points="60,8 106,32 106,82 60,106 14,82 14,32" fill="none" stroke="#0080cc" stroke-width="1.5" opacity="0.5"/>
-      <text x="60" y="52" text-anchor="middle" dominant-baseline="central" font-family="'JetBrains Mono',monospace" font-size="40" font-weight="700" fill="#00c8ff">UCI</text>
-      <rect x="14" y="72" width="92" height="2" rx="1" fill="#0080cc" opacity="0.35"/>
-      <rect x="14" y="72" width="38" height="2" rx="1" fill="#00c8ff"/>
-      <text x="60" y="90" text-anchor="middle" dominant-baseline="central" font-family="'JetBrains Mono',monospace" font-size="11" fill="#0080cc">tools</text>
-    </svg>
+    <img src="./icon-192.png" alt="UCI Tools" class="brand-mark">
     <span style="font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;">UCI Tools</span>
   </div>
   <div class="header-right">
@@ -1036,10 +1041,10 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="nav-item" onclick="showCalc('gfr-dosing',this)"><span class="nav-icon">·</span>Dosificación Renal (TFG + ATB)</div>
       <div class="nav-item" onclick="showCalc('elec-uri',this)"><span class="nav-icon">·</span>Electrolitos Urinarios</div>
       <div class="nav-item" onclick="showCalc('electrolitos',this)"><span class="nav-icon">·</span>Reposición Electrolitos (incl. Ca)</div>
-      <div class="nav-item" onclick="showCalc('tsr-dosis',this)"><span class="nav-icon">·</span>Dosis Diálisis (Kt/V / CRRT)</div>
-      <div class="nav-item" onclick="showCalc('tsr-uf',this)"><span class="nav-icon">·</span>Ultrafiltrado y Reposición</div>
-      <div class="nav-item" onclick="showCalc('tsr-anticoag',this)"><span class="nav-icon">·</span>Anticoagulación TSR</div>
-      <div class="nav-item" onclick="showCalc('tsr-modalidad',this)"><span class="nav-icon">·</span>Modalidad e Indicaciones TSR</div>
+      <div class="nav-item" onclick="showCalc('tsr-dosis',this)"><span class="nav-icon">·</span>TSR: Dosis (Kt/V / CRRT)</div>
+      <div class="nav-item" onclick="showCalc('tsr-uf',this)"><span class="nav-icon">·</span>TSR: Ultrafiltrado y reposición</div>
+      <div class="nav-item" onclick="showCalc('tsr-anticoag',this)"><span class="nav-icon">·</span>TSR: Anticoagulación</div>
+      <div class="nav-item" onclick="showCalc('tsr-modalidad',this)"><span class="nav-icon">·</span>TSR: Modalidad e indicaciones</div>
     </div>
   </div>
 
@@ -1094,7 +1099,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 </div>
 
 <!-- PATIENT PROFILE PANEL -->
-<div id="calc-paciente" class="calc-panel active">
+<div id="calc-paciente" class="calc-panel">
   <div class="card">
     <div class="card-title">Datos del Paciente</div>
 
@@ -1227,7 +1232,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 
     <!-- RENAL -->
     <div class="export-section">
-      <div class="export-section-title">🫘 Renal / Electrolitos</div>
+      <div class="export-section-title">🫘 Renal · Electrolitos · TSR</div>
       <div class="score-grid">
         <div class="score-card"><span class="score-card-name">KDIGO</span><span class="score-card-val" id="ex-kdigo">—</span><span class="score-card-badge result-badge" id="ex-kdigo-b"></span></div>
         <div class="score-card"><span class="score-card-name">Osmolaridad sérica</span><span class="score-card-val" id="ex-osmo">—</span></div>
@@ -1264,7 +1269,11 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- WELCOME -->
 <div id="calc-welcome" class="calc-panel active">
   <div class="card">
-    <div class="card-title">UCI Tools · Medicina Crítica UCI Tools</div>
+    <div class="card-title">UCI Tools · Medicina Crítica</div>
+    <div class="welcome-brand">
+      <img src="./icon-512.png" alt="UCI Tools" class="welcome-brand-mark">
+      <div class="welcome-brand-text">Branding clínico actualizado</div>
+    </div>
     <div style="color:var(--muted2);font-size:13px;line-height:1.8;">
       Selecciona una calculadora del menú lateral.<br><br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🚨 ADMISIÓN</span> — NEWS2 · qSOFA · GCS · PADUA · CURB-65 · Wells<br>
@@ -1272,10 +1281,20 @@ input.pat-synced:focus, select.pat-synced:focus {
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫁 VENTILACIÓN</span> — Mecánica/monitor · Oxigenación · Destete<br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🧪 GAS / ÁCIDO-BASE</span> — Gasometría · Taller gasométrico · Panel metabólico<br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💉 HEMODINÁMICA</span> — Shock · DO₂/VO₂/SVR · Vasopresor · VExUS<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫘 RENAL & TSR</span> — KDIGO · Balance · Electrolitos · Diálisis · UF · Anticoagulación<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫘 RENAL & TSR</span> — KDIGO · Balance · Electrolitos · TFG/ATB · TSR (dosis · UF · anticoag · modalidad)<br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🧠 NEURO & SEDACIÓN</span> — Sedación · CAM-ICU · RASS · PPC<br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💊 SOPORTE</span> — Sepsis Bundle · Transfusión · Harris-Benedict
     </div>
+    <details style="margin-top:10px;">
+      <summary style="cursor:pointer;color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:.06em;">Siglas y términos</summary>
+      <div class="info" style="margin-top:6px;line-height:1.5;">
+        PAM: presión arterial media · TFG: tasa de filtrado glomerular · PIC: peso ideal calculado ·
+        PEEP: presión positiva al final de la espiración · FiO2: fracción inspirada de oxígeno ·
+        PaO2: presión arterial de oxígeno · SvO2/ScvO2: saturación venosa mixta/central de oxígeno ·
+        KDIGO: clasificación de lesión renal aguda · TSR: terapia de sustitución renal ·
+        VExUS: Venous Excess Ultrasound Score.
+      </div>
+    </details>
   </div>
 </div>
 
@@ -1289,23 +1308,23 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="card-title">NEWS2 — Alerta de Deterioro Clínico</div>
     <div class="section-sub">Parámetros vitales</div>
     <div class="row cols2">
-      <div><label>Frecuencia respiratoria (resp/min)</label><input type="number" id="news2-fr" placeholder="12 – 20" oninput="calcNEWS2()"></div>
-      <div><label>SpO₂ (%)</label><input type="number" id="news2-sao2" placeholder="94 – 98" oninput="calcNEWS2()"></div>
-      <div><label>Temperatura corporal (°C)</label><input type="number" id="news2-temp" placeholder="36.0 – 37.5" step="0.1" oninput="calcNEWS2()"></div>
-      <div><label>Presión arterial sistólica (mmHg)</label><input type="number" id="news2-sbs" placeholder="90 – 140" oninput="calcNEWS2()"></div>
-      <div><label>Frecuencia cardíaca (lat/min)</label><input type="number" id="news2-fc" placeholder="60 – 100" oninput="calcNEWS2()"></div>
+      <div><label>Frecuencia respiratoria (resp/min)</label><input type="number" id="news2-fr" placeholder="12 – 20"></div>
+      <div><label>SpO₂ (%)</label><input type="number" id="news2-sao2" placeholder="94 – 98"></div>
+      <div><label>Temperatura corporal (°C)</label><input type="number" id="news2-temp" placeholder="36.0 – 37.5" step="0.1"></div>
+      <div><label>Presión arterial sistólica (mmHg)</label><input type="number" id="news2-sbs" placeholder="90 – 140"></div>
+      <div><label>Frecuencia cardíaca (lat/min)</label><input type="number" id="news2-fc" placeholder="60 – 100"></div>
     </div>
     <div class="section-sub">Oxígeno y conciencia</div>
     <div class="row cols2">
       <div><label>¿Oxígeno suplementario?</label>
-        <select id="news2-o2" onchange="calcNEWS2()">
+        <select id="news2-o2">
           <option value="">Seleccionar</option>
           <option value="0">No (aire ambiente)</option>
           <option value="2">Sí (con O₂ suplementario)</option>
         </select>
       </div>
       <div><label>Nivel de alerta (AVPU / Confusión)</label>
-        <select id="news2-avpu" onchange="calcNEWS2()">
+        <select id="news2-avpu">
           <option value="">Seleccionar</option>
           <option value="0">A — Alerta</option>
           <option value="3">V — Responde a voz</option>
@@ -1336,18 +1355,18 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="card-title">Clasificación de Shock</div>
     <div class="section-sub">Parámetros hemodinámicos</div>
     <div class="row cols2">
-      <div><label>Presión arterial media (mmHg)</label><input type="number" id="shock-map" placeholder="70 – 105" oninput="calcShock()"></div>
-      <div><label>Frecuencia cardíaca (lat/min)</label><input type="number" id="shock-fc" placeholder="60 – 100" oninput="calcShock()"></div>
-      <div><label>Presión venosa central (mmHg)</label><input type="number" id="shock-cvp" placeholder="8 – 12" oninput="calcShock()"></div>
-      <div><label>Diuresis (mL/hr)</label><input type="number" id="shock-diuresis" placeholder="0.5 – 1.0 mL/kg/h" oninput="calcShock()"></div>
-      <div><label>Lactato (mmol/L)</label><input type="number" id="shock-lactato" placeholder="0.5 – 2.0" step="0.1" oninput="calcShock()"></div>
-      <div><label>ScvO2 (%) — si disponible</label><input type="number" id="shock-scvo2" placeholder="70 – 80" oninput="calcShock()"></div>
+      <div><label>Presión arterial media (mmHg)</label><input type="number" id="shock-map" placeholder="70 – 105"></div>
+      <div><label>Frecuencia cardíaca (lat/min)</label><input type="number" id="shock-fc" placeholder="60 – 100"></div>
+      <div><label>Presión venosa central (mmHg)</label><input type="number" id="shock-cvp" placeholder="8 – 12"></div>
+      <div><label>Diuresis (mL/hr)</label><input type="number" id="shock-diuresis" placeholder="0.5 – 1.0 mL/kg/h"></div>
+      <div><label>Lactato (mmol/L)</label><input type="number" id="shock-lactato" placeholder="0.5 – 2.0" step="0.1"></div>
+      <div><label title="Saturación venosa central de oxígeno">ScvO2 (saturación venosa central de oxígeno) (%)</label><input type="number" id="shock-scvo2" placeholder="70 – 80"></div>
     </div>
 
     <div class="section-sub">Contexto clínico</div>
     <div class="row">
       <div><label>Contexto clínico principal</label>
-        <select id="shock-context" onchange="calcShock()">
+        <select id="shock-context">
           <option value="">Seleccionar</option>
           <option value="sepsis">Sepsis / Shock distributivo</option>
           <option value="cardiac">Problemas cardíacos / Shock cardiogénico</option>
@@ -1383,16 +1402,21 @@ input.pat-synced:focus, select.pat-synced:focus {
 
     <div class="section-sub">Cálculo de TFG (MDRD o CKD-EPI)</div>
     <div class="row cols2">
-      <div><label>Edad (años)</label><input type="number" id="gfr-edad" placeholder="ej. 65" oninput="calcGFR()"></div>
+      <div><label>Edad (años)</label><input type="number" id="gfr-edad" placeholder="ej. 65"></div>
       <div><label>Sexo</label>
-        <select id="gfr-sexo" onchange="calcGFR()">
+        <select id="gfr-sexo">
           <option value="">Seleccionar</option>
           <option value="M">Masculino</option>
           <option value="F">Femenino</option>
         </select>
       </div>
-      <div><label>Peso (kg)</label><input type="number" id="gfr-peso" placeholder="" oninput="calcGFR()"></div>
-      <div><label>Creatinina sérica (mg/dL)</label><input type="number" id="gfr-cr" placeholder="0.6 – 1.2" step="0.1" oninput="calcGFR()"></div>
+      <div><label>Peso (kg)</label><input type="number" id="gfr-peso" placeholder=""></div>
+      <div><label>Creatinina sérica (mg/dL)</label><input type="number" id="gfr-cr" placeholder="0.6 – 1.2" step="0.1"></div>
+    </div>
+
+    <div class="btn-row" style="margin-top:12px;">
+      <button class="calc" onclick="calcGFR()">Calcular</button>
+      <button class="reset" onclick="resetPanel('calc-gfr-dosing')">Limpiar</button>
     </div>
 
     <div class="result" id="gfr-result" style="display:none;margin-top:12px;">
@@ -1450,7 +1474,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 
     <div class="section-sub">Función renal (usa TFG calculada arriba)</div>
     <div class="row">
-      <div><label>TFG estimada (mL/min/1.73m²)</label><input type="number" id="abx-gfr" placeholder="≥ 90" oninput="showAntibioticDosing()"></div>
+      <div><label title="Tasa de filtrado glomerular">TFG (tasa de filtrado glomerular) estimada (mL/min/1.73m²)</label><input type="number" id="abx-gfr" placeholder="≥ 90" oninput="showAntibioticDosing()"></div>
     </div>
 
     <div class="section-sub">Función hepática (opcional)</div>
@@ -1514,15 +1538,15 @@ input.pat-synced:focus, select.pat-synced:focus {
 
     <div class="section-sub">Parámetros de entrada</div>
     <div class="row cols2">
-      <div><label>Gasto cardíaco (L/min)</label><input type="number" id="hemo-co" placeholder="4 – 8" step="0.1" oninput="calcHemodynamics()"></div>
-      <div><label>Presión arterial media (mmHg)</label><input type="number" id="hemo-map" placeholder="70 – 105" oninput="calcHemodynamics()"></div>
-      <div><label>Presión venosa central (mmHg)</label><input type="number" id="hemo-cvp" placeholder="8 – 12" oninput="calcHemodynamics()"></div>
-      <div><label>Hemoglobina (g/dL)</label><input type="number" id="hemo-hb" placeholder="12 – 16" step="0.1" oninput="calcHemodynamics()"></div>
-      <div><label>SaO2 (%)</label><input type="number" id="hemo-sao2" placeholder="95 – 100" oninput="calcHemodynamics()"></div>
-      <div><label>PaO2 (mmHg)</label><input type="number" id="hemo-pao2" placeholder="80 – 100" oninput="calcHemodynamics()"></div>
-      <div><label>Altura (cm) - para BSA</label><input type="number" id="hemo-height" placeholder="" oninput="calcHemodynamics()"></div>
-      <div><label>Peso (kg) - para BSA</label><input type="number" id="hemo-weight" placeholder="" oninput="calcHemodynamics()"></div>
-      <div><label>SvO2 (%) — venoso mixto</label><input type="number" id="hemo-svo2" placeholder="65 – 75" oninput="calcHemodynamics()"></div>
+      <div><label>Gasto cardíaco (L/min)</label><input type="number" id="hemo-co" placeholder="4 – 8" step="0.1"></div>
+      <div><label>Presión arterial media (mmHg)</label><input type="number" id="hemo-map" placeholder="70 – 105"></div>
+      <div><label>Presión venosa central (mmHg)</label><input type="number" id="hemo-cvp" placeholder="8 – 12"></div>
+      <div><label>Hemoglobina (g/dL)</label><input type="number" id="hemo-hb" placeholder="12 – 16" step="0.1"></div>
+      <div><label>SaO2 (%)</label><input type="number" id="hemo-sao2" placeholder="95 – 100"></div>
+      <div><label>PaO2 (mmHg)</label><input type="number" id="hemo-pao2" placeholder="80 – 100"></div>
+      <div><label>Altura (cm) - para BSA</label><input type="number" id="hemo-height" placeholder=""></div>
+      <div><label>Peso (kg) - para BSA</label><input type="number" id="hemo-weight" placeholder=""></div>
+      <div><label>SvO2 (%) — venoso mixto</label><input type="number" id="hemo-svo2" placeholder="65 – 75"></div>
     </div>
     <div class="btn-row" style="margin-top:12px;">
       <button class="calc" onclick="calcHemodynamics()">Calcular</button>
@@ -1570,9 +1594,9 @@ input.pat-synced:focus, select.pat-synced:focus {
 
     <div class="section-sub">Paciente</div>
     <div class="row cols2">
-      <div><label>Peso (kg)</label><input type="number" id="sed-weight" placeholder="" oninput="calcSedation()"></div>
+      <div><label>Peso (kg)</label><input type="number" id="sed-weight" placeholder=""></div>
       <div><label>Diagnóstico principal</label>
-        <select id="sed-diagnosis" onchange="calcSedation()">
+        <select id="sed-diagnosis">
           <option value="">— Seleccionar —</option>
           <option value="ards">SDRA</option>
           <option value="sepsis">Sepsis</option>
@@ -1586,7 +1610,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="section-sub">Objetivo de sedación (RASS)</div>
     <div class="row cols2">
       <div><label>Escala RASS objetivo</label>
-        <select id="sed-rass" onchange="calcSedation()">
+        <select id="sed-rass">
           <option value="">— Seleccionar —</option>
           <option value="-3">-3 Profunda (paralizado, sin respuesta)</option>
           <option value="-2">-2 Muy profunda (despierta con estímulo doloroso)</option>
@@ -1596,7 +1620,7 @@ input.pat-synced:focus, select.pat-synced:focus {
         </select>
       </div>
       <div><label>¿Requiere bloqueo neuromuscular?</label>
-        <select id="sed-paralysis" onchange="calcSedation()">
+        <select id="sed-paralysis">
           <option value="no">No</option>
           <option value="yes">Sí (ARDS grave, asincronía)</option>
         </select>
@@ -1606,7 +1630,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="section-sub">Medicamento seleccionado</div>
     <div class="row">
       <div><label>Opción de sedación</label>
-        <select id="sed-drug" onchange="calcSedation()">
+        <select id="sed-drug">
           <option value="">— Seleccionar —</option>
           <option value="propofol">Propofol (monoterapia)</option>
           <option value="dexmed">Dexmedetomidina (monoterapia)</option>
@@ -1615,6 +1639,11 @@ input.pat-synced:focus, select.pat-synced:focus {
           <option value="dexmed-fent">Dexmedetomidina + Fentanilo (combinación)</option>
         </select>
       </div>
+    </div>
+
+    <div class="btn-row" style="margin-top:12px;">
+      <button class="calc" onclick="calcSedation()">Calcular</button>
+      <button class="reset" onclick="resetPanel('calc-sedation')">Limpiar</button>
     </div>
 
     <div id="sed-result-box" style="padding:12px;background:rgba(0,200,255,0.06);border-radius:6px;border:1px solid rgba(0,200,255,0.15);margin-top:12px;display:none;">
@@ -1637,18 +1666,18 @@ input.pat-synced:focus, select.pat-synced:focus {
 
     <div class="section-sub">Parámetros hematológicos actuales</div>
     <div class="row cols3">
-      <div><label>Hemoglobina (g/dL)</label><input type="number" id="tf-hb" placeholder="12 – 16" step="0.1" oninput="calcTransfusion()"></div>
-      <div><label>Plaquetas (×10³/µL)</label><input type="number" id="tf-plt" placeholder="150 – 400" oninput="calcTransfusion()"></div>
-      <div><label>INR</label><input type="number" id="tf-inr" placeholder="0.8 – 1.2" step="0.1" oninput="calcTransfusion()"></div>
+      <div><label>Hemoglobina (g/dL)</label><input type="number" id="tf-hb" placeholder="12 – 16" step="0.1"></div>
+      <div><label>Plaquetas (×10³/µL)</label><input type="number" id="tf-plt" placeholder="150 – 400"></div>
+      <div><label>INR</label><input type="number" id="tf-inr" placeholder="0.8 – 1.2" step="0.1"></div>
     </div>
 
     <div class="row cols3">
-      <div><label>Fibrinógeno (mg/dL)</label><input type="number" id="tf-fibrin" placeholder="200 – 400" oninput="calcTransfusion()"></div>
-      <div><label>aPTT (segundos)</label><input type="number" id="tf-aptt" placeholder="25 – 35" oninput="calcTransfusion()"></div>
-      <div><label>Lactato (mmol/L)</label><input type="number" id="tf-lactate" placeholder="0.5 – 2.0" step="0.1" oninput="calcTransfusion()"></div>
+      <div><label>Fibrinógeno (mg/dL)</label><input type="number" id="tf-fibrin" placeholder="200 – 400"></div>
+      <div><label>aPTT (segundos)</label><input type="number" id="tf-aptt" placeholder="25 – 35"></div>
+      <div><label>Lactato (mmol/L)</label><input type="number" id="tf-lactate" placeholder="0.5 – 2.0" step="0.1"></div>
     </div>
     <div class="row cols2">
-      <div><label>Peso (kg) — para dosis de componentes</label><input type="number" id="tf-weight" placeholder="" step="0.1" oninput="calcTransfusion()"></div>
+      <div><label>Peso (kg) — para dosis de componentes</label><input type="number" id="tf-weight" placeholder="" step="0.1"></div>
     </div>
 
     <!-- TAB: Electivo -->
@@ -1656,14 +1685,14 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="section-sub">Escenario electivo</div>
       <div class="row cols2">
         <div><label>Diagnóstico</label>
-          <select id="tf-scenario" onchange="calcTransfusion()">
+          <select id="tf-scenario">
             <option value="">— Seleccionar —</option>
             <option value="elective">Electivo (sin sangrado activo)</option>
             <option value="dic">DIC (coagulopatía)</option>
           </select>
         </div>
         <div><label>¿Sangrado activo?</label>
-          <select id="tf-bleeding" onchange="calcTransfusion()">
+          <select id="tf-bleeding">
             <option value="no">No</option>
             <option value="yes">Sí, en control</option>
           </select>
@@ -1676,15 +1705,15 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="section-sub">Escenario de sangrado</div>
       <div class="row cols2">
         <div><label>Diagnóstico</label>
-          <select id="tf-scenario-b" onchange="calcTransfusionBleed()">
+          <select id="tf-scenario-b">
             <option value="">— Seleccionar —</option>
             <option value="bleeding">Sangrado activo controlado</option>
             <option value="uncontrolled">Sangrado no controlado/masivo</option>
             <option value="dic">DIC (coagulopatía + sangrado)</option>
           </select>
         </div>
-        <div><label>Activar protocolo masivo?</label>
-          <select id="tf-bleeding-b" onchange="calcTransfusionBleed()">
+        <div><label>¿Activar protocolo masivo?</label>
+          <select id="tf-bleeding-b">
             <option value="yes">Sangrado en control</option>
             <option value="massive">Sí — Transfusión masiva 1:1:1</option>
           </select>
@@ -1693,6 +1722,11 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div id="tf-result-bleed-box" style="padding:12px;background:rgba(255,80,80,0.06);border-radius:6px;border:1px solid rgba(255,80,80,0.15);margin-top:12px;display:none;">
         <div style="font-size:12px;color:var(--text);line-height:1.8;" id="tf-result-bleed-text">—</div>
       </div>
+    </div>
+
+    <div class="btn-row" style="margin-top:12px;">
+      <button class="calc" onclick="if(document.getElementById('tf-tab-sangrado').classList.contains('active')){calcTransfusionBleed();}else{calcTransfusion();}">Calcular</button>
+      <button class="reset" onclick="resetPanel('calc-transfusion')">Limpiar</button>
     </div>
 
     <div id="tf-result-box" style="padding:12px;background:rgba(0,200,255,0.06);border-radius:6px;border:1px solid rgba(0,200,255,0.15);margin-top:12px;display:none;">
@@ -1710,7 +1744,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="sofa-grid">
       <div class="sofa-item">
         <div class="sofa-name">Respiratorio<br><span style="font-size:10px;color:var(--muted)">PaO2/FiO2</span></div>
-        <select id="sofa-resp" onchange="calcSOFA()">
+        <select id="sofa-resp">
           <option value="0">≥ 400 → 0 pts</option><option value="1">300–399 → 1 pt</option>
           <option value="2">200–299 → 2 pts</option><option value="3">100–199 con VM → 3 pts</option>
           <option value="4">&lt; 100 con VM → 4 pts</option>
@@ -1719,7 +1753,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       </div>
       <div class="sofa-item">
         <div class="sofa-name">Coagulación<br><span style="font-size:10px;color:var(--muted)">Plaquetas K/uL</span></div>
-        <select id="sofa-coa" onchange="calcSOFA()">
+        <select id="sofa-coa">
           <option value="0">≥ 150 → 0 pts</option><option value="1">100–149 → 1 pt</option>
           <option value="2">50–99 → 2 pts</option><option value="3">20–49 → 3 pts</option>
           <option value="4">&lt; 20 → 4 pts</option>
@@ -1728,7 +1762,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       </div>
       <div class="sofa-item">
         <div class="sofa-name">Hepático<br><span style="font-size:10px;color:var(--muted)">Bilirrubina mg/dL</span></div>
-        <select id="sofa-hep" onchange="calcSOFA()">
+        <select id="sofa-hep">
           <option value="0">&lt; 1.2 → 0 pts</option><option value="1">1.2–1.9 → 1 pt</option>
           <option value="2">2.0–5.9 → 2 pts</option><option value="3">6.0–11.9 → 3 pts</option>
           <option value="4">≥ 12.0 → 4 pts</option>
@@ -1737,7 +1771,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       </div>
       <div class="sofa-item">
         <div class="sofa-name">Cardiovascular<br><span style="font-size:10px;color:var(--muted)">Vasopresor</span></div>
-        <select id="sofa-cv" onchange="calcSOFA()">
+        <select id="sofa-cv">
           <option value="0">PAM ≥ 70, sin vasopresor → 0</option>
           <option value="1">PAM &lt; 70, sin vasopresor → 1</option>
           <option value="2">Dopamina ≤5 o dobutamina → 2</option>
@@ -1748,7 +1782,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       </div>
       <div class="sofa-item">
         <div class="sofa-name">Neurológico<br><span style="font-size:10px;color:var(--muted)">GCS</span></div>
-        <select id="sofa-neu" onchange="calcSOFA()">
+        <select id="sofa-neu">
           <option value="0">GCS 15 → 0 pts</option><option value="1">GCS 13–14 → 1 pt</option>
           <option value="2">GCS 10–12 → 2 pts</option><option value="3">GCS 6–9 → 3 pts</option>
           <option value="4">GCS &lt; 6 → 4 pts</option>
@@ -1757,7 +1791,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       </div>
       <div class="sofa-item">
         <div class="sofa-name">Renal<br><span style="font-size:10px;color:var(--muted)">Cr / Uresis</span></div>
-        <select id="sofa-ren" onchange="calcSOFA()">
+        <select id="sofa-ren">
           <option value="0">Cr &lt; 1.2 → 0 pts</option><option value="1">Cr 1.2–1.9 → 1 pt</option>
           <option value="2">Cr 2.0–3.4 → 2 pts</option><option value="3">Cr 3.5–4.9 o uresis &lt;500 → 3 pts</option>
           <option value="4">Cr ≥ 5.0 o uresis &lt;200 → 4 pts</option>
@@ -1951,8 +1985,8 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div><label>Sexo</label><select id="vp-sexo" onchange="updateVentParamsPIC()"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
     </div>
     <div class="row cols2">
-      <div><label>PIC calculado (kg)</label><input type="number" id="vp-pic" placeholder="auto" readonly style="background:rgba(0,200,255,0.05);"></div>
-      <div><label>Modo ventilatorio</label>
+      <div><label title="Peso Ideal Calculado">PIC (peso ideal calculado) (kg)</label><input type="number" id="vp-pic" placeholder="auto" readonly style="background:rgba(0,200,255,0.05);"></div>
+      <div><label>Modo ventilatorio (referencia)</label>
         <select id="vp-modo">
           <option value="VCV">VCV</option>
           <option value="PCV">PCV</option>
@@ -1960,12 +1994,17 @@ input.pat-synced:focus, select.pat-synced:focus {
           <option value="CPAP/PSV">CPAP/PSV</option>
           <option value="SIMV">SIMV</option>
         </select>
+        <div class="info" style="margin-top:4px;">No modifica este cálculo; se muestra como referencia clínica.</div>
       </div>
     </div>
     <div class="section-sub">Configuración inicial</div>
     <div class="row cols3">
-      <div><label>FiO2 (%)</label><input type="number" id="vp-fio2" min="21" max="100" step="1" placeholder="21 – 40"></div>
-      <div><label>PEEP (cmH₂O)</label><input type="number" id="vp-peep" min="3" max="20" step="0.1" placeholder="5 – 8"></div>
+      <div>
+        <label title="Fracción inspirada de oxígeno">FiO2 (fracción inspirada de oxígeno)</label>
+        <input type="number" id="vp-fio2" min="0.21" max="100" step="0.01" placeholder="0.40 o 40">
+        <div class="info" style="margin-top:4px;">Acepta 0.21-1.00 (decimal) o 21-100 (%).</div>
+      </div>
+      <div><label title="Presión positiva al final de la espiración">PEEP (presión positiva al final de la espiración) (cmH₂O)</label><input type="number" id="vp-peep" min="3" max="20" step="0.1" placeholder="5 – 8"></div>
       <div><label>Frecuencia respiratoria (rpm)</label><input type="number" id="vp-fr" min="10" max="35" step="1" placeholder="12 – 20"></div>
     </div>
     <div class="section-sub">Volumen y presiones</div>
@@ -1975,11 +2014,14 @@ input.pat-synced:focus, select.pat-synced:focus {
         <input type="number" id="vp-vt" step="1" placeholder="400 – 550">
         <button type="button" class="reset" style="margin-top:6px;padding:4px 8px;font-size:10px;" onclick="fillVentParamsVT()">Calcular 6 mL/kg</button>
       </div>
-      <div><label>Presión pico objetivo (cmH₂O)</label><input type="number" id="vp-ppico" step="0.1" placeholder="15 – 30"></div>
+      <div>
+        <label>Presión pico objetivo (cmH₂O, referencia)</label>
+        <input type="number" id="vp-ppico" step="0.1" placeholder="15 – 30">
+      </div>
       <div><label>Presión meseta objetivo (cmH₂O)</label><input type="number" id="vp-pplat" step="0.1" placeholder="≤ 30"></div>
     </div>
     <div class="row cols2">
-      <div><label>Relación I:E</label>
+      <div><label>Relación I:E (referencia)</label>
         <select id="vp-ie">
           <option value="1:1">1:1</option>
           <option value="1:1.5">1:1.5</option>
@@ -1987,6 +2029,7 @@ input.pat-synced:focus, select.pat-synced:focus {
           <option value="1:2.5">1:2.5</option>
           <option value="1:3">1:3</option>
         </select>
+        <div class="info" style="margin-top:4px;">Dato orientativo; no cambia el cálculo numérico mostrado.</div>
       </div>
       <div><label>Volumen minuto estimado (L/min)</label><input type="number" id="vp-vm-est" placeholder="5 – 8" readonly style="background:rgba(0,200,255,0.05);"></div>
     </div>
@@ -2202,14 +2245,14 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="row cols4">
       <div><label>Hb (g/dL)</label><input type="number" id="ot-hb" placeholder="12 – 16" step="0.1"></div>
       <div><label>SaO₂ (%)</label><input type="number" id="ot-sao2" placeholder="95 – 100" step="0.1"></div>
-      <div><label>SvO₂ (%)</label><input type="number" id="ot-svo2" placeholder="65 – 75" step="0.1"></div>
-      <div><label>PaO₂ (mmHg)</label><input type="number" id="ot-pao2" placeholder="80 – 100" step="0.1"></div>
+      <div><label title="Saturación venosa mixta de oxígeno">SvO₂ (saturación venosa mixta de oxígeno) (%)</label><input type="number" id="ot-svo2" placeholder="65 – 75" step="0.1"></div>
+      <div><label title="Presión arterial de oxígeno">PaO₂ (presión arterial de oxígeno) (mmHg)</label><input type="number" id="ot-pao2" placeholder="80 – 100" step="0.1"></div>
     </div>
     <div class="row cols4">
       <div><label>PvO₂ (mmHg)</label><input type="number" id="ot-pvo2" placeholder="35 – 45" step="0.1"></div>
       <div><label>GC (L/min)</label><input type="number" id="ot-gc" placeholder="4 – 8" step="0.1"></div>
       <div><label>FC (lpm)</label><input type="number" id="ot-fc" placeholder="60 – 100" step="1"></div>
-      <div><label>PAM (mmHg)</label><input type="number" id="ot-pam" placeholder="70 – 105" step="0.1"></div>
+      <div><label title="Presión arterial media">PAM (presión arterial media) (mmHg)</label><input type="number" id="ot-pam" placeholder="70 – 105" step="0.1"></div>
     </div>
     <div class="row cols4">
       <div><label>PVC (mmHg)</label><input type="number" id="ot-pvc" placeholder="8 – 12" step="0.1"></div>
@@ -2219,7 +2262,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div class="row cols4">
       <div><label>SC (m²)</label><input type="number" id="ot-sc" placeholder="1.7 – 2.0" step="0.01"></div>
-      <div><label>FiO₂ (decimal)</label><input type="number" id="ot-fio2" placeholder="0.21 – 0.40" step="0.01"></div>
+      <div><label title="Fracción inspirada de oxígeno">FiO₂ (decimal)</label><input type="number" id="ot-fio2" placeholder="0.21 – 0.40" step="0.01"></div>
       <div><label>PaCO₂ (mmHg)</label><input type="number" id="ot-paco2" placeholder="35 – 45" step="0.1"></div>
       <div style="display:flex;align-items:end;"><button class="reset" type="button" style="width:100%;padding:8px 10px;" onclick="calcOTSc()">Calcular SC</button></div>
     </div>
@@ -2432,7 +2475,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="card-title">Perfil hemodinámico</div>
     <div class="section-sub">Clasificación de choque</div>
     <div class="row cols3">
-      <div><label>PAM (mmHg)</label><input type="number" id="ph-pam" placeholder="70 – 105"></div>
+      <div><label title="Presión arterial media">PAM (presión arterial media) (mmHg)</label><input type="number" id="ph-pam" placeholder="70 – 105"></div>
       <div><label>FC (lpm)</label><input type="number" id="ph-fc" placeholder="60 – 100"></div>
       <div><label>PVC (mmHg)</label><input type="number" id="ph-pvc" placeholder="8 – 12"></div>
     </div>
@@ -2630,6 +2673,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <div id="calc-balance" class="calc-panel">
   <div class="card">
     <div class="card-title">Balance Hídrico</div>
+    <div class="info" style="font-size:11px;margin-bottom:10px;">Balance global del turno (ingresos y egresos). Para metas de líquidos y UF en CRRT usa <strong>TSR: Ultrafiltrado y reposición</strong> — allí el «balance» es el acumulado a corregir en el circuito, no la tabla de este panel.</div>
     <table class="balance-table">
       <thead><tr><th>INGRESOS</th><th>mL</th><th>EGRESOS</th><th>mL</th></tr></thead>
       <tbody>
@@ -2806,7 +2850,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- ===== VExUS — CONGESTIÓN VENOSA ===== -->
 <div id="calc-vexus" class="calc-panel">
   <div class="card">
-    <div class="card-title">VExUS — Venous Excess Ultrasound Score</div>
+    <div class="card-title" title="Venous Excess Ultrasound Score">VExUS — Venous Excess Ultrasound Score</div>
     <div class="info" style="margin-bottom:14px;">
       Sistema de gradación de congestión venosa por ultrasonido. <b>Paso 1:</b> Medir VCI. Si VCI &lt;2 cm → VExUS 0 (sin congestión). Si VCI ≥2 cm → evaluar venas hepática, porta e intrarenal.
     </div>
@@ -2816,11 +2860,11 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="row cols2">
       <div>
         <label>Diámetro VCI (cm)</label>
-        <input type="number" id="vx-vci" placeholder="1.5-2.5" step="0.1" oninput="calcVEXUS()">
+        <input type="number" id="vx-vci" placeholder="1.5-2.5" step="0.1">
       </div>
       <div>
         <label>Colapsabilidad VCI con inspiración</label>
-        <select id="vx-vci-col" onchange="calcVEXUS()">
+        <select id="vx-vci-col">
           <option value="colapsa">&gt;50% — colapsa (normal)</option>
           <option value="parcial">25–50% — parcialmente</option>
           <option value="fija">&lt;25% — fija / sin colapso</option>
@@ -2836,7 +2880,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="row cols2">
       <div>
         <label>Patrón Doppler vena hepática</label>
-        <select id="vx-hep" onchange="calcVEXUS()">
+        <select id="vx-hep">
           <option value="normal">Normal — predominio sistólico (S&gt;D)</option>
           <option value="leve">Leve — onda S reducida (S&lt;D, S positiva)</option>
           <option value="grave">Grave — inversión sistólica (S negativa/reversa)</option>
@@ -2852,7 +2896,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="row cols2">
       <div>
         <label>Patrón Doppler vena porta</label>
-        <select id="vx-port" onchange="calcVEXUS()">
+        <select id="vx-port">
           <option value="normal">Normal — flujo continuo monofásico</option>
           <option value="leve">Leve — pulsatilidad &lt;30% (índice pulsatilidad portal)</option>
           <option value="grave">Grave — pulsatilidad ≥30% o flujo bifásico</option>
@@ -2860,7 +2904,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       </div>
       <div>
         <label>IPP opcional: (Vmax−Vmin)/Vmax × 100 (%)</label>
-        <input type="number" id="vx-ipp" placeholder="ej. 35 (%)" step="1" oninput="calcVEXUS()">
+        <input type="number" id="vx-ipp" placeholder="ej. 35 (%)" step="1">
       </div>
     </div>
 
@@ -2869,7 +2913,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="row cols2">
       <div>
         <label>Patrón Doppler vena intrarenal</label>
-        <select id="vx-intra" onchange="calcVEXUS()">
+        <select id="vx-intra">
           <option value="normal">Normal — flujo continuo</option>
           <option value="leve">Leve — patrón bifásico (discontinuo, 2 fases)</option>
           <option value="grave">Grave — patrón monofásico interrumpido (solo diastólico)</option>
@@ -3051,7 +3095,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- KDIGO -->
 <div id="calc-kdigo" class="calc-panel">
   <div class="card">
-    <div class="card-title">KDIGO — Lesión Renal Aguda</div>
+    <div class="card-title" title="Kidney Disease: Improving Global Outcomes">KDIGO — Lesión Renal Aguda</div>
     <div class="row cols2">
       <div><label>Creatinina basal (mg/dL)</label><input type="number" id="kd-base" placeholder="0.6 – 1.2" step="0.01"></div>
       <div><label>Creatinina actual (mg/dL)</label><input type="number" id="kd-curr" placeholder="0.6 – 1.2" step="0.01"></div>
@@ -3435,11 +3479,10 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div>
         <label>
           Peso (kg)
-          <span class="req-tag" id="req-el-peso" style="display:none;">⚠️ requerido para K y P</span>
         </label>
         <input type="number" id="el-peso" placeholder="" oninput="updateElecReqs()">
       </div>
-      <div><label>TFG / Función renal</label>
+      <div><label title="Tasa de filtrado glomerular">TFG (tasa de filtrado glomerular) / función renal</label>
         <select id="el-tfg">
           <option value="normal">Normal (TFG ≥60)</option>
           <option value="moderada">Moderada (TFG 30-59)</option>
@@ -3452,7 +3495,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="section-sub" id="sub-k">🧂 Potasio (K⁺)</div>
     <div class="row cols3">
       <div>
-        <label>K sérico actual (mEq/L) <span class="req-tag" id="req-k">⚠️ falta K</span></label>
+        <label>K sérico actual (mEq/L)</label>
         <input type="number" id="el-k" placeholder="3.5-5.0" step="0.1" oninput="updateElecReqs()">
       </div>
       <div><label>K meta (mEq/L)</label><input type="number" id="el-k-meta" placeholder="4.0" step="0.1"></div><!-- keep default 4.0 for K target -->
@@ -3460,30 +3503,24 @@ input.pat-synced:focus, select.pat-synced:focus {
         <select id="el-k-via"><option value="iv">IV (KCl)</option><option value="vo">VO (KCl oral)</option></select>
       </div>
     </div>
-    <div class="elec-missing" id="miss-k" style="display:none;">
-      <span class="miss-icon">⚠️</span> Para calcular <b>Potasio</b> ingresa: <span id="miss-k-list"></span>
-    </div>
 
     <!-- MAGNESIO -->
     <div class="section-sub">🦴 Magnesio (Mg²⁺)</div>
     <div class="row cols2">
       <div>
-        <label>Mg sérico actual (mg/dL) <span class="req-tag" id="req-mg">⚠️ falta Mg</span></label>
+        <label>Mg sérico actual (mg/dL)</label>
         <input type="number" id="el-mg" placeholder="1.8-2.4" step="0.1" oninput="updateElecReqs()">
       </div>
       <div><label>Sintomático / arritmia</label>
         <select id="el-mg-sint"><option value="no">No</option><option value="si">Sí</option></select>
       </div>
     </div>
-    <div class="elec-missing" id="miss-mg" style="display:none;">
-      <span class="miss-icon">⚠️</span> Para calcular <b>Magnesio</b> ingresa: <span id="miss-mg-list"></span>
-    </div>
 
     <!-- FÓSFORO -->
     <div class="section-sub">🔩 Fósforo (P)</div>
     <div class="row cols2">
       <div>
-        <label>Fósforo actual (mg/dL) <span class="req-tag" id="req-p">⚠️ falta P</span></label>
+        <label>Fósforo actual (mg/dL)</label>
         <input type="number" id="el-p" placeholder="2.5-4.5" step="0.1" oninput="updateElecReqs()">
       </div>
       <div><label>Severidad clínica</label>
@@ -3495,15 +3532,12 @@ input.pat-synced:focus, select.pat-synced:focus {
         </select>
       </div>
     </div>
-    <div class="elec-missing" id="miss-p" style="display:none;">
-      <span class="miss-icon">⚠️</span> Para calcular <b>Fósforo</b> ingresa: <span id="miss-p-list"></span>
-    </div>
 
     <!-- CALCIO -->
     <div class="section-sub">🧪 Calcio (Ca²⁺)</div>
     <div class="row cols3">
       <div>
-        <label>Ca total sérico (mg/dL) <span class="req-tag" id="req-ca">⚠️ falta Ca</span></label>
+        <label>Ca total sérico (mg/dL)</label>
         <input type="number" id="el-ca" placeholder="8.5-10.5" step="0.1" oninput="updateElecReqs()">
       </div>
       <div><label>Albúmina (g/dL) <span style="font-size:9px;color:var(--muted)">(usa 4.0 si vacío)</span></label>
@@ -3512,9 +3546,6 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div><label>Sintomático (tetania, QT)</label>
         <select id="el-ca-sint"><option value="no">No</option><option value="si">Sí</option></select>
       </div>
-    </div>
-    <div class="elec-missing" id="miss-ca" style="display:none;">
-      <span class="miss-icon">⚠️</span> Para calcular <b>Calcio</b> ingresa: <span id="miss-ca-list"></span>
     </div>
 
     <div class="btn-row">
@@ -3958,7 +3989,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- DOSIS DIÁLISIS -->
 <div id="calc-tsr-dosis" class="calc-panel">
   <div class="card">
-    <div class="card-title">Dosis de Diálisis — Kt/V y CRRT</div>
+    <div class="card-title" title="Terapia de Sustitución Renal">TSR: Dosis — Kt/V y CRRT</div>
     <div class="row cols2">
       <div><label>Modalidad</label>
         <select id="tsr-mod" onchange="updateTSRDosis()">
@@ -4017,7 +4048,8 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- ULTRAFILTRADO -->
 <div id="calc-tsr-uf" class="calc-panel">
   <div class="card">
-    <div class="card-title">Ultrafiltrado y Tasa de Reposición — CRRT</div>
+    <div class="card-title" title="Terapia de Sustitución Renal">TSR: Ultrafiltrado y tasa de reposición (CRRT)</div>
+    <div class="info" style="font-size:11px;margin-bottom:10px;">«Balance hídrico acumulado» aquí es el volumen neto a compensar con UF en el contexto de CRRT (p. ej. sobrecarga previa). No es el balance parcial del turno de <strong>Balance hídrico</strong>.</div>
     <div class="row cols3">
       <div><label>Peso actual (kg)</label><input type="number" id="uf-peso" placeholder=""></div>
       <div><label>Peso seco / meta (kg)</label><input type="number" id="uf-meta" placeholder=""></div>
@@ -4053,7 +4085,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- ANTICOAGULACIÓN TSR -->
 <div id="calc-tsr-anticoag" class="calc-panel">
   <div class="card">
-    <div class="card-title">Anticoagulación en CRRT</div>
+    <div class="card-title">TSR: Anticoagulación (CRRT)</div>
     <div class="row cols2">
       <div><label>Modalidad anticoagulación</label>
         <select id="ac-tipo" onchange="showAnticoag()">
@@ -4117,7 +4149,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- MODALIDAD E INDICACIONES TSR -->
 <div id="calc-tsr-modalidad" class="calc-panel">
   <div class="card">
-    <div class="card-title">Modalidad e Indicaciones de TSR en UCI</div>
+    <div class="card-title">TSR: Modalidad e indicaciones en UCI</div>
     <div class="section-sub">Indicaciones de inicio (AEIOU)</div>
     <div class="sofa-grid" style="gap:6px; margin-bottom:14px;">
       <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">A — Acidosis metabólica severa</div><div style="font-size:10px;color:var(--muted)">pH &lt;7.15 refractaria a tratamiento</div></div><select id="aeiou-a" style="width:70px;" onchange="evalAEIOU()"><option value="0">No</option><option value="1">Sí</option></select></div>
@@ -4209,25 +4241,25 @@ input.pat-synced:focus, select.pat-synced:focus {
 
     <div class="section-sub">Electrolitos séricos</div>
     <div class="row cols3">
-      <div><label>Na⁺ (mEq/L)</label><input type="number" id="mp-na" placeholder="135-145" oninput="calcMetabolic()"></div>
-      <div><label>Cl⁻ (mEq/L)</label><input type="number" id="mp-cl" placeholder="98-106" oninput="calcMetabolic()"></div>
-      <div><label>HCO₃⁻ (mEq/L)</label><input type="number" id="mp-hco3" placeholder="22-26" oninput="calcMetabolic()"></div>
+      <div><label>Na⁺ (mEq/L)</label><input type="number" id="mp-na" placeholder="135-145"></div>
+      <div><label>Cl⁻ (mEq/L)</label><input type="number" id="mp-cl" placeholder="98-106"></div>
+      <div><label>HCO₃⁻ (mEq/L)</label><input type="number" id="mp-hco3" placeholder="22-26"></div>
     </div>
     <div class="row cols3">
-      <div><label>Albúmina (g/dL)</label><input type="number" id="mp-alb" placeholder="3.5-5.0" step="0.1" oninput="calcMetabolic()"></div>
-      <div><label>Glucosa (mg/dL)</label><input type="number" id="mp-glu" placeholder="70-110" oninput="calcMetabolic()"></div>
-      <div><label>BUN (mg/dL)</label><input type="number" id="mp-bun" placeholder="7-20" oninput="calcMetabolic()"></div>
+      <div><label>Albúmina (g/dL)</label><input type="number" id="mp-alb" placeholder="3.5-5.0" step="0.1"></div>
+      <div><label>Glucosa (mg/dL)</label><input type="number" id="mp-glu" placeholder="70-110"></div>
+      <div><label>BUN (mg/dL)</label><input type="number" id="mp-bun" placeholder="7-20"></div>
     </div>
 
     <div class="section-sub">Osmolaridad</div>
     <div class="row cols2">
-      <div><label>Osmolaridad medida (mOsm/kg)</label><input type="number" id="mp-osm-med" placeholder="ej. 310" oninput="calcMetabolic()"></div>
-      <div><label>Etanol (mg/dL) — opcional</label><input type="number" id="mp-etoh" placeholder="0" oninput="calcMetabolic()"></div>
+      <div><label>Osmolaridad medida (mOsm/kg)</label><input type="number" id="mp-osm-med" placeholder="ej. 310"></div>
+      <div><label>Etanol (mg/dL) — opcional</label><input type="number" id="mp-etoh" placeholder="0"></div>
     </div>
 
     <div class="section-sub">Lactato</div>
     <div class="row cols2">
-      <div><label>Lactato (mmol/L)</label><input type="number" id="mp-lac" placeholder="ej. 2.0" step="0.1" oninput="calcMetabolic()"></div>
+      <div><label>Lactato (mmol/L)</label><input type="number" id="mp-lac" placeholder="ej. 2.0" step="0.1"></div>
     </div>
     <div class="btn-row" style="margin-top:12px;">
       <button class="calc" onclick="calcMetabolic()">Calcular</button>
@@ -4262,7 +4294,7 @@ input.pat-synced:focus, select.pat-synced:focus {
   <div class="card">
     <div class="card-title">Glasgow Coma Scale (GCS)</div>
     <div><label>Apertura ocular (E)</label>
-      <select id="gcs-e" onchange="calcGCS()">
+      <select id="gcs-e">
         <option value="">Seleccionar</option>
         <option value="4">4 — Espontánea</option>
         <option value="3">3 — A la voz</option>
@@ -4271,7 +4303,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       </select>
     </div>
     <div style="margin-top:8px;"><label>Respuesta verbal (V)</label>
-      <select id="gcs-v" onchange="calcGCS()">
+      <select id="gcs-v">
         <option value="">Seleccionar</option>
         <option value="5">5 — Orientada</option>
         <option value="4">4 — Confusa</option>
@@ -4281,7 +4313,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       </select>
     </div>
     <div style="margin-top:8px;"><label>Respuesta motora (M)</label>
-      <select id="gcs-m" onchange="calcGCS()">
+      <select id="gcs-m">
         <option value="">Seleccionar</option>
         <option value="6">6 — Obedece órdenes</option>
         <option value="5">5 — Localiza dolor</option>
@@ -4310,21 +4342,21 @@ input.pat-synced:focus, select.pat-synced:focus {
   <div class="card">
     <div class="card-title">qSOFA — Quick SOFA</div>
     <div><label>Presión arterial sistólica ≤100 mmHg</label>
-      <select id="qsofa-pas" onchange="calcQSOFA()">
+      <select id="qsofa-pas">
         <option value="">Seleccionar</option>
         <option value="0">No (PAS &gt;100)</option>
         <option value="1">Sí (PAS ≤100)</option>
       </select>
     </div>
     <div style="margin-top:8px;"><label>Frecuencia respiratoria ≥22/min</label>
-      <select id="qsofa-fr" onchange="calcQSOFA()">
+      <select id="qsofa-fr">
         <option value="">Seleccionar</option>
         <option value="0">No (FR &lt;22)</option>
         <option value="1">Sí (FR ≥22)</option>
       </select>
     </div>
     <div style="margin-top:8px;"><label>Alteración del estado mental (GCS &lt;15)</label>
-      <select id="qsofa-gcs" onchange="calcQSOFA()">
+      <select id="qsofa-gcs">
         <option value="">Seleccionar</option>
         <option value="0">No (alerta, GCS 15)</option>
         <option value="1">Sí (confuso o GCS &lt;15)</option>
@@ -4348,37 +4380,37 @@ input.pat-synced:focus, select.pat-synced:focus {
   <div class="card">
     <div class="card-title">Wells Score — Tromboembolia Pulmonar</div>
     <div><label>Signos/síntomas clínicos de TVP</label>
-      <select id="wells-tvp" onchange="calcWells()">
+      <select id="wells-tvp">
         <option value="0">No</option><option value="3">Sí (+3)</option>
       </select>
     </div>
     <div style="margin-top:8px;"><label>TEP es el diagnóstico más probable</label>
-      <select id="wells-alt" onchange="calcWells()">
+      <select id="wells-alt">
         <option value="0">No</option><option value="3">Sí (+3)</option>
       </select>
     </div>
     <div style="margin-top:8px;"><label>FC &gt;100 lpm</label>
-      <select id="wells-fc" onchange="calcWells()">
+      <select id="wells-fc">
         <option value="0">No</option><option value="1.5">Sí (+1.5)</option>
       </select>
     </div>
     <div style="margin-top:8px;"><label>Inmovilización ≥3 días o cirugía en últimas 4 semanas</label>
-      <select id="wells-inmov" onchange="calcWells()">
+      <select id="wells-inmov">
         <option value="0">No</option><option value="1.5">Sí (+1.5)</option>
       </select>
     </div>
     <div style="margin-top:8px;"><label>TVP o TEP previo</label>
-      <select id="wells-prev" onchange="calcWells()">
+      <select id="wells-prev">
         <option value="0">No</option><option value="1.5">Sí (+1.5)</option>
       </select>
     </div>
     <div style="margin-top:8px;"><label>Hemoptisis</label>
-      <select id="wells-hemo" onchange="calcWells()">
+      <select id="wells-hemo">
         <option value="0">No</option><option value="1">Sí (+1)</option>
       </select>
     </div>
     <div style="margin-top:8px;"><label>Cáncer activo (tratamiento en últimos 6 meses)</label>
-      <select id="wells-cancer" onchange="calcWells()">
+      <select id="wells-cancer">
         <option value="0">No</option><option value="1">Sí (+1)</option>
       </select>
     </div>
@@ -4401,14 +4433,14 @@ input.pat-synced:focus, select.pat-synced:focus {
   <div class="card">
     <div class="card-title">MELD Score — Enfermedad Hepática Terminal</div>
     <div class="row cols3">
-      <div><label>Bilirrubina total (mg/dL)</label><input type="number" id="meld-bili" placeholder="ej. 2.5" step="0.1" oninput="calcMELD()"></div>
-      <div><label>Creatinina sérica (mg/dL)</label><input type="number" id="meld-cr" placeholder="ej. 1.2" step="0.1" oninput="calcMELD()"></div>
-      <div><label>INR</label><input type="number" id="meld-inr" placeholder="ej. 1.5" step="0.1" oninput="calcMELD()"></div>
+      <div><label>Bilirrubina total (mg/dL)</label><input type="number" id="meld-bili" placeholder="ej. 2.5" step="0.1"></div>
+      <div><label>Creatinina sérica (mg/dL)</label><input type="number" id="meld-cr" placeholder="ej. 1.2" step="0.1"></div>
+      <div><label>INR</label><input type="number" id="meld-inr" placeholder="ej. 1.5" step="0.1"></div>
     </div>
     <div class="row cols2" style="margin-top:8px;">
-      <div><label>Sodio sérico (mEq/L) — para MELD-Na</label><input type="number" id="meld-na" placeholder="ej. 137" oninput="calcMELD()"></div>
+      <div><label>Sodio sérico (mEq/L) — para MELD-Na</label><input type="number" id="meld-na" placeholder="ej. 137"></div>
       <div><label>¿En hemodiálisis (≥2/sem)?</label>
-        <select id="meld-hd" onchange="calcMELD()">
+        <select id="meld-hd">
           <option value="0">No</option><option value="1">Sí (Cr se fija en 4.0)</option>
         </select>
       </div>
@@ -4489,8 +4521,8 @@ function buildEvid(id) {
 
 const evidData = {
   news2: {
-    formula: 'Suma de 6 variables fisiológicas + nivel de conciencia (AVPU)\nRango total: 0?20 puntos',
-    interpretation: '0?4: riesgo bajo · 5?6 o cualquier parámetro con 3 puntos: riesgo intermedio · ≥7: riesgo alto y respuesta urgente',
+    formula: 'Suma de 6 variables fisiológicas + nivel de conciencia (AVPU)\nRango total: 0-20 puntos',
+    interpretation: '0-4: riesgo bajo · 5-6 o cualquier parámetro con 3 puntos: riesgo intermedio · ≥7: riesgo alto y respuesta urgente',
     refs: [
       {year:'2017', authors:'Royal College of Physicians', title:'National Early Warning Score (NEWS) 2', journal:'RCP London', doi:''},
       {year:'2019', authors:'Pimentel MAF et al.', title:'Comparison of NEWS and NEWS2 for in-hospital mortality prediction', journal:'Resuscitation', doi:'10.1016/j.resuscitation.2019.02.017'},
@@ -4554,8 +4586,8 @@ const evidData = {
     ]
   },
   sofa: {
-    formula: 'Suma de 6 órganos (Resp, Coag, Hepático, CV, Neuro, Renal)\nCada órgano: 0?4 pts · Total: 0?24 pts',
-    interpretation: '0?1: &lt;10% mortalidad · 7?9: ~20% · 10?12: ~40% · &gt;12: &gt;80%\nIncremento de ≥2 pts en 48h define disfunción orgánica en sepsis (Sepsis-3)',
+    formula: 'Suma de 6 órganos (Resp, Coag, Hepático, CV, Neuro, Renal)\nCada órgano: 0-4 pts · Total: 0-24 pts',
+    interpretation: '0-1: &lt;10% mortalidad · 7-9: ~20% · 10-12: ~40% · &gt;12: &gt;80%\nIncremento de ≥2 pts en 48h define disfunción orgánica en sepsis (Sepsis-3)',
     refs: [
       {year:'1996', authors:'Vincent JL et al.', title:'The SOFA (Sepsis-related Organ Failure Assessment) score to describe organ dysfunction/failure', journal:'Intensive Care Med', doi:'10.1007/BF01709751'},
       {year:'2016', authors:'Singer M et al.', title:'The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3)', journal:'JAMA', doi:'10.1001/jama.2016.0287'},
@@ -4563,20 +4595,20 @@ const evidData = {
   },
   apache: {
     formula: 'APS (12 variables fisiológicas) + Edad + Enfermedad crónica\nLogit = −3.517 + 0.146 × APACHE II\nMortalidad = 1 / (1 + e^−logit)',
-    interpretation: '&lt;10 pts: &lt;10% mortalidad · 20?29: 40% · ≥30: &gt;70%',
+    interpretation: '&lt;10 pts: &lt;10% mortalidad · 20-29: 40% · ≥30: &gt;70%',
     refs: [
       {year:'1985', authors:'Knaus WA et al.', title:'APACHE II: a severity of disease classification system', journal:'Crit Care Med', doi:'10.1097/00003246-198510000-00009'},
     ]
   },
   saps: {
     formula: 'Logit = −7.7631 + 0.0737×SAPS + 0.9971×ln(SAPS+1)\nMortalidad = e^logit / (1 + e^logit)',
-    interpretation: '&lt;30 pts: baja mortalidad · 30?60: moderada · &gt;60: alta',
+    interpretation: '&lt;30 pts: baja mortalidad · 30-60: moderada · &gt;60: alta',
     refs: [
       {year:'1993', authors:'Le Gall JR et al.', title:'A new Simplified Acute Physiology Score (SAPS II) based on a European/North American multicenter study', journal:'JAMA', doi:'10.1001/jama.270.24.2957'},
     ]
   },
   nutric: {
-    formula: 'Suma: Edad (0?2) + APACHE II (0?3) + SOFA (0?2) + Comorbilidades (0?1) + Días hosp. (0?1) + IL-6 opcional (0?1)\nRango: 0?9 (con IL-6) / 0?8 (sin IL-6)',
+    formula: 'Suma: Edad (0-2) + APACHE II (0-3) + SOFA (0-2) + Comorbilidades (0-1) + Días hosp. (0-1) + IL-6 opcional (0-1)\nRango: 0-9 (con IL-6) / 0-8 (sin IL-6)',
     interpretation: '≥5 pts: alto riesgo nutricional — inicio soporte &lt;48h mejora outcomes\n&lt;5 pts: bajo riesgo — monitorizar tolerancia',
     refs: [
       {year:'2011', authors:'Heyland D et al.', title:'Identifying critically ill patients who benefit most from nutrition therapy: the development and initial validation of a novel risk assessment tool', journal:'Crit Care', doi:'10.1186/cc10072'},
@@ -4584,7 +4616,7 @@ const evidData = {
   },
   vt: {
     formula: 'PP Hombre = 50 + 0.91 × (Talla cm − 152.4)\nPP Mujer = 45.5 + 0.91 × (Talla cm − 152.4)\nVT protector = 6 mL/kg PP',
-    interpretation: 'Meta ventilación protectora: 6 mL/kg PP (rango 4?8)\nReducir si P meseta &gt;28 o DP &gt;15 cmH₂O',
+    interpretation: 'Meta ventilación protectora: 6 mL/kg PP (rango 4-8)\nReducir si P meseta &gt;28 o DP &gt;15 cmH₂O',
     refs: [
       {year:'2000', authors:'ARDS Network (ARDSnet)', title:'Ventilation with lower tidal volumes as compared with traditional tidal volumes for acute lung injury and the acute respiratory distress syndrome', journal:'NEJM', doi:'10.1056/NEJM200005043421801'},
     ]
@@ -4598,7 +4630,7 @@ const evidData = {
   },
   mp: {
     formula: 'MP = 0.098 × FR × VT(L) × (Ppico − ΔP/2)\nUnidades: J/min',
-    interpretation: '&lt;12 J/min: riesgo bajo de VILI · 12?17: zona gris · &gt;17: alto riesgo VILI\nValor umbral más aceptado: 17 J/min',
+    interpretation: '&lt;12 J/min: riesgo bajo de VILI · 12-17: zona gris · &gt;17: alto riesgo VILI\nValor umbral más aceptado: 17 J/min',
     refs: [
       {year:'2016', authors:'Gattinoni L et al.', title:'The Future of Mechanical Ventilation: Lessons from the Present and the Past', journal:'Crit Care', doi:'10.1186/s13054-017-1750-x'},
       {year:'2018', authors:'Serpa Neto A et al.', title:'Mechanical Power of Ventilation Is Associated With Mortality in Critically Ill Patients', journal:'Intensive Care Med', doi:'10.1007/s00134-018-5375-6'},
@@ -4606,7 +4638,7 @@ const evidData = {
   },
   pafi: {
     formula: 'P:F ratio = PaO₂ / FiO₂\nSF ratio = SpO₂ / FiO₂ (sustituto no invasivo)',
-    interpretation: 'Berlin 2012 (con PEEP ≥5):\n&gt;300: sin SDRA · 200?300: Leve · 100?200: Moderado · &lt;100: Grave',
+    interpretation: 'Berlin 2012 (con PEEP ≥5):\n&gt;300: sin SDRA · 200-300: Leve · 100-200: Moderado · &lt;100: Grave',
     refs: [
       {year:'2012', authors:'ARDS Definition Task Force', title:'Acute Respiratory Distress Syndrome: The Berlin Definition', journal:'JAMA', doi:'10.1001/jama.2012.5669'},
     ]
@@ -4619,15 +4651,15 @@ const evidData = {
     ]
   },
   expres: {
-    formula: 'Suma 0?100 pts (Fig. 3 Baptistella 2021). RSBI en SBT (resp/min/L): ≤42→25 · ≤54→20 · ≤76→10 · ≤90→5 · ≥91→0. Compliance dinámica (mL/cmH₂O): ≥63→15 · ≥51→10 · ≥43→7 · ≥32→3 · &lt;32→0. Días VM: ≤3→10 · ≤5→7 · ≤8→4 · ≤10→1 · &gt;10→0. GCS estimado: ≥13.5→10 · ≥11.7→6 · ≥8.9→3 · &lt;8.9→0. MRC (0?60): ≥49→10 · ≥37→7 · ≥25→4 · ≥13→1 · &lt;13→0. Hematocrito (%): ≥37→10 · ≥32→7 · ≥26→3 · ≥22→1 · &lt;22→0. Creatinina (mg/dL): ≤0.99→10 · ≤1.2→7 · ≤1.5→4 · ≤2.9→1 · &gt;2.9→0. Comorbilidad neurológica: ausente→10 · presente→0.\nFig. 3: https://journals.plos.org/plosone/article/figure/image?size=original&id=10.1371/journal.pone.0248868.g003 · Fig. 5: https://journals.plos.org/plosone/article/figure/image?size=original&id=10.1371/journal.pone.0248868.g005',
-    interpretation: 'Total ≤44: baja probabilidad de éxito (derivación ~57.1% éxito; ver Fig. 5). 45?58: intermedia (~83.3%). ≥59: alta (~98.7%). AUC informada 0,875. No sustituye juicio clínico ni prueba de tolerancia.',
+    formula: 'Suma 0-100 pts (Fig. 3 Baptistella 2021). RSBI en SBT (resp/min/L): ≤42→25 · ≤54→20 · ≤76→10 · ≤90→5 · ≥91→0. Compliance dinámica (mL/cmH₂O): ≥63→15 · ≥51→10 · ≥43→7 · ≥32→3 · &lt;32→0. Días VM: ≤3→10 · ≤5→7 · ≤8→4 · ≤10→1 · &gt;10→0. GCS estimado: ≥13.5→10 · ≥11.7→6 · ≥8.9→3 · &lt;8.9→0. MRC (0-60): ≥49→10 · ≥37→7 · ≥25→4 · ≥13→1 · &lt;13→0. Hematocrito (%): ≥37→10 · ≥32→7 · ≥26→3 · ≥22→1 · &lt;22→0. Creatinina (mg/dL): ≤0.99→10 · ≤1.2→7 · ≤1.5→4 · ≤2.9→1 · &gt;2.9→0. Comorbilidad neurológica: ausente→10 · presente→0.\nFig. 3: https://journals.plos.org/plosone/article/figure/image?size=original&id=10.1371/journal.pone.0248868.g003 · Fig. 5: https://journals.plos.org/plosone/article/figure/image?size=original&id=10.1371/journal.pone.0248868.g005',
+    interpretation: 'Total ≤44: baja probabilidad de éxito (derivación ~57.1% éxito; ver Fig. 5). 45-58: intermedia (~83.3%). ≥59: alta (~98.7%). AUC informada 0,875. No sustituye juicio clínico ni prueba de tolerancia.',
     refs: [
       {year:'2021', authors:'Baptistella AR et al.', title:'Prediction of extubation outcome in mechanically ventilated patients: Development and validation of the Extubation Predictive Score (ExPreS)', journal:'PLoS ONE', doi:'10.1371/journal.pone.0248868'},
     ]
   },
   gas: {
     formula: 'AG = Na − (Cl + HCO₃) · AG corregido = AG + 2.5×(4 − Alb)\nDelta-Delta = (AG−12) / (24−HCO₃)\nBE ≈ HCO₃ − 24 + 16.2×(pH − 7.4)',
-    interpretation: 'AG normal ≤12 mEq/L · Delta-delta 1?2: acidosis pura · &lt;1 o &gt;2: trastorno mixto\nCompensación ácido-base: Winter (AM), regla 1-4 (AR)',
+    interpretation: 'AG normal ≤12 mEq/L · Delta-delta 1-2: acidosis pura · &lt;1 o &gt;2: trastorno mixto\nCompensación ácido-base: Winter (AM), regla 1-4 (AR)',
     refs: [
       {year:'2010', authors:'Emmett M, Narins RG', title:'Clinical use of the anion gap', journal:'Medicine (Baltimore)', doi:'10.1097/00005792-197701000-00002'},
     ]
@@ -4650,7 +4682,7 @@ const evidData = {
   },
   kirby: {
     formula: 'SF ratio = SpO₂ (%) / FiO₂\nFiO₂ requerida = SpO₂ meta / SF ratio actual\nP:F (PaO₂/FiO₂) se calcula solo en el bloque PAFI del mismo panel (misma FiO₂).',
-    interpretation: 'SF &gt;315: normal · 235?315: SDRA leve · 150?235: moderado · &lt;150: grave\nSF ratio correlaciona con PF ratio (Rice TW, 2007)',
+    interpretation: 'SF &gt;315: normal · 235-315: SDRA leve · 150-235: moderado · &lt;150: grave\nSF ratio correlaciona con PF ratio (Rice TW, 2007)',
     refs: [
       {year:'2007', authors:'Rice TW et al.', title:'Comparison of the SpO2/FiO2 ratio and the PaO2/FiO2 ratio in patients with acute lung injury or ARDS', journal:'Chest', doi:'10.1378/chest.07-0617'},
       {year:'2012', authors:'Bongard FS, Sue DY', title:'Current Diagnosis and Treatment: Critical Care', journal:'McGraw-Hill', doi:''},
@@ -4665,14 +4697,14 @@ const evidData = {
   },
   kdigo: {
     formula: 'LRA por Cr: aumento ≥0.3 en 48h, o ×1.5 basal en 7d, o TFG &lt;35\nLRA por uresis: &lt;0.5 mL/kg/h por ≥6h',
-    interpretation: 'Estadio 1: Cr ×1.5?1.9 o +0.3 · Estadio 2: ×2?2.9 · Estadio 3: ×3 o Cr ≥4 o TRS\nFactor pronóstico: estadio al ingreso + recuperación renal',
+    interpretation: 'Estadio 1: Cr ×1.5-1.9 o +0.3 · Estadio 2: ×2-2.9 · Estadio 3: ×3 o Cr ≥4 o TRS\nFactor pronóstico: estadio al ingreso + recuperación renal',
     refs: [
       {year:'2012', authors:'KDIGO AKI Work Group', title:'KDIGO Clinical Practice Guideline for Acute Kidney Injury', journal:'Kidney Int Suppl', doi:'10.1038/kisup.2012.1'},
     ]
   },
   ppc: {
     formula: 'PPC = PAM − PIC\nDVNO: PIC (Robba) = −6.72 + 4.04×DVNO\nDTC: IP = (Vs − Vd) / Vm · PIC (Bellner) = (IP×10.93) − 1.28',
-    interpretation: 'Meta TBI: PPC 60?70 mmHg (BTF 2016)\nDVNO ≥5.8 mm: HTIC probable (S 74%, E 86%)\nIP DTC &gt;1.4: resistencia cerebrovascular elevada',
+    interpretation: 'Meta TBI: PPC 60-70 mmHg (BTF 2016)\nDVNO ≥5.8 mm: HTIC probable (S 74%, E 86%)\nIP DTC &gt;1.4: resistencia cerebrovascular elevada',
     refs: [
       {year:'2007', authors:'Brain Trauma Foundation', title:'Guidelines for the Management of Severe Traumatic Brain Injury, 3rd Ed.', journal:'J Neurotrauma', doi:'10.1089/neu.2007.9999'},
       {year:'2019', authors:'Robba C et al.', title:'Optic nerve sheath diameter ultrasonography for ICP assessment', journal:'Intensive Care Med', doi:'10.1007/s00134-018-5453-9'},
@@ -4681,7 +4713,7 @@ const evidData = {
   },
   harris: {
     formula: 'Hombre: GEB = 66.5 + 13.75×P + 5.003×T − 6.775×E\nMujer: GEB = 655.1 + 9.563×P + 1.85×T − 4.676×E\nGET = GEB × Factor de estrés',
-    interpretation: 'Proteínas UCI: 1.2?2.0 g/kg/día (recomendación ASPEN/ESPEN 2022)\nFactores de estrés: 1.2 (postqx) · 1.35 (sepsis) · 1.5?1.6 (trauma) · 1.8 (gran quemado)',
+    interpretation: 'Proteínas UCI: 1.2-2.0 g/kg/día (recomendación ASPEN/ESPEN 2022)\nFactores de estrés: 1.2 (postqx) · 1.35 (sepsis) · 1.5-1.6 (trauma) · 1.8 (gran quemado)',
     refs: [
       {year:'1919', authors:'Harris JA, Benedict FG', title:'A Biometric Study of Human Basal Metabolism', journal:'Proc Natl Acad Sci', doi:'10.1073/pnas.4.12.370'},
       {year:'2022', authors:'Thibault R et al.', title:'ESPEN guidelines on clinical nutrition in the intensive care unit', journal:'Clin Nutr', doi:'10.1016/j.clnu.2021.09.039'},
@@ -4689,13 +4721,13 @@ const evidData = {
   },
   camicu: {
     formula: 'POSITIVO si: Criterio 1 (cambio agudo) Y Criterio 2 (inatención)\nY [Criterio 3 (RASS≠0) O Criterio 4 (pensamiento desorg.)]',
-    interpretation: 'Sensibilidad: 80% · Especificidad: 96% · VPP: 95%\nVálido con RASS ≥ −3 · Prevalencia delirium UCI: 20?80%',
+    interpretation: 'Sensibilidad: 80% · Especificidad: 96% · VPP: 95%\nVálido con RASS ≥ −3 · Prevalencia delirium UCI: 20-80%',
     refs: [
       {year:'2001', authors:'Ely EW et al.', title:'Delirium in mechanically ventilated patients: validity and reliability of the confusion assessment method for the intensive care unit (CAM-ICU)', journal:'JAMA', doi:'10.1001/jama.286.21.2703'},
     ]
   },
   padua: {
-    formula: 'Suma de 11 ítems ponderados (1?3 pts cada uno)\nRango 0?20 pts',
+    formula: 'Suma de 11 ítems ponderados (1-3 pts cada uno)\nRango 0-20 pts',
     interpretation: '≥4 pts: alto riesgo TEV — NNT para HBPM ≈ 48\n&lt;4 pts: bajo riesgo — profilaxis mecánica',
     refs: [
       {year:'2010', authors:'Barbar S et al.', title:'A risk assessment model for the identification of hospitalized medical patients at risk for venous thromboembolism: the Padua Prediction Score', journal:'J Thromb Haemost', doi:'10.1111/j.1538-7836.2010.03Barbar'},
@@ -4703,14 +4735,14 @@ const evidData = {
   },
   curb: {
     formula: 'C: Confusión · U: BUN &gt;19 · R: FR ≥30 · B: PAS &lt;90 o PAD ≤60 · 65: Edad ≥65\nUn punto por criterio presente',
-    interpretation: '0?1: mortalidad ~1.5%, ambulatorio · 2: ~9.2%, hospitalización · 3?5: ~22?57%, UCI',
+    interpretation: '0-1: mortalidad ~1.5%, ambulatorio · 2: ~9.2%, hospitalización · 3-5: ~22-57%, UCI',
     refs: [
       {year:'2003', authors:'Lim WS et al.', title:'Defining community acquired pneumonia severity on presentation to hospital: an international derivation and validation study', journal:'Thorax', doi:'10.1136/thorax.58.5.377'},
     ]
   },
   rockall: {
-    formula: 'Suma: Edad + Choque + Comorbilidades + Diagnóstico + Estigmas sangrado reciente\nRango 0?11 pts',
-    interpretation: '0?2: mortalidad &lt;5% · 3?4: 10?20% · ≥5: &gt;40%\nRockall pre-endoscopia (3 primeras vars.) predice necesidad de intervención',
+    formula: 'Suma: Edad + Choque + Comorbilidades + Diagnóstico + Estigmas sangrado reciente\nRango 0-11 pts',
+    interpretation: '0-2: mortalidad &lt;5% · 3-4: 10-20% · ≥5: &gt;40%\nRockall pre-endoscopia (3 primeras vars.) predice necesidad de intervención',
     refs: [
       {year:'1996', authors:'Rockall TA et al.', title:'Risk assessment after acute upper gastrointestinal haemorrhage', journal:'Gut', doi:'10.1136/gut.38.3.316'},
     ]
@@ -4741,21 +4773,21 @@ const evidData = {
   },
   vexus: {
     formula: 'Grado 0: VCI &lt;2 cm\nGrado 1: VCI ≥2 cm, sin patrones anormales\nGrado 2: VCI ≥2 cm + 1 patrón grave\nGrado 3: VCI ≥2 cm + ≥2 patrones graves',
-    interpretation: 'VExUS 3: HR para LRA 3.7 (IC 1.5?9.3)\nPatrones graves: hepática (S invertida), porta (pulsatilidad ≥30%), intrarenal (monofásico)',
+    interpretation: 'VExUS 3: HR para LRA 3.7 (IC 1.5-9.3)\nPatrones graves: hepática (S invertida), porta (pulsatilidad ≥30%), intrarenal (monofásico)',
     refs: [
       {year:'2020', authors:'Beaubien-Souligny W et al.', title:'Quantifying Systemic Congestion with Point-Of-Care Ultrasound: Development of the Venous Excess Ultrasound Grading System', journal:'Ultrasound J', doi:'10.1186/s13089-020-00163-w'},
     ]
   },
   osmo: {
     formula: 'Osmolaridad = 2×Na + Glucosa/18 + BUN/2.8 + EtOH/4.6\nBrecha osmótica = Osm medida − Osm calculada',
-    interpretation: 'Normal: 280?295 mOsm/kg · Brecha &lt;10: normal\nBrecha &gt;10: metanol, etilenglicol, propilenglicol, manitol, etanol',
+    interpretation: 'Normal: 280-295 mOsm/kg · Brecha &lt;10: normal\nBrecha &gt;10: metanol, etilenglicol, propilenglicol, manitol, etanol',
     refs: [
       {year:'2000', authors:'Bhagat CI et al.', title:'Calculated osmolality: not quite right', journal:'Clin Chem', doi:'10.1093/clinchem/46.7.1053'},
     ]
   },
   ca: {
     formula: 'Ca corregido = Ca total + 0.8 × (4 − Albúmina)\nAlternativa ionizado: Ca corregido = Ca total / (0.6 + [Total proteína/8.5])',
-    interpretation: 'Normal Ca total: 8.5?10.2 mg/dL · Ionizado: 1.12?1.32 mmol/L\nHipocalcemia &lt;8.5: evaluar PTH, Mg, vit D',
+    interpretation: 'Normal Ca total: 8.5-10.2 mg/dL · Ionizado: 1.12-1.32 mmol/L\nHipocalcemia &lt;8.5: evaluar PTH, Mg, vit D',
     refs: [
       {year:'1977', authors:'Payne RB et al.', title:'Interpretation of serum total calcium: effects of adjustment for albumin concentration on frequency of abnormal values', journal:'J Clin Pathol', doi:'10.1136/jcp.30.3.169'},
     ]
@@ -4765,7 +4797,7 @@ const evidData = {
     refs: []
   },
   electrolitos: {
-    formula: 'Déficit K = (Kmeta − Kactual) × 0.4 × Peso\nDosis P = 0.16?0.32 mmol/kg IV según severidad\nCa corregido = Ca + 0.8 × (4 − Alb)',
+    formula: 'Déficit K = (Kmeta − Kactual) × 0.4 × Peso\nDosis P = 0.16-0.32 mmol/kg IV según severidad\nCa corregido = Ca + 0.8 × (4 − Alb)',
     interpretation: 'K crítico &lt;2.5: reposición urgente IV · Mg: corregir antes de K refractario\nP &lt;1.0: síndrome de realimentación — reposición urgente',
     refs: [
       {year:'2018', authors:'Kraft MD et al.', title:'Treatment of electrolyte disorders in adult patients in the intensive care unit', journal:'Am J Health Syst Pharm', doi:'10.2146/ajhp160298'},
@@ -4773,14 +4805,14 @@ const evidData = {
   },
   kdigo_tsr: {
     formula: 'Kt/V (Daugirdas): −ln(R − 0.008×t) + (4 − 3.5R)×(UF/V)\nR = BUN post / BUN pre · t = duración sesión\nCRRT dosis = Efluente total / Peso (mL/kg/h)',
-    interpretation: 'CRRT meta: 20?25 mL/kg/h · IHD meta Kt/V ≥1.2/sesión\nFF &lt;25%: evitar coagulación filtro',
+    interpretation: 'CRRT meta: 20-25 mL/kg/h · IHD meta Kt/V ≥1.2/sesión\nFF &lt;25%: evitar coagulación filtro',
     refs: [
       {year:'2012', authors:'KDIGO AKI Work Group', title:'KDIGO Clinical Practice Guideline for Acute Kidney Injury — Section on Renal Replacement Therapy', journal:'Kidney Int Suppl', doi:'10.1038/kisup.2012.1'},
       {year:'2016', authors:'RENAL Study Investigators', title:'Intensity of Continuous Renal-Replacement Therapy in Critically Ill Patients', journal:'NEJM', doi:'10.1056/NEJMoa0902413'},
     ]
   },
   tsr_anticoag: {
-    formula: 'Heparina: ajuste por TTPa meta.\nCitrato regional: titular a Ca postfiltro 0.25?0.35 mmol/L y Ca sistémico 1.0?1.2 mmol/L.',
+    formula: 'Heparina: ajuste por TTPa meta.\nCitrato regional: titular a Ca postfiltro 0.25-0.35 mmol/L y Ca sistémico 1.0-1.2 mmol/L.',
     interpretation: 'Citrato regional suele prolongar vida del filtro y reduce sangrado vs heparina sistémica en pacientes de alto riesgo.',
     refs: [
       {year:'2023', authors:'Raimundo M et al.', title:'Regional citrate versus systemic heparin anticoagulation for CRRT: systematic review and meta-analysis', journal:'Crit Care', doi:'10.1186/s13054-023-04359-3'},
@@ -4806,15 +4838,15 @@ const evidData = {
     ]
   },
   gcs: {
-    formula: 'GCS = E (1?4) + V (1?5) + M (1?6)\nRango: 3?15',
-    interpretation: '13?15: leve · 9?12: moderado · 6?8: grave (considerar intubación) · 3?5: muy grave (intubar, TAC urgente)',
+    formula: 'GCS = E (1-4) + V (1-5) + M (1-6)\nRango: 3-15',
+    interpretation: '13-15: leve · 9-12: moderado · 6-8: grave (considerar intubación) · 3-5: muy grave (intubar, TAC urgente)',
     refs: [
       {year:'1974', authors:'Teasdale G, Jennett B', title:'Assessment of coma and impaired consciousness: a practical scale', journal:'Lancet', doi:'10.1016/S0140-6736(74)91639-0'},
       {year:'2014', authors:'Teasdale G et al.', title:'The Glasgow Coma Scale at 40 years: standing the test of time', journal:'Lancet Neurol', doi:'10.1016/S1474-4422(14)70120-6'},
     ]
   },
   qsofa: {
-    formula: 'qSOFA = PAS ≤100 (1 pt) + FR ≥22 (1 pt) + GCS <15 (1 pt)\nRango: 0?3',
+    formula: 'qSOFA = PAS ≤100 (1 pt) + FR ≥22 (1 pt) + GCS <15 (1 pt)\nRango: 0-3',
     interpretation: '0: bajo riesgo · 1: vigilar · ≥2: alta sospecha de sepsis — completar SOFA, lactato, hemocultivos y considerar ATB empírico.',
     refs: [
       {year:'2016', authors:'Seymour CW et al.', title:'Assessment of Clinical Criteria for Sepsis (Sepsis-3)', journal:'JAMA', doi:'10.1001/jama.2016.0288'},
@@ -4823,7 +4855,7 @@ const evidData = {
   },
   wells: {
     formula: 'Signos TVP (+3) + TEP dx más probable (+3) + FC >100 (+1.5) + Inmovilización/cirugía (+1.5) + TEV previo (+1.5) + Hemoptisis (+1) + Cáncer (+1)',
-    interpretation: '≤1: baja probabilidad (~1.3%) → dímero D · 2?4: moderada (~16%) → dímero D, si + → angioTAC · >4: alta (~41%) → angioTAC directo',
+    interpretation: '≤1: baja probabilidad (~1.3%) → dímero D · 2-4: moderada (~16%) → dímero D, si + → angioTAC · >4: alta (~41%) → angioTAC directo',
     refs: [
       {year:'2000', authors:'Wells PS et al.', title:'Derivation of a Simple Clinical Model to Categorize Patients Probability of Pulmonary Embolism', journal:'Thromb Haemost', doi:'10.1055/s-0037-1613938'},
       {year:'2006', authors:'van Belle A et al.', title:'Effectiveness of managing suspected pulmonary embolism using an algorithm combining clinical probability, D-dimer testing, and CT', journal:'JAMA', doi:'10.1001/jama.295.2.172'},
@@ -4831,7 +4863,7 @@ const evidData = {
   },
   meld: {
     formula: 'MELD = 10 × (0.957×ln(Cr) + 0.378×ln(Bili) + 1.120×ln(INR) + 0.643)\nMELD-Na = MELD + 1.32×(137−Na) − 0.033×MELD×(137−Na)',
-    interpretation: '<10: compensada · 10?19: moderada · 20?29: severa, listar para trasplante · ≥30: falla terminal, urgencia',
+    interpretation: '<10: compensada · 10-19: moderada · 20-29: severa, listar para trasplante · ≥30: falla terminal, urgencia',
     refs: [
       {year:'2001', authors:'Kamath PS et al.', title:'A model to predict survival in patients with end-stage liver disease', journal:'Hepatology', doi:'10.1053/jhep.2001.22172'},
       {year:'2006', authors:'Kim WR et al.', title:'Hyponatremia and Mortality among Patients on the Liver-Transplant Waiting List', journal:'N Engl J Med', doi:'10.1056/NEJMoa062034'},
@@ -4966,8 +4998,12 @@ function toggleSidebar() {
 // ============ RESET ============
 function resetPanel(panelId) {
   const p = document.getElementById(panelId);
-  p.querySelectorAll('input[type=number]').forEach(el => el.value = '');
+  if (!p) return;
+  p.querySelectorAll('input[type=number], input[type=text], input[type=date], textarea').forEach(el => el.value = '');
   p.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+  p.querySelectorAll('.val-error, .input-warn, .input-danger').forEach(el => {
+    el.classList.remove('val-error', 'input-warn', 'input-danger');
+  });
   p.querySelectorAll('.result, .multi-result').forEach(el => el.style.display = 'none');
 }
 
@@ -4994,7 +5030,9 @@ function calcNEWS2() {
     {id:'news2-sao2', label:'SpO₂'},
     {id:'news2-temp', label:'Temperatura'},
     {id:'news2-sbs', label:'Presión sistólica'},
-    {id:'news2-fc', label:'Frecuencia cardíaca'}
+    {id:'news2-fc', label:'Frecuencia cardíaca'},
+    {id:'news2-o2', label:'Oxígeno suplementario'},
+    {id:'news2-avpu', label:'Estado de conciencia (AVPU)'}
   ])) return;
   const fr = parseFloat(document.getElementById('news2-fr').value);
   const sao2 = parseFloat(document.getElementById('news2-sao2').value);
@@ -5078,6 +5116,14 @@ function calcNEWS2() {
 
 // ============ SHOCK CLASSIFICATION ============
 function calcShock() {
+  if (!validate([
+    {id:'shock-map', label:'Presión arterial media'},
+    {id:'shock-fc', label:'Frecuencia cardíaca'},
+    {id:'shock-cvp', label:'Presión venosa central'},
+    {id:'shock-diuresis', label:'Diuresis'},
+    {id:'shock-lactato', label:'Lactato'},
+    {id:'shock-context', label:'Contexto clínico'}
+  ])) return;
   const map = parseFloat(document.getElementById('shock-map').value);
   const fc = parseFloat(document.getElementById('shock-fc').value);
   const cvp = parseFloat(document.getElementById('shock-cvp').value);
@@ -5087,8 +5133,8 @@ function calcShock() {
   const context = document.getElementById('shock-context').value;
 
   if (isNaN(map) || isNaN(fc) || isNaN(cvp) || isNaN(diuresis) || isNaN(lactato) || context === '') {
+    showToast('Completa los parámetros de shock para obtener recomendaciones.');
     document.getElementById('shock-result').style.display = 'none';
-    document.getElementById('shock-management').textContent = 'Completa los parámetros para ver recomendaciones';
     return;
   }
 
@@ -5224,19 +5270,19 @@ const drugDatabase = {
   'vancomycin': {
     name: 'Vancomicina',
     dosing: {
-      'normal': 'Loading: 15?20 mg/kg IV | Maintenance: 15?20 mg/kg Q8?12H | Target trough: 15?20 mcg/mL',
-      'mild': 'GFR 60?89: Sin ajuste requerido | Trough: 15?20 mcg/mL',
-      'moderate': 'GFR 30?59: Q12?24H | Trough: 10?15 mcg/mL',
-      'severe': 'GFR <30: Q24?48H | Trough: 10?15 mcg/mL | Requiere TDM',
-      'dialysis': 'En CRRT: Loading 15?20 mg/kg, luego redosificar Q24H | Requiere monitorización'
+      'normal': 'Loading: 15-20 mg/kg IV | Maintenance: 15-20 mg/kg Q8-12H | Target trough: 15-20 mcg/mL',
+      'mild': 'GFR 60-89: Sin ajuste requerido | Trough: 15-20 mcg/mL',
+      'moderate': 'GFR 30-59: Q12-24H | Trough: 10-15 mcg/mL',
+      'severe': 'GFR <30: Q24-48H | Trough: 10-15 mcg/mL | Requiere TDM',
+      'dialysis': 'En CRRT: Loading 15-20 mg/kg, luego redosificar Q24H | Requiere monitorización'
     }
   },
   'piptaz': {
     name: 'Piperacilina/Tazobactam',
     dosing: {
       'normal': '4.5 g IV Q6H (3.375 g si <60 kg)',
-      'mild': 'GFR 60?89: Sin ajuste',
-      'moderate': 'GFR 20?59: 2.25 g Q6H o 3.375 g Q8H',
+      'mild': 'GFR 60-89: Sin ajuste',
+      'moderate': 'GFR 20-59: 2.25 g Q6H o 3.375 g Q8H',
       'severe': 'GFR <20: 2.25 g Q8H | En CRRT: Dosis normal',
       'dialysis': 'En CRRT: Dosis normal o Q8H según clearance'
     }
@@ -5244,9 +5290,9 @@ const drugDatabase = {
   'ceftriaxone': {
     name: 'Ceftriaxona',
     dosing: {
-      'normal': '1?2 g IV Q12H',
+      'normal': '1-2 g IV Q12H',
       'mild': 'GFR ≥30: Sin ajuste',
-      'moderate': 'GFR 30?59: Sin ajuste (acumula lentamente)',
+      'moderate': 'GFR 30-59: Sin ajuste (acumula lentamente)',
       'severe': 'GFR <30: Considerar dosis más espaciadas o agente alternativo',
       'dialysis': 'En CRRT: Sin ajuste'
     }
@@ -5255,38 +5301,38 @@ const drugDatabase = {
     name: 'Meropenem',
     dosing: {
       'normal': '1 g IV Q8H',
-      'mild': 'GFR 50?89: Sin ajuste',
-      'moderate': 'GFR 25?49: 500 mg Q8H o 1 g Q12H',
+      'mild': 'GFR 50-89: Sin ajuste',
+      'moderate': 'GFR 25-49: 500 mg Q8H o 1 g Q12H',
       'severe': 'GFR <25: 500 mg Q12H',
-      'dialysis': 'En CRRT: 500 mg Q8?12H'
+      'dialysis': 'En CRRT: 500 mg Q8-12H'
     }
   },
   'gentamicin': {
     name: 'Gentamicina (Aminoglucósido)',
     dosing: {
-      'normal': 'Dosing extendido (moderno): 5?7 mg/kg Q24H | OJO: evitar Q8H',
-      'mild': 'GFR ≥60: 5?7 mg/kg Q24H',
-      'moderate': 'GFR 30?59: 5?7 mg/kg Q24?36H | Monitorizar niveles',
-      'severe': 'GFR <30: Contraído o dosis muy espaciadas (Q48?72H) | Requiere TDM|En CRRT: 4?5 mg/kg Q24H + dosing post-sesión',
+      'normal': 'Dosing extendido (moderno): 5-7 mg/kg Q24H | OJO: evitar Q8H',
+      'mild': 'GFR ≥60: 5-7 mg/kg Q24H',
+      'moderate': 'GFR 30-59: 5-7 mg/kg Q24-36H | Monitorizar niveles',
+      'severe': 'GFR <30: Contraído o dosis muy espaciadas (Q48-72H) | Requiere TDM|En CRRT: 4-5 mg/kg Q24H + dosing post-sesión',
       'dialysis': 'CRRT: Considerar alternativa o TDM'
     }
   },
   'acyclovir': {
     name: 'Aciclovir',
     dosing: {
-      'normal': '10?15 mg/kg IV Q8H',
+      'normal': '10-15 mg/kg IV Q8H',
       'mild': 'GFR >50: Sin ajuste',
-      'moderate': 'GFR 25?50: 10?15 mg/kg Q12H',
-      'severe': 'GFR <25: 10?15 mg/kg Q24H | Requiere monitorización (nefrotoxicidad)',
+      'moderate': 'GFR 25-50: 10-15 mg/kg Q12H',
+      'severe': 'GFR <25: 10-15 mg/kg Q24H | Requiere monitorización (nefrotoxicidad)',
       'dialysis': 'Post-CRRT: Redosificar si clearance alto'
     }
   },
   'fluconazole': {
     name: 'Fluconazol',
     dosing: {
-      'normal': '400?800 mg día 1, luego 200?400 mg/día',
+      'normal': '400-800 mg día 1, luego 200-400 mg/día',
       'mild': 'GFR >50: Sin ajuste',
-      'moderate': 'GFR 10?50: 50% dosis normal',
+      'moderate': 'GFR 10-50: 50% dosis normal',
       'severe': 'GFR <10: Considerar dosis en días alternos',
       'dialysis': 'En CRRT: Dosis normal, poco clearance renal'
     }
@@ -5295,8 +5341,8 @@ const drugDatabase = {
     name: 'Metformina',
     dosing: {
       'normal': 'Mantener si GFR ≥45',
-      'mild': 'GFR 45?59: Usar con cuidado, monitorizar',
-      'moderate': 'GFR 30?44: CONTRAINDICATION en la mayoría de guías',
+      'mild': 'GFR 45-59: Usar con cuidado, monitorizar',
+      'moderate': 'GFR 30-44: CONTRAINDICATION en la mayoría de guías',
       'severe': 'GFR <30: CONTRAINDICATION ABSOLUTA (riesgo acidosis láctica)',
       'dialysis': 'CONTRAINDICADO'
     }
@@ -5306,7 +5352,7 @@ const drugDatabase = {
     dosing: {
       'normal': 'ENOXAPARINA 40 mg SC Q24H o 30 mg Q12H',
       'mild': 'GFR >30: Sin ajuste',
-      'moderate': 'GFR 30?59: Enoxaparina 30 mg Q24H (no Q12H)',
+      'moderate': 'GFR 30-59: Enoxaparina 30 mg Q24H (no Q12H)',
       'severe': 'GFR <30: Enoxaparina 30 mg Q24H O UFH IV (monitorizar aPTT)',
       'dialysis': 'CRRT: Heparina UFH IV (mejor control, clearance renal mínimo)'
     }
@@ -5315,8 +5361,8 @@ const drugDatabase = {
     name: 'Inhibidores ACE (ej. Enalapril)',
     dosing: {
       'normal': 'Dosis estándar según indicación',
-      'mild': 'GFR 60?89: Reduce dosis 25?50%',
-      'moderate': 'GFR 30?59: Reduce dosis 50%, monitorizar K y Cr',
+      'mild': 'GFR 60-89: Reduce dosis 25-50%',
+      'moderate': 'GFR 30-59: Reduce dosis 50%, monitorizar K y Cr',
       'severe': 'GFR <30: Riesgo hiperpotasemia | Considera agente alternativo',
       'dialysis': 'Usar con cautela, potencial hiperpotasemia'
     }
@@ -5326,7 +5372,7 @@ const drugDatabase = {
     dosing: {
       'normal': 'Dosis estándar, corta duración',
       'mild': 'GFR <60: EVITAR en lo posible (nefrotoxicidad)',
-      'moderate': 'GFR 30?59: CONTRAINDICATION — riesgo insuficiencia renal aguda',
+      'moderate': 'GFR 30-59: CONTRAINDICATION — riesgo insuficiencia renal aguda',
       'severe': 'GFR <30: CONTRAINDICATION ABSOLUTA',
       'dialysis': 'CONTRAINDICADO'
     }
@@ -5411,6 +5457,17 @@ function showDrugDosing() {
 
 // ============ HEMODYNAMIC CALCULATIONS ============
 function calcHemodynamics() {
+  if (!validate([
+    {id:'hemo-co', label:'Gasto cardíaco'},
+    {id:'hemo-map', label:'Presión arterial media'},
+    {id:'hemo-cvp', label:'Presión venosa central'},
+    {id:'hemo-hb', label:'Hemoglobina'},
+    {id:'hemo-sao2', label:'SaO2'},
+    {id:'hemo-pao2', label:'PaO2'},
+    {id:'hemo-height', label:'Altura'},
+    {id:'hemo-weight', label:'Peso'},
+    {id:'hemo-svo2', label:'SvO2'}
+  ])) return;
   const co = parseFloat(document.getElementById('hemo-co').value);
   const map = parseFloat(document.getElementById('hemo-map').value);
   const cvp = parseFloat(document.getElementById('hemo-cvp').value);
@@ -5423,7 +5480,7 @@ function calcHemodynamics() {
 
   if (isNaN(co) || isNaN(map) || isNaN(cvp) || isNaN(hb) || isNaN(sao2) || isNaN(pao2) || isNaN(height) || isNaN(weight) || isNaN(svo2)) {
     document.getElementById('hemo-result').style.display = 'none';
-    document.getElementById('hemo-interpretation').textContent = 'Ingresa todos los parámetros para interpretar';
+    showToast('Ingresa todos los parámetros hemodinámicos requeridos.');
     return;
   }
 
@@ -5522,57 +5579,57 @@ function showAntibioticDosing() {
   const drugDatabase = {
     vancomycin: {
       name: 'Vancomicina',
-      normal: 'Loading: 15?20 mg/kg IV | Maintenance: 15?20 mg/kg Q8?12H | Target trough: 15?20 mcg/mL',
-      moderate: 'Loading: 15?20 mg/kg IV | Maintenance: 7.5?15 mg/kg Q12?24H | Target trough: 10?15 mcg/mL',
-      severe: 'Loading: 15?20 mg/kg IV | Maintenance: 250?1000 mg Q24?48H | Target trough: 10?15 mcg/mL',
-      esrd: 'Loading: 15?20 mg/kg IV | Maintenance: 250?500 mg Q24?48H | Requiere TDM',
+      normal: 'Loading: 15-20 mg/kg IV | Maintenance: 15-20 mg/kg Q8-12H | Target trough: 15-20 mcg/mL',
+      moderate: 'Loading: 15-20 mg/kg IV | Maintenance: 7.5-15 mg/kg Q12-24H | Target trough: 10-15 mcg/mL',
+      severe: 'Loading: 15-20 mg/kg IV | Maintenance: 250-1000 mg Q24-48H | Target trough: 10-15 mcg/mL',
+      esrd: 'Loading: 15-20 mg/kg IV | Maintenance: 250-500 mg Q24-48H | Requiere TDM',
       rrt: {
-        crrt: 'CRRT: 15?20 mg/kg loading, luego 5?10 mg/kg Q12H based on levels',
-        ihd: 'IHD: 15?20 mg/kg loading, post-HD dosing Q24?48H based on TDM'
+        crrt: 'CRRT: 15-20 mg/kg loading, luego 5-10 mg/kg Q12H based on levels',
+        ihd: 'IHD: 15-20 mg/kg loading, post-HD dosing Q24-48H based on TDM'
       }
     },
     piptaz: {
       name: 'Piperacilina/Tazobactam',
-      normal: 'Loading: 4.5 g IV Q6?8H | Max 18 g/día',
-      moderate: 'GFR 30?59: 4.5 g Q6?8H (sin cambio significativo)',
-      severe: 'GFR <30: 4.5 g Q8?12H o 2.25 g Q6H',
-      esrd: 'GFR <15: 2.25 g Q6?8H | Consider dialysis clearance',
+      normal: 'Loading: 4.5 g IV Q6-8H | Max 18 g/día',
+      moderate: 'GFR 30-59: 4.5 g Q6-8H (sin cambio significativo)',
+      severe: 'GFR <30: 4.5 g Q8-12H o 2.25 g Q6H',
+      esrd: 'GFR <15: 2.25 g Q6-8H | Consider dialysis clearance',
       rrt: {
-        crrt: 'CRRT: 4.5 g Q6?8H (normal dosing, buena clearance)',
-        ihd: 'IHD: 2.25 g post-diálisis, luego Q8?12H'
+        crrt: 'CRRT: 4.5 g Q6-8H (normal dosing, buena clearance)',
+        ihd: 'IHD: 2.25 g post-diálisis, luego Q8-12H'
       }
     },
     ceftriaxone: {
       name: 'Ceftriaxona',
-      normal: 'Loading: 1?2 g Q12H | Max 4 g/día',
-      moderate: '1?2 g Q12H (sin ajuste requerido)',
+      normal: 'Loading: 1-2 g Q12H | Max 4 g/día',
+      moderate: '1-2 g Q12H (sin ajuste requerido)',
       severe: '1 g Q12H | Considerar concentraciones',
-      esrd: '500 mg?1 g Q12H | Monitorización de niveles',
+      esrd: '500 mg-1 g Q12H | Monitorización de niveles',
       rrt: {
-        crrt: 'CRRT: 1?2 g Q12H (normal dosing)',
-        ihd: 'IHD: 1?2 g post-diálisis'
+        crrt: 'CRRT: 1-2 g Q12H (normal dosing)',
+        ihd: 'IHD: 1-2 g post-diálisis'
       }
     },
     cefepime: {
       name: 'Cefepima',
-      normal: '1?2 g IV Q8?12H | Max 6 g/día',
-      moderate: 'GFR 30?59: 1 g Q12H | GFR <30: 1 g Q24H',
-      severe: '500 mg?1 g Q24H | Considerar TDM',
-      esrd: '500 mg Q24?48H | Requiere monitorización',
+      normal: '1-2 g IV Q8-12H | Max 6 g/día',
+      moderate: 'GFR 30-59: 1 g Q12H | GFR <30: 1 g Q24H',
+      severe: '500 mg-1 g Q24H | Considerar TDM',
+      esrd: '500 mg Q24-48H | Requiere monitorización',
       rrt: {
-        crrt: 'CRRT: 1?2 g Q12H (buena clearance)',
+        crrt: 'CRRT: 1-2 g Q12H (buena clearance)',
         ihd: 'IHD: 1 g Q24H post-HD'
       }
     },
     meropenem: {
       name: 'Meropenem',
-      normal: '500 mg?1 g IV Q8H | Max 4 g/día',
-      moderate: 'GFR 26?50: 500 mg?1 g Q8?12H | GFR 10?25: 500 mg?1 g Q12?24H',
-      severe: '250?500 mg Q12?24H',
-      esrd: '250?500 mg Q24H | Considerar TDM',
+      normal: '500 mg-1 g IV Q8H | Max 4 g/día',
+      moderate: 'GFR 26-50: 500 mg-1 g Q8-12H | GFR 10-25: 500 mg-1 g Q12-24H',
+      severe: '250-500 mg Q12-24H',
+      esrd: '250-500 mg Q24H | Considerar TDM',
       rrt: {
         crrt: 'CRRT: 1 g Q8H (good clearance)',
-        ihd: 'IHD: 500 mg post-HD, then Q12?24H'
+        ihd: 'IHD: 500 mg post-HD, then Q12-24H'
       }
     },
     ertapenem: {
@@ -5580,7 +5637,7 @@ function showAntibioticDosing() {
       normal: '1 g IV daily (Q24H)',
       moderate: '1 g Q24H (sin ajuste requerido)',
       severe: 'GFR <30: 500 mg Q24H',
-      esrd: '500 mg Q24?48H',
+      esrd: '500 mg Q24-48H',
       rrt: {
         crrt: 'CRRT: 1 g Q24H',
         ihd: 'IHD: 500 mg Q24H post-HD'
@@ -5588,20 +5645,20 @@ function showAntibioticDosing() {
     },
     gentamicin: {
       name: 'Gentamicina',
-      normal: '5?7 mg/kg Q24H (extended interval dosing preferred) | Monitor levels',
-      moderate: 'GFR 40?59: 5?7 mg/kg Q24?36H | GFR 20?39: 5?7 mg/kg Q36?48H',
-      severe: '5?7 mg/kg Q48?72H | Requiere TDM obligatorio',
-      esrd: '5?7 mg/kg post-diálisis (Q48?72H minimum) | TDM imprescindible',
+      normal: '5-7 mg/kg Q24H (extended interval dosing preferred) | Monitor levels',
+      moderate: 'GFR 40-59: 5-7 mg/kg Q24-36H | GFR 20-39: 5-7 mg/kg Q36-48H',
+      severe: '5-7 mg/kg Q48-72H | Requiere TDM obligatorio',
+      esrd: '5-7 mg/kg post-diálisis (Q48-72H minimum) | TDM imprescindible',
       rrt: {
-        crrt: 'CRRT: 5?7 mg/kg Q24?36H based on levels',
-        ihd: 'IHD: 5?7 mg/kg post-HD Q48H minimum, TDM mandatory'
+        crrt: 'CRRT: 5-7 mg/kg Q24-36H based on levels',
+        ihd: 'IHD: 5-7 mg/kg post-HD Q48H minimum, TDM mandatory'
       }
     },
     levofloxacin: {
       name: 'Levofloxacina',
-      normal: '500 mg?750 mg daily (Q24H)',
+      normal: '500 mg-750 mg daily (Q24H)',
       moderate: 'GFR ≥30: Dosis normal (Q24H)',
-      severe: 'GFR <30: 250?500 mg Q24?48H',
+      severe: 'GFR <30: 250-500 mg Q24-48H',
       esrd: '250 mg Q48H',
       rrt: {
         crrt: 'CRRT: 500 mg Q24H',
@@ -5610,9 +5667,9 @@ function showAntibioticDosing() {
     },
     ciprofloxacin: {
       name: 'Ciprofloxacina',
-      normal: '400 mg IV Q8?12H | Oral: 500?750 mg Q12H',
-      moderate: 'GFR ≥30: Normal dosing (Q8?12H)',
-      severe: 'GFR <30: 400 mg Q12?24H (IV)',
+      normal: '400 mg IV Q8-12H | Oral: 500-750 mg Q12H',
+      moderate: 'GFR ≥30: Normal dosing (Q8-12H)',
+      severe: 'GFR <30: 400 mg Q12-24H (IV)',
       esrd: '400 mg Q24H o menos',
       rrt: {
         crrt: 'CRRT: 400 mg Q12H',
@@ -5621,23 +5678,23 @@ function showAntibioticDosing() {
     },
     acyclovir: {
       name: 'Aciclovir',
-      normal: '5?10 mg/kg IV Q8H | Ajustar por renales',
-      moderate: 'GFR 25?50: 5?10 mg/kg Q12H | GFR 10?25: 5?10 mg/kg Q24H',
-      severe: 'GFR <10: 2.5?5 mg/kg Q24H',
-      esrd: '2.5 mg/kg post-diálisis Q24?48H | Considerar CRRT clearance',
+      normal: '5-10 mg/kg IV Q8H | Ajustar por renales',
+      moderate: 'GFR 25-50: 5-10 mg/kg Q12H | GFR 10-25: 5-10 mg/kg Q24H',
+      severe: 'GFR <10: 2.5-5 mg/kg Q24H',
+      esrd: '2.5 mg/kg post-diálisis Q24-48H | Considerar CRRT clearance',
       rrt: {
-        crrt: 'CRRT: 5?10 mg/kg Q8?12H (buena clearance)',
-        ihd: 'IHD: 5?10 mg/kg post-HD'
+        crrt: 'CRRT: 5-10 mg/kg Q8-12H (buena clearance)',
+        ihd: 'IHD: 5-10 mg/kg post-HD'
       }
     },
     fluconazole: {
       name: 'Fluconazol',
-      normal: '400?800 mg loading, 200?400 mg daily',
-      moderate: 'GFR 21?50: 50% dose reduction (100?200 mg daily)',
-      severe: 'GFR <20: 50% dose reduction (100?200 mg daily)',
+      normal: '400-800 mg loading, 200-400 mg daily',
+      moderate: 'GFR 21-50: 50% dose reduction (100-200 mg daily)',
+      severe: 'GFR <20: 50% dose reduction (100-200 mg daily)',
       esrd: '100 mg post-diálisis or 50 mg daily without dialysis',
       rrt: {
-        crrt: 'CRRT: 200?400 mg daily (buena clearance)',
+        crrt: 'CRRT: 200-400 mg daily (buena clearance)',
         ihd: 'IHD: 200 mg post-HD, then usual dosing'
       }
     },
@@ -5687,7 +5744,7 @@ function showAntibioticDosing() {
   if (liver !== 'normal') {
     dosing += '<br><b>⚠️ Ajuste por función hepática:</b><br>';
     if (drug === 'fluconazole' || drug === 'linezolid') {
-      dosing += '• Reducción de 25?50% si hepatopatía moderada?grave';
+      dosing += '• Reducción de 25-50% si hepatopatía moderada-grave';
     } else if (drug === 'vancomycin' || drug === 'gentamicin') {
       dosing += '• Mínimo ajuste hepático (principalmente renales)';
     } else {
@@ -5720,37 +5777,37 @@ function calcSedation() {
   const sedationProtocols = {
     propofol: {
       name: 'Propofol (Diprivan)',
-      loading: `Loading: 0.5?1 mg/kg IV lentamente (máx. 40 mg en 10 seg) = ${(0.5 * weight).toFixed(0)}?${weight} mg`,
-      maintenance: `Infusión inicial: 5?15 mcg/kg/min = ${(5 * weight * 60 / 1000).toFixed(1)}?${(15 * weight * 60 / 1000).toFixed(1)} mL/hr (si 10 mg/mL)`,
-      titration: 'Titrar por 0.5?1 mg/kg Q5min hasta RASS objetivo',
+      loading: `Loading: 0.5-1 mg/kg IV lentamente (máx. 40 mg en 10 seg) = ${(0.5 * weight).toFixed(0)}-${weight} mg`,
+      maintenance: `Infusión inicial: 5-15 mcg/kg/min = ${(5 * weight * 60 / 1000).toFixed(1)}-${(15 * weight * 60 / 1000).toFixed(1)} mL/hr (si 10 mg/mL)`,
+      titration: 'Titrar por 0.5-1 mg/kg Q5min hasta RASS objetivo',
       notes: '⚠️ Riesgo de hipotensión (reduce precarga) · Hiperlipidemia si >7 días · No usar >4 mg/kg/hr en SDRA'
     },
     dexmed: {
       name: 'Dexmedetomidina (Precedex)',
       loading: 'Loading: 1 mcg/kg IV en 10 min lentamente (opcional si ya sedado)',
-      maintenance: `Infusión: 0.2?0.7 mcg/kg/hr = ${(0.2 * weight).toFixed(1)}?${(0.7 * weight).toFixed(1)} mcg/hr`,
-      titration: 'Titrar por 0.1 mcg/kg/hr cada 5?10 min hasta RASS objetivo',
+      maintenance: `Infusión: 0.2-0.7 mcg/kg/hr = ${(0.2 * weight).toFixed(1)}-${(0.7 * weight).toFixed(1)} mcg/hr`,
+      titration: 'Titrar por 0.1 mcg/kg/hr cada 5-10 min hasta RASS objetivo',
       notes: '✓ Mejor hemodinámia que propofol · No depresión respiratoria · Riesgo de bradicardia (monitorizar FC)'
     },
     fentanyl: {
       name: 'Fentanilo (Sublimaze)',
-      loading: `Loading: 1?2 mcg/kg IV = ${(1 * weight).toFixed(0)}?${(2 * weight).toFixed(0)} mcg (máx. 50 mcg)`,
-      maintenance: `Infusión: 0.5?1.5 mcg/kg/hr = ${(0.5 * weight).toFixed(1)}?${(1.5 * weight).toFixed(1)} mcg/hr`,
-      titration: 'Titrar por 0.25?0.5 mcg/kg/hr cada 5?10 min',
+      loading: `Loading: 1-2 mcg/kg IV = ${(1 * weight).toFixed(0)}-${(2 * weight).toFixed(0)} mcg (máx. 50 mcg)`,
+      maintenance: `Infusión: 0.5-1.5 mcg/kg/hr = ${(0.5 * weight).toFixed(1)}-${(1.5 * weight).toFixed(1)} mcg/hr`,
+      titration: 'Titrar por 0.25-0.5 mcg/kg/hr cada 5-10 min',
       notes: '⚠️ NO USAR MONOTERAPIA en sedación (riesgo de movimiento, no amnesia) · Usar con propofol o dexmedetomidina'
     },
     'propofol-fent': {
       name: 'Propofol + Fentanilo (Combinación)',
-      loading: `Propofol: 0.5?1 mg/kg = ${(0.5 * weight).toFixed(0)}?${weight} mg IV lentamente\nFentanilo: 1 mcg/kg = ${(1 * weight).toFixed(0)} mcg IV`,
-      maintenance: `Propofol: 5?10 mcg/kg/min = ${(5 * weight * 60 / 1000).toFixed(1)}?${(10 * weight * 60 / 1000).toFixed(1)} mL/hr (10 mg/mL)\nFentanilo: 0.5?1 mcg/kg/hr = ${(0.5 * weight).toFixed(1)}?${weight} mcg/hr`,
-      titration: 'Titrar ambos sinérgicamente: Reducir propofol 2?5 mcg/kg/min, aumentar fentanilo 0.5 mcg/kg/hr alternadamente',
+      loading: `Propofol: 0.5-1 mg/kg = ${(0.5 * weight).toFixed(0)}-${weight} mg IV lentamente\nFentanilo: 1 mcg/kg = ${(1 * weight).toFixed(0)} mcg IV`,
+      maintenance: `Propofol: 5-10 mcg/kg/min = ${(5 * weight * 60 / 1000).toFixed(1)}-${(10 * weight * 60 / 1000).toFixed(1)} mL/hr (10 mg/mL)\nFentanilo: 0.5-1 mcg/kg/hr = ${(0.5 * weight).toFixed(1)}-${weight} mcg/hr`,
+      titration: 'Titrar ambos sinérgicamente: Reducir propofol 2-5 mcg/kg/min, aumentar fentanilo 0.5 mcg/kg/hr alternadamente',
       notes: '✓ Excelente combinación: reduce dosis de cada uno, sinergismo sedativo-analgésico · Monitorizar hipotensión'
     },
     'dexmed-fent': {
       name: 'Dexmedetomidina + Fentanilo (Combinación)',
       loading: 'Dexmedetomidina: 1 mcg/kg en 10 min (opcional)\nFentanilo: 1 mcg/kg = '+`${(1 * weight).toFixed(0)}`+' mcg IV',
-      maintenance: `Dexmedetomidina: 0.2?0.5 mcg/kg/hr = ${(0.2 * weight).toFixed(1)}?${(0.5 * weight).toFixed(1)} mcg/hr\nFentanilo: 0.5?1 mcg/kg/hr = ${(0.5 * weight).toFixed(1)}?${weight} mcg/hr`,
-      titration: 'Titrar: Aumentar dexmedetomidina 0.1?0.2 mcg/kg/hr, fentanilo 0.25?0.5 mcg/kg/hr cada 5?10 min',
+      maintenance: `Dexmedetomidina: 0.2-0.5 mcg/kg/hr = ${(0.2 * weight).toFixed(1)}-${(0.5 * weight).toFixed(1)} mcg/hr\nFentanilo: 0.5-1 mcg/kg/hr = ${(0.5 * weight).toFixed(1)}-${weight} mcg/hr`,
+      titration: 'Titrar: Aumentar dexmedetomidina 0.1-0.2 mcg/kg/hr, fentanilo 0.25-0.5 mcg/kg/hr cada 5-10 min',
       notes: '✓ Mejor hemodinámia que propofol+fentanilo · Excelente para TBI (neuroprotección) · Bradicardia menos frecuente que monoterapia'
     }
   };
@@ -5785,8 +5842,8 @@ function calcSedation() {
 
   if (paralysis === 'yes') {
     result += '<br><br><b>⚠️ Bloqueo neuromuscular solicitado:</b><br>';
-    result += '• Rocuronio: 0.6 mg/kg IV carga, luego 0.1?0.2 mg/kg cada 30?60 min (train-of-four monitorización)<br>';
-    result += '• Vecuronio: 0.08?0.1 mg/kg carga, luego 0.02?0.03 mg/kg cada 1?2 hr<br>';
+    result += '• Rocuronio: 0.6 mg/kg IV carga, luego 0.1-0.2 mg/kg cada 30-60 min (train-of-four monitorización)<br>';
+    result += '• Vecuronio: 0.08-0.1 mg/kg carga, luego 0.02-0.03 mg/kg cada 1-2 hr<br>';
     result += '• NOTA: Requiere sedación profunda (RASS -2 a -3) + analgesia adecuada (fentanilo)';
   }
 
@@ -5817,11 +5874,11 @@ function calcTransfusion() {
   let hb_goal = '';
   if (scenario === 'elective') {
     if (hb < 7) hb_goal = '🔴 Transfundir: Hb <7 (electivo)';
-    else if (hb < 8) hb_goal = '🟡 Considerar: Hb 7?8 (comorbilidad cardíaca)';
+    else if (hb < 8) hb_goal = '🟡 Considerar: Hb 7-8 (comorbilidad cardíaca)';
     else hb_goal = '🟢 Sin transfusión: Hb ≥8';
   } else if (scenario === 'bleeding' || scenario === 'uncontrolled') {
     if (hb < 10) hb_goal = '🔴 Transfundir: Hb <10 (sangrado activo)';
-    else if (hb < 11) hb_goal = '🟡 Considerar: Hb 10?11 (según pérdida)';
+    else if (hb < 11) hb_goal = '🟡 Considerar: Hb 10-11 (según pérdida)';
     else hb_goal = '🟢 Sin transfusión urgente: Hb ≥11';
   } else if (scenario === 'dic') {
     hb_goal = '🔴 TRANSFUNDIR si Hb <10 (DIC con coagulopatía)';
@@ -5848,7 +5905,7 @@ function calcTransfusion() {
     const ffpMaxMl = Math.round(weight * 15);
     const ffpUnitsMin = Math.max(1, Math.round(ffpMinMl / 250));
     const ffpUnitsMax = Math.max(ffpUnitsMin, Math.round(ffpMaxMl / 250));
-    result += `   Dosis: 10?15 mL/kg (~${ffpMinMl}-${ffpMaxMl} mL, aprox ${ffpUnitsMin}-${ffpUnitsMax} U)<br>`;
+    result += `   Dosis: 10-15 mL/kg (~${ffpMinMl}-${ffpMaxMl} mL, aprox ${ffpUnitsMin}-${ffpUnitsMax} U)<br>`;
   } else if (inr > 1.8 && scenario === 'dic') {
     ffpInd = true;
     result += `🔴 TRANSFUNDIR: INR ${inr} en contexto DIC<br>`;
@@ -5856,7 +5913,7 @@ function calcTransfusion() {
     const ffpMaxMl = Math.round(weight * 15);
     const ffpUnitsMin = Math.max(1, Math.round(ffpMinMl / 250));
     const ffpUnitsMax = Math.max(ffpUnitsMin, Math.round(ffpMaxMl / 250));
-    result += `   Dosis: 10?15 mL/kg (~${ffpMinMl}-${ffpMaxMl} mL, aprox ${ffpUnitsMin}-${ffpUnitsMax} U)<br>`;
+    result += `   Dosis: 10-15 mL/kg (~${ffpMinMl}-${ffpMaxMl} mL, aprox ${ffpUnitsMin}-${ffpUnitsMax} U)<br>`;
   } else if (inr > 2.0) {
     result += `🟡 CONSIDERAR: INR ${inr} (sin sangrado) - monitorizar<br>`;
   } else {
@@ -5928,7 +5985,7 @@ function calcTransfusion() {
   if (scenario === 'dic') {
     result += '<br><br><b>🔴 MANEJO DIC:</b><br>';
     result += '1. <b>Causa subyacente:</b> Sepsis, trauma, malignidad, embolia de líquido amniótico<br>';
-    result += '2. <b>Monitorización:</b> PT/INR, APTT, plaquetas, fibrinógeno, D-dímero cada 4?6 hr<br>';
+    result += '2. <b>Monitorización:</b> PT/INR, APTT, plaquetas, fibrinógeno, D-dímero cada 4-6 hr<br>';
     result += '3. <b>Transfusión componentes:</b> Meta INR <1.5, plaquetas >30, fibrinógeno >100<br>';
     result += '4. <b>Terapia anticoagulante:</b> CONSIDERAR heparina si: trombosis > hemorragia OR shock refractario<br>';
     result += '5. <b>TXA:</b> Considerar si hemorragia masiva (1 g bolus + 1 g infusión en 8 hr)';
@@ -5938,7 +5995,7 @@ function calcTransfusion() {
   if (aptt > 50) {
     result += '<br><br><b>⚠️ aPTT elevado (>50 seg):</b><br>';
     result += '• Sospechar: Heparina excesiva, factor deficiencia, DIC, antibióticos<br>';
-    result += '• Corrección: FFP 10?15 mL/kg si aPTT >70 + sangrado';
+    result += '• Corrección: FFP 10-15 mL/kg si aPTT >70 + sangrado';
   }
 
   document.getElementById('tf-result-text').innerHTML = result;
@@ -6022,7 +6079,7 @@ function calcVT() {
   const pp = sex==='M' ? 50+0.91*(tall-152.4) : 45.5+0.91*(tall-152.4);
   document.getElementById('vt-pp').textContent = pp.toFixed(1)+' kg';
   document.getElementById('vt-calc').textContent = Math.round(pp*dose)+' mL';
-  document.getElementById('vt-range').textContent = Math.round(pp*6)+' ? '+Math.round(pp*8)+' mL';
+  document.getElementById('vt-range').textContent = Math.round(pp*6)+' - '+Math.round(pp*8)+' mL';
   document.getElementById('vt-result').style.display='grid';
 }
 
@@ -6041,29 +6098,56 @@ function updateVentParamsPIC() {
 function fillVentParamsVT() {
   const pic = updateVentParamsPIC();
   if (pic === null) {
-    alert('Capture talla y sexo para calcular PIC.');
+    showToast('Talla inválida: ingrese talla >100 cm y sexo para calcular PIC.');
     return;
   }
   document.getElementById('vp-vt').value = Math.round(pic * 6);
+}
+function normalizeVentParamsFiO2(rawVal) {
+  if (isNaN(rawVal)) return null;
+  const fio2Pct = rawVal <= 1 ? rawVal * 100 : rawVal;
+  if (fio2Pct < 21 || fio2Pct > 100) return null;
+  return fio2Pct;
 }
 function calcVentParams() {
   if (!validate([
     {id:'vp-talla', label:'Talla'},
     {id:'vp-fio2', label:'FiO2'},
     {id:'vp-peep', label:'PEEP'},
-    {id:'vp-fr', label:'Frecuencia respiratoria'},
-    {id:'vp-vt', label:'Volumen tidal'}
+    {id:'vp-fr', label:'Frecuencia respiratoria'}
   ])) return;
   const pic = updateVentParamsPIC();
-  const vt = parseFloat(document.getElementById('vp-vt').value);
+  if (pic === null) {
+    showToast('No se pudo calcular PIC: verifique talla (>100 cm) y sexo.');
+    return;
+  }
+  const vtInput = document.getElementById('vp-vt');
+  if (vtInput.value.trim() === '') vtInput.value = Math.round(pic * 6);
+  const vt = parseFloat(vtInput.value);
   const fr = parseFloat(document.getElementById('vp-fr').value);
   const pplat = parseFloat(document.getElementById('vp-pplat').value);
-  const fio2 = parseFloat(document.getElementById('vp-fio2').value);
+  const fio2Raw = parseFloat(document.getElementById('vp-fio2').value);
+  const fio2Pct = normalizeVentParamsFiO2(fio2Raw);
   const peep = parseFloat(document.getElementById('vp-peep').value);
 
-  if (pic === null || isNaN(vt) || isNaN(fr) || isNaN(fio2) || isNaN(peep)) return;
-  if (fio2 < 21 || fio2 > 100 || peep < 3 || peep > 20 || fr < 10 || fr > 35) {
-    showToast('Verifique rangos: FiO2 21-100, PEEP 3-20, FR 10-35.');
+  if (isNaN(vt) || vt <= 0) {
+    showToast('Volumen tidal faltante o inválido. Ingrese VT o use 6 mL/kg.');
+    return;
+  }
+  if (isNaN(fr)) {
+    showToast('Frecuencia respiratoria inválida. Capture FR entre 10 y 35 rpm.');
+    return;
+  }
+  if (isNaN(peep)) {
+    showToast('PEEP inválida. Capture PEEP entre 3 y 20 cmH₂O.');
+    return;
+  }
+  if (fio2Pct === null) {
+    showToast('FiO2 fuera de rango. Use 0.21-1.00 (decimal) o 21-100 (%).');
+    return;
+  }
+  if (peep < 3 || peep > 20 || fr < 10 || fr > 35) {
+    showToast('Verifique rangos: PEEP 3-20 y FR 10-35.');
     return;
   }
   const vtKg = vt / pic;
@@ -6098,8 +6182,8 @@ function calcPAFI() {
   document.getElementById('pafi-val').textContent=Math.round(pf);
   let interp, cls;
   if (pf>300){ interp='Normal'; cls='badge-green'; }
-  else if (pf>200){ interp='SDRA Leve (200?300)'; cls='badge-yellow'; }
-  else if (pf>100){ interp='SDRA Moderado (100?200)'; cls='badge-orange'; }
+  else if (pf>200){ interp='SDRA Leve (200-300)'; cls='badge-yellow'; }
+  else if (pf>100){ interp='SDRA Moderado (100-200)'; cls='badge-orange'; }
   else { interp='SDRA Grave (<100)'; cls='badge-red'; }
   document.getElementById('pafi-interp').textContent=interp;
   setBadge('pafi-badge', cls, interp);
@@ -6382,48 +6466,89 @@ function calcO2Transport() {
   const fio2 = parseFloat(document.getElementById('ot-fio2').value);
   const paco2 = parseFloat(document.getElementById('ot-paco2').value);
 
-  if ([hb,sao2,svo2,pao2,pvo2,gc,fc,pam,pvc,papm,poap,sc,pad,fio2,paco2].some(v => isNaN(v) || v === 0)) return;
-
-  const cco2 = (hb * 1.34) + (0.0031 * pao2);
-  const cao2 = (hb * 1.34 * (sao2/100)) + (0.0031 * pao2);
-  const cvo2 = (hb * 1.34 * (svo2/100)) + (0.0031 * pvo2);
+  const cco2 = (hb * 1.34) + (0.0031 * (pao2 || 0));
+  const cao2 = (hb * 1.34 * (sao2/100)) + (0.0031 * (pao2 || 0));
+  const cvo2 = (hb * 1.34 * (svo2/100)) + (0.0031 * (pvo2 || 0));
   const davo2 = cao2 - cvo2;
-  const qsqt = ((cco2 - cao2) / (cco2 - cvo2)) * 100;
   const do2 = gc * 10 * cao2;
   const vo2 = gc * 10 * davo2;
   const ieo2 = ((cao2 - cvo2) / cao2) * 100;
-  const vs = (gc / fc) * 1000;
-  const vsi = vs / sc;
-  const ic = gc / sc;
-  const rvs = ((pam - pvc) * 80) / gc;
-  const rvsi = rvs * sc;
-  const rvp = ((papm - poap) * 80) / gc;
-  const rvpi = rvp * sc;
-  const tlvi = vs * (pam - poap) * 0.0136;
-  const tlvd = vs * (papm - pad) * 0.0136;
-  const pio2 = (587 - 47) * fio2;
-  const pao2alv = pio2 - (paco2 / 0.8);
-  const aa = pao2alv - pao2;
 
-  const badgeRange = (id, v, min, max) => setBadge(id, (v>=min && v<=max) ? 'badge-green' : (v<min ? 'badge-yellow' : 'badge-orange'), (v>=min && v<=max) ? 'Normal' : (v<min ? 'Bajo' : 'Alto'));
-  badgeRange('ot-cao2-b', cao2, 17, 20);
-  badgeRange('ot-cvo2-b', cvo2, 12, 15);
-  badgeRange('ot-davo2-b', davo2, 4, 6);
-  setBadge('ot-qsqt-b', qsqt < 15 ? 'badge-green' : 'badge-red', qsqt < 15 ? 'Normal' : 'Elevado');
-  badgeRange('ot-do2-b', do2, 950, 1150);
-  badgeRange('ot-vo2-b', vo2 / sc, 200, 250);
-  badgeRange('ot-ieo2-b', ieo2, 20, 30);
-  badgeRange('ot-ic-b', ic, 2.5, 4.0);
-  setBadge('ot-aa-b', (aa>=10 && aa<=20) ? 'badge-green' : 'badge-yellow', (aa>=10 && aa<=20) ? 'Normal' : 'Alterado');
+  const put = (id, v, unit='') => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = isNaN(v) ? '—' : v.toFixed(2) + (unit ? ' ' + unit : '');
+  };
+  const setBadgeOpt = (id, v, min, max) => {
+    if (isNaN(v)) return;
+    setBadge(id, (v>=min && v<=max) ? 'badge-green' : (v<min ? 'badge-yellow' : 'badge-orange'),
+      (v>=min && v<=max) ? 'Normal' : (v<min ? 'Bajo' : 'Alto'));
+  };
 
-  const put = (id, v, unit='') => document.getElementById(id).textContent = v.toFixed(2) + (unit ? ' ' + unit : '');
-  put('ot-cco2', cco2, 'mL/dL'); put('ot-cao2', cao2, 'mL/dL'); put('ot-cvo2', cvo2, 'mL/dL');
-  put('ot-davo2', davo2, 'mL/dL'); put('ot-qsqt', qsqt, '%'); put('ot-do2', do2, 'mL/min');
-  put('ot-vo2', vo2/sc, 'mL/min/m²'); put('ot-ieo2', ieo2, '%'); put('ot-vs', vs, 'mL/lat');
-  put('ot-vsi', vsi, 'mL/m²/lat'); put('ot-ic', ic, 'L/min/m²'); put('ot-rvs', rvs, 'dyn·s/cm⁵');
-  put('ot-rvsi', rvsi, 'dyn·s/cm⁵/m²'); put('ot-rvp', rvp, 'dyn·s/cm⁵'); put('ot-rvpi', rvpi, 'dyn·s/cm⁵/m²');
-  put('ot-tlvi', tlvi, 'g·m/lat'); put('ot-tlvd', tlvd, 'g·m/lat'); put('ot-pio2', pio2, 'mmHg');
-  put('ot-pao2alv', pao2alv, 'mmHg'); put('ot-aa', aa, 'mmHg');
+  put('ot-cco2', cco2, 'mL/dL');
+  put('ot-cao2', cao2, 'mL/dL'); setBadgeOpt('ot-cao2-b', cao2, 17, 20);
+  put('ot-cvo2', cvo2, 'mL/dL'); setBadgeOpt('ot-cvo2-b', cvo2, 12, 15);
+  put('ot-davo2', davo2, 'mL/dL'); setBadgeOpt('ot-davo2-b', davo2, 4, 6);
+  put('ot-do2', do2, 'mL/min'); setBadgeOpt('ot-do2-b', do2, 950, 1150);
+  put('ot-vo2', !isNaN(sc) && sc > 0 ? vo2/sc : vo2, 'mL/min');
+  setBadgeOpt('ot-vo2-b', !isNaN(sc) && sc > 0 ? vo2/sc : NaN, 200, 250);
+  put('ot-ieo2', ieo2, '%'); setBadgeOpt('ot-ieo2-b', ieo2, 20, 30);
+
+  if (!isNaN(pao2) && pao2 > 0) {
+    const qsqt = ((cco2 - cao2) / (cco2 - cvo2)) * 100;
+    put('ot-qsqt', qsqt, '%');
+    setBadge('ot-qsqt-b', qsqt < 15 ? 'badge-green' : 'badge-red',
+      qsqt < 15 ? 'Normal' : 'Elevado');
+  }
+
+  if (!isNaN(fc) && fc > 0) {
+    const vs = (gc / fc) * 1000;
+    put('ot-vs', vs, 'mL/lat');
+    if (!isNaN(sc) && sc > 0) {
+      put('ot-vsi', vs / sc, 'mL/m²/lat');
+    }
+  }
+
+  if (!isNaN(sc) && sc > 0) {
+    const ic = gc / sc;
+    put('ot-ic', ic, 'L/min/m²'); setBadgeOpt('ot-ic-b', ic, 2.5, 4.0);
+  }
+
+  if (!isNaN(pam) && !isNaN(pvc) && pam > 0) {
+    const rvs = ((pam - pvc) * 80) / gc;
+    put('ot-rvs', rvs, 'dyn·s/cm⁵'); setBadgeOpt('ot-rvs-b', rvs, 1000, 1500);
+    if (!isNaN(sc) && sc > 0) {
+      put('ot-rvsi', rvs * sc, 'dyn·s/cm⁵/m²');
+    }
+    if (!isNaN(fc) && fc > 0 && !isNaN(poap) && poap > 0) {
+      const vs = (gc / fc) * 1000;
+      put('ot-tlvi', vs * (pam - poap) * 0.0136, 'g·m/lat');
+    }
+  }
+
+  if (!isNaN(papm) && !isNaN(poap) && papm > 0) {
+    const rvp = ((papm - poap) * 80) / gc;
+    put('ot-rvp', rvp, 'dyn·s/cm⁵');
+    if (!isNaN(sc) && sc > 0) {
+      put('ot-rvpi', rvp * sc, 'dyn·s/cm⁵/m²');
+    }
+    if (!isNaN(fc) && fc > 0 && !isNaN(pad) && pad > 0) {
+      const vs = (gc / fc) * 1000;
+      put('ot-tlvd', vs * (papm - pad) * 0.0136, 'g·m/lat');
+    }
+  }
+
+  if (!isNaN(fio2) && !isNaN(paco2) && fio2 > 0) {
+    const pio2 = (587 - 47) * fio2;
+    const pao2alv = pio2 - (paco2 / 0.8);
+    put('ot-pio2', pio2, 'mmHg');
+    put('ot-pao2alv', pao2alv, 'mmHg');
+    if (!isNaN(pao2) && pao2 > 0) {
+      const aa = pao2alv - pao2;
+      put('ot-aa', aa, 'mmHg');
+      setBadge('ot-aa-b', (aa>=10 && aa<=20) ? 'badge-green' : 'badge-yellow',
+        (aa>=10 && aa<=20) ? 'Normal' : 'Alterado');
+    }
+  }
 
   document.getElementById('ot-result').style.display = 'grid';
 }
@@ -6980,12 +7105,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ============ VASOPRESOR ============
 const vasoRefs={
-  NE:'Rango: 0.01?3 mcg/kg/min — Inicio habitual: 0.05?0.1 mcg/kg/min',
-  EP:'Rango: 0.01?1 mcg/kg/min — Anafilaxis/sepsis',
-  VP:'Dosis fija: 0.03?0.04 U/min — No ajustar por peso',
-  DA:'1?20 mcg/kg/min — Dopaminergico <5, inotr. 5?10, vasopresor >10',
-  DB:'2.5?20 mcg/kg/min — Inotropico puro',
-  PH:'0.5?6 mcg/kg/min — Vasopresion pura'
+  NE:'Rango: 0.01-3 mcg/kg/min — Inicio habitual: 0.05-0.1 mcg/kg/min',
+  EP:'Rango: 0.01-1 mcg/kg/min — Anafilaxis/sepsis',
+  VP:'Dosis fija: 0.03-0.04 U/min — No ajustar por peso',
+  DA:'1-20 mcg/kg/min — Dopaminergico <5, inotr. 5-10, vasopresor >10',
+  DB:'2.5-20 mcg/kg/min — Inotropico puro',
+  PH:'0.5-6 mcg/kg/min — Vasopresion pura'
 };
 const vasoUnits={NE:'mcg/kg/min',EP:'mcg/kg/min',VP:'U/min',DA:'mcg/kg/min',DB:'mcg/kg/min',PH:'mcg/kg/min'};
 const vasoDoseHints={
@@ -7110,7 +7235,7 @@ function calcSTARLING() {
 // ============ PPC — 3 MÉTODOS ============
 function ppcStatus(ppc, meta) {
   meta = meta || 60;
-  if (ppc >= 60 && ppc <= 70) return ['badge-green',  'En meta (60?70 mmHg)'];
+  if (ppc >= 60 && ppc <= 70) return ['badge-green',  'En meta (60-70 mmHg)'];
   if (ppc > 70)               return ['badge-green',  'Sobre meta (>'+ ppc.toFixed(0) +')'];
   if (ppc >= meta)            return ['badge-yellow',  'En meta mínima'];
   if (ppc >= 50)              return ['badge-yellow', 'Límite inferior (<60)'];
@@ -7169,7 +7294,7 @@ function calcDVNO() {
 
   const b = elCached('dvno-badge');
   if (prom < 5.0)       { b.className='result-badge badge-green';  b.textContent='DVNO normal (<5.0 mm) — PIC probablemente normal'; }
-  else if (prom < 5.8)  { b.className='result-badge badge-yellow'; b.textContent='DVNO límite (5.0?5.8) — vigilar, repetir'; }
+  else if (prom < 5.8)  { b.className='result-badge badge-yellow'; b.textContent='DVNO límite (5.0-5.8) — vigilar, repetir'; }
   else                  { b.className='result-badge badge-red';     b.textContent='DVNO elevado (≥5.8 mm) — HTIC probable'; }
 
   if (!isNaN(pam)) {
@@ -7232,9 +7357,9 @@ function calcDTC() {
   // Interpretación IP
   const ib = elCached('dtc-ip-badge');
   if      (ip < 0.6)  { ib.className='result-badge badge-yellow'; ib.textContent='IP bajo (<0.6) — vasodilatación/hipercapnia'; }
-  else if (ip <= 1.1) { ib.className='result-badge badge-green';  ib.textContent='IP normal (0.6?1.1)'; }
-  else if (ip <= 1.4) { ib.className='result-badge badge-yellow'; ib.textContent='IP elevado (1.1?1.4) — resistencia aumentada'; }
-  else if (ip <= 2.0) { ib.className='result-badge badge-orange'; ib.textContent='IP alto (1.4?2.0) — HTIC probable'; }
+  else if (ip <= 1.1) { ib.className='result-badge badge-green';  ib.textContent='IP normal (0.6-1.1)'; }
+  else if (ip <= 1.4) { ib.className='result-badge badge-yellow'; ib.textContent='IP elevado (1.1-1.4) — resistencia aumentada'; }
+  else if (ip <= 2.0) { ib.className='result-badge badge-orange'; ib.textContent='IP alto (1.4-2.0) — HTIC probable'; }
   else                { ib.className='result-badge badge-red';     ib.textContent='IP >2.0 — flujo diastólico ausente/reverso, HTIC crítica'; }
 
   // Consenso solo con fórmulas validadas (Bellner + CPP approx), excluir IR×PAD
@@ -7288,7 +7413,7 @@ function updatePPCResumen() {
   // Consenso: promedio de PIC disponibles
   const picPromConsenso = metodos.reduce((s,m) => s + m.pic, 0) / metodos.length;
   const [clsC, txtC] = picPromConsenso > 20 ? ['badge-red','HTIC — PIC >20 mmHg'] :
-                       picPromConsenso > 15  ? ['badge-yellow','Límite — PIC 15?20 mmHg'] :
+                       picPromConsenso > 15  ? ['badge-yellow','Límite — PIC 15-20 mmHg'] :
                                                ['badge-green','PIC normal (<15 mmHg)'];
 
   let html = '<div class="multi-result">';
@@ -7317,7 +7442,7 @@ function updatePPCResumen() {
     const pics = metodos.map(m => m.pic);
     const rango = Math.max(...pics) - Math.min(...pics);
     const concord = rango <= 5 ? '✓ Concordancia buena (Δ ≤5 mmHg)' :
-                    rango <= 10 ? '⚠️ Concordancia moderada (Δ 5?10 mmHg) — interpretar con cautela' :
+                    rango <= 10 ? '⚠️ Concordancia moderada (Δ 5-10 mmHg) — interpretar con cautela' :
                                   '⚠️ Discordancia entre métodos (Δ >10 mmHg) — priorizar método invasivo si disponible';
     html += `<div class="info" style="margin-top:8px;"><b>Concordancia:</b> ${concord}</div>`;
   }
@@ -7342,6 +7467,12 @@ function resetPPCAll() {
 function calcKDIGO() {
   if (!validate([{id:'kd-base',label:'Cr basal'},{id:'kd-curr',label:'Cr actual'}])) return;
   const base=parseFloat(elCached('kd-base').value);
+  if (isNaN(base) || base <= 0) {
+    const baseEl = elCached('kd-base');
+    baseEl.classList.add('val-error');
+    showToast('⚠️ Cr basal debe ser > 0');
+    return;
+  }
   const curr=parseFloat(elCached('kd-curr').value);
   const uri=parseFloat(elCached('kd-uri').value);
   const hrs=parseFloat(elCached('kd-hrs').value);
@@ -7398,7 +7529,7 @@ function calcCA() {
   const alb=parseFloat(document.getElementById('ca-alb').value);
   const corr=ca+0.8*(4-alb);
   document.getElementById('ca-corr').textContent=corr.toFixed(2)+' mg/dL';
-  document.getElementById('ca-interp').textContent=corr<8.5?'Hipocalcemia (<8.5 mg/dL)':corr<=10.2?'Normal (8.5?10.2 mg/dL)':'Hipercalcemia (>10.2 mg/dL)';
+  document.getElementById('ca-interp').textContent=corr<8.5?'Hipocalcemia (<8.5 mg/dL)':corr<=10.2?'Normal (8.5-10.2 mg/dL)':'Hipercalcemia (>10.2 mg/dL)';
   document.getElementById('ca-result').style.display='grid';
 }
 
@@ -7456,7 +7587,7 @@ function calcCURB() {
   let interp;
   if (total<=1){ b.className='result-badge badge-green'; b.textContent='Bajo riesgo'; interp='Mortalidad ~1.5% — considerar ambulatorio'; }
   else if (total===2){ b.className='result-badge badge-yellow'; b.textContent='Moderado'; interp='Mortalidad ~9.2% — hospitalizacion'; }
-  else { b.className='result-badge badge-red'; b.textContent='Alto riesgo'; interp='Mortalidad ~22?57% — considerar UCI'; }
+  else { b.className='result-badge badge-red'; b.textContent='Alto riesgo'; interp='Mortalidad ~22-57% — considerar UCI'; }
   document.getElementById('curb-interp').textContent=interp;
   document.getElementById('curb-result').style.display='flex';
 }
@@ -7474,7 +7605,7 @@ function calcROCKALL() {
   const b=document.getElementById('rock-badge');
   let interp;
   if (total<=2){ b.className='result-badge badge-green'; b.textContent='Bajo riesgo'; interp='Mortalidad <5% — alta precoz posible'; }
-  else if (total<=4){ b.className='result-badge badge-yellow'; b.textContent='Intermedio'; interp='Mortalidad ~10?20% — hospitalizacion'; }
+  else if (total<=4){ b.className='result-badge badge-yellow'; b.textContent='Intermedio'; interp='Mortalidad ~10-20% — hospitalizacion'; }
   else { b.className='result-badge badge-red'; b.textContent='Alto riesgo'; interp='Mortalidad >40% — UCI, endoscopia urgente'; }
   document.getElementById('rock-interp').textContent=interp;
   document.getElementById('rockall-result').style.display='flex';
@@ -7681,27 +7812,46 @@ function updateExportPanel() {
   document.getElementById('exp-timestamp').textContent = 'Generado: ' + ts;
   document.getElementById('ph-fecha').textContent = ts;
   document.getElementById('ph-turno').textContent = '';
+  const clearBadge = (id) => {
+    const b = document.getElementById(id);
+    if (b) { b.className = 'score-card-badge result-badge'; b.textContent = ''; }
+  };
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+  const hasRenderableValue = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return false;
+    const v = (el.textContent || '').trim();
+    return v !== '' && v !== '—';
+  };
 
   // SOFA
   const sofaEl = document.getElementById('sofa-total');
   const sofaBEl = document.getElementById('sofa-badge');
-  if (sofaEl) { document.getElementById('ex-sofa').textContent = sofaEl.textContent + ' pts'; copyBadge(sofaBEl, 'ex-sofa-b'); }
+  if (sofaEl && hasRenderableValue('sofa-total')) { document.getElementById('ex-sofa').textContent = sofaEl.textContent + ' pts'; copyBadge(sofaBEl, 'ex-sofa-b'); }
+  else { setVal('ex-sofa', '—'); clearBadge('ex-sofa-b'); }
 
   // APACHE
   const apR = document.getElementById('apache-result');
   if (apR && apR.style.display!=='none') { document.getElementById('ex-apache').textContent = document.getElementById('apache-total').textContent+' pts'; copyBadge(document.getElementById('apache-badge'),'ex-apache-b'); }
+  else { setVal('ex-apache', '—'); clearBadge('ex-apache-b'); }
 
   // SAPS
   const sapsR = document.getElementById('saps-result');
   if (sapsR && sapsR.style.display!=='none') { document.getElementById('ex-saps').textContent = document.getElementById('saps-total').textContent+' pts'; copyBadge(document.getElementById('saps-badge'),'ex-saps-b'); }
+  else { setVal('ex-saps', '—'); clearBadge('ex-saps-b'); }
 
   // NUTRIC
   const nutR = document.getElementById('nutric-result');
   if (nutR && nutR.style.display!=='none') { document.getElementById('ex-nutric').textContent = document.getElementById('nutric-total').textContent+' pts'; copyBadge(document.getElementById('nutric-badge'),'ex-nutric-b'); }
+  else { setVal('ex-nutric', '—'); clearBadge('ex-nutric-b'); }
 
   // PAFI
   const pafiR = document.getElementById('pafi-result');
   if (pafiR && pafiR.style.display!=='none') { document.getElementById('ex-pafi').textContent = document.getElementById('pafi-val').textContent; copyBadge(document.getElementById('pafi-badge'),'ex-pafi-b'); }
+  else { setVal('ex-pafi', '—'); clearBadge('ex-pafi-b'); }
 
   // Driving pressure y poder mecánico (panel unificado vent-mec / monitor)
   const vmWrap = document.getElementById('vm-result-wrap');
@@ -7722,33 +7872,40 @@ function updateExportPanel() {
   // VT
   const vtR = document.getElementById('vt-result');
   if (vtR && vtR.style.display!=='none') { document.getElementById('ex-vt').textContent = document.getElementById('vt-calc').textContent; }
+  else { setVal('ex-vt', '—'); }
 
   // Balance
   document.getElementById('ex-bal').textContent = document.getElementById('bal-par').textContent;
 
   // PPC
   const ppcR = document.getElementById('ppc-result');
-  if (ppcR && ppcR.style.display!=='none') { document.getElementById('ex-ppc').textContent = document.getElementById('ppc-val').textContent; copyBadge(document.getElementById('ppc-badge'),'ex-ppc-b'); }
+  if (ppcR && ppcR.style.display!=='none' && hasRenderableValue('ppc-val')) { document.getElementById('ex-ppc').textContent = document.getElementById('ppc-val').textContent; copyBadge(document.getElementById('ppc-badge'),'ex-ppc-b'); }
+  else { setVal('ex-ppc', '—'); clearBadge('ex-ppc-b'); }
 
   // VPP
   const stR = document.getElementById('starling-result');
-  if (stR && stR.style.display!=='none') { document.getElementById('ex-vpp').textContent = document.getElementById('st-vpp').textContent; }
+  if (stR && stR.style.display!=='none' && hasRenderableValue('st-vpp')) { document.getElementById('ex-vpp').textContent = document.getElementById('st-vpp').textContent; }
+  else { setVal('ex-vpp', '—'); }
 
   // Vasopresor rate
   const vR = document.getElementById('vaso-result');
-  if (vR && vR.style.display!=='none') { document.getElementById('ex-vaso').textContent = document.getElementById('vas-rate').textContent+' mL/hr'; }
+  if (vR && vR.style.display!=='none' && hasRenderableValue('vas-rate')) { document.getElementById('ex-vaso').textContent = document.getElementById('vas-rate').textContent+' mL/hr'; }
+  else { setVal('ex-vaso', '—'); }
 
   // KDIGO
   const kdR = document.getElementById('kdigo-result');
-  if (kdR && kdR.style.display!=='none') { copyBadge(document.getElementById('kd-final'),'ex-kdigo-b'); document.getElementById('ex-kdigo').textContent = document.getElementById('kd-final').textContent; }
+  if (kdR && kdR.style.display!=='none' && hasRenderableValue('kd-final')) { copyBadge(document.getElementById('kd-final'),'ex-kdigo-b'); document.getElementById('ex-kdigo').textContent = document.getElementById('kd-final').textContent; }
+  else { setVal('ex-kdigo', '—'); clearBadge('ex-kdigo-b'); }
 
   // Osmolaridad
   const osR = document.getElementById('osmo-result');
-  if (osR && osR.style.display!=='none') { document.getElementById('ex-osmo').textContent = document.getElementById('os-calc').textContent; }
+  if (osR && osR.style.display!=='none' && hasRenderableValue('os-calc')) { document.getElementById('ex-osmo').textContent = document.getElementById('os-calc').textContent; }
+  else { setVal('ex-osmo', '—'); }
 
   // Ca corregido
   const caR = document.getElementById('ca-result');
-  if (caR && caR.style.display!=='none') { document.getElementById('ex-ca').textContent = document.getElementById('ca-corr').textContent; }
+  if (caR && caR.style.display!=='none' && hasRenderableValue('ca-corr')) { document.getElementById('ex-ca').textContent = document.getElementById('ca-corr').textContent; }
+  else { setVal('ex-ca', '—'); }
 
   // Indice urinario
   document.getElementById('ex-iuk').textContent = document.getElementById('bal-iuk').textContent;
@@ -7756,22 +7913,27 @@ function updateExportPanel() {
   // Harris-Benedict
   const hbR = document.getElementById('harris-result');
   if (hbR && hbR.style.display!=='none') { document.getElementById('ex-harris').textContent = document.getElementById('hb-get').textContent; }
+  else { setVal('ex-harris', '—'); }
 
   // CAM-ICU
   const camR = document.getElementById('cam-result');
-  if (camR && camR.style.display!=='none') { document.getElementById('ex-cam').textContent = document.getElementById('cam-val').textContent; copyBadge(document.getElementById('cam-badge'),'ex-cam-b'); }
+  if (camR && camR.style.display!=='none' && hasRenderableValue('cam-val')) { document.getElementById('ex-cam').textContent = document.getElementById('cam-val').textContent; copyBadge(document.getElementById('cam-badge'),'ex-cam-b'); }
+  else { setVal('ex-cam', '—'); clearBadge('ex-cam-b'); }
 
   // PADUA
   const padR = document.getElementById('padua-result');
-  if (padR && padR.style.display!=='none') { document.getElementById('ex-padua').textContent = document.getElementById('padua-total').textContent+' pts'; copyBadge(document.getElementById('padua-badge'),'ex-padua-b'); }
+  if (padR && padR.style.display!=='none' && hasRenderableValue('padua-total')) { document.getElementById('ex-padua').textContent = document.getElementById('padua-total').textContent+' pts'; copyBadge(document.getElementById('padua-badge'),'ex-padua-b'); }
+  else { setVal('ex-padua', '—'); clearBadge('ex-padua-b'); }
 
   // CURB
   const curbR = document.getElementById('curb-result');
-  if (curbR && curbR.style.display!=='none') { document.getElementById('ex-curb').textContent = document.getElementById('curb-total').textContent+' pts'; copyBadge(document.getElementById('curb-badge'),'ex-curb-b'); }
+  if (curbR && curbR.style.display!=='none' && hasRenderableValue('curb-total')) { document.getElementById('ex-curb').textContent = document.getElementById('curb-total').textContent+' pts'; copyBadge(document.getElementById('curb-badge'),'ex-curb-b'); }
+  else { setVal('ex-curb', '—'); clearBadge('ex-curb-b'); }
 
   // Rockall
   const rockR = document.getElementById('rockall-result');
-  if (rockR && rockR.style.display!=='none') { document.getElementById('ex-rockall').textContent = document.getElementById('rock-total').textContent+' pts'; copyBadge(document.getElementById('rock-badge'),'ex-rockall-b'); }
+  if (rockR && rockR.style.display!=='none' && hasRenderableValue('rock-total')) { document.getElementById('ex-rockall').textContent = document.getElementById('rock-total').textContent+' pts'; copyBadge(document.getElementById('rock-badge'),'ex-rockall-b'); }
+  else { setVal('ex-rockall', '—'); clearBadge('ex-rockall-b'); }
 }
 
 function copyBadge(src, destId) {
@@ -7804,6 +7966,8 @@ function printViaBlob() {
   updateExportPanel();
   const nombre  = document.getElementById('pat-nombre').value || 'Paciente';
   const cama    = document.getElementById('pat-cama').value || '—';
+  const nssEl   = document.getElementById('pat-nss');
+  const nss     = nssEl ? (nssEl.value || '').trim() : '';
   const dx      = document.getElementById('pat-dx').value || '—';
   const medico  = document.getElementById('pat-medico').value || '—';
   const now     = new Date();
@@ -7846,7 +8010,7 @@ function printViaBlob() {
 <div class="pat-grid">
   <div class="pat-field"><label>Paciente</label><b>${nombre}</b></div>
   <div class="pat-field"><label>Cama</label><b>${cama}</b></div>
-  <div class="pat-field"><label>NSS / Expediente</label><b>${document.getElementById('pat-nss').value||'—'}</b></div>
+  <div class="pat-field"><label>NSS / Expediente</label><b>${nss || '—'}</b></div>
   <div class="pat-field"><label>Médico</label><b>${medico}</b></div>
 </div>
 <div class="pat-field" style="margin-bottom:12px;"><label>Diagnóstico</label><b>${dx}</b></div>
@@ -7884,7 +8048,7 @@ function collectScores() {
       {name:'PPC', val:()=>{ const r=document.getElementById('ppc-result'); return r&&r.style.display!=='none'?document.getElementById('ppc-val').textContent:'—';}, badge:()=>document.getElementById('ppc-badge')},
       {name:'VPP', val:()=>{ const r=document.getElementById('starling-result'); return r&&r.style.display!=='none'?document.getElementById('st-vpp').textContent:'—';}, badge:()=>null},
     ]},
-    {title:'Renal / Electrolitos', items:[
+    {title:'Renal · Electrolitos · TSR', items:[
       {name:'KDIGO', val:()=>{ const r=document.getElementById('kdigo-result'); return r&&r.style.display!=='none'?document.getElementById('kd-final').textContent:'—';}, badge:()=>document.getElementById('kd-final')},
       {name:'Osmolaridad', val:()=>{ const r=document.getElementById('osmo-result'); return r&&r.style.display!=='none'?document.getElementById('os-calc').textContent:'—';}, badge:()=>null},
       {name:'Ca corregido', val:()=>{ const r=document.getElementById('ca-result'); return r&&r.style.display!=='none'?document.getElementById('ca-corr').textContent:'—';}, badge:()=>null},
@@ -7956,8 +8120,8 @@ function calcKIRBY() {
   document.getElementById('kb-sf').textContent = sf.toFixed(0);
   let sfInterp;
   if      (sf > 315)  { sfInterp='Normal (>315)'; }
-  else if (sf > 235)  { sfInterp='SDRA leve (235?315)'; }
-  else if (sf > 150)  { sfInterp='SDRA moderado (150?235)'; }
+  else if (sf > 235)  { sfInterp='SDRA leve (235-315)'; }
+  else if (sf > 150)  { sfInterp='SDRA moderado (150-235)'; }
   else                { sfInterp='SDRA grave (<150)'; }
   document.getElementById('kb-sf-interp').textContent = sfInterp;
 
@@ -7981,54 +8145,50 @@ function calcKIRBY() {
 }
 
 // ============ ELECTROLITOS ============
-// ── Requisitos por electrolito ───────────────────────────────────────────────
-const elecReqs = {
-  k:  { needs: ['el-k','el-peso'], labels: ['K sérico','Peso'], miss: 'miss-k', missL: 'miss-k-list', reqK: 'req-k',   result: 'el-k-result'  },
-  mg: { needs: ['el-mg'],          labels: ['Mg sérico'],        miss: 'miss-mg',missL: 'miss-mg-list',reqK: 'req-mg',  result: 'el-mg-result' },
-  p:  { needs: ['el-p','el-peso'], labels: ['P sérico','Peso'],  miss: 'miss-p', missL: 'miss-p-list', reqK: 'req-p',   result: 'el-p-result'  },
-  ca: { needs: ['el-ca'],          labels: ['Ca sérico'],         miss: 'miss-ca',missL: 'miss-ca-list',reqK: 'req-ca',  result: 'el-ca-result' },
-};
-
 function updateElecReqs() {
-  Object.entries(elecReqs).forEach(([key, cfg]) => {
-    const missing = cfg.needs.filter(id => {
-      const v = document.getElementById(id)?.value.trim();
-      return !v || isNaN(parseFloat(v));
-    });
-    const missBox  = document.getElementById(cfg.miss);
-    const missList = document.getElementById(cfg.missL);
-    const reqTag   = document.getElementById(cfg.reqK);
-    const inp      = document.getElementById(cfg.needs[0]);
-
-    if (missing.length > 0) {
-      // Show warning
-      const missingLabels = missing.map(id => {
-        const idx = cfg.needs.indexOf(id);
-        return '<b>' + cfg.labels[idx] + '</b>';
-      });
-      if (missBox)  { missBox.style.display = 'flex'; }
-      if (missList) { missList.innerHTML = missingLabels.join(' y '); }
-      if (reqTag)   { reqTag.style.display = 'inline'; }
-      if (inp)      { inp.classList.add('input-missing'); inp.classList.remove('input-ok'); }
-    } else {
-      if (missBox)  { missBox.style.display = 'none'; }
-      if (reqTag)   { reqTag.style.display = 'none'; }
-      if (inp)      { inp.classList.remove('input-missing'); inp.classList.add('input-ok'); }
-    }
-  });
-
-  // Peso warning (affects K and P)
-  const peso = document.getElementById('el-peso')?.value.trim();
-  const pesoBad = !peso || isNaN(parseFloat(peso));
-  const reqPeso = document.getElementById('req-el-peso');
-  if (reqPeso) reqPeso.style.display = pesoBad ? 'inline' : 'none';
-  document.getElementById('el-peso')?.classList.toggle('input-missing', pesoBad);
-  document.getElementById('el-peso')?.classList.toggle('input-ok', !pesoBad);
+  // No-op: in this calculator, validation feedback is shown on submit via validate() + val-error.
 }
 
 function calcELECTRO() {
   // Run live validation first
   updateElecReqs();
+
+  const blocks = {
+    k:  [{ id: 'el-k', label: 'K sérico' }, { id: 'el-peso', label: 'Peso' }],
+    mg: [{ id: 'el-mg', label: 'Mg sérico' }],
+    p:  [{ id: 'el-p', label: 'P sérico' }, { id: 'el-peso', label: 'Peso' }],
+    ca: [{ id: 'el-ca', label: 'Ca sérico' }],
+  };
+  const hasNum = id => {
+    const el = document.getElementById(id);
+    if (!el) return false;
+    const v = el.value.trim();
+    return v !== '' && !isNaN(parseFloat(v));
+  };
+  const uniqById = fields => {
+    const map = new Map();
+    fields.forEach(f => { if (!map.has(f.id)) map.set(f.id, f); });
+    return Array.from(map.values());
+  };
+  const allReqFields = uniqById([...blocks.k, ...blocks.mg, ...blocks.p, ...blocks.ca]);
+  const allEmpty = allReqFields.every(f => !hasNum(f.id));
+  if (allEmpty) {
+    document.querySelectorAll('#calc-electrolitos .multi-result').forEach(el => el.style.display = 'none');
+    elCached('electro-result').style.display = 'none';
+    validate(allReqFields);
+    return;
+  }
+  const valid = { k: false, mg: false, p: false, ca: false };
+  const partialMissing = [];
+  Object.entries(blocks).forEach(([key, reqs]) => {
+    const present = reqs.filter(f => hasNum(f.id)).length;
+    if (present === reqs.length) {
+      valid[key] = true;
+    } else if (present > 0) {
+      reqs.forEach(f => { if (!hasNum(f.id)) partialMissing.push(f); });
+    }
+  });
+  if (partialMissing.length) validate(uniqById(partialMissing));
 
   const peso   = parseFloat(elCached('el-peso').value);
   const tfg    = elCached('el-tfg').value;
@@ -8045,49 +8205,53 @@ function calcELECTRO() {
 
   let anyShown = false;
   elCached('electro-result').style.display = 'block';
+  elCached('el-k-result').style.display = 'none';
+  elCached('el-mg-result').style.display = 'none';
+  elCached('el-p-result').style.display = 'none';
+  elCached('el-ca-result').style.display = 'none';
 
   // ── POTASIO (requiere K + Peso) ───────────────────────────
-  if (!isNaN(k) && !isNaN(peso)) {
+  if (valid.k && !isNaN(k) && !isNaN(peso)) {
     anyShown = true;
     elCached('el-k-result').style.display = 'grid';
     const deficit = (kmeta - k) * 0.4 * peso;
     elCached('el-k-deficit').textContent = deficit > 0 ? deficit.toFixed(0) + ' mEq estimados' : 'Sin déficit';
     let rep = '', vel = '';
     if      (k < 2.5) { rep = '40 mEq KCl IV en 4h, repetir y controlar';  vel = '10 mEq/h periférica máx'; }
-    else if (k < 3.0) { rep = '20?40 mEq KCl IV + 20?40 mEq VO';           vel = '10 mEq/h periférica'; }
-    else if (k < 3.5) { rep = '20?40 mEq KCl VO c/4?6h × 2 dosis';         vel = 'VO preferida'; }
+    else if (k < 3.0) { rep = '20-40 mEq KCl IV + 20-40 mEq VO';           vel = '10 mEq/h periférica'; }
+    else if (k < 3.5) { rep = '20-40 mEq KCl VO c/4-6h × 2 dosis';         vel = 'VO preferida'; }
     else if (k > 5.5) { rep = 'Hipercalemia — evitar aportes, kayexalate/insulina+glucosa'; vel = '—'; }
-    else              { rep = 'En rango normal (3.5?5.0 mEq/L)';             vel = '—'; }
-    if (kvia === 'iv' && rep.includes('VO preferida')) rep = '20?40 mEq KCl IV en 2?4h';
+    else              { rep = 'En rango normal (3.5-5.0 mEq/L)';             vel = '—'; }
+    if (kvia === 'iv' && rep.includes('VO preferida')) rep = '20-40 mEq KCl IV en 2-4h';
     elCached('el-k-rep').textContent    = rep;
     elCached('el-k-vel').textContent    = vel;
     elCached('el-k-renal').textContent  =
       tfg === 'grave'    ? '⚠️ TFG <30: reducir dosis 50%, monitoreo c/2h' :
-      tfg === 'moderada' ? 'TFG 30?59: monitorizar K c/4h' :
+      tfg === 'moderada' ? 'TFG 30-59: monitorizar K c/4h' :
                            'TFG normal — protocolo estándar';
   }
 
   // ── MAGNESIO (solo requiere Mg) ───────────────────────────
-  if (!isNaN(mg)) {
+  if (valid.mg && !isNaN(mg)) {
     anyShown = true;
     elCached('el-mg-result').style.display = 'grid';
     elCached('el-mg-nivel').textContent = mg + ' mg/dL (' + (mg * 0.411).toFixed(2) + ' mmol/L)';
     let rep = '', iv = '';
     if (mg < 1.0 || mgSint === 'si') {
-      rep = '2?4 g MgSO₄ IV en 10?30 min (urgencia)';
-      iv  = '1 g/10 mL sol. 10%, infundir en 10?30 min';
+      rep = '2-4 g MgSO₄ IV en 10-30 min (urgencia)';
+      iv  = '1 g/10 mL sol. 10%, infundir en 10-30 min';
     } else if (mg < 1.7) {
-      rep = '1?2 g MgSO₄ IV en 1h, luego 0.5 g/h × 4h';
+      rep = '1-2 g MgSO₄ IV en 1h, luego 0.5 g/h × 4h';
       iv  = 'Diluir en 100 mL SF, pasar en 1h';
     } else {
-      rep = 'En rango normal (1.7?2.4 mg/dL)'; iv = '—';
+      rep = 'En rango normal (1.7-2.4 mg/dL)'; iv = '—';
     }
     elCached('el-mg-rep').textContent = rep;
     elCached('el-mg-iv').textContent  = iv;
   }
 
   // ── FÓSFORO (requiere P + Peso) ────────────────────────────
-  if (!isNaN(p) && !isNaN(peso)) {
+  if (valid.p && !isNaN(p) && !isNaN(peso)) {
     anyShown = true;
     elCached('el-p-result').style.display = 'grid';
     elCached('el-p-nivel').textContent = p + ' mg/dL (' + (p * 0.323).toFixed(2) + ' mmol/L)';
@@ -8098,11 +8262,11 @@ function calcELECTRO() {
     if (p < 1.0 || sev === 'grave') {
       rep = '0.32 mmol/kg (' + (0.32 * peso).toFixed(0) + ' mmol) IV en 6h — urgencia';
     } else if (p < 2.0 || sev === 'moderada') {
-      rep = '0.16?0.24 mmol/kg (' + (0.16*peso).toFixed(0) + '?' + (0.24*peso).toFixed(0) + ' mmol) IV en 4?6h';
+      rep = '0.16-0.24 mmol/kg (' + (0.16*peso).toFixed(0) + '-' + (0.24*peso).toFixed(0) + ' mmol) IV en 4-6h';
     } else if (p < 2.5) {
-      rep = 'Fosfato sódico VO 250?500 mg c/6h × 24h';
+      rep = 'Fosfato sódico VO 250-500 mg c/6h × 24h';
     } else {
-      rep = 'En rango normal (2.5?4.5 mg/dL)';
+      rep = 'En rango normal (2.5-4.5 mg/dL)';
     }
     elCached('el-p-rep').textContent   = rep;
     elCached('el-p-renal').textContent =
@@ -8112,7 +8276,7 @@ function calcELECTRO() {
   }
 
   // ── CALCIO (solo requiere Ca; Alb opcional con default 4.0) ──
-  if (!isNaN(ca)) {
+  if (valid.ca && !isNaN(ca)) {
     anyShown = true;
     elCached('el-ca-result').style.display = 'grid';
     const caCorr = ca + 0.8 * (4 - alb);
@@ -8122,13 +8286,13 @@ function calcELECTRO() {
       (alb !== 4.0 ? '' : ' — Alb asumida 4.0 g/dL');
     let rep = '', vel = '';
     if      (caCorr < 7.5 || caSint === 'si') {
-      rep = 'Ca gluconato 1?2 g IV STAT'; vel = '1 g en 10 min IV lento, luego 0.5?1 g/h';
+      rep = 'Ca gluconato 1-2 g IV STAT'; vel = '1 g en 10 min IV lento, luego 0.5-1 g/h';
     } else if (caCorr < 8.5) {
-      rep = 'Ca gluconato 1 g IV en 1h × 4?6 dosis, luego VO'; vel = '1 g/h IV o Ca carbonato 1?1.5 g VO c/8h';
+      rep = 'Ca gluconato 1 g IV en 1h × 4-6 dosis, luego VO'; vel = '1 g/h IV o Ca carbonato 1-1.5 g VO c/8h';
     } else if (caCorr > 12) {
-      rep = 'Hipercalcemia grave — SF 200?500 mL/h + furosemida'; vel = 'Evitar Ca adicional';
+      rep = 'Hipercalcemia grave — SF 200-500 mL/h + furosemida'; vel = 'Evitar Ca adicional';
     } else {
-      rep = 'En rango normal (8.5?10.2 mg/dL)'; vel = '—';
+      rep = 'En rango normal (8.5-10.2 mg/dL)'; vel = '—';
     }
     elCached('el-ca-rep').textContent = rep;
     elCached('el-ca-vel').textContent = vel;
@@ -8143,7 +8307,7 @@ function resetElectro() {
   const panel = document.getElementById('calc-electrolitos');
   panel.querySelectorAll('input[type=number]').forEach(el => {
     el.value = '';
-    el.classList.remove('input-missing','input-ok');
+    el.classList.remove('val-error');
   });
   panel.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
   panel.querySelectorAll('.multi-result').forEach(el => el.style.display = 'none');
@@ -8301,6 +8465,10 @@ Nota generada con UCI Tools`;
 
 function generarNotaDiariaSOAP() {
   const d = _notaData();
+  const NO = 'No calculado';
+  const kdigoVal = d.kdigo === 'No evaluado' ? NO : d.kdigo;
+  const camVal = d.cam === 'No evaluado' ? NO : d.cam;
+  const rassVal = d.rass === 'No evaluado' ? NO : d.rass;
   const nota = `NOTA DE EVOLUCIÓN (SOAP) — MEDICINA CRÍTICA
 ${d.fecha} — ${d.hora} hrs
 ${'═'.repeat(55)}
@@ -8323,8 +8491,8 @@ O — OBJETIVO
   Scores:
     SOFA ${d.sofa} | APACHE II ${d.apache} | SAPS II ${d.saps}
     NEWS2 ${d.news2} | NUTRIC ${d.nutric}
-    RASS ${d.rass} | CAM-ICU ${d.cam}
-    KDIGO ${d.kdigo} | PADUA ${d.padua}
+    RASS ${rassVal} | CAM-ICU ${camVal}
+    KDIGO ${kdigoVal} | PADUA ${d.padua}
 
   Ventilatorio: DP ${d.dp} | PM ${d.mp} | PaFi ${d.pafi}
   Nutricional: ${d.harris}
@@ -8332,8 +8500,8 @@ O — OBJETIVO
 A — ANÁLISIS
   Paciente en día ${d.dias} UCI con Dx ${d.dx}.
   SOFA ${d.sofa} — tendencia a evaluar.
-  ${d.kdigo !== 'No evaluado' ? 'Función renal: KDIGO ' + d.kdigo + '.' : ''}
-  ${d.cam !== 'No evaluado' ? 'Neurológico: CAM-ICU ' + d.cam + ', RASS ' + d.rass + '.' : ''}
+  ${kdigoVal !== NO ? 'Función renal: KDIGO ' + kdigoVal + '.' : ''}
+  ${camVal !== NO ? 'Neurológico: CAM-ICU ' + camVal + ', RASS ' + rassVal + '.' : ''}
 
 P — PLAN
 ${d.plan.split('\n').map(l => '  ' + l).join('\n')}
@@ -8701,13 +8869,13 @@ function calcElecUri() {
     const tags = [];
     if (efna !== null) {
       if (efna < 1)   { preR += 3; tags.push({label:'EFNa <1% → Prerrenal', cls:'badge-green'}); }
-      else if (efna < 2){ preR += 1; intR += 1; tags.push({label:'EFNa 1?2% → Indeterminado', cls:'badge-yellow'}); }
+      else if (efna < 2){ preR += 1; intR += 1; tags.push({label:'EFNa 1-2% → Indeterminado', cls:'badge-yellow'}); }
       else             { intR += 3; tags.push({label:'EFNa ≥2% → Intrarenal (NTA)', cls:'badge-red'}); }
     }
     if (!isNaN(nau)) {
       if (nau < 20)   { preR += 2; tags.push({label:'NaU <20 mEq/L → Prerrenal', cls:'badge-green'}); }
       else if (nau > 40){ intR += 2; tags.push({label:'NaU >40 mEq/L → Intrarenal', cls:'badge-red'}); }
-      else             { tags.push({label:'NaU 20?40 → Indeterminado', cls:'badge-yellow'}); }
+      else             { tags.push({label:'NaU 20-40 → Indeterminado', cls:'badge-yellow'}); }
     }
     if (osmRatio !== null) {
       if (osmRatio > 1.5) { preR += 2; tags.push({label:'OsmU/OsmS >1.5 → Prerrenal (riñón concentra)', cls:'badge-green'}); }
@@ -8719,10 +8887,10 @@ function calcElecUri() {
     }
     dx = preR > intR ? 'LRA PRERRENAL (IRA funcional)' : intR > preR ? 'LRA INTRARENAL (NTA probable)' : 'Indeterminado — evaluar contexto clínico';
     interpHTML = buildInterpTable(tags, [
-      ['EFNa','<1% prerrenal','1?2% indeterminado','≥2% NTA'],
-      ['Na urinario','<20 prerrenal','20?40 indeterminado','>40 NTA'],
-      ['OsmU/OsmS','>1.5 prerrenal','1.1?1.5 intermedio','<1.1 isostenuria (NTA)'],
-      ['CrU/CrS','>40 prerrenal','20?40 intermedio','<20 NTA'],
+      ['EFNa','<1% prerrenal','1-2% indeterminado','≥2% NTA'],
+      ['Na urinario','<20 prerrenal','20-40 indeterminado','>40 NTA'],
+      ['OsmU/OsmS','>1.5 prerrenal','1.1-1.5 intermedio','<1.1 isostenuria (NTA)'],
+      ['CrU/CrS','>40 prerrenal','20-40 intermedio','<20 NTA'],
     ]);
 
   } else if (ctx === 'hiponatremia') {
@@ -8899,7 +9067,7 @@ function calcTGasInterp() {
   if      (ph < 7.35) { phLabel = 'Acidemia'; phCls = 'alert'; }
   else if (ph > 7.45) { phLabel = 'Alcalemia'; phCls = 'warn'; }
   else                { phLabel = 'pH Normal'; phCls = 'normal'; }
-  document.getElementById('tgs1').innerHTML = stepBox(1,'pH',ph.toFixed(3),phLabel,'Normal: 7.35?7.45',phCls);
+  document.getElementById('tgs1').innerHTML = stepBox(1,'pH',ph.toFixed(3),phLabel,'Normal: 7.35-7.45',phCls);
 
   // Paso 2: Trastorno primario
   let prim='', primCls='';
@@ -8962,7 +9130,7 @@ function calcTGasInterp() {
                          'AG elevado + Alcalosis metabólica coexistente';
     document.getElementById('tgs5').innerHTML = stepBox(5,'Delta-Delta',
       `Δ/Δ = ${dd.toFixed(2)}`,ddI,
-      'Δ/Δ <1: trastorno mixto · 1?2: puro · >2: alcalosis sobreañadida',
+      'Δ/Δ <1: trastorno mixto · 1-2: puro · >2: alcalosis sobreañadida',
       dd < 1 || dd > 2 ? 'warn' : 'normal');
   } else {
     document.getElementById('tgs5').innerHTML = stepBox(5,'Delta-Delta','No aplica','AG normal — no se calcula delta-delta','','normal');
@@ -8972,7 +9140,7 @@ function calcTGasInterp() {
   if (!isNaN(lac)) {
     let lacDesc, lacCls;
     if (lac < 2)        { lacDesc='Normal (<2 mmol/L)'; lacCls='normal'; }
-    else if (lac < 4)   { lacDesc='Hiperlactatemia leve (2?4) — vigilar perfusión'; lacCls='warn'; }
+    else if (lac < 4)   { lacDesc='Hiperlactatemia leve (2-4) — vigilar perfusión'; lacCls='warn'; }
     else                { lacDesc='HIPERLACTATEMIA GRAVE (>4) — choque / disoxia'; lacCls='alert'; }
     document.getElementById('tgs6').innerHTML = stepBox(6,'Lactato',lac+' mmol/L',lacDesc,'',lacCls);
   } else {
@@ -8982,7 +9150,7 @@ function calcTGasInterp() {
   // Paso 7: PAFI si aplica
   if (!isNaN(pao2)) {
     document.getElementById('tgs7').innerHTML = stepBox(7,'PaO₂',pao2+' mmHg',
-      pao2 >= 80 ? 'Normal (≥80 mmHg)' : pao2 >= 60 ? 'Hipoxemia leve-moderada (60?79)' : 'Hipoxemia grave (<60)',
+      pao2 >= 80 ? 'Normal (≥80 mmHg)' : pao2 >= 60 ? 'Hipoxemia leve-moderada (60-79)' : 'Hipoxemia grave (<60)',
       '','');
   } else {
     document.getElementById('tgs7').innerHTML = '';
@@ -9064,7 +9232,7 @@ const metasData = {
       ['ScvO₂','≥70% (venosa central)'],
       ['Balance hídrico','Negativo o neutro tras resucitación inicial'],
       ['Uresis','≥0.5 mL/kg/h'],
-      ['PaO₂','60?80 mmHg · PAFI ≥150 si en VM'],
+      ['PaO₂','60-80 mmHg · PAFI ≥150 si en VM'],
       ['Vasopresor','NE de primera línea, agregar VP si NE ≥0.25'],
       ['Antibiótico','Inicio ≤1h de diagnóstico de choque'],
     ]
@@ -9073,37 +9241,37 @@ const metasData = {
     title: 'TBI / Hipertensión Endocraneal (BTF 2016)',
     metas: [
       ['PIC','<22 mmHg'],
-      ['PPC','60?70 mmHg'],
+      ['PPC','60-70 mmHg'],
       ['PAM','≥80 mmHg (para mantener PPC)'],
       ['SpO₂','≥95% / PaO₂ >80 mmHg'],
-      ['PaCO₂','35?40 mmHg (evitar hipocapnia sostenida)'],
-      ['Glucosa','140?180 mg/dL'],
+      ['PaCO₂','35-40 mmHg (evitar hipocapnia sostenida)'],
+      ['Glucosa','140-180 mg/dL'],
       ['Temperatura','Normotermia (37°C)'],
-      ['Na','135?145 mEq/L (evitar hiponatremia)'],
+      ['Na','135-145 mEq/L (evitar hiponatremia)'],
     ]
   },
   sdra: {
     title: 'SDRA (ARDSnet / PROSEVA)',
     metas: [
-      ['VT','6 mL/kg PP (rango 4?8)'],
-      ['P meseta','≤28?30 cmH2O'],
+      ['VT','6 mL/kg PP (rango 4-8)'],
+      ['P meseta','≤28-30 cmH2O'],
       ['Driving Pressure','≤15 cmH2O'],
       ['Poder Mecánico','<17 J/min'],
       ['PEEP','Según tabla ARDSnet / PAFI y compliancia'],
-      ['PaO₂','55?80 mmHg / SpO₂ 88?95%'],
+      ['PaO₂','55-80 mmHg / SpO₂ 88-95%'],
       ['FiO₂','Mínima para SpO₂ meta'],
-      ['Prono','>12?16 h/día si PAFI <150 (SDRA grave)'],
+      ['Prono','>12-16 h/día si PAFI <150 (SDRA grave)'],
     ]
   },
   icc: {
     title: 'Insuficiencia Cardiaca Descompensada',
     metas: [
-      ['PAS','90?140 mmHg'],
-      ['FC','60?100 lpm'],
+      ['PAS','90-140 mmHg'],
+      ['FC','60-100 lpm'],
       ['SpO₂','≥94%'],
       ['Uresis','≥1 mL/kg/h durante descongestión'],
-      ['Balance','Negativo 500?1500 mL/día (descongestión)'],
-      ['PVC','8?12 mmHg (guía de precarga)'],
+      ['Balance','Negativo 500-1500 mL/día (descongestión)'],
+      ['PVC','8-12 mmHg (guía de precarga)'],
       ['ScvO₂','>65% (si GC reducido)'],
       ['Lactato','<2 mmol/L'],
     ]
@@ -9126,10 +9294,10 @@ const metasData = {
     metas: [
       ['PAS',  '<185/110 mmHg si candidato a trombolisis'],
       ['PAS post-trombólisis','<180/105 mmHg × 24h'],
-      ['Glucosa','140?180 mg/dL (evitar hipoglucemia)'],
+      ['Glucosa','140-180 mg/dL (evitar hipoglucemia)'],
       ['Temperatura','Normotermia, tratar fiebre'],
       ['SpO₂','≥94%'],
-      ['Na','135?145 mEq/L'],
+      ['Na','135-145 mEq/L'],
       ['Ventana trombolisis','≤4.5 h (rtPA IV)'],
       ['Trombectomía','≤24 h si penumbra viable'],
     ]
@@ -9140,8 +9308,8 @@ const metasData = {
       ['PAS hemorragia','<140 mmHg (si PAS >220, reducción gradual)'],
       ['PPC en TBI asociado','≥60 mmHg'],
       ['PIC','<22 mmHg'],
-      ['Na','135?150 mEq/L (evitar hiponatremia en HSA)'],
-      ['Glucosa','140?180 mg/dL'],
+      ['Na','135-150 mEq/L (evitar hiponatremia en HSA)'],
+      ['Glucosa','140-180 mg/dL'],
       ['Temperatura','Normotermia'],
       ['Nimodipino (HSA)','60 mg c/4h VO × 21 días (vasoespasmo)'],
       ['Coagulación','Revertir anticoagulación urgente'],
@@ -9217,8 +9385,8 @@ const modoVentData = {
     title: 'SDRA / Lesión Pulmonar Aguda',
     metas: [
       ['Modo recomendado','VCV (control volumen) o PCV con límite meseta'],
-      ['VT','6 mL/kg PP (rango 4?8 según compliancia)'],
-      ['FR','14?30 rpm · ajustar para pH 7.30?7.45'],
+      ['VT','6 mL/kg PP (rango 4-8 según compliancia)'],
+      ['FR','14-30 rpm · ajustar para pH 7.30-7.45'],
       ['PEEP','Tabla ARDSnet alta si FiO₂ >0.50'],
       ['P meseta','≤28 cmH2O'],
       ['Driving Pressure','≤15 cmH2O (objetivo principal)'],
@@ -9230,11 +9398,11 @@ const modoVentData = {
     title: 'EPOC Exacerbado',
     metas: [
       ['Modo recomendado','VCV o PRVC · VNI preferida si tolera'],
-      ['VT','5?7 mL/kg PP (cuidar atrapamiento)'],
-      ['FR','12?16 rpm (minimizar hiperinflación)'],
+      ['VT','5-7 mL/kg PP (cuidar atrapamiento)'],
+      ['FR','12-16 rpm (minimizar hiperinflación)'],
       ['I:E ratio','1:3 o 1:4 (espiración prolongada)'],
-      ['PEEP extrínseco','3?5 cmH2O (si PEEPi documentado)'],
-      ['SpO₂ meta','88?92% (evitar hiperoxia)'],
+      ['PEEP extrínseco','3-5 cmH2O (si PEEPi documentado)'],
+      ['SpO₂ meta','88-92% (evitar hiperoxia)'],
       ['Flujo pico','Aumentar para reducir I:E'],
       ['Permissive hypercapnia','pH >7.25 tolerable'],
     ]
@@ -9243,10 +9411,10 @@ const modoVentData = {
     title: 'Crisis Asmática Grave',
     metas: [
       ['Modo recomendado','VCV — flujo constante'],
-      ['VT','5?7 mL/kg PP (muy conservador)'],
-      ['FR','10?14 rpm (prioridad: espiración)'],
+      ['VT','5-7 mL/kg PP (muy conservador)'],
+      ['FR','10-14 rpm (prioridad: espiración)'],
       ['I:E ratio','1:4 o 1:5 mínimo'],
-      ['PEEP extrínseco','0?5 (evitar PEEP adicional)'],
+      ['PEEP extrínseco','0-5 (evitar PEEP adicional)'],
       ['P pico tolerada','<50 cmH2O (resistencia alta)'],
       ['Hipercapnia permisiva','pH >7.20 aceptable'],
       ['Sedoanalgesia','Profunda: ketamina + benzodiacepina'],
@@ -9256,12 +9424,12 @@ const modoVentData = {
     title: 'Neumonía Grave (sin SDRA)',
     metas: [
       ['Modo recomendado','VCV o PCV estándar'],
-      ['VT','6?8 mL/kg PP'],
-      ['FR','14?20 rpm'],
-      ['PEEP','5?8 cmH2O (según tolerancia)'],
-      ['FiO₂','Mínima para SpO₂ 92?96%'],
+      ['VT','6-8 mL/kg PP'],
+      ['FR','14-20 rpm'],
+      ['PEEP','5-8 cmH2O (según tolerancia)'],
+      ['FiO₂','Mínima para SpO₂ 92-96%'],
       ['P meseta','<30 cmH2O'],
-      ['Posición','HOB 30?45°, prono si evoluciona a SDRA'],
+      ['Posición','HOB 30-45°, prono si evoluciona a SDRA'],
       ['Destete','Precoz cuando PAFI >200'],
     ]
   },
@@ -9269,9 +9437,9 @@ const modoVentData = {
     title: 'TBI / Hipertensión Endocraneal',
     metas: [
       ['Modo recomendado','VCV · evitar lucha con ventilador'],
-      ['VT','6?8 mL/kg PP'],
-      ['PaCO₂','35?40 mmHg (normocapnia)'],
-      ['Hiperventilaión temporal','PaCO₂ 30?35 sólo en hernación activa'],
+      ['VT','6-8 mL/kg PP'],
+      ['PaCO₂','35-40 mmHg (normocapnia)'],
+      ['Hiperventilaión temporal','PaCO₂ 30-35 sólo en hernación activa'],
       ['PEEP','≤8 cmH2O (evitar aumento de PIC)'],
       ['FiO₂','Para PaO₂ >80 / SpO₂ ≥95%'],
       ['Posición','HOB 30° en línea media'],
@@ -9282,9 +9450,9 @@ const modoVentData = {
     title: 'Edema Pulmonar / ICC',
     metas: [
       ['Modo recomendado','VNI (CPAP/BiPAP) primera línea'],
-      ['CPAP/PEEP','8?12 cmH2O (reduce postcarga VI)'],
+      ['CPAP/PEEP','8-12 cmH2O (reduce postcarga VI)'],
       ['FiO₂','Para SpO₂ ≥94%'],
-      ['Si intuba: VCV','6?8 mL/kg PP · PEEP 5?8'],
+      ['Si intuba: VCV','6-8 mL/kg PP · PEEP 5-8'],
       ['Ventilación mecánica','Si falla VNI o desaturación'],
       ['Meta PaO₂','≥80 mmHg'],
       ['Descongestión','Furosemida paralela a soporte ventilatorio'],
@@ -9295,12 +9463,12 @@ const modoVentData = {
     title: 'Postoperatorio General',
     metas: [
       ['Modo recomendado','VCV o PCV + PSV para destete temprano'],
-      ['VT','6?8 mL/kg PP (protector siempre)'],
-      ['PEEP','5?8 cmH2O (prevenir atelectasias)'],
-      ['FiO₂','0.40?0.60 inicial, reducir a mínima'],
+      ['VT','6-8 mL/kg PP (protector siempre)'],
+      ['PEEP','5-8 cmH2O (prevenir atelectasias)'],
+      ['FiO₂','0.40-0.60 inicial, reducir a mínima'],
       ['Filtro HME','Sí, siempre'],
-      ['Destete','Inicio en las primeras 2?4h postqx si posible'],
-      ['SBT','PSV 5?8 + PEEP 5 por 30 min'],
+      ['Destete','Inicio en las primeras 2-4h postqx si posible'],
+      ['SBT','PSV 5-8 + PEEP 5 por 30 min'],
       ['Extubación','Si cumple criterios Tobin'],
     ]
   },
@@ -9311,7 +9479,7 @@ const modoVentData = {
       ['Modo inicial','VCV con VT 6 mL/kg PP'],
       ['PEEP','5 cmH2O (pulmones usualmente sanos)'],
       ['FiO₂','Mínima para SpO₂ ≥94%'],
-      ['FR','12?16 rpm'],
+      ['FR','12-16 rpm'],
       ['Sedoanalgesia','Mínima (monitoreo neurológico)'],
       ['Destete','Gradual con PSV · criterio: CV >10 mL/kg'],
       ['Traqueostomía','Considerar si VM >14 días esperada'],
@@ -9352,13 +9520,13 @@ function calcSDRA() {
   let stage, stageCls, recs;
 
   if (pf > 300)      { stage='Sin criterios SDRA'; stageCls='sdra-normal';
-    recs = ['Monitorizar, buscar causa de hipoxemia','PEEP estándar 5?8','FiO₂ mínima para SpO₂ 92?96%'];
-  } else if (pf > 200) { stage='SDRA LEVE (P:F 200?300)'; stageCls='sdra-leve';
-    recs = ['VT 6?8 mL/kg PP','P meseta ≤28 cmH2O','PEEP bajo (tabla ARDSnet)','Posición HOB 30?45°','Evaluar prono si empeora'];
-  } else if (pf > 100) { stage='SDRA MODERADO (P:F 100?200)'; stageCls='sdra-moderado';
-    recs = ['VT 6 mL/kg PP (estricto)','Driving Pressure ≤15 cmH2O','PEEP alto (tabla ARDSnet)','Evaluar prono si PAFI <150','Considerar bloqueo neuromuscular 24?48h','Prone si no responde'];
+    recs = ['Monitorizar, buscar causa de hipoxemia','PEEP estándar 5-8','FiO₂ mínima para SpO₂ 92-96%'];
+  } else if (pf > 200) { stage='SDRA LEVE (P:F 200-300)'; stageCls='sdra-leve';
+    recs = ['VT 6-8 mL/kg PP','P meseta ≤28 cmH2O','PEEP bajo (tabla ARDSnet)','Posición HOB 30-45°','Evaluar prono si empeora'];
+  } else if (pf > 100) { stage='SDRA MODERADO (P:F 100-200)'; stageCls='sdra-moderado';
+    recs = ['VT 6 mL/kg PP (estricto)','Driving Pressure ≤15 cmH2O','PEEP alto (tabla ARDSnet)','Evaluar prono si PAFI <150','Considerar bloqueo neuromuscular 24-48h','Prone si no responde'];
   } else               { stage='SDRA GRAVE (P:F <100)'; stageCls='sdra-grave';
-    recs = ['VT 4?6 mL/kg PP','Prono ≥16 h/día (PROSEVA)','PEEP alto / reclutamiento','Bloqueo neuromuscular','Considerar VNO (óxido nítrico) / Almitrina','ECMO-VV si refractario (pH<7.25, PAFI<80)'];
+    recs = ['VT 4-6 mL/kg PP','Prono ≥16 h/día (PROSEVA)','PEEP alto / reclutamiento','Bloqueo neuromuscular','Considerar VNO (óxido nítrico) / Almitrina','ECMO-VV si refractario (pH<7.25, PAFI<80)'];
   }
 
   let dp = !isNaN(pplat) && !isNaN(peep) ? (pplat-peep).toFixed(1) : null;
@@ -9460,7 +9628,7 @@ function calcExPreS() {
   const pNeuro = neuro === 'no' ? 10 : 0;
 
   if (pRsbi === null || pCdyn === null || pDays === null || pGcs === null || pMrc === null || pHct === null || pCr === null) {
-    alert('Complete todos los campos numéricos con valores válidos (MRC 0?60, días VM ≥1).');
+    alert('Complete todos los campos numéricos con valores válidos (MRC 0-60, días VM ≥1).');
     return;
   }
 
@@ -9482,7 +9650,7 @@ function calcExPreS() {
     interp = 'Probabilidad de éxito de extubación alta (estudio: ~98.7% tasa de éxito en ese estrato).';
     cls = 'badge-green';
   } else if (total >= 45) {
-    interp = 'Probabilidad intermedia (cohorte derivación: ~83.3% éxito en 45?58 pts). Valorar factores de riesgo y plan de VMNI si aplica.';
+    interp = 'Probabilidad intermedia (cohorte derivación: ~83.3% éxito en 45-58 pts). Valorar factores de riesgo y plan de VMNI si aplica.';
     cls = 'badge-yellow';
   } else {
     interp = 'Probabilidad baja (estudio: ~57% éxito si ≤44). Reevaluar causa, fuerza, secreciones y criterios de destete.';
@@ -9515,7 +9683,7 @@ function calcDestete() {
   if (!isNaN(fr) && !isNaN(vt) && vt > 0) {
     tobin = fr / vt;
     tobinCls = tobin <= 80 ? 'badge-green' : tobin <= 105 ? 'badge-yellow' : 'badge-red';
-    tobinDesc = tobin <= 80 ? 'Muy favorable (<80)' : tobin <= 105 ? 'Favorable (80?105)' : 'Desfavorable (>105)';
+    tobinDesc = tobin <= 80 ? 'Muy favorable (<80)' : tobin <= 105 ? 'Favorable (80-105)' : 'Desfavorable (>105)';
   }
 
   let pafi = null;
@@ -9591,7 +9759,7 @@ function calcPEEP() {
   }
   if (!isNaN(pf)) {
     html += `<div class="mr-row"><span class="mr-label">PAFI actual</span><span class="mr-val">${pf.toFixed(0)} mmHg</span></div>`;
-    let peepRec = pf > 200 ? 'PEEP bajo (5?10 cmH2O)' : pf > 100 ? 'PEEP medio-alto (10?14)' : 'PEEP alto (14?20+) + reclutamiento';
+    let peepRec = pf > 200 ? 'PEEP bajo (5-10 cmH2O)' : pf > 100 ? 'PEEP medio-alto (10-14)' : 'PEEP alto (14-20+) + reclutamiento';
     html += `<div class="mr-row"><span class="mr-label">PEEP recomendado según PAFI</span><span class="mr-val green">${peepRec}</span></div>`;
   }
   html += '<div class="divider"></div>';
@@ -9616,23 +9784,58 @@ function updateTSRDosis() {
   const mod = document.getElementById('tsr-mod').value;
   document.getElementById('crrt-inputs').style.display = mod==='crrt' ? 'block' : 'none';
   document.getElementById('ihd-inputs').style.display  = mod!=='crrt' ? 'block' : 'none';
+  // Evita arrastre visual de resultados al cambiar modalidad (CRRT/IHD/SLED)
+  const R = document.getElementById('tsr-dosis-result');
+  document.getElementById('tsr-dose-val').textContent = '—';
+  document.getElementById('tsr-dose-badge').textContent = '—';
+  document.getElementById('tsr-dose-badge').className = 'result-badge';
+  document.getElementById('tsr-ktv').textContent = '—';
+  document.getElementById('tsr-ktv-badge').textContent = '—';
+  document.getElementById('tsr-ktv-badge').className = 'result-badge';
+  document.getElementById('tsr-urr').textContent = '—';
+  document.getElementById('tsr-ff-val').textContent = '—';
+  R.style.display = 'none';
 }
 
 function calcTSRDosis() {
   const mod    = document.getElementById('tsr-mod').value;
   const peso   = parseFloat(document.getElementById('tsr-peso').value);
   const R = document.getElementById('tsr-dosis-result');
-  R.style.display = 'grid';
+  const out = {
+    doseVal: document.getElementById('tsr-dose-val'),
+    doseBadge: document.getElementById('tsr-dose-badge'),
+    ktv: document.getElementById('tsr-ktv'),
+    ktvBadge: document.getElementById('tsr-ktv-badge'),
+    urr: document.getElementById('tsr-urr'),
+    ffVal: document.getElementById('tsr-ff-val'),
+  };
+  out.doseVal.textContent = '—';
+  out.doseBadge.textContent = '—';
+  out.doseBadge.className = 'result-badge';
+  out.ktv.textContent = '—';
+  out.ktvBadge.textContent = '—';
+  out.ktvBadge.className = 'result-badge';
+  out.urr.textContent = '—';
+  out.ffVal.textContent = '—';
+  R.style.display = 'none';
 
   if (mod === 'crrt') {
+    if (!validate([{id:'tsr-peso',label:'Peso actual'},{id:'tsr-efluente',label:'Tasa de efluente total'}])) return;
     const efluente  = parseFloat(document.getElementById('tsr-efluente').value);
     const qb        = parseFloat(document.getElementById('tsr-qb').value);
     const ff        = parseFloat(document.getElementById('tsr-ff').value);
+    if (isNaN(peso) || peso <= 0) {
+      const pesoEl = document.getElementById('tsr-peso');
+      pesoEl.classList.add('val-error');
+      showToast('⚠️ Peso actual debe ser > 0');
+      return;
+    }
+    R.style.display = 'grid';
     if (!isNaN(efluente) && !isNaN(peso) && peso > 0) {
       const dosis = efluente / peso;
       document.getElementById('tsr-dose-val').textContent = dosis.toFixed(1) + ' mL/kg/h';
       const b = document.getElementById('tsr-dose-badge');
-      if (dosis >= 20 && dosis <= 25) { b.className='result-badge badge-green';  b.textContent='En meta (20?25 mL/kg/h)'; }
+      if (dosis >= 20 && dosis <= 25) { b.className='result-badge badge-green';  b.textContent='En meta (20-25 mL/kg/h)'; }
       else if (dosis < 20)            { b.className='result-badge badge-yellow'; b.textContent='Sub-terapéutico (<20) — aumentar'; }
       else                            { b.className='result-badge badge-orange'; b.textContent='Supra-terapéutico (>25) — revisar'; }
     }
@@ -9647,11 +9850,24 @@ function calcTSRDosis() {
     document.getElementById('tsr-urr').textContent = '—';
     document.getElementById('tsr-ktv-badge').textContent = 'CRRT — dosis en mL/kg/h';
   } else {
+    if (!validate([
+      {id:'tsr-peso',label:'Peso actual'},
+      {id:'tsr-bun-pre',label:'BUN pre-diálisis'},
+      {id:'tsr-bun-post',label:'BUN post-diálisis'},
+      {id:'tsr-duracion',label:'Duración sesión'}
+    ])) return;
     const bunPre  = parseFloat(document.getElementById('tsr-bun-pre').value);
     const bunPost = parseFloat(document.getElementById('tsr-bun-post').value);
     const v       = parseFloat(document.getElementById('tsr-v').value) || (peso * 0.6);
     const dur     = parseFloat(document.getElementById('tsr-duracion').value);
     const kt      = parseFloat(document.getElementById('tsr-kt').value);
+    if (isNaN(bunPre) || bunPre <= 0) {
+      const bunPreEl = document.getElementById('tsr-bun-pre');
+      bunPreEl.classList.add('val-error');
+      showToast('⚠️ BUN pre-diálisis debe ser > 0');
+      return;
+    }
+    R.style.display = 'grid';
     if (!isNaN(bunPre) && !isNaN(bunPost) && bunPre > 0) {
       const urr = ((bunPre - bunPost)/bunPre)*100;
       document.getElementById('tsr-urr').textContent = urr.toFixed(1) + '%';
@@ -9680,6 +9896,13 @@ function calcUF() {
   const qb       = parseFloat(document.getElementById('uf-qb').value);
   const hto      = parseFloat(document.getElementById('uf-hto').value) || 35;
   const R = document.getElementById('uf-result');
+  if ((isNaN(peso) || isNaN(meta)) && isNaN(bal)) {
+    validate([{id:'uf-peso',label:'Peso actual'},{id:'uf-meta',label:'Peso meta'}]);
+    validate([{id:'uf-bal',label:'Balance hídrico acumulado'}]);
+    showToast('Ingresa peso y peso meta, o bien balance hídrico acumulado.');
+    R.style.display = 'none';
+    return;
+  }
   R.style.display = 'grid';
 
   let deficit = 0;
@@ -9702,7 +9925,7 @@ function calcUF() {
         document.getElementById('uf-ff').textContent = ffCalc.toFixed(1) + '%';
         const ffB = document.getElementById('uf-ff-badge');
         if (ffCalc < 20)    { ffB.className='result-badge badge-green';  ffB.textContent='FF óptima (<20%)'; }
-        else if (ffCalc<25) { ffB.className='result-badge badge-yellow'; ffB.textContent='FF aceptable (20?25%)'; }
+        else if (ffCalc<25) { ffB.className='result-badge badge-yellow'; ffB.textContent='FF aceptable (20-25%)'; }
         else                { ffB.className='result-badge badge-red';    ffB.textContent='FF alta (>25%) — riesgo coagulación'; }
       }
     }
@@ -9716,14 +9939,21 @@ function showAnticoag() {
   document.getElementById('ac-heparina').style.display = tipo==='heparina' ? 'block' : 'none';
   document.getElementById('ac-citrato').style.display  = tipo==='citrato'  ? 'block' : 'none';
   document.getElementById('ac-sin-output').style.display = tipo==='sin' ? 'block' : 'none';
+  // Limpieza de salidas para evitar resultados previos al alternar esquema
+  document.getElementById('hep-result').style.display = 'none';
+  document.getElementById('ci-result').style.display = 'none';
 }
 
 function calcHeparina() {
-  if (!validate([{id:'ac-peso',label:'Peso'}])) return;
+  if (!validate([{id:'ac-peso',label:'Peso'},{id:'ac-ttpa-actual',label:'TTPa actual'}])) return;
   const peso  = parseFloat(document.getElementById('ac-peso').value);
   const ttpa  = parseFloat(document.getElementById('ac-ttpa-actual').value);
   const meta  = parseFloat(document.getElementById('ac-ttpa-meta').value) || 50;
   const R = document.getElementById('hep-result');
+  document.getElementById('hep-inicio').textContent = '—';
+  document.getElementById('hep-ajuste').textContent = '—';
+  document.getElementById('hep-rate').textContent = '—';
+  R.style.display = 'none';
   R.style.display = 'grid';
   if (!isNaN(peso)) {
     document.getElementById('hep-inicio').textContent = '500 UI bolo IV, luego ' + Math.round(peso * 7) + ' UI/h (' + Math.round(peso*7/50).toFixed(0) + ' mL/h si solución 25000 UI/500 mL)';
@@ -9738,34 +9968,51 @@ function calcHeparina() {
     else                           ajuste = 'Pausar 60 min, reducir 4 UI/kg/h + evaluar reversión';
     document.getElementById('hep-ajuste').textContent = ajuste;
   }
+  if (isNaN(ttpa) || isNaN(meta)) {
+    showToast('Verifica TTPa actual y meta para ajustar heparina.');
+  }
   if (!isNaN(peso)) {
     document.getElementById('hep-rate').textContent = Math.round(peso*7/50) + ' mL/h (solución estándar 25,000 UI/500 mL)';
   }
 }
 
 function calcCitrato() {
-  if (!validate([{id:'ci-qb',label:'Flujo sanguíneo Qb'}])) return;
+  if (!validate([
+    {id:'ci-qb',label:'Flujo sanguíneo Qb'},
+    {id:'ci-ca-post',label:'Ca ionizado post-filtro'},
+    {id:'ci-ca-sist',label:'Ca ionizado sistémico'}
+  ])) return;
   const qb      = parseFloat(document.getElementById('ci-qb').value);
   const caPost  = parseFloat(document.getElementById('ci-ca-post').value);
   const caSist  = parseFloat(document.getElementById('ci-ca-sist').value);
   const R = document.getElementById('ci-result');
+  document.getElementById('ci-flujo').textContent = '—';
+  document.getElementById('ci-ca-rep').textContent = '—';
+  const estP = document.getElementById('ci-estado');
+  const estS = document.getElementById('ci-ca-estado');
+  estP.className = 'result-badge';
+  estP.textContent = '—';
+  estS.className = 'result-badge';
+  estS.textContent = '—';
+  R.style.display = 'none';
   R.style.display = 'grid';
   if (!isNaN(qb)) {
     const flujoCitrato = qb * 1.5;
     document.getElementById('ci-flujo').textContent = flujoCitrato.toFixed(0) + ' mL/h (ACD-A, ratio 1.5:1 Qb)';
   }
-  document.getElementById('ci-ca-rep').textContent = 'Ca gluconato 10%: 10?30 mL/h IV central (ajustar a Ca sistémico)';
+  document.getElementById('ci-ca-rep').textContent = 'Ca gluconato 10%: 10-30 mL/h IV central (ajustar a Ca sistémico)';
   if (!isNaN(caPost)) {
-    const estP = document.getElementById('ci-estado');
     if      (caPost < 0.25) { estP.className='result-badge badge-yellow'; estP.textContent='Citrato insuficiente — aumentar flujo'; }
-    else if (caPost <= 0.35){ estP.className='result-badge badge-green';  estP.textContent='En meta (0.25?0.35 mmol/L)'; }
+    else if (caPost <= 0.35){ estP.className='result-badge badge-green';  estP.textContent='En meta (0.25-0.35 mmol/L)'; }
     else                    { estP.className='result-badge badge-orange'; estP.textContent='Exceso citrato — reducir flujo'; }
   }
   if (!isNaN(caSist)) {
-    const estS = document.getElementById('ci-ca-estado');
     if      (caSist < 1.0) { estS.className='result-badge badge-red';    estS.textContent='Hipocalcemia sistémica — aumentar reposición Ca'; }
-    else if (caSist <= 1.2){ estS.className='result-badge badge-green';  estS.textContent='Ca sistémico en meta (1.0?1.2)'; }
+    else if (caSist <= 1.2){ estS.className='result-badge badge-green';  estS.textContent='Ca sistémico en meta (1.0-1.2)'; }
     else                   { estS.className='result-badge badge-yellow'; estS.textContent='Hipercalcemia — reducir reposición Ca'; }
+  }
+  if (isNaN(qb) || isNaN(caPost) || isNaN(caSist)) {
+    showToast('Completa Qb y calcio ionizado (post-filtro y sistémico).');
   }
 }
 
@@ -9961,7 +10208,7 @@ function calcTransfusionBleed() {
   }
 
   if (scenario === 'dic') {
-    r += '<br><b>⚠️ DIC:</b> Monitorizar c/4?6h: PT, aPTT, Plt, Fib, D-dímero. Tratar causa subyacente.<br>';
+    r += '<br><b>⚠️ DIC:</b> Monitorizar c/4-6h: PT, aPTT, Plt, Fib, D-dímero. Tratar causa subyacente.<br>';
   }
 
   document.getElementById('tf-result-bleed-text').innerHTML = r;
@@ -9987,14 +10234,14 @@ function copyModuleResult(panelId) {
 // ============ INIT ============
 // ============ GCS ============
 function calcGCS() {
+  if (!validate([
+    {id:'gcs-e', label:'Apertura ocular (E)'},
+    {id:'gcs-v', label:'Respuesta verbal (V)'},
+    {id:'gcs-m', label:'Respuesta motora (M)'}
+  ])) return;
   const e = parseInt(document.getElementById('gcs-e').value);
   const v = parseInt(document.getElementById('gcs-v').value);
   const m = parseInt(document.getElementById('gcs-m').value);
-  if (isNaN(e) || isNaN(v) || isNaN(m)) {
-    document.getElementById('gcs-result').style.display = 'none';
-    document.getElementById('gcs-detail').style.display = 'none';
-    return;
-  }
   const total = e + v + m;
   document.getElementById('gcs-total').textContent = total;
   document.getElementById('gcs-components').textContent = `E${e} V${v} M${m}`;
@@ -10015,7 +10262,8 @@ function calcGCS() {
 function calcQSOFA() {
   if (!validate([
     {id:'qsofa-fr', label:'Frecuencia respiratoria'},
-    {id:'qsofa-pas', label:'Presión sistólica'}
+    {id:'qsofa-pas', label:'Presión sistólica'},
+    {id:'qsofa-gcs', label:'Estado mental (GCS <15)'}
   ])) return;
   const pas = document.getElementById('qsofa-pas').value;
   const fr = document.getElementById('qsofa-fr').value;
@@ -10088,7 +10336,7 @@ function calcMELD() {
   if (displayScore < 10)      { mort = '<2%'; interp = 'Enfermedad compensada'; cls = 'badge-green'; }
   else if (displayScore < 20) { mort = '~6%'; interp = 'Moderada — Evaluar trasplante'; cls = 'badge-yellow'; }
   else if (displayScore < 30) { mort = '~20%'; interp = 'Severa — Lista de trasplante'; cls = 'badge-orange'; }
-  else if (displayScore < 40) { mort = '~50?70%'; interp = 'Muy severa — Urgencia de trasplante'; cls = 'badge-red'; }
+  else if (displayScore < 40) { mort = '~50-70%'; interp = 'Muy severa — Urgencia de trasplante'; cls = 'badge-red'; }
   else                        { mort = '>70%'; interp = 'Falla hepática terminal'; cls = 'badge-red'; }
   document.getElementById('meld-mort').textContent = mort;
   document.getElementById('meld-interp').textContent = interp;
@@ -10221,7 +10469,7 @@ document.addEventListener('DOMContentLoaded', function() {
     { match: /\bsbs\b|sistol|pas\b/i,   warn:[60,250],  danger:[30,300] },
     { match: /\bpam\b|media/i,          warn:[50,150],  danger:[20,200] },
     { match: /temp/i,                    warn:[34,42],   danger:[25,45] },
-    { match: /ph\b/i,                    warn:[6.8,7.8], danger:[6.5,8.0] },
+    { match: /(?:^|[\s(])ph(?:[\s):]|$)/i, warn:[6.8,7.8], danger:[6.5,8.0] },
     { match: /pao2|po2/i,               warn:[30,500],  danger:[10,700] },
     { match: /paco2|pco2/i,             warn:[15,80],   danger:[5,120] },
     { match: /hco3|bicarbonato/i,       warn:[5,45],    danger:[1,60] },
@@ -10267,7 +10515,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var span = document.createElement('span');
     span.className = 'input-range-hint' + (level === 'danger' ? ' danger' : '');
     span.textContent = (level === 'danger' ? '⚠ Fuera de rango fisiológico' : '⚠ Verifique valor') +
-                        ' (' + range.warn[0] + '?' + range.warn[1] + ')';
+                        ' (' + range.warn[0] + '-' + range.warn[1] + ')';
     if (input.parentElement) input.parentElement.appendChild(span);
   }
 
@@ -10372,23 +10620,23 @@ function showUpdateToast() {
 const uciKB = {
   sofa: {
     keys: ['sofa','fallo orgánico','organ failure','disfunción'],
-    answer: '**SOFA** (Sequential Organ Failure Assessment)\n0?6: disfunción leve · 7?9: moderada · 10?12: severa · ≥13: muy severa.\nUn aumento ≥2 puntos desde el basal sugiere sepsis (Sepsis-3).\nEvaluar cada 24h; la tendencia importa más que un valor aislado.'
+    answer: '**SOFA** (Sequential Organ Failure Assessment)\n0-6: disfunción leve · 7-9: moderada · 10-12: severa · ≥13: muy severa.\nUn aumento ≥2 puntos desde el basal sugiere sepsis (Sepsis-3).\nEvaluar cada 24h; la tendencia importa más que un valor aislado.'
   },
   apache: {
     keys: ['apache','apache ii','mortalidad predicha','pronóstico'],
-    answer: '**APACHE II** — Rango 0?71.\n0?9: ~5% mortalidad · 10?19: ~15% · 20?29: ~35% · 30?39: ~60% · ≥40: >80%.\nCalcular en las primeras 24h de ingreso. Usar el peor valor de cada variable.'
+    answer: '**APACHE II** — Rango 0-71.\n0-9: ~5% mortalidad · 10-19: ~15% · 20-29: ~35% · 30-39: ~60% · ≥40: >80%.\nCalcular en las primeras 24h de ingreso. Usar el peor valor de cada variable.'
   },
   saps: {
     keys: ['saps','saps ii','saps2','simplificado'],
-    answer: '**SAPS II** — Rango 0?163.\nCalcula mortalidad hospitalaria predicha con 17 variables en las primeras 24h.\n<30: bajo riesgo · 30?50: moderado · >50: alto riesgo.'
+    answer: '**SAPS II** — Rango 0-163.\nCalcula mortalidad hospitalaria predicha con 17 variables en las primeras 24h.\n<30: bajo riesgo · 30-50: moderado · >50: alto riesgo.'
   },
   news2: {
     keys: ['news','news2','early warning','alerta temprana','deterioro'],
-    answer: '**NEWS2** (National Early Warning Score).\n0?4: riesgo bajo (monitoreo cada 4?6h) · Score de 3 en un solo parámetro: respuesta urgente · 5?6: riesgo intermedio (cada 1h) · ≥7: riesgo alto (activar equipo de respuesta rápida).'
+    answer: '**NEWS2** (National Early Warning Score).\n0-4: riesgo bajo (monitoreo cada 4-6h) · Score de 3 en un solo parámetro: respuesta urgente · 5-6: riesgo intermedio (cada 1h) · ≥7: riesgo alto (activar equipo de respuesta rápida).'
   },
   nutric: {
     keys: ['nutric','nutrición','riesgo nutricional','desnutrición'],
-    answer: '**NUTRIC** — Riesgo nutricional en UCI.\n≤4: bajo riesgo (nutrición estándar) · 5?9: alto riesgo (optimizar aporte calórico-proteico, considerar nutrición enteral temprana).'
+    answer: '**NUTRIC** — Riesgo nutricional en UCI.\n≤4: bajo riesgo (nutrición estándar) · 5-9: alto riesgo (optimizar aporte calórico-proteico, considerar nutrición enteral temprana).'
   },
   sepsis: {
     keys: ['sepsis','séptico','sepsis bundle','hour-1','bundle sepsis','qsofa'],
@@ -10400,39 +10648,39 @@ const uciKB = {
   },
   vasopresores: {
     keys: ['vasopresor','norepinefrina','vasopresina','dobutamina','noradrenalina','dosis vasopresor','fenilefrina','epinefrina'],
-    answer: '**Vasopresores en UCI**:\n• Norepinefrina: 1ª línea, 0.01?3 mcg/kg/min, α1>β1\n• Vasopresina: 2ª línea, 0.01?0.04 U/min, complemento a NE\n• Epinefrina: shock séptico refractario, 0.01?0.5 mcg/kg/min\n• Dobutamina: GC bajo, 2?20 mcg/kg/min (inotrópico)\n• Fenilefrina: α1 puro, útil en taquiarritmias\nMeta: PAM ≥65 mmHg, mejoría de lactato y diuresis.'
+    answer: '**Vasopresores en UCI**:\n• Norepinefrina: 1ª línea, 0.01-3 mcg/kg/min, α1>β1\n• Vasopresina: 2ª línea, 0.01-0.04 U/min, complemento a NE\n• Epinefrina: shock séptico refractario, 0.01-0.5 mcg/kg/min\n• Dobutamina: GC bajo, 2-20 mcg/kg/min (inotrópico)\n• Fenilefrina: α1 puro, útil en taquiarritmias\nMeta: PAM ≥65 mmHg, mejoría de lactato y diuresis.'
   },
   sedacion: {
     keys: ['sedación','rass','cam-icu','delirium','propofol','midazolam','dexmedetomidina','fentanilo','precedex'],
-    answer: '**Sedación/Analgesia en UCI**:\n• RASS objetivo: -2 a 0 (sedación ligera preferida)\n• CAM-ICU diario para detectar delirium\n• 1ª línea analgesia: Fentanilo 25?100 mcg/h\n• Sedación: Propofol 5?80 mcg/kg/min o Dexmedetomidina 0.2?1.5 mcg/kg/h\n• Evitar benzodiacepinas (mayor riesgo de delirium)\n• Protocolo ABCDEF: despertar diario + prueba de ventilación espontánea.'
+    answer: '**Sedación/Analgesia en UCI**:\n• RASS objetivo: -2 a 0 (sedación ligera preferida)\n• CAM-ICU diario para detectar delirium\n• 1ª línea analgesia: Fentanilo 25-100 mcg/h\n• Sedación: Propofol 5-80 mcg/kg/min o Dexmedetomidina 0.2-1.5 mcg/kg/h\n• Evitar benzodiacepinas (mayor riesgo de delirium)\n• Protocolo ABCDEF: despertar diario + prueba de ventilación espontánea.'
   },
   ventilacion: {
     keys: ['ventilación','ventilador','sdra','ards','peep','vt','volumen tidal','protectora','driving pressure','presión meseta'],
-    answer: '**Ventilación protectora**:\n• Vt 6?8 mL/kg peso ideal\n• Pplat ≤30 cmH₂O\n• Driving pressure ≤15 cmH₂O\n• PEEP según tabla ARDSNet o titulación\n**SDRA** (Berlin): Leve PaFi 200?300, Moderado 100?200, Severo <100\n• Prono ≥16h si PaFi <150\n• Considerar relajante neuromuscular en SDRA severo temprano.'
+    answer: '**Ventilación protectora**:\n• Vt 6-8 mL/kg peso ideal\n• Pplat ≤30 cmH₂O\n• Driving pressure ≤15 cmH₂O\n• PEEP según tabla ARDSNet o titulación\n**SDRA** (Berlin): Leve PaFi 200-300, Moderado 100-200, Severo <100\n• Prono ≥16h si PaFi <150\n• Considerar relajante neuromuscular en SDRA severo temprano.'
   },
   extubacion: {
     keys: ['extubación','destete','weaning','tubo en t','rsbi','pva'],
-    answer: '**Criterios de extubación**:\n• RSBI <105 (FR/Vt en L)\n• Prueba de ventilación espontánea exitosa (30?120 min)\n• Tos adecuada, manejo de secreciones\n• Sin requerimiento alto de vasopresores\n• FiO₂ ≤0.4, PEEP ≤8\n• Estado neurológico: GCS ≥8 o que proteja vía aérea\n• Cuff leak test si riesgo de edema laríngeo.'
+    answer: '**Criterios de extubación**:\n• RSBI <105 (FR/Vt en L)\n• Prueba de ventilación espontánea exitosa (30-120 min)\n• Tos adecuada, manejo de secreciones\n• Sin requerimiento alto de vasopresores\n• FiO₂ ≤0.4, PEEP ≤8\n• Estado neurológico: GCS ≥8 o que proteja vía aérea\n• Cuff leak test si riesgo de edema laríngeo.'
   },
   kdigo: {
     keys: ['kdigo','lesión renal','aki','creatinina','oliguria','diálisis','terapia renal'],
-    answer: '**KDIGO AKI**:\n• Estadio 1: Cr ×1.5?1.9 o +0.3 mg/dL en 48h, o UO <0.5 mL/kg/h ×6?12h\n• Estadio 2: Cr ×2?2.9, o UO <0.5 mL/kg/h ×≥12h\n• Estadio 3: Cr ×3 o ≥4 mg/dL, o UO <0.3 mL/kg/h ×≥24h, o anuria ×12h, o TRR\nManejo: optimizar volemia, suspender nefrotóxicos, ajustar dosis renales.'
+    answer: '**KDIGO AKI**:\n• Estadio 1: Cr ×1.5-1.9 o +0.3 mg/dL en 48h, o UO <0.5 mL/kg/h ×6-12h\n• Estadio 2: Cr ×2-2.9, o UO <0.5 mL/kg/h ×≥12h\n• Estadio 3: Cr ×3 o ≥4 mg/dL, o UO <0.3 mL/kg/h ×≥24h, o anuria ×12h, o TRR\nManejo: optimizar volemia, suspender nefrotóxicos, ajustar dosis renales.'
   },
   electrolitos: {
     keys: ['electrolitos','sodio','potasio','calcio','magnesio','fósforo','hiponatremia','hiperkalemia','hipocalcemia'],
-    answer: '**Electrolitos — Valores críticos**:\n• Na: 135?145 mEq/L. Hipo <130: corregir ≤10 mEq/24h (riesgo mielinólisis)\n• K: 3.5?5.0 mEq/L. Hiper >6.0: Ca gluconato + insulina/glucosa + salbutamol\n• Ca ionizado: 4.4?5.4 mg/dL. Hipo: Ca gluconato 1?2g IV\n• Mg: 1.8?2.4 mg/dL. Hipo: MgSO₄ 1?2g IV en 1h\n• PO₄: 2.5?4.5 mg/dL.'
+    answer: '**Electrolitos — Valores críticos**:\n• Na: 135-145 mEq/L. Hipo <130: corregir ≤10 mEq/24h (riesgo mielinólisis)\n• K: 3.5-5.0 mEq/L. Hiper >6.0: Ca gluconato + insulina/glucosa + salbutamol\n• Ca ionizado: 4.4-5.4 mg/dL. Hipo: Ca gluconato 1-2 g IV\n• Mg: 1.8-2.4 mg/dL. Hipo: MgSO₄ 1-2 g IV en 1h\n• PO₄: 2.5-4.5 mg/dL.'
   },
   gasometria: {
     keys: ['gasometría','gas arterial','ph','paco2','hco3','acidosis','alcalosis','anion gap','brecha aniónica','delta delta'],
-    answer: '**Gasometría arterial**:\npH 7.35?7.45 · PaCO₂ 35?45 · HCO₃ 22?26 · BE ±2\n**Anion Gap** = Na − (Cl + HCO₃) [normal 8?12]\nAG elevado: MUDPILES (metanol, uremia, DKA, propilenglicol, isoniazida, lactato, etilenglicol, salicilatos)\n**Delta-Delta** = ΔAG/ΔHCO₃: <1 acidosis no-AG concomitante, 1?2 compensada, >2 alcalosis metabólica concomitante.'
+    answer: '**Gasometría arterial**:\npH 7.35-7.45 · PaCO₂ 35-45 · HCO₃ 22-26 · BE ±2\n**Anion Gap** = Na − (Cl + HCO₃) [normal 8-12]\nAG elevado: MUDPILES (metanol, uremia, DKA, propilenglicol, isoniazida, lactato, etilenglicol, salicilatos)\n**Delta-Delta** = ΔAG/ΔHCO₃: <1 acidosis no-AG concomitante, 1-2 compensada, >2 alcalosis metabólica concomitante.'
   },
   transfusion: {
     keys: ['transfusión','hemoglobina','plaquetas','pfc','crioprecipitados','sangrado masivo','concentrado eritrocitario'],
-    answer: '**Umbrales de transfusión**:\n• CE: Hb <7 g/dL (general UCI), <8 si cardiopatía\n• Plaquetas: <10,000 profiláctico, <50,000 si procedimiento, <100,000 si neurocirugía\n• PFC: INR >1.5 con sangrado activo, 10?15 mL/kg\n• Crioprecipitados: Fibrinógeno <150 mg/dL, 1 pool\n**Transfusión masiva** (protocolo 1:1:1): CE:PFC:Plaq.'
+    answer: '**Umbrales de transfusión**:\n• CE: Hb <7 g/dL (general UCI), <8 si cardiopatía\n• Plaquetas: <10,000 profiláctico, <50,000 si procedimiento, <100,000 si neurocirugía\n• PFC: INR >1.5 con sangrado activo, 10-15 mL/kg\n• Crioprecipitados: Fibrinógeno <150 mg/dL, 1 pool\n**Transfusión masiva** (protocolo 1:1:1): CE:PFC:Plaq.'
   },
   antibioticos: {
     keys: ['antibiótico','antimicrobiano','empírico','vancomicina','meropenem','piperacilina','ceftriaxona','infección'],
-    answer: '**Antibióticos en UCI — Principios**:\n• Administrar en ≤1h si sepsis\n• Empírico según foco y flora local\n• NAC severa: Ceftriaxona + Macrólido o Fluoroquinolona\n• Nosocomial/VAP: Pipe/Tazo o Meropenem ± Vancomicina\n• Intraabdominal: Pipe/Tazo o Meropenem\n• Ajustar por TFG (CKD-EPI) y niveles séricos\n• Desescalar a las 48?72h según cultivos.'
+    answer: '**Antibióticos en UCI — Principios**:\n• Administrar en ≤1h si sepsis\n• Empírico según foco y flora local\n• NAC severa: Ceftriaxona + Macrólido o Fluoroquinolona\n• Nosocomial/VAP: Pipe/Tazo o Meropenem ± Vancomicina\n• Intraabdominal: Pipe/Tazo o Meropenem\n• Ajustar por TFG (CKD-EPI) y niveles séricos\n• Desescalar a las 48-72h según cultivos.'
   },
   vexus: {
     keys: ['vexus','congestión venosa','vci','vena cava inferior','fluid responsiveness','precarga'],
@@ -10440,15 +10688,15 @@ const uciKB = {
   },
   ppc: {
     keys: ['presión perfusión cerebral','ppc','pic','presión intracraneal','neurocrítico','tce'],
-    answer: '**Presión de Perfusión Cerebral**:\nPPC = PAM − PIC\nObjetivo: PPC 60?70 mmHg\nPIC normal <20 mmHg. PIC >22: tratar (osmoterapia, drenaje, sedación, hiperventilación controlada, craniectomía).\nEvitar hipotensión (PAM <80) e hipoxemia en TCE severo.'
+    answer: '**Presión de Perfusión Cerebral**:\nPPC = PAM − PIC\nObjetivo: PPC 60-70 mmHg\nPIC normal <20 mmHg. PIC >22: tratar (osmoterapia, drenaje, sedación, hiperventilación controlada, craniectomía).\nEvitar hipotensión (PAM <80) e hipoxemia en TCE severo.'
   },
   nutricion: {
     keys: ['nutrición','harris benedict','calorías','proteínas','nutrición enteral','nutrición parenteral','gasto energético'],
-    answer: '**Nutrición en UCI**:\n• Iniciar nutrición enteral temprana (24?48h)\n• Calorías: 25?30 kcal/kg/día (fase aguda: 15?20 kcal/kg/día)\n• Proteínas: 1.2?2.0 g/kg/día\n• Harris-Benedict para gasto energético basal × factor de estrés\n• Si intolerancia enteral: procinéticos → post-pilórica → parenteral suplementaria\n• Monitorizar residuo gástrico, glucemia, triglicéridos.'
+    answer: '**Nutrición en UCI**:\n• Iniciar nutrición enteral temprana (24-48h)\n• Calorías: 25-30 kcal/kg/día (fase aguda: 15-20 kcal/kg/día)\n• Proteínas: 1.2-2.0 g/kg/día\n• Harris-Benedict para gasto energético basal × factor de estrés\n• Si intolerancia enteral: procinéticos → post-pilórica → parenteral suplementaria\n• Monitorizar residuo gástrico, glucemia, triglicéridos.'
   },
   padua: {
     keys: ['padua','tev','tromboembolismo','tvp','tep','anticoagulación profiláctica','enoxaparina'],
-    answer: '**Score de Padua** (riesgo de TEV):\n≥4: alto riesgo → tromboprofilaxis farmacológica\n<4: bajo riesgo → movilización temprana\nProfilaxis: Enoxaparina 40 mg SC/día o HNF 5000 UI SC c/8?12h.\nContraindicaciones: sangrado activo, plaquetas <50,000, procedimiento reciente.'
+    answer: '**Score de Padua** (riesgo de TEV):\n≥4: alto riesgo → tromboprofilaxis farmacológica\n<4: bajo riesgo → movilización temprana\nProfilaxis: Enoxaparina 40 mg SC/día o HNF 5000 UI SC c/8-12h.\nContraindicaciones: sangrado activo, plaquetas <50,000, procedimiento reciente.'
   },
   codigo_azul: {
     keys: ['código azul','paro','rcp','reanimación','acls','paro cardíaco','fibrilación ventricular','asistolia','aesp','desfibrilación'],
@@ -10773,7 +11021,7 @@ function suggestCalcPrompt() {
   let msg = 'Basándote en los datos de mi paciente, sugiere qué calculadoras de UCI debo usar y en qué orden.\n';
   if (p.dx) msg += `Diagnóstico: ${p.dx}\n`;
   if (p.dias) msg += `Día UCI: ${p.dias}\n`;
-  msg += 'Calculadoras disponibles: SOFA, APACHE II, SAPS II, NEWS2, NUTRIC, Gasometría, Vasopresor, KDIGO, VExUS, Hemodynamics, PPC, Transfusión, Sedación (RASS/CAM-ICU), PADUA, CURB-65, Harris-Benedict, Electrolitos, Balance hídrico.';
+  msg += 'Calculadoras disponibles: SOFA, APACHE II, SAPS II, NEWS2, NUTRIC, Gasometría, Vasopresor, KDIGO, VExUS, Hemodynamics, PPC, Transfusión, Sedación (RASS/CAM-ICU), PADUA, CURB-65, Harris-Benedict, Electrolitos, Balance hídrico, TSR (dosis/UF/anticoag/modalidad).';
   return msg;
 }
 
