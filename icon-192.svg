@@ -1,23 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
-  <rect width="192" height="192" rx="32" fill="#080c12"/>
-  <rect width="192" height="192" rx="32" fill="url(#grad)"/>
-  <defs>
-    <linearGradient id="grad" x1="0" y1="0" x2="192" y2="192">
-      <stop offset="0%" stop-color="#0f1520"/>
-      <stop offset="100%" stop-color="#080c12"/>
-    </linearGradient>
-  </defs>
-  <!-- Border glow -->
-  <rect x="2" y="2" width="188" height="188" rx="30" fill="none" stroke="#00c8ff" stroke-width="2" opacity="0.4"/>
-  <!-- UCI text -->
-  <text x="96" y="80" font-family="monospace" font-size="38" font-weight="bold" 
-        fill="#00c8ff" text-anchor="middle" letter-spacing="4">UCI</text>
-  <!-- Divider line -->
-  <line x1="30" y1="92" x2="162" y2="92" stroke="#1e2d3d" stroke-width="2"/>
-  <!-- Tools text -->
-  <text x="96" y="126" font-family="monospace" font-size="24" font-weight="600"
-        fill="#c9d7e8" text-anchor="middle" letter-spacing="2">Tools</text>
-  <!-- Heartbeat pulse line -->
-  <polyline points="20,158 45,158 55,140 65,175 75,148 85,158 107,158 115,145 125,170 135,158 172,158"
-    fill="none" stroke="#00c8ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 120 120">
+  <rect width="120" height="120" rx="26" fill="#080c12"/>
+  <polygon points="60,8 106,32 106,82 60,106 14,82 14,32" fill="none" stroke="#0080cc" stroke-width="1.5" opacity="0.5"/>
+  <text x="60" y="52" text-anchor="middle" dominant-baseline="central" font-family="monospace" font-size="40" font-weight="700" fill="#00c8ff">UCI</text>
+  <rect x="14" y="72" width="92" height="2" rx="1" fill="#0080cc" opacity="0.35"/>
+  <rect x="14" y="72" width="38" height="2" rx="1" fill="#00c8ff"/>
+  <text x="60" y="90" text-anchor="middle" dominant-baseline="central" font-family="monospace" font-size="11" fill="#0080cc">tools</text>
 </svg>
