@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UCI Tools · UCI Siglo XXI</title>
+<title>UCI Tools</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="UCI Tools">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#00c8ff">
-<meta name="description" content="Calculadoras clínicas UCI · Medicina Crítica UCI Siglo XXI · © Christopher Godines">
+<meta name="description" content="Calculadoras clínicas UCI · Medicina Crítica · © Christopher Godines">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="manifest" href="./manifest.json">
@@ -926,7 +926,17 @@ input.pat-synced:focus, select.pat-synced:focus {
 
 <header>
   <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-  <div class="logo">UCI<span>/</span>Tools <span>· UCI Siglo XXI</span></div>
+  <div class="logo" style="display:flex;align-items:center;gap:10px;">
+    <svg width="28" height="28" viewBox="0 0 120 120" style="flex-shrink:0;">
+      <rect width="120" height="120" rx="26" fill="#080c12"/>
+      <polygon points="60,8 106,32 106,82 60,106 14,82 14,32" fill="none" stroke="#0080cc" stroke-width="1.5" opacity="0.5"/>
+      <text x="60" y="52" text-anchor="middle" dominant-baseline="central" font-family="'JetBrains Mono',monospace" font-size="40" font-weight="700" fill="#00c8ff">UCI</text>
+      <rect x="14" y="72" width="92" height="2" rx="1" fill="#0080cc" opacity="0.35"/>
+      <rect x="14" y="72" width="38" height="2" rx="1" fill="#00c8ff"/>
+      <text x="60" y="90" text-anchor="middle" dominant-baseline="central" font-family="'JetBrains Mono',monospace" font-size="11" fill="#0080cc">tools</text>
+    </svg>
+    <span style="font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;">UCI Tools</span>
+  </div>
   <div class="header-right">
     <div class="clock" id="clock">--:--</div>
   </div>
@@ -1151,7 +1161,7 @@ input.pat-synced:focus, select.pat-synced:focus {
   <div class="print-header" id="print-header" style="margin-bottom:20px; border-bottom:2px solid #1a4a6a; padding-bottom:12px;">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;">
       <div>
-        <div style="font-size:18px;font-weight:700;color:#0055aa;">UCI Tools · UCI Siglo XXI</div>
+        <div style="font-size:18px;font-weight:700;color:#0055aa;">UCI Tools</div>
         <div style="font-size:11px;color:#555;margin-top:2px;">Reporte de Scores — Medicina Critica</div>
       </div>
       <div style="text-align:right;font-size:11px;color:#555;">
@@ -1254,7 +1264,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- WELCOME -->
 <div id="calc-welcome" class="calc-panel active">
   <div class="card">
-    <div class="card-title">UCI Tools · Medicina Crítica UCI Siglo XXI</div>
+    <div class="card-title">UCI Tools · Medicina Crítica UCI Tools</div>
     <div style="color:var(--muted2);font-size:13px;line-height:1.8;">
       Selecciona una calculadora del menú lateral.<br><br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🚨 ADMISIÓN</span> — NEWS2 · qSOFA · GCS · PADUA · CURB-65 · Wells<br>
@@ -1757,7 +1767,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div class="btn-row" style="margin-top:12px;">
       <button class="calc" onclick="calcSOFA()">Calcular</button>
-      <button class="reset" onclick="resetPanel('calc-sofa')">Limpiar</button>
+      <button class="reset" onclick="resetSOFA()">Limpiar</button>
     </div>
     <div class="result">
       <div class="result-val" id="sofa-total">0</div>
@@ -4422,7 +4432,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 </main>
 </div><!-- end app-body -->
 <footer class="app-footer">
-  <div class="footer-title">UCI Tools · UCI Siglo XXI</div>
+  <div class="footer-title">UCI Tools</div>
   <div class="footer-copy">© Christopher Godines. Todos los derechos reservados.</div>
   <div class="footer-disclaimer">
     <b>Aviso:</b> Herramienta exclusiva de apoyo clínico para profesionales de medicina crítica.
@@ -4961,8 +4971,31 @@ function resetPanel(panelId) {
   p.querySelectorAll('.result, .multi-result').forEach(el => el.style.display = 'none');
 }
 
+function resetSOFA() {
+  const p = document.getElementById('calc-sofa');
+  p.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+  const ids = ['resp','coa','hep','cv','neu','ren'];
+  ids.forEach(i => {
+    const el = document.getElementById('s-' + i);
+    if (el) el.textContent = '0';
+  });
+  document.getElementById('sofa-total').textContent = '0';
+  document.getElementById('sofa-interp').textContent = 'Selecciona los valores';
+  const b = document.getElementById('sofa-badge');
+  b.className = 'result-badge';
+  b.textContent = '';
+  updateStickyScore('sofa', 0);
+}
+
 // ============ NEWS2 — NATIONAL EARLY WARNING SCORE 2 ============
 function calcNEWS2() {
+  if (!validate([
+    {id:'news2-fr', label:'Frecuencia respiratoria'},
+    {id:'news2-sao2', label:'SpO₂'},
+    {id:'news2-temp', label:'Temperatura'},
+    {id:'news2-sbs', label:'Presión sistólica'},
+    {id:'news2-fc', label:'Frecuencia cardíaca'}
+  ])) return;
   const fr = parseFloat(document.getElementById('news2-fr').value);
   const sao2 = parseFloat(document.getElementById('news2-sao2').value);
   const temp = parseFloat(document.getElementById('news2-temp').value);
@@ -7802,7 +7835,7 @@ function printViaBlob() {
 </style></head><body>
 <div class="header">
   <div>
-    <h1>UCI Tools · UCI Siglo XXI</h1>
+    <h1>UCI Tools</h1>
     <div style="font-size:10px;color:#555;margin-top:2px;">Reporte de Scores — Medicina Crítica</div>
   </div>
   <div style="text-align:right;font-size:10px;color:#555;">
@@ -7818,7 +7851,7 @@ function printViaBlob() {
 </div>
 <div class="pat-field" style="margin-bottom:12px;"><label>Diagnóstico</label><b>${dx}</b></div>
 ${scores}
-<div class="footer">Nota generada con UCI Tools · UCI Siglo XXI · ${fecha} ${hora}</div>
+<div class="footer">Nota generada con UCI Tools · ${fecha} ${hora}</div>
 <div id="val-toast" class="val-toast"><span>⚠️</span><span id="val-toast-msg"></span></div>
 </body></html>`;
 
@@ -8202,7 +8235,7 @@ function generarNotaActual() {
 function generarNotaDiaria() {
   const d = _notaData();
   const nota = `NOTA DE EVOLUCIÓN — MEDICINA CRÍTICA
-UCI Siglo XXI — Unidad de Cuidados Intensivos
+Unidad de Cuidados Intensivos
 ${'═'.repeat(55)}
 Fecha: ${d.fecha}
 Hora:  ${d.hora} hrs
@@ -8261,7 +8294,7 @@ ${'═'.repeat(55)}
 Médico tratante: ${d.medico}
 Firma: ________________________   Cédula: ____________
 ${'─'.repeat(55)}
-Nota generada con UCI Tools · UCI Siglo XXI`;
+Nota generada con UCI Tools`;
 
   _outputNota(nota);
 }
@@ -8269,7 +8302,7 @@ Nota generada con UCI Tools · UCI Siglo XXI`;
 function generarNotaDiariaSOAP() {
   const d = _notaData();
   const nota = `NOTA DE EVOLUCIÓN (SOAP) — MEDICINA CRÍTICA
-UCI Siglo XXI — ${d.fecha} — ${d.hora} hrs
+${d.fecha} — ${d.hora} hrs
 ${'═'.repeat(55)}
 Paciente: ${d.nombre} | Cama ${d.cama} | ${d.edad}a ${d.sexoStr} | ${d.peso}kg | Día UCI ${d.dias}
 Dx: ${d.dx}
@@ -8308,7 +8341,7 @@ ${'═'.repeat(55)}
 Médico: ${d.medico}
 Firma: ________________________   Cédula: ____________
 ${'─'.repeat(55)}
-Nota generada con UCI Tools · UCI Siglo XXI`;
+Nota generada con UCI Tools`;
 
   _outputNota(nota);
 }
@@ -8327,7 +8360,7 @@ function generarNotaIngreso() {
   const planIng = pf('ning-plan') || d.plan;
 
   const nota = `NOTA DE INGRESO A UCI — MEDICINA CRÍTICA
-UCI Siglo XXI — Unidad de Cuidados Intensivos
+Unidad de Cuidados Intensivos
 ${'═'.repeat(55)}
 Fecha: ${d.fecha}
 Hora:  ${d.hora} hrs
@@ -8372,7 +8405,7 @@ ${'═'.repeat(55)}
 Médico tratante: ${d.medico}
 Firma: ________________________   Cédula: ____________
 ${'─'.repeat(55)}
-Nota generada con UCI Tools · UCI Siglo XXI`;
+Nota generada con UCI Tools`;
 
   _outputNota(nota);
 }
@@ -8391,7 +8424,7 @@ function generarNotaIngresoSOAP() {
   const planIng = pf('ning-plan') || d.plan;
 
   const nota = `NOTA DE INGRESO A UCI (SOAP) — MEDICINA CRÍTICA
-UCI Siglo XXI — ${d.fecha} — ${d.hora} hrs
+${d.fecha} — ${d.hora} hrs
 ${'═'.repeat(55)}
 Paciente: ${d.nombre} | Cama ${d.cama} | ${d.edad}a ${d.sexoStr} | ${d.peso}kg
 ${'─'.repeat(55)}
@@ -8422,7 +8455,7 @@ ${'═'.repeat(55)}
 Médico: ${d.medico}
 Firma: ________________________   Cédula: ____________
 ${'─'.repeat(55)}
-Nota generada con UCI Tools · UCI Siglo XXI`;
+Nota generada con UCI Tools`;
 
   _outputNota(nota);
 }
@@ -8590,13 +8623,13 @@ function calcVEXUS() {
     congestion = 'VCI dilatada sin patrones anormales — congestión leve';
     conducta = 'Vigilar evolución, considerar balance neutro o ligeramente negativo.';
   } else if (nGraves === 0 && nAlterados >= 1) {
-    grado = 'GRADO 1?2'; gradoCls = 'badge-yellow';
+    grado = 'GRADO 1-2'; gradoCls = 'badge-yellow';
     congestion = 'Patrones leves — congestión moderada';
-    conducta = 'Considerar balance negativo 500?1000 mL/día. Reevaluar VExUS en 6?12h.';
+    conducta = 'Considerar balance negativo 500-1000 mL/día. Reevaluar VExUS en 6-12h.';
   } else if (nGraves === 1) {
     grado = 'GRADO 2'; gradoCls = 'badge-orange';
     congestion = 'Un patrón grave — congestión moderada-severa';
-    conducta = 'Balance negativo 1000?1500 mL/día. Diuréticos IV (furosemida). Restringir fluidos.';
+    conducta = 'Balance negativo 1000-1500 mL/día. Diuréticos IV (furosemida). Restringir fluidos.';
   } else {
     grado = 'GRADO 3'; gradoCls = 'badge-red';
     congestion = 'Múltiples patrones graves — congestión venosa severa';
@@ -9980,6 +10013,10 @@ function calcGCS() {
 
 // ============ qSOFA ============
 function calcQSOFA() {
+  if (!validate([
+    {id:'qsofa-fr', label:'Frecuencia respiratoria'},
+    {id:'qsofa-pas', label:'Presión sistólica'}
+  ])) return;
   const pas = document.getElementById('qsofa-pas').value;
   const fr = document.getElementById('qsofa-fr').value;
   const gcs = document.getElementById('qsofa-gcs').value;
@@ -10539,7 +10576,7 @@ function hasAPIKey() {
 }
 
 function buildSystemPrompt(ctx) {
-  let sys = `Eres un asistente clínico especializado en Medicina Crítica / UCI (Unidad de Cuidados Intensivos). Trabajas en UCI Siglo XXI.
+  let sys = `Eres un asistente clínico especializado en Medicina Crítica / UCI (Unidad de Cuidados Intensivos). Trabajas en UCI Tools.
 
 Responde de forma concisa, práctica y basada en evidencia. Usa viñetas y negritas para claridad. Siempre en español.
 
