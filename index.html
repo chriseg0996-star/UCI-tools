@@ -706,8 +706,37 @@ input.pat-synced:focus, select.pat-synced:focus {
 
 /* MOBILE ≤700px — al final para ganar cascada sobre reglas base */
 @media (max-width: 700px) {
-  .sidebar { position: fixed; left: -var(--sidebar); top: 48px; height: calc(100vh - 48px); z-index: 150; transform: translateX(-100%); transition: transform 0.2s; }
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 48px;
+    width: min(88vw, 360px);
+    max-width: 360px;
+    height: calc(100vh - 48px);
+    z-index: 150;
+    transform: translateX(-100%);
+    transition: transform 0.2s;
+  }
   .sidebar.open { transform: translateX(0); }
+  .nav-group-header { padding: 10px 14px 8px; }
+  .nav-group-label {
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-wrap: balance;
+  }
+  .nav-item {
+    font-size: 12.5px;
+    line-height: 1.3;
+    padding: 9px 14px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .nav-item .nav-icon { margin-top: 1px; }
   .menu-toggle { display: block; }
   /* header compacto */
   header { gap: 8px; padding: 0 10px; overflow: hidden; }
@@ -1007,7 +1036,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 
   <div class="nav-group">
     <div class="nav-group-header collapsed" onclick="toggleGroup('g-acid',this)">
-      <span class="nav-group-label">🧪 Ácido-base y hemodinámica</span><span class="nav-chevron">▾</span>
+      <span class="nav-group-label">🧪 Gasometría y transporte de O₂</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-acid">
       <div class="nav-item" id="nav-gas-met" onclick="showCalc('gas-met',this)"><span class="nav-icon">·</span>Gasometría y análisis metabólico</div>
@@ -1037,14 +1066,14 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div class="nav-group-items collapsed" id="g-renal">
       <div class="nav-item" onclick="showCalc('kdigo',this)"><span class="nav-icon">·</span>KDIGO — LRA</div>
-      <div class="nav-item" onclick="showCalc('balance',this)"><span class="nav-icon">·</span>Balance Hídrico</div>
-      <div class="nav-item" onclick="showCalc('gfr-dosing',this)"><span class="nav-icon">·</span>Dosificación Renal (TFG + ATB)</div>
-      <div class="nav-item" onclick="showCalc('elec-uri',this)"><span class="nav-icon">·</span>Electrolitos Urinarios</div>
-      <div class="nav-item" onclick="showCalc('electrolitos',this)"><span class="nav-icon">·</span>Reposición Electrolitos (incl. Ca)</div>
-      <div class="nav-item" onclick="showCalc('tsr-dosis',this)"><span class="nav-icon">·</span>TSR: Dosis (Kt/V / CRRT)</div>
-      <div class="nav-item" onclick="showCalc('tsr-uf',this)"><span class="nav-icon">·</span>TSR: Ultrafiltrado y reposición</div>
+      <div class="nav-item" onclick="showCalc('balance',this)"><span class="nav-icon">·</span>Balance hídrico</div>
+      <div class="nav-item" onclick="showCalc('gfr-dosing',this)"><span class="nav-icon">·</span>Dosificación renal (TFG + ATB)</div>
+      <div class="nav-item" onclick="showCalc('elec-uri',this)"><span class="nav-icon">·</span>Electrolitos urinarios</div>
+      <div class="nav-item" onclick="showCalc('electrolitos',this)"><span class="nav-icon">·</span>Reposición electrolitos</div>
+      <div class="nav-item" onclick="showCalc('tsr-dosis',this)"><span class="nav-icon">·</span>TSR: Dosis</div>
+      <div class="nav-item" onclick="showCalc('tsr-uf',this)"><span class="nav-icon">·</span>TSR: Ultrafiltrado</div>
       <div class="nav-item" onclick="showCalc('tsr-anticoag',this)"><span class="nav-icon">·</span>TSR: Anticoagulación</div>
-      <div class="nav-item" onclick="showCalc('tsr-modalidad',this)"><span class="nav-icon">·</span>TSR: Modalidad e indicaciones</div>
+      <div class="nav-item" onclick="showCalc('tsr-modalidad',this)"><span class="nav-icon">·</span>TSR: Modalidad</div>
     </div>
   </div>
 
@@ -1055,10 +1084,10 @@ input.pat-synced:focus, select.pat-synced:focus {
       <span class="nav-group-label">🧠 Neuro, Sedación y Analgesia</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-neuro">
+      <div class="nav-item" onclick="showCalc('ppc',this)"><span class="nav-icon">·</span>Perfusión cerebral / Neuromonitoreo (PPC)</div>
       <div class="nav-item" onclick="showCalc('sedation',this)"><span class="nav-icon">·</span>Sedación / Analgesia</div>
-      <div class="nav-item" onclick="showCalc('camicu',this)"><span class="nav-icon">·</span>CAM-ICU — Delirium</div>
       <div class="nav-item" onclick="showCalc('rass',this)"><span class="nav-icon">·</span>RASS — Nivel de Sedación</div>
-      <div class="nav-item" onclick="showCalc('ppc',this)"><span class="nav-icon">·</span>Perfusión Cerebral (PPC)</div>
+      <div class="nav-item" onclick="showCalc('camicu',this)"><span class="nav-icon">·</span>CAM-ICU — Delirium</div>
     </div>
   </div>
 
@@ -1272,18 +1301,17 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="card-title">UCI Tools · Medicina Crítica</div>
     <div class="welcome-brand">
       <img src="./icon-512.png" alt="UCI Tools" class="welcome-brand-mark">
-      <div class="welcome-brand-text">Branding clínico actualizado</div>
     </div>
     <div style="color:var(--muted2);font-size:13px;line-height:1.8;">
-      Selecciona una calculadora del menú lateral.<br><br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🚨 ADMISIÓN</span> — NEWS2 · qSOFA · GCS · PADUA · CURB-65 · Wells<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">📊 SEVERIDAD</span> — SOFA · APACHE II · SAPS II · NUTRIC · MELD<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫁 VENTILACIÓN</span> — Mecánica/monitor · Oxigenación · Destete<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🧪 GAS / ÁCIDO-BASE</span> — Gasometría · Taller gasométrico · Panel metabólico<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💉 HEMODINÁMICA</span> — Shock · DO₂/VO₂/SVR · Vasopresor · VExUS<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫘 RENAL & TSR</span> — KDIGO · Balance · Electrolitos · TFG/ATB · TSR (dosis · UF · anticoag · modalidad)<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🧠 NEURO & SEDACIÓN</span> — Sedación · CAM-ICU · RASS · PPC<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💊 SOPORTE</span> — Sepsis Bundle · Transfusión · Harris-Benedict
+      Flujo sugerido: captura primero <b>Datos del Paciente</b> y luego navega por categoría clínica.<br><br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🚨 ADMISIÓN Y TAMIZAJE</span> — NEWS2 · qSOFA · Glasgow · PADUA · CURB-65 · Rockall · Wells<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">📊 PRONÓSTICO Y SEVERIDAD</span> — SOFA · APACHE II · SAPS II · NUTRIC · MELD<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫁 VENTILACIÓN</span> — Parámetros ventilatorios · Mecánica ventilatoria · Destete/Extubación<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🧪 GASOMETRÍA Y TRANSPORTE O₂</span> — Gasometría y análisis metabólico · Oxigenación y transporte de O₂<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💉 HEMODINÁMICA</span> — Perfil hemodinámico · Ultrasonido hemodinámico · Bombas de infusión · VExUS<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫘 RENAL, ELECTROLITOS Y TSR</span> — KDIGO · Balance hídrico · Dosificación renal · Electrolitos urinarios · Reposición electrolitos · TSR (Dosis · UF · Anticoagulación · Modalidad)<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🧠 NEURO, SEDACIÓN Y ANALGESIA</span> — Perfusión cerebral/Neuromonitoreo (PPC) · Sedación/Analgesia · RASS · CAM-ICU<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💊 SOPORTE Y MANEJO</span> — Sepsis Bundle · Transfusión · Harris-Benedict
     </div>
     <details style="margin-top:10px;">
       <summary style="cursor:pointer;color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:.06em;">Siglas y términos</summary>
@@ -1398,7 +1426,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- GFR & RENAL DRUG DOSING -->
 <div id="calc-gfr-dosing" class="calc-panel">
   <div class="card">
-    <div class="card-title">Dosificación de Medicamentos por TFG</div>
+    <div class="card-title">Dosificación renal (TFG + ATB)</div>
 
     <div class="section-sub">Cálculo de TFG (MDRD o CKD-EPI)</div>
     <div class="row cols2">
@@ -2672,7 +2700,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- BALANCE HIDRICO -->
 <div id="calc-balance" class="calc-panel">
   <div class="card">
-    <div class="card-title">Balance Hídrico</div>
+    <div class="card-title">Balance hídrico</div>
     <div class="info" style="font-size:11px;margin-bottom:10px;">Balance global del turno (ingresos y egresos). Para metas de líquidos y UF en CRRT usa <strong>TSR: Ultrafiltrado y reposición</strong> — allí el «balance» es el acumulado a corregir en el circuito, no la tabla de este panel.</div>
     <table class="balance-table">
       <thead><tr><th>INGRESOS</th><th>mL</th><th>EGRESOS</th><th>mL</th></tr></thead>
@@ -3015,7 +3043,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- ===== ELECTROLITOS URINARIOS ===== -->
 <div id="calc-elec-uri" class="calc-panel">
   <div class="card">
-    <div class="card-title">Electrolitos Urinarios — Interpretación Diagnóstica</div>
+    <div class="card-title">Electrolitos urinarios</div>
     <div class="info" style="margin-bottom:14px;">
       Los electrolitos urinarios permiten distinguir causas prerrenales, renales intrínsecas y postrenales de la LRA, y guiar el diagnóstico de trastornos de sodio, potasio y ácido-base.
     </div>
@@ -3472,7 +3500,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- ===== ELECTROLITOS ===== -->
 <div id="calc-electrolitos" class="calc-panel">
   <div class="card">
-    <div class="card-title">Reposición de Electrolitos</div>
+    <div class="card-title">Reposición electrolitos</div>
 
     <!-- Datos globales -->
     <div class="row cols2">
@@ -3989,7 +4017,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- DOSIS DIÁLISIS -->
 <div id="calc-tsr-dosis" class="calc-panel">
   <div class="card">
-    <div class="card-title" title="Terapia de Sustitución Renal">TSR: Dosis — Kt/V y CRRT</div>
+    <div class="card-title" title="Terapia de Sustitución Renal">TSR: Dosis</div>
     <div class="row cols2">
       <div><label>Modalidad</label>
         <select id="tsr-mod" onchange="updateTSRDosis()">
@@ -4048,7 +4076,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- ULTRAFILTRADO -->
 <div id="calc-tsr-uf" class="calc-panel">
   <div class="card">
-    <div class="card-title" title="Terapia de Sustitución Renal">TSR: Ultrafiltrado y tasa de reposición (CRRT)</div>
+    <div class="card-title" title="Terapia de Sustitución Renal">TSR: Ultrafiltrado</div>
     <div class="info" style="font-size:11px;margin-bottom:10px;">«Balance hídrico acumulado» aquí es el volumen neto a compensar con UF en el contexto de CRRT (p. ej. sobrecarga previa). No es el balance parcial del turno de <strong>Balance hídrico</strong>.</div>
     <div class="row cols3">
       <div><label>Peso actual (kg)</label><input type="number" id="uf-peso" placeholder=""></div>
@@ -4085,7 +4113,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- ANTICOAGULACIÓN TSR -->
 <div id="calc-tsr-anticoag" class="calc-panel">
   <div class="card">
-    <div class="card-title">TSR: Anticoagulación (CRRT)</div>
+    <div class="card-title">TSR: Anticoagulación</div>
     <div class="row cols2">
       <div><label>Modalidad anticoagulación</label>
         <select id="ac-tipo" onchange="showAnticoag()">
@@ -4149,7 +4177,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- MODALIDAD E INDICACIONES TSR -->
 <div id="calc-tsr-modalidad" class="calc-panel">
   <div class="card">
-    <div class="card-title">TSR: Modalidad e indicaciones en UCI</div>
+    <div class="card-title">TSR: Modalidad</div>
     <div class="section-sub">Indicaciones de inicio (AEIOU)</div>
     <div class="sofa-grid" style="gap:6px; margin-bottom:14px;">
       <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">A — Acidosis metabólica severa</div><div style="font-size:10px;color:var(--muted)">pH &lt;7.15 refractaria a tratamiento</div></div><select id="aeiou-a" style="width:70px;" onchange="evalAEIOU()"><option value="0">No</option><option value="1">Sí</option></select></div>
@@ -9896,6 +9924,14 @@ function calcUF() {
   const qb       = parseFloat(document.getElementById('uf-qb').value);
   const hto      = parseFloat(document.getElementById('uf-hto').value) || 35;
   const R = document.getElementById('uf-result');
+  document.getElementById('uf-deficit').textContent = '—';
+  document.getElementById('uf-tasa').textContent = '—';
+  document.getElementById('uf-repos').textContent = '—';
+  document.getElementById('uf-bal-proy').textContent = '—';
+  document.getElementById('uf-ff').textContent = '—';
+  const ffB0 = document.getElementById('uf-ff-badge');
+  ffB0.className = 'result-badge';
+  ffB0.textContent = '—';
   if ((isNaN(peso) || isNaN(meta)) && isNaN(bal)) {
     validate([{id:'uf-peso',label:'Peso actual'},{id:'uf-meta',label:'Peso meta'}]);
     validate([{id:'uf-bal',label:'Balance hídrico acumulado'}]);
