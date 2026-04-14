@@ -287,6 +287,50 @@ button.reset:hover { border-color: var(--muted); color: var(--text); }
 .mr-val.green { color: var(--green); }
 .mr-val.red { color: var(--red); }
 .mr-val.yellow { color: var(--yellow); }
+.hemo-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  max-width: 62%;
+}
+.hemo-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+}
+.hemo-formula {
+  font-size: 13px;
+  color: var(--muted2);
+  margin-top: 2px;
+  line-height: 1.2;
+}
+.hemo-value-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  justify-content: flex-end;
+  min-width: 0;
+  flex-shrink: 0;
+}
+.hemo-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 10px;
+}
+.hemo-val {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.hemo-unit {
+  font-size: 13px;
+  opacity: 0.9;
+  line-height: 1.2;
+}
 .divider { height: 1px; background: var(--border); }
 .info {
   font-size: 11px; color: var(--muted2); margin-top: 8px; line-height: 1.6;
@@ -766,6 +810,16 @@ input.pat-synced:focus, select.pat-synced:focus {
   /* results */
   .result-val { font-size: 22px; }
   .mr-row { gap: 6px; padding: 5px 0; }
+  .hemo-label { max-width: 60%; }
+  .hemo-name { font-size: 15px; }
+  .hemo-formula {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .hemo-val { font-size: 16px; }
+  .hemo-unit { font-size: 10px; }
   .mr-val { font-size: 14px; }
   .result-badge { font-size: 10px; padding: 3px 7px; }
   .card-title { font-size: 13px; letter-spacing: 0.05em; }
@@ -799,6 +853,16 @@ input.pat-synced:focus, select.pat-synced:focus {
   .result { flex-direction: column; gap: 6px; }
   .result-val { font-size: 28px; }
   .multi-result { padding: 8px 10px; }
+  .hemo-label { max-width: 66%; }
+  .hemo-name { font-size: 15px; }
+  .hemo-name, .hemo-formula {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .hemo-formula { font-size: 12px; }
+  .hemo-val { font-size: 16px; }
+  .hemo-unit { font-size: 10px; }
   .mr-label { font-size: 11px; }
   .mr-val { font-size: 13px; }
 }
@@ -995,8 +1059,8 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div class="nav-group-items collapsed" id="g-admision">
       <div class="nav-item" onclick="showCalc('news2',this)"><span class="nav-icon">·</span>NEWS2 — Alerta Temprana</div>
-      <div class="nav-item" onclick="showCalc('qsofa',this)"><span class="nav-icon">·</span>qSOFA — Sepsis Rápido</div>
-      <div class="nav-item" onclick="showCalc('gcs',this)"><span class="nav-icon">·</span>Glasgow Coma Scale</div>
+      <div class="nav-item" onclick="showCalc('qsofa',this)"><span class="nav-icon">·</span>qSOFA — Sepsis rápido</div>
+      <div class="nav-item" onclick="showCalc('gcs',this)"><span class="nav-icon">·</span>Glasgow</div>
       <div class="nav-item" onclick="showCalc('padua',this)"><span class="nav-icon">·</span>PADUA — TEV</div>
       <div class="nav-item" onclick="showCalc('curb',this)"><span class="nav-icon">·</span>CURB-65 — NAC</div>
       <div class="nav-item" onclick="showCalc('rockall',this)"><span class="nav-icon">·</span>Rockall — HTDA</div>
@@ -1011,11 +1075,11 @@ input.pat-synced:focus, select.pat-synced:focus {
       <span class="nav-group-label">📊 Pronóstico y Severidad</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-severidad">
-      <div class="nav-item" onclick="showCalc('sofa',this)"><span class="nav-icon">·</span>SOFA Score</div>
       <div class="nav-item" onclick="showCalc('apache',this)"><span class="nav-icon">·</span>APACHE II</div>
+      <div class="nav-item" onclick="showCalc('sofa',this)"><span class="nav-icon">·</span>SOFA</div>
       <div class="nav-item" onclick="showCalc('saps',this)"><span class="nav-icon">·</span>SAPS II</div>
-      <div class="nav-item" onclick="showCalc('nutric',this)"><span class="nav-icon">·</span>NUTRIC Score</div>
-      <div class="nav-item" onclick="showCalc('meld',this)"><span class="nav-icon">·</span>MELD — Hepático</div>
+      <div class="nav-item" onclick="showCalc('nutric',this)"><span class="nav-icon">·</span>NUTRIC</div>
+      <div class="nav-item" onclick="showCalc('meld',this)"><span class="nav-icon">·</span>MELD</div>
     </div>
   </div>
 
@@ -1026,7 +1090,6 @@ input.pat-synced:focus, select.pat-synced:focus {
       <span class="nav-group-label">🫁 Ventilación</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-vent">
-      <div class="nav-item" id="nav-vent-params" onclick="showCalc('vent-params',this)"><span class="nav-icon">·</span>Parámetros ventilatorios</div>
       <div class="nav-item" id="nav-vent-mec" onclick="showCalc('vent-mec',this)"><span class="nav-icon">·</span>Mecánica ventilatoria</div>
       <div class="nav-item" id="nav-tvent" onclick="showCalc('tvent',this)"><span class="nav-icon">·</span>Destete / Extubación</div>
     </div>
@@ -1051,7 +1114,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       <span class="nav-group-label">💉 Hemodinámica</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-hemo">
-      <div class="nav-item" id="nav-perfil-hemo" onclick="showCalc('perfil-hemo',this)"><span class="nav-icon">·</span>Perfil hemodinámico</div>
+      <div class="nav-item" id="nav-perfil-hemo" onclick="showCalc('perfil-hemo',this)"><span class="nav-icon">·</span>Perfil hemodinámico (choque)</div>
       <div class="nav-item" id="nav-us-hemo" onclick="showCalc('us-hemo',this)"><span class="nav-icon">·</span>Ultrasonido hemodinámico</div>
       <div class="nav-item" id="nav-bombas" onclick="showCalc('bombas',this)"><span class="nav-icon">·</span>Bombas de infusión</div>
       <div class="nav-item" id="nav-vexus" onclick="showCalc('vexus',this)"><span class="nav-icon">·</span>VExUS — Congestión venosa</div>
@@ -1069,11 +1132,11 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="nav-item" onclick="showCalc('balance',this)"><span class="nav-icon">·</span>Balance hídrico</div>
       <div class="nav-item" onclick="showCalc('gfr-dosing',this)"><span class="nav-icon">·</span>Dosificación renal (TFG + ATB)</div>
       <div class="nav-item" onclick="showCalc('elec-uri',this)"><span class="nav-icon">·</span>Electrolitos urinarios</div>
-      <div class="nav-item" onclick="showCalc('electrolitos',this)"><span class="nav-icon">·</span>Reposición electrolitos</div>
-      <div class="nav-item" onclick="showCalc('tsr-dosis',this)"><span class="nav-icon">·</span>TSR: Dosis</div>
-      <div class="nav-item" onclick="showCalc('tsr-uf',this)"><span class="nav-icon">·</span>TSR: Ultrafiltrado</div>
+      <div class="nav-item" onclick="showCalc('electrolitos',this)"><span class="nav-icon">·</span>Reposición de electrolitos</div>
+      <div class="nav-item" onclick="showCalc('tsr-dosis',this)"><span class="nav-icon">·</span>TSR: Dosis (Kt/V / CRRT)</div>
+      <div class="nav-item" onclick="showCalc('tsr-uf',this)"><span class="nav-icon">·</span>TSR: Ultrafiltrado y reposición</div>
       <div class="nav-item" onclick="showCalc('tsr-anticoag',this)"><span class="nav-icon">·</span>TSR: Anticoagulación</div>
-      <div class="nav-item" onclick="showCalc('tsr-modalidad',this)"><span class="nav-icon">·</span>TSR: Modalidad</div>
+      <div class="nav-item" onclick="showCalc('tsr-modalidad',this)"><span class="nav-icon">·</span>TSR: Modalidad e indicaciones</div>
     </div>
   </div>
 
@@ -1098,9 +1161,9 @@ input.pat-synced:focus, select.pat-synced:focus {
       <span class="nav-group-label">💊 Soporte y Manejo</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-soporte">
-      <div class="nav-item" onclick="showCalc('sepsis-bundle',this)"><span class="nav-icon">·</span>Sepsis Bundle (3h/6h)</div>
-      <div class="nav-item" onclick="showCalc('transfusion',this)"><span class="nav-icon">·</span>Transfusión — Decisión</div>
-      <div class="nav-item" onclick="showCalc('harris',this)"><span class="nav-icon">·</span>Harris-Benedict — Nutrición</div>
+      <div class="nav-item" onclick="showCalc('sepsis-bundle',this)"><span class="nav-icon">·</span>Sepsis Bundle</div>
+      <div class="nav-item" onclick="showCalc('transfusion',this)"><span class="nav-icon">·</span>Transfusión</div>
+      <div class="nav-item" onclick="showCalc('harris',this)"><span class="nav-icon">·</span>Harris-Benedict</div>
     </div>
   </div>
 
@@ -1182,7 +1245,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
 
     <div class="btn-row" style="margin-top:10px;">
-      <button class="calc" onclick="showCalc('sofa', document.querySelector('.nav-item[onclick*=sofa]'))">Ir a calcular →</button>
+      <button class="calc" onclick="showCalc('apache', document.querySelector('.nav-item[onclick*=apache]'))">Ir a calcular →</button>
       <button class="reset" onclick="clearPatient()">Limpiar datos</button>
     </div>
     <div class="info" style="margin-top:6px;">Datos se guardan automáticamente y se propagan a todas las calculadoras.</div>
@@ -1230,10 +1293,11 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="export-section">
       <div class="export-section-title">📊 Pronóstico</div>
       <div class="score-grid">
-        <div class="score-card"><span class="score-card-name">SOFA Score</span><span class="score-card-val" id="ex-sofa">—</span><span class="score-card-badge result-badge" id="ex-sofa-b"></span></div>
         <div class="score-card"><span class="score-card-name">APACHE II</span><span class="score-card-val" id="ex-apache">—</span><span class="score-card-badge result-badge" id="ex-apache-b"></span></div>
+        <div class="score-card"><span class="score-card-name">SOFA</span><span class="score-card-val" id="ex-sofa">—</span><span class="score-card-badge result-badge" id="ex-sofa-b"></span></div>
         <div class="score-card"><span class="score-card-name">SAPS II</span><span class="score-card-val" id="ex-saps">—</span><span class="score-card-badge result-badge" id="ex-saps-b"></span></div>
-        <div class="score-card"><span class="score-card-name">NUTRIC Score</span><span class="score-card-val" id="ex-nutric">—</span><span class="score-card-badge result-badge" id="ex-nutric-b"></span></div>
+        <div class="score-card"><span class="score-card-name">NUTRIC</span><span class="score-card-val" id="ex-nutric">—</span><span class="score-card-badge result-badge" id="ex-nutric-b"></span></div>
+        <div class="score-card"><span class="score-card-name">MELD</span><span class="score-card-val" id="ex-meld">—</span><span class="score-card-badge result-badge" id="ex-meld-b"></span></div>
       </div>
     </div>
 
@@ -1303,14 +1367,14 @@ input.pat-synced:focus, select.pat-synced:focus {
       <img src="./icon-512.png" alt="UCI Tools" class="welcome-brand-mark">
     </div>
     <div style="color:var(--muted2);font-size:13px;line-height:1.8;">
-      Flujo sugerido: captura primero <b>Datos del Paciente</b> y luego navega por categoría clínica.<br><br>
+      Inicie con <b>Datos del Paciente</b> y continúe por categoría clínica según prioridad.<br><br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🚨 ADMISIÓN Y TAMIZAJE</span> — NEWS2 · qSOFA · Glasgow · PADUA · CURB-65 · Rockall · Wells<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">📊 PRONÓSTICO Y SEVERIDAD</span> — SOFA · APACHE II · SAPS II · NUTRIC · MELD<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫁 VENTILACIÓN</span> — Parámetros ventilatorios · Mecánica ventilatoria · Destete/Extubación<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🧪 GASOMETRÍA Y TRANSPORTE O₂</span> — Gasometría y análisis metabólico · Oxigenación y transporte de O₂<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💉 HEMODINÁMICA</span> — Perfil hemodinámico · Ultrasonido hemodinámico · Bombas de infusión · VExUS<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫘 RENAL, ELECTROLITOS Y TSR</span> — KDIGO · Balance hídrico · Dosificación renal · Electrolitos urinarios · Reposición electrolitos · TSR (Dosis · UF · Anticoagulación · Modalidad)<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🧠 NEURO, SEDACIÓN Y ANALGESIA</span> — Perfusión cerebral/Neuromonitoreo (PPC) · Sedación/Analgesia · RASS · CAM-ICU<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">📊 PRONÓSTICO Y SEVERIDAD</span> — APACHE II · SOFA · SAPS II · NUTRIC · MELD<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫁 VENTILACIÓN</span> — Mecánica ventilatoria · Destete / Extubación<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🧪 GASOMETRÍA Y TRANSPORTE DE O₂</span> — Gasometría y análisis metabólico · Oxigenación y transporte de O₂<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💉 HEMODINÁMICA</span> — Perfil hemodinámico (choque) · Ultrasonido hemodinámico · Bombas de infusión · VExUS — Congestión venosa<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫘 RENAL, ELECTROLITOS Y TSR</span> — KDIGO — LRA · Balance hídrico · Dosificación renal (TFG + ATB) · Electrolitos urinarios · Reposición de electrolitos · TSR: Dosis (Kt/V / CRRT) · TSR: Ultrafiltrado y reposición · TSR: Anticoagulación · TSR: Modalidad e indicaciones<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🧠 NEURO, SEDACIÓN Y ANALGESIA</span> — Perfusión cerebral / Neuromonitoreo (PPC) · Sedación / Analgesia · RASS — Nivel de Sedación · CAM-ICU — Delirium<br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💊 SOPORTE Y MANEJO</span> — Sepsis Bundle · Transfusión · Harris-Benedict
     </div>
     <details style="margin-top:10px;">
@@ -1685,7 +1749,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- TRANSFUSION DECISION SUPPORT -->
 <div id="calc-transfusion" class="calc-panel">
   <div class="card">
-    <div class="card-title">Soporte de Decisión Transfusional</div>
+    <div class="card-title">Transfusión</div>
 
     <div class="tab-bar">
       <button class="tab-btn active" onclick="switchTfTab('electivo',this)">Electivo / Estable</button>
@@ -1768,7 +1832,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- SOFA -->
 <div id="calc-sofa" class="calc-panel">
   <div class="card">
-    <div class="card-title">SOFA Score</div>
+    <div class="card-title">SOFA</div>
     <div class="sofa-grid">
       <div class="sofa-item">
         <div class="sofa-name">Respiratorio<br><span style="font-size:10px;color:var(--muted)">PaO2/FiO2</span></div>
@@ -1844,7 +1908,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- APACHE II -->
 <div id="calc-apache" class="calc-panel">
   <div class="card">
-    <div class="card-title">APACHE II Score</div>
+    <div class="card-title">APACHE II</div>
     <div class="section-sub">Variables fisiológicas agudas</div>
     <div class="row cols2">
       <div><label>Temp rectal (°C)</label>
@@ -1905,7 +1969,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div class="btn-row">
       <button class="calc" onclick="calcAPACHE()">Calcular</button>
-      <button class="reset" onclick="resetPanel('calc-apache')">Limpiar</button>
+      <button class="reset" onclick="resetAPACHE()">Limpiar</button>
     </div>
     <div class="result" id="apache-result" style="display:none">
       <div class="result-val" id="apache-total">0</div><div class="result-unit">pts</div>
@@ -1919,7 +1983,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- SAPS II -->
 <div id="calc-saps" class="calc-panel">
   <div class="card">
-    <div class="card-title">SAPS II Score</div>
+    <div class="card-title">SAPS II</div>
     <div class="row cols2">
       <div><label>Edad</label><select id="saps-age"><option value="0">&lt;40</option><option value="7">40–59</option><option value="12">60–69</option><option value="15">70–74</option><option value="16">75–79</option><option value="18">≥80</option></select></div>
       <div><label>FC (lpm)</label><select id="saps-fc"><option value="11">&lt;40</option><option value="2">40–69</option><option value="0">70–119</option><option value="4">120–159</option><option value="7">≥160</option></select></div>
@@ -1955,7 +2019,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div class="btn-row">
       <button class="calc" onclick="calcSAPS()">Calcular</button>
-      <button class="reset" onclick="resetPanel('calc-saps')">Limpiar</button>
+      <button class="reset" onclick="resetSAPS()">Limpiar</button>
     </div>
     <div class="result" id="saps-result" style="display:none">
       <div class="result-val" id="saps-total">0</div><div class="result-unit">pts</div>
@@ -1969,7 +2033,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- NUTRIC -->
 <div id="calc-nutric" class="calc-panel">
   <div class="card">
-    <div class="card-title">NUTRIC Score</div>
+    <div class="card-title">NUTRIC</div>
     <div class="row cols2">
       <div><label>Edad</label><select id="nut-age"><option value="0">&lt;50</option><option value="1">50–74</option><option value="2">≥75</option></select></div>
       <div><label>APACHE II</label><select id="nut-apa"><option value="0">&lt;15</option><option value="1">15–19</option><option value="2">20–27</option><option value="3">≥28</option></select></div>
@@ -1984,7 +2048,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div class="btn-row">
       <button class="calc" onclick="calcNUTRIC()">Calcular</button>
-      <button class="reset" onclick="resetPanel('calc-nutric')">Limpiar</button>
+      <button class="reset" onclick="resetNUTRIC()">Limpiar</button>
     </div>
     <div class="result" id="nutric-result" style="display:none">
       <div class="result-val" id="nutric-total">0</div><div class="result-unit">pts</div>
@@ -1999,106 +2063,6 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- VENTILACION -->
 <!-- ============================================================ -->
 
-<div id="calc-vent-params" class="calc-panel">
-  <div class="card" style="margin-bottom:12px;padding:12px 16px;">
-    <div class="group-title" style="margin-bottom:4px;">Parámetros ventilatorios</div>
-    <div class="group-desc">Configuración inicial de VM: PIC, VT protector, FiO2/PEEP, FR y metas de presión.</div>
-  </div>
-
-  <div class="card" id="vent-params-sec">
-    <div class="card-title">Datos del paciente</div>
-    <div class="row cols3">
-      <div><label>Peso (kg)</label><input type="number" id="vp-peso" placeholder="" step="0.1"></div>
-      <div><label>Talla (cm)</label><input type="number" id="vp-talla" placeholder="" step="0.1" oninput="updateVentParamsPIC()"></div>
-      <div><label>Sexo</label><select id="vp-sexo" onchange="updateVentParamsPIC()"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
-    </div>
-    <div class="row cols2">
-      <div><label title="Peso Ideal Calculado">PIC (peso ideal calculado) (kg)</label><input type="number" id="vp-pic" placeholder="auto" readonly style="background:rgba(0,200,255,0.05);"></div>
-      <div><label>Modo ventilatorio (referencia)</label>
-        <select id="vp-modo">
-          <option value="VCV">VCV</option>
-          <option value="PCV">PCV</option>
-          <option value="PRVC">PRVC</option>
-          <option value="CPAP/PSV">CPAP/PSV</option>
-          <option value="SIMV">SIMV</option>
-        </select>
-        <div class="info" style="margin-top:4px;">No modifica este cálculo; se muestra como referencia clínica.</div>
-      </div>
-    </div>
-    <div class="section-sub">Configuración inicial</div>
-    <div class="row cols3">
-      <div>
-        <label title="Fracción inspirada de oxígeno">FiO2 (fracción inspirada de oxígeno)</label>
-        <input type="number" id="vp-fio2" min="0.21" max="100" step="0.01" placeholder="0.40 o 40">
-        <div class="info" style="margin-top:4px;">Acepta 0.21-1.00 (decimal) o 21-100 (%).</div>
-      </div>
-      <div><label title="Presión positiva al final de la espiración">PEEP (presión positiva al final de la espiración) (cmH₂O)</label><input type="number" id="vp-peep" min="3" max="20" step="0.1" placeholder="5 – 8"></div>
-      <div><label>Frecuencia respiratoria (rpm)</label><input type="number" id="vp-fr" min="10" max="35" step="1" placeholder="12 – 20"></div>
-    </div>
-    <div class="section-sub">Volumen y presiones</div>
-    <div class="row cols3">
-      <div>
-        <label>Volumen tidal (mL)</label>
-        <input type="number" id="vp-vt" step="1" placeholder="400 – 550">
-        <button type="button" class="reset" style="margin-top:6px;padding:4px 8px;font-size:10px;" onclick="fillVentParamsVT()">Calcular 6 mL/kg</button>
-      </div>
-      <div>
-        <label>Presión pico objetivo (cmH₂O, referencia)</label>
-        <input type="number" id="vp-ppico" step="0.1" placeholder="15 – 30">
-      </div>
-      <div><label>Presión meseta objetivo (cmH₂O)</label><input type="number" id="vp-pplat" step="0.1" placeholder="≤ 30"></div>
-    </div>
-    <div class="row cols2">
-      <div><label>Relación I:E (referencia)</label>
-        <select id="vp-ie">
-          <option value="1:1">1:1</option>
-          <option value="1:1.5">1:1.5</option>
-          <option value="1:2" selected>1:2</option>
-          <option value="1:2.5">1:2.5</option>
-          <option value="1:3">1:3</option>
-        </select>
-        <div class="info" style="margin-top:4px;">Dato orientativo; no cambia el cálculo numérico mostrado.</div>
-      </div>
-      <div><label>Volumen minuto estimado (L/min)</label><input type="number" id="vp-vm-est" placeholder="5 – 8" readonly style="background:rgba(0,200,255,0.05);"></div>
-    </div>
-    <div class="btn-row">
-      <button class="calc" onclick="calcVentParams()">Calcular</button>
-      <button class="reset" onclick="resetPanel('vent-params-sec')">Limpiar</button>
-    </div>
-    <div class="multi-result" id="vp-result" style="display:none;margin-top:12px;">
-      <div class="mr-row"><span class="mr-label">PIC calculado</span><span class="mr-val accent" id="vp-out-pic">—</span></div>
-      <div class="mr-row"><span class="mr-label">VT por kg de PIC</span><span class="mr-val" id="vp-out-vtkg">—</span></div>
-      <div class="mr-row"><span class="mr-label">Volumen minuto estimado</span><span class="mr-val" id="vp-out-vm">—</span></div>
-      <div class="divider"></div>
-      <div class="mr-row" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-        <span class="mr-label">Protección pulmonar por VT</span>
-        <span class="result-badge" id="vp-vt-badge">—</span>
-      </div>
-      <div class="mr-row" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-        <span class="mr-label">Meta de presión meseta</span>
-        <span class="result-badge" id="vp-pplat-badge">—</span>
-      </div>
-    </div>
-    <div class="evid-panel" style="margin-top:10px;">
-      <div class="evid-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
-        <span>📚 Bibliografía y Evidencia</span>
-        <span class="evid-arrow">▾</span>
-      </div>
-      <div class="evid-body">
-        <div class="evid-section">
-          <div class="evid-section-title">Estrategia protectora</div>
-          <div class="evid-interp">Ventilación protectora con VT cercano a 6 mL/kg de peso ideal, presión meseta &lt;30 cmH₂O y vigilancia de presión de distensión reduce lesión pulmonar asociada al ventilador.</div>
-        </div>
-        <div class="evid-section">
-          <div class="evid-section-title">Referencias</div>
-          <div class="evid-ref"><span class="evid-year">2000</span> — <b>ARDS Network</b>. Ventilation with lower tidal volumes as compared with traditional tidal volumes for ALI/ARDS. <i>N Engl J Med</i>. <a href="https://doi.org/10.1056/NEJM200005043421801" target="_blank" style="color:var(--accent);font-size:10px;">DOI</a>.</div>
-          <div class="evid-ref"><span class="evid-year">2015</span> — <b>Amato MBP et al.</b> Driving Pressure and Survival in ARDS. <i>N Engl J Med</i>. <a href="https://doi.org/10.1056/NEJMsa1410639" target="_blank" style="color:var(--accent);font-size:10px;">DOI</a>.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- MECANICA VENTILATORIA -->
 <div id="calc-vent-mec" class="calc-panel">
   <div class="card" style="margin-bottom:12px;padding:12px 16px;">
@@ -2106,8 +2070,35 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="group-desc">Cálculo integral de distensibilidad, resistencia, trabajo ventilatorio, ventilación alveolar y poder mecánico.</div>
   </div>
 
+  <div class="card" id="vent-sec-vt">
+    <div class="card-title">Ventilación protectora (VT)</div>
+    <div class="row cols3">
+      <div><label>Talla (cm)</label><input type="number" id="vt-tall" placeholder="160 - 180" step="0.1"></div>
+      <div><label>Sexo</label><select id="vt-sex"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
+      <div><label>Dosis objetivo (mL/kg)</label><select id="vt-dose"><option value="4">4</option><option value="5">5</option><option value="6" selected>6</option><option value="7">7</option><option value="8">8</option></select></div>
+    </div>
+    <div class="row cols3">
+      <div><label>Frecuencia respiratoria (rpm) — para VM</label><input type="number" id="vt-fr" placeholder="12 - 20" step="1"></div>
+      <div><label>Presión meseta (cmH₂O) — seguridad</label><input type="number" id="vt-pplat" placeholder="<= 30" step="0.1"></div>
+      <div><label>Peso predicho (kg)</label><input type="number" id="vt-pp" readonly style="background:rgba(0,200,255,0.05);"></div>
+    </div>
+    <div class="btn-row">
+      <button class="calc" onclick="calcVT()">Calcular VT protector</button>
+      <button class="reset" onclick="resetPanel('vent-sec-vt')">Limpiar</button>
+    </div>
+    <div class="multi-result" id="vt-result" style="display:none;margin-top:12px;">
+      <div class="mr-row"><span class="mr-label">VT objetivo</span><span class="mr-val accent" id="vt-calc">—</span></div>
+      <div class="mr-row"><span class="mr-label">Rango protector sugerido</span><span class="mr-val" id="vt-range">—</span></div>
+      <div class="mr-row"><span class="mr-label">Volumen minuto estimado</span><span class="mr-val" id="vt-vm">—</span></div>
+      <div class="mr-row" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+        <span class="mr-label">Control presión meseta</span><span class="result-badge" id="vt-pplat-badge">—</span>
+      </div>
+    </div>
+    <div id="evid-wrap-vt" style="margin-top:0;"></div>
+  </div>
+
   <div class="card" id="vent-sec-monitor">
-    <div class="card-title">Inputs compartidos</div>
+    <div class="card-title">Mecánica ventilatoria</div>
     <div class="row cols3">
       <div><label>Presión pico / Ppico (cmH₂O)</label><input type="number" id="vm-ppico" placeholder="15 – 30" step="0.1"></div>
       <div><label>Presión plateau / Ppl (cmH₂O)</label><input type="number" id="vm-pplat" placeholder="≤ 30" step="0.1"></div>
@@ -2299,26 +2290,146 @@ input.pat-synced:focus, select.pat-synced:focus {
       <button class="reset" onclick="resetPanel('calc-o2-transport')">Limpiar</button>
     </div>
     <div class="multi-result" id="ot-result" style="display:none;margin-top:12px;">
-      <div class="mr-row"><span class="mr-label">CcO₂</span><span class="mr-val" id="ot-cco2">—</span></div>
-      <div class="mr-row"><span class="mr-label">CaO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-cao2">—</span><span class="result-badge" id="ot-cao2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">CvO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-cvo2">—</span><span class="result-badge" id="ot-cvo2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">DavO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-davo2">—</span><span class="result-badge" id="ot-davo2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">Qs/Qt</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-qsqt">—</span><span class="result-badge" id="ot-qsqt-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">DO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-do2">—</span><span class="result-badge" id="ot-do2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">VO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-vo2">—</span><span class="result-badge" id="ot-vo2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">IEO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-ieo2">—</span><span class="result-badge" id="ot-ieo2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">VS</span><span class="mr-val" id="ot-vs">—</span></div>
-      <div class="mr-row"><span class="mr-label">VSI</span><span class="mr-val" id="ot-vsi">—</span></div>
-      <div class="mr-row"><span class="mr-label">IC</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-ic">—</span><span class="result-badge" id="ot-ic-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">RVS</span><span class="mr-val" id="ot-rvs">—</span></div>
-      <div class="mr-row"><span class="mr-label">RVSI</span><span class="mr-val" id="ot-rvsi">—</span></div>
-      <div class="mr-row"><span class="mr-label">RVP</span><span class="mr-val" id="ot-rvp">—</span></div>
-      <div class="mr-row"><span class="mr-label">RVPI</span><span class="mr-val" id="ot-rvpi">—</span></div>
-      <div class="mr-row"><span class="mr-label">TLVI</span><span class="mr-val" id="ot-tlvi">—</span></div>
-      <div class="mr-row"><span class="mr-label">TLVD</span><span class="mr-val" id="ot-tlvd">—</span></div>
-      <div class="mr-row"><span class="mr-label">PiO₂</span><span class="mr-val" id="ot-pio2">—</span></div>
-      <div class="mr-row"><span class="mr-label">PAO₂</span><span class="mr-val" id="ot-pao2alv">—</span></div>
-      <div class="mr-row"><span class="mr-label">P(A-a)O₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-aa">—</span><span class="result-badge" id="ot-aa-b"></span></span></div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="CcO2 = 1.34*Hb + 0.0031*PaO2">
+          <span class="hemo-name">CcO₂</span>
+          <span class="hemo-formula">CcO2 = 1.34*Hb + 0.0031*PaO2</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-cco2">—</span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="CaO2 = 1.34*Hb*SaO2 + 0.003*PaO2">
+          <span class="hemo-name">CaO₂</span>
+          <span class="hemo-formula">CaO2 = 1.34*Hb*SaO2 + 0.003*PaO2</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-cao2">—</span><span class="result-badge" id="ot-cao2-b"></span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="CvO2 = 1.34*Hb*SvO2 + 0.003*PvO2">
+          <span class="hemo-name">CvO₂</span>
+          <span class="hemo-formula">CvO2 = 1.34*Hb*SvO2 + 0.003*PvO2</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-cvo2">—</span><span class="result-badge" id="ot-cvo2-b"></span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="DavO2 = CaO2-CvO2">
+          <span class="hemo-name">DavO₂</span>
+          <span class="hemo-formula">DavO2 = CaO2-CvO2</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-davo2">—</span><span class="result-badge" id="ot-davo2-b"></span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="Qs/Qt = (CcO2-CaO2)/(CcO2-CvO2)*100">
+          <span class="hemo-name">Qs/Qt</span>
+          <span class="hemo-formula">Qs/Qt = (CcO2-CaO2)/(CcO2-CvO2)*100</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-qsqt">—</span><span class="result-badge" id="ot-qsqt-b"></span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="DO2 = GC*CaO2*10">
+          <span class="hemo-name">DO₂</span>
+          <span class="hemo-formula">DO2 = GC*CaO2*10</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-do2">—</span><span class="result-badge" id="ot-do2-b"></span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="VO2 = GC*(CaO2-CvO2)*10">
+          <span class="hemo-name">VO₂</span>
+          <span class="hemo-formula">VO2 = GC*(CaO2-CvO2)*10</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-vo2">—</span><span class="result-badge" id="ot-vo2-b"></span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="IEO2 = VO2/DO2*100">
+          <span class="hemo-name">IEO₂</span>
+          <span class="hemo-formula">IEO2 = VO2/DO2*100</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-ieo2">—</span><span class="result-badge" id="ot-ieo2-b"></span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="VS = GC/FC*1000">
+          <span class="hemo-name">VS</span>
+          <span class="hemo-formula">VS = GC/FC*1000</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-vs">—</span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="VSI = VS/SC">
+          <span class="hemo-name">VSI</span>
+          <span class="hemo-formula">VSI = VS/SC</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-vsi">—</span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="IC = GC/SC">
+          <span class="hemo-name">IC</span>
+          <span class="hemo-formula">IC = GC/SC</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-ic">—</span><span class="result-badge" id="ot-ic-b"></span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="RVS = ((PAM-PVC)*80)/GC">
+          <span class="hemo-name">RVS</span>
+          <span class="hemo-formula">RVS = ((PAM-PVC)*80)/GC</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-rvs">—</span><span class="result-badge" id="ot-rvs-b"></span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="RVSI = RVS*SC">
+          <span class="hemo-name">RVSI</span>
+          <span class="hemo-formula">RVSI = RVS*SC</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-rvsi">—</span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="RVP = ((PAPM-POAP)*80)/GC">
+          <span class="hemo-name">RVP</span>
+          <span class="hemo-formula">RVP = ((PAPM-POAP)*80)/GC</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-rvp">—</span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="RVPI = RVP*SC">
+          <span class="hemo-name">RVPI</span>
+          <span class="hemo-formula">RVPI = RVP*SC</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-rvpi">—</span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="TLVI = VS*(PAM-POAP)*0.0136">
+          <span class="hemo-name">TLVI</span>
+          <span class="hemo-formula">TLVI = VS*(PAM-POAP)*0.0136</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-tlvi">—</span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="TLVD = VS*(PAPM-PAD)*0.0136">
+          <span class="hemo-name">TLVD</span>
+          <span class="hemo-formula">TLVD = VS*(PAPM-PAD)*0.0136</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-tlvd">—</span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="PiO2 = (Pb-PH2O)*FiO2">
+          <span class="hemo-name">PiO₂</span>
+          <span class="hemo-formula">PiO2 = (Pb-PH2O)*FiO2</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-pio2">—</span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="PAO2 = PiO2-(PaCO2/R)">
+          <span class="hemo-name">PAO₂</span>
+          <span class="hemo-formula">PAO2 = PiO2-(PaCO2/R)</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-pao2alv">—</span></span>
+      </div>
+      <div class="mr-row hemo-row">
+        <span class="hemo-label" title="P(A-a)O2 = PAO2-PaO2">
+          <span class="hemo-name">P(A-a)O₂</span>
+          <span class="hemo-formula">P(A-a)O2 = PAO2-PaO2</span>
+        </span>
+        <span class="hemo-value-wrap"><span class="mr-val hemo-val" id="ot-aa">—</span><span class="result-badge" id="ot-aa-b"></span></span>
+      </div>
     </div>
     <div class="info" style="margin-top:10px;">*Presión barométrica CDMX: 587 mmHg · Presión de vapor de agua: 47 mmHg</div>
     <div class="evid-panel" style="margin-top:10px;">
@@ -2500,7 +2611,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 
 <div id="calc-perfil-hemo" class="calc-panel">
   <div class="card">
-    <div class="card-title">Perfil hemodinámico</div>
+    <div class="card-title">Perfil hemodinámico (choque)</div>
     <div class="section-sub">Clasificación de choque</div>
     <div class="row cols3">
       <div><label title="Presión arterial media">PAM (presión arterial media) (mmHg)</label><input type="number" id="ph-pam" placeholder="70 – 105"></div>
@@ -2528,26 +2639,9 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="mr-row"><span class="mr-label">Descripción</span><span class="mr-val" id="ph-shock-desc" style="max-width:70%;text-align:right;">—</span></div>
     </div>
 
-    <div class="section-sub">Transporte y consumo de O₂</div>
-    <div class="row cols4">
-      <div><label>Hb (g/dL)</label><input type="number" id="ph-hb" placeholder="12 – 16" step="0.1"></div>
-      <div><label>SaO₂ (%)</label><input type="number" id="ph-sao2" placeholder="95 – 100" step="0.1"></div>
-      <div><label>PaO₂ (mmHg)</label><input type="number" id="ph-pao2" placeholder="80 – 100" step="0.1"></div>
-      <div><label>PvO₂ (mmHg)</label><input type="number" id="ph-pvo2" placeholder="35 – 45" step="0.1"></div>
-    </div>
-    <div class="row cols2">
-      <div><label>SC (m²)</label><input type="number" id="ph-sc" placeholder="1.7 – 2.0" step="0.01"></div>
-      <div><label>RVS calculada</label><input type="number" id="ph-rvs-calc" readonly placeholder="auto" style="background:rgba(0,200,255,0.05);"></div>
-    </div>
-    <div class="multi-result" id="ph-ox-result" style="display:none;margin-top:12px;">
-      <div class="mr-row"><span class="mr-label">CaO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-cao2">—</span><span class="result-badge" id="ph-cao2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">CvO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-cvo2">—</span><span class="result-badge" id="ph-cvo2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">DavO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-davo2">—</span><span class="result-badge" id="ph-davo2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">DO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-do2">—</span><span class="result-badge" id="ph-do2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">VO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-vo2">—</span><span class="result-badge" id="ph-vo2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">IEO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-ieo2">—</span><span class="result-badge" id="ph-ieo2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">RVS = [(PAM−PVC)×80]/GC</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-rvs-out">—</span><span class="result-badge" id="ph-rvs-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">IC = GC/SC</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-ic-out">—</span><span class="result-badge" id="ph-ic-b"></span></span></div>
+    <div class="info" style="margin-top:10px;">
+      Este submódulo clasifica fenotipo de choque (enfoque rápido). Para cálculos completos de oxigenación/transporte (CaO₂, DO₂, VO₂, IEO₂, shunt y resistencias), use
+      <button type="button" class="reset" style="margin-left:6px;padding:4px 10px;" onclick="showCalc('o2-transport')">Oxigenación y transporte de O₂</button>.
     </div>
 
     <div class="evid-panel" style="margin-top:10px;">
@@ -3123,7 +3217,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- KDIGO -->
 <div id="calc-kdigo" class="calc-panel">
   <div class="card">
-    <div class="card-title" title="Kidney Disease: Improving Global Outcomes">KDIGO — Lesión Renal Aguda</div>
+    <div class="card-title" title="Kidney Disease: Improving Global Outcomes">KDIGO — LRA</div>
     <div class="row cols2">
       <div><label>Creatinina basal (mg/dL)</label><input type="number" id="kd-base" placeholder="0.6 – 1.2" step="0.01"></div>
       <div><label>Creatinina actual (mg/dL)</label><input type="number" id="kd-curr" placeholder="0.6 – 1.2" step="0.01"></div>
@@ -3209,7 +3303,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- HARRIS-BENEDICT -->
 <div id="calc-harris" class="calc-panel">
   <div class="card">
-    <div class="card-title">Requerimiento Calórico — Harris-Benedict</div>
+    <div class="card-title">Harris-Benedict</div>
     <div class="row cols3">
       <div><label>Sexo</label><select id="hb-sex"><option value="M">Masculino</option><option value="F">Femenino</option></select></div>
       <div><label>Peso actual (kg)</label><input type="number" id="hb-peso" placeholder=""></div>
@@ -3500,7 +3594,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- ===== ELECTROLITOS ===== -->
 <div id="calc-electrolitos" class="calc-panel">
   <div class="card">
-    <div class="card-title">Reposición electrolitos</div>
+    <div class="card-title">Reposición de electrolitos</div>
 
     <!-- Datos globales -->
     <div class="row cols2">
@@ -4017,7 +4111,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- DOSIS DIÁLISIS -->
 <div id="calc-tsr-dosis" class="calc-panel">
   <div class="card">
-    <div class="card-title" title="Terapia de Sustitución Renal">TSR: Dosis</div>
+    <div class="card-title" title="Terapia de Sustitución Renal">TSR: Dosis (Kt/V / CRRT)</div>
     <div class="row cols2">
       <div><label>Modalidad</label>
         <select id="tsr-mod" onchange="updateTSRDosis()">
@@ -4076,7 +4170,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- ULTRAFILTRADO -->
 <div id="calc-tsr-uf" class="calc-panel">
   <div class="card">
-    <div class="card-title" title="Terapia de Sustitución Renal">TSR: Ultrafiltrado</div>
+    <div class="card-title" title="Terapia de Sustitución Renal">TSR: Ultrafiltrado y reposición</div>
     <div class="info" style="font-size:11px;margin-bottom:10px;">«Balance hídrico acumulado» aquí es el volumen neto a compensar con UF en el contexto de CRRT (p. ej. sobrecarga previa). No es el balance parcial del turno de <strong>Balance hídrico</strong>.</div>
     <div class="row cols3">
       <div><label>Peso actual (kg)</label><input type="number" id="uf-peso" placeholder=""></div>
@@ -4177,7 +4271,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- MODALIDAD E INDICACIONES TSR -->
 <div id="calc-tsr-modalidad" class="calc-panel">
   <div class="card">
-    <div class="card-title">TSR: Modalidad</div>
+    <div class="card-title">TSR: Modalidad e indicaciones</div>
     <div class="section-sub">Indicaciones de inicio (AEIOU)</div>
     <div class="sofa-grid" style="gap:6px; margin-bottom:14px;">
       <div class="sofa-item" style="grid-template-columns:1fr auto;"><div><div class="sofa-name">A — Acidosis metabólica severa</div><div style="font-size:10px;color:var(--muted)">pH &lt;7.15 refractaria a tratamiento</div></div><select id="aeiou-a" style="width:70px;" onchange="evalAEIOU()"><option value="0">No</option><option value="1">Sí</option></select></div>
@@ -4459,7 +4553,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <!-- ===== MELD ===== -->
 <div id="calc-meld" class="calc-panel">
   <div class="card">
-    <div class="card-title">MELD Score — Enfermedad Hepática Terminal</div>
+    <div class="card-title">MELD</div>
     <div class="row cols3">
       <div><label>Bilirrubina total (mg/dL)</label><input type="number" id="meld-bili" placeholder="ej. 2.5" step="0.1"></div>
       <div><label>Creatinina sérica (mg/dL)</label><input type="number" id="meld-cr" placeholder="ej. 1.2" step="0.1"></div>
@@ -4473,7 +4567,7 @@ input.pat-synced:focus, select.pat-synced:focus {
         </select>
       </div>
     </div>
-    <div class="btn-row" style="margin-top:12px;"><button class="calc" onclick="calcMELD()">Calcular</button><button class="reset" onclick="resetPanel('calc-meld')">Limpiar</button></div>
+    <div class="btn-row" style="margin-top:12px;"><button class="calc" onclick="calcMELD()">Calcular</button><button class="reset" onclick="resetMELD()">Limpiar</button></div>
     <div class="result" id="meld-result" style="display:none;">
       <div class="result-val" id="meld-total">0</div>
       <div class="result-unit">pts</div>
@@ -5048,7 +5142,82 @@ function resetSOFA() {
   const b = document.getElementById('sofa-badge');
   b.className = 'result-badge';
   b.textContent = '';
-  updateStickyScore('sofa', 0);
+  const sticky = document.getElementById('ps-sofa');
+  if (sticky) sticky.style.display = 'none';
+  const sep = document.querySelector('.ps-score-sep');
+  const anyVisible = Array.from(document.querySelectorAll('.ps-score')).some(el => el.style.display !== 'none');
+  if (sep && !anyVisible) sep.style.display = 'none';
+  updateExportPanel();
+}
+
+function resetAPACHE() {
+  const p = document.getElementById('calc-apache');
+  if (!p) return;
+  p.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+  p.querySelectorAll('.val-error').forEach(el => el.classList.remove('val-error'));
+  const total = document.getElementById('apache-total');
+  const interp = document.getElementById('apache-interp');
+  const badge = document.getElementById('apache-badge');
+  if (total) total.textContent = '0';
+  if (interp) interp.textContent = '';
+  if (badge) { badge.className = 'result-badge'; badge.textContent = ''; }
+  const result = document.getElementById('apache-result');
+  if (result) result.style.display = 'none';
+  updateExportPanel();
+}
+
+function resetSAPS() {
+  const p = document.getElementById('calc-saps');
+  if (!p) return;
+  p.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+  p.querySelectorAll('.val-error').forEach(el => el.classList.remove('val-error'));
+  const total = document.getElementById('saps-total');
+  const interp = document.getElementById('saps-interp');
+  const badge = document.getElementById('saps-badge');
+  if (total) total.textContent = '0';
+  if (interp) interp.textContent = '';
+  if (badge) { badge.className = 'result-badge'; badge.textContent = ''; }
+  const result = document.getElementById('saps-result');
+  if (result) result.style.display = 'none';
+  updateExportPanel();
+}
+
+function resetNUTRIC() {
+  const p = document.getElementById('calc-nutric');
+  if (!p) return;
+  p.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+  p.querySelectorAll('.val-error').forEach(el => el.classList.remove('val-error'));
+  const total = document.getElementById('nutric-total');
+  const interp = document.getElementById('nutric-interp');
+  const badge = document.getElementById('nutric-badge');
+  if (total) total.textContent = '0';
+  if (interp) interp.textContent = '';
+  if (badge) { badge.className = 'result-badge'; badge.textContent = ''; }
+  const result = document.getElementById('nutric-result');
+  if (result) result.style.display = 'none';
+  updateExportPanel();
+}
+
+function resetMELD() {
+  const p = document.getElementById('calc-meld');
+  if (!p) return;
+  p.querySelectorAll('input[type=number]').forEach(el => el.value = '');
+  p.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+  p.querySelectorAll('.val-error').forEach(el => el.classList.remove('val-error'));
+  const total = document.getElementById('meld-total');
+  const badge = document.getElementById('meld-badge');
+  const detailIds = ['meld-classic','meld-na-val','meld-mort','meld-interp'];
+  if (total) total.textContent = '0';
+  if (badge) { badge.className = 'result-badge'; badge.textContent = ''; }
+  detailIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '—';
+  });
+  const result = document.getElementById('meld-result');
+  const detail = document.getElementById('meld-detail');
+  if (result) result.style.display = 'none';
+  if (detail) detail.style.display = 'none';
+  updateExportPanel();
 }
 
 // ============ NEWS2 — NATIONAL EARLY WARNING SCORE 2 ============
@@ -5069,12 +5238,6 @@ function calcNEWS2() {
   const fc = parseFloat(document.getElementById('news2-fc').value);
   const avpu = document.getElementById('news2-avpu').value;
   const o2sup = document.getElementById('news2-o2').value;
-
-  if (isNaN(fr) || isNaN(sao2) || isNaN(temp) || isNaN(sbs) || isNaN(fc) || avpu === '' || o2sup === '') {
-    document.getElementById('news2-result').style.display = 'none';
-    document.getElementById('news2-action').textContent = 'Completa todos los campos para calcular';
-    return;
-  }
 
   var useScale2 = parseInt(o2sup) === 2;
   let score = 0;
@@ -5881,6 +6044,18 @@ function calcSedation() {
 
 // ============ TRANSFUSION DECISION SUPPORT ============
 function calcTransfusion() {
+  if (!validate([
+    {id:'tf-hb', label:'Hemoglobina'},
+    {id:'tf-plt', label:'Plaquetas'},
+    {id:'tf-inr', label:'INR'},
+    {id:'tf-fibrin', label:'Fibrinógeno'},
+    {id:'tf-aptt', label:'aPTT'},
+    {id:'tf-scenario', label:'Diagnóstico (electivo)'}
+  ])) {
+    document.getElementById('tf-result-box').style.display = 'none';
+    showToast('Completa los campos requeridos de transfusión (electivo).');
+    return;
+  }
   const hb = parseFloat(document.getElementById('tf-hb').value);
   const plt = parseFloat(document.getElementById('tf-plt').value);
   const inr = parseFloat(document.getElementById('tf-inr').value);
@@ -5889,11 +6064,6 @@ function calcTransfusion() {
   const weight = parseFloat(document.getElementById('tf-weight').value) || 70;
   const scenario = document.getElementById('tf-scenario').value;
   const bleeding = document.getElementById('tf-bleeding').value;
-
-  if (!hb || !plt || !inr || !fibrin || !aptt || !scenario) {
-    document.getElementById('tf-result-box').style.display = 'none';
-    return;
-  }
 
   let result = '';
   result += `<b>Hb: ${hb} g/dL | Plaquetas: ${plt} K/uL | INR: ${inr} | Fibrinógeno: ${fibrin} mg/dL</b><br><br>`;
@@ -6032,6 +6202,14 @@ function calcTransfusion() {
 
 // ============ SOFA ============
 function calcSOFA() {
+  if (!validate([
+    {id:'sofa-resp', label:'SOFA respiratorio'},
+    {id:'sofa-coa', label:'SOFA coagulación'},
+    {id:'sofa-hep', label:'SOFA hepático'},
+    {id:'sofa-cv', label:'SOFA cardiovascular'},
+    {id:'sofa-neu', label:'SOFA neurológico'},
+    {id:'sofa-ren', label:'SOFA renal'}
+  ])) return;
   const ids = ['resp','coa','hep','cv','neu','ren'];
   let total = 0;
   ids.forEach(i => {
@@ -6054,6 +6232,22 @@ function calcSOFA() {
 
 // ============ APACHE II ============
 function calcAPACHE() {
+  if (!validate([
+    {id:'ap-temp', label:'Temperatura'},
+    {id:'ap-pam', label:'PAM'},
+    {id:'ap-fc', label:'FC'},
+    {id:'ap-fr', label:'FR'},
+    {id:'ap-ox', label:'Oxigenación'},
+    {id:'ap-ph', label:'pH'},
+    {id:'ap-na', label:'Sodio'},
+    {id:'ap-k', label:'Potasio'},
+    {id:'ap-cr', label:'Creatinina'},
+    {id:'ap-hto', label:'Hematocrito'},
+    {id:'ap-leu', label:'Leucocitos'},
+    {id:'ap-gcs', label:'GCS'},
+    {id:'ap-age', label:'Edad'},
+    {id:'ap-chr', label:'Enfermedad crónica'}
+  ])) return;
   // All are selects (always have value), just calc
   const ids = ['temp','pam','fc','fr','ox','ph','na','k','cr','hto','leu','gcs','age','chr'];
   const total = ids.reduce((s,i) => s + parseInt(document.getElementById('ap-'+i).value), 0);
@@ -6072,6 +6266,25 @@ function calcAPACHE() {
 
 // ============ SAPS II ============
 function calcSAPS() {
+  if (!validate([
+    {id:'saps-age', label:'Edad'},
+    {id:'saps-fc', label:'FC'},
+    {id:'saps-pas', label:'PAS'},
+    {id:'saps-temp', label:'Temperatura'},
+    {id:'saps-pafi', label:'PaO2/FiO2'},
+    {id:'saps-uri', label:'Uresis'},
+    {id:'saps-bun', label:'BUN'},
+    {id:'saps-na', label:'Sodio'},
+    {id:'saps-k', label:'Potasio'},
+    {id:'saps-bic', label:'Bicarbonato'},
+    {id:'saps-bil', label:'Bilirrubina'},
+    {id:'saps-gcs', label:'GCS'},
+    {id:'saps-leu', label:'Leucocitos'},
+    {id:'saps-adm', label:'Tipo de ingreso'},
+    {id:'saps-hem', label:'Cáncer hematológico'},
+    {id:'saps-met', label:'Cáncer metastásico'},
+    {id:'saps-aids', label:'SIDA'}
+  ])) return;
   const ids = ['age','fc','pas','temp','pafi','uri','bun','na','k','bic','bil','gcs','leu','adm','hem','met','aids'];
   const total = ids.reduce((s,i) => s + parseInt(document.getElementById('saps-'+i).value), 0);
   document.getElementById('saps-total').textContent = total;
@@ -6088,6 +6301,14 @@ function calcSAPS() {
 
 // ============ NUTRIC ============
 function calcNUTRIC() {
+  if (!validate([
+    {id:'nut-age', label:'Edad'},
+    {id:'nut-apa', label:'APACHE II'},
+    {id:'nut-sofa', label:'SOFA'},
+    {id:'nut-com', label:'Comorbilidades'},
+    {id:'nut-days', label:'Días de hospitalización'},
+    {id:'nut-il6', label:'IL-6'}
+  ])) return;
   const ids = ['age','apa','sofa','com','days','il6'];
   const total = ids.reduce((s,i) => s + parseInt(document.getElementById('nut-'+i).value), 0);
   document.getElementById('nutric-total').textContent = total;
@@ -6104,96 +6325,32 @@ function calcVT() {
   const sex = document.getElementById('vt-sex').value;
   const tall = parseFloat(document.getElementById('vt-tall').value);
   const dose = parseFloat(document.getElementById('vt-dose').value);
+  const fr = parseFloat(document.getElementById('vt-fr').value);
+  const pplat = parseFloat(document.getElementById('vt-pplat').value);
   const pp = sex==='M' ? 50+0.91*(tall-152.4) : 45.5+0.91*(tall-152.4);
-  document.getElementById('vt-pp').textContent = pp.toFixed(1)+' kg';
-  document.getElementById('vt-calc').textContent = Math.round(pp*dose)+' mL';
+  const vt = Math.round(pp*dose);
+  const vm = !isNaN(fr) ? ((vt / 1000) * fr).toFixed(2) + ' L/min' : '—';
+  const ppEl = document.getElementById('vt-pp');
+  if (ppEl.tagName === 'INPUT') ppEl.value = pp.toFixed(1);
+  else ppEl.textContent = pp.toFixed(1) + ' kg';
+  document.getElementById('vt-calc').textContent = vt + ' mL';
   document.getElementById('vt-range').textContent = Math.round(pp*6)+' - '+Math.round(pp*8)+' mL';
+  document.getElementById('vt-vm').textContent = vm;
+  const pplatBadge = document.getElementById('vt-pplat-badge');
+  if (!isNaN(pplat) && pplat > 30) setBadge('vt-pplat-badge', 'badge-yellow', 'Pplat > 30');
+  else if (!isNaN(pplat)) setBadge('vt-pplat-badge', 'badge-green', 'Pplat objetivo');
+  else {
+    pplatBadge.className = 'result-badge';
+    pplatBadge.textContent = 'Sin dato';
+  }
   document.getElementById('vt-result').style.display='grid';
-}
 
-// ============ PARAMETROS VENTILATORIOS ============
-function updateVentParamsPIC() {
-  const talla = parseFloat(document.getElementById('vp-talla').value);
-  const sexo = document.getElementById('vp-sexo').value;
-  if (isNaN(talla) || talla <= 100) {
-    document.getElementById('vp-pic').value = '';
-    return null;
-  }
-  const pic = sexo === 'M' ? 50 + 0.91 * (talla - 152.4) : 45.5 + 0.91 * (talla - 152.4);
-  document.getElementById('vp-pic').value = pic.toFixed(1);
-  return pic;
-}
-function fillVentParamsVT() {
-  const pic = updateVentParamsPIC();
-  if (pic === null) {
-    showToast('Talla inválida: ingrese talla >100 cm y sexo para calcular PIC.');
-    return;
-  }
-  document.getElementById('vp-vt').value = Math.round(pic * 6);
-}
-function normalizeVentParamsFiO2(rawVal) {
-  if (isNaN(rawVal)) return null;
-  const fio2Pct = rawVal <= 1 ? rawVal * 100 : rawVal;
-  if (fio2Pct < 21 || fio2Pct > 100) return null;
-  return fio2Pct;
-}
-function calcVentParams() {
-  if (!validate([
-    {id:'vp-talla', label:'Talla'},
-    {id:'vp-fio2', label:'FiO2'},
-    {id:'vp-peep', label:'PEEP'},
-    {id:'vp-fr', label:'Frecuencia respiratoria'}
-  ])) return;
-  const pic = updateVentParamsPIC();
-  if (pic === null) {
-    showToast('No se pudo calcular PIC: verifique talla (>100 cm) y sexo.');
-    return;
-  }
-  const vtInput = document.getElementById('vp-vt');
-  if (vtInput.value.trim() === '') vtInput.value = Math.round(pic * 6);
-  const vt = parseFloat(vtInput.value);
-  const fr = parseFloat(document.getElementById('vp-fr').value);
-  const pplat = parseFloat(document.getElementById('vp-pplat').value);
-  const fio2Raw = parseFloat(document.getElementById('vp-fio2').value);
-  const fio2Pct = normalizeVentParamsFiO2(fio2Raw);
-  const peep = parseFloat(document.getElementById('vp-peep').value);
-
-  if (isNaN(vt) || vt <= 0) {
-    showToast('Volumen tidal faltante o inválido. Ingrese VT o use 6 mL/kg.');
-    return;
-  }
-  if (isNaN(fr)) {
-    showToast('Frecuencia respiratoria inválida. Capture FR entre 10 y 35 rpm.');
-    return;
-  }
-  if (isNaN(peep)) {
-    showToast('PEEP inválida. Capture PEEP entre 3 y 20 cmH₂O.');
-    return;
-  }
-  if (fio2Pct === null) {
-    showToast('FiO2 fuera de rango. Use 0.21-1.00 (decimal) o 21-100 (%).');
-    return;
-  }
-  if (peep < 3 || peep > 20 || fr < 10 || fr > 35) {
-    showToast('Verifique rangos: PEEP 3-20 y FR 10-35.');
-    return;
-  }
-  const vtKg = vt / pic;
-  const vm = (vt / 1000) * fr;
-  document.getElementById('vp-vm-est').value = vm.toFixed(2);
-  document.getElementById('vp-out-pic').textContent = pic.toFixed(1) + ' kg';
-  document.getElementById('vp-out-vtkg').textContent = vtKg.toFixed(2) + ' mL/kg';
-  document.getElementById('vp-out-vm').textContent = vm.toFixed(2) + ' L/min';
-
-  if (vtKg > 8) setBadge('vp-vt-badge', 'badge-red', '⚠ VT protector excedido');
-  else if (vtKg > 6.5) setBadge('vp-vt-badge', 'badge-yellow', 'En límite');
-  else setBadge('vp-vt-badge', 'badge-green', 'VT protector');
-
-  if (!isNaN(pplat) && pplat > 30) setBadge('vp-pplat-badge', 'badge-yellow', 'Pplat > 30');
-  else if (!isNaN(pplat)) setBadge('vp-pplat-badge', 'badge-green', 'Pplat objetivo');
-  else setBadge('vp-pplat-badge', 'badge-yellow', 'Sin dato Pplat');
-
-  document.getElementById('vp-result').style.display = 'grid';
+  const vmVte = document.getElementById('vm-vte');
+  if (vmVte) vmVte.value = vt;
+  const vmFr = document.getElementById('vm-fr');
+  if (vmFr && !isNaN(fr)) vmFr.value = Math.round(fr);
+  const vmPplat = document.getElementById('vm-pplat');
+  if (vmPplat && !isNaN(pplat)) vmPplat.value = pplat;
 }
 
 // ============ PAFI ============
@@ -6504,7 +6661,12 @@ function calcO2Transport() {
 
   const put = (id, v, unit='') => {
     const el = document.getElementById(id);
-    if (el) el.textContent = isNaN(v) ? '—' : v.toFixed(2) + (unit ? ' ' + unit : '');
+    if (!el) return;
+    if (isNaN(v)) {
+      el.textContent = '—';
+      return;
+    }
+    el.innerHTML = '<span class="hemo-num">' + v.toFixed(2) + '</span>' + (unit ? ' <span class="hemo-unit">' + unit + '</span>' : '');
   };
   const setBadgeOpt = (id, v, min, max) => {
     if (isNaN(v)) return;
@@ -6606,30 +6768,6 @@ function calcPerfilHemo() {
   setBadge('ph-shock-badge', cls, shock);
   document.getElementById('ph-shock-desc').textContent = desc;
   document.getElementById('ph-shock-result').style.display = 'grid';
-
-  const hb = parseFloat(document.getElementById('ph-hb').value);
-  const sao2 = parseFloat(document.getElementById('ph-sao2').value);
-  const pao2 = parseFloat(document.getElementById('ph-pao2').value);
-  const pvo2 = parseFloat(document.getElementById('ph-pvo2').value);
-  const sc = parseFloat(document.getElementById('ph-sc').value);
-  if (!isNaN(hb) && !isNaN(sao2) && !isNaN(pao2) && !isNaN(pvo2) && !isNaN(sc) && !isNaN(gc)) {
-    const cao2 = (hb*1.34*(sao2/100)) + (0.0031*pao2);
-    const cvo2 = (hb*1.34*(svo2/100)) + (0.0031*pvo2);
-    const davo2 = cao2 - cvo2;
-    const do2 = gc*10*cao2;
-    const vo2 = gc*10*davo2;
-    const ieo2 = ((cao2-cvo2)/cao2)*100;
-    const rvs = ((pam-pvc)*80)/gc;
-    const icCalc = gc/sc;
-    document.getElementById('ph-rvs-calc').value = rvs.toFixed(0);
-    const put=(id,v,u='')=>document.getElementById(id).textContent=v.toFixed(2)+(u?(' '+u):'');
-    put('ph-cao2',cao2,'mL/dL'); put('ph-cvo2',cvo2,'mL/dL'); put('ph-davo2',davo2,'mL/dL');
-    put('ph-do2',do2,'mL/min'); put('ph-vo2',vo2,'mL/min'); put('ph-ieo2',ieo2,'%'); put('ph-rvs-out',rvs,'dyn·s/cm⁵'); put('ph-ic-out',icCalc,'L/min/m²');
-    const badge=(id,v,min,max)=>setBadge(id,(v>=min&&v<=max)?'badge-green':(v<min?'badge-yellow':'badge-red'),(v>=min&&v<=max)?'Normal':(v<min?'Bajo':'Alto'));
-    badge('ph-cao2-b',cao2,17,20); badge('ph-cvo2-b',cvo2,12,15); badge('ph-davo2-b',davo2,4,6); badge('ph-do2-b',do2,950,1150);
-    badge('ph-vo2-b',vo2,200,250); badge('ph-ieo2-b',ieo2,20,30); badge('ph-rvs-b',rvs,1000,1500); badge('ph-ic-b',icCalc,2.5,4.0);
-    document.getElementById('ph-ox-result').style.display = 'grid';
-  }
 }
 
 function calcUshSistolica() {
@@ -7596,6 +7734,19 @@ function calcCAM() {
 
 // ============ PADUA ============
 function calcPADUA() {
+  if (!validate([
+    {id:'pad1', label:'Cáncer activo'},
+    {id:'pad2', label:'TEV previo'},
+    {id:'pad3', label:'Movilidad reducida'},
+    {id:'pad4', label:'Trombofilia conocida'},
+    {id:'pad5', label:'Trauma o cirugía reciente'},
+    {id:'pad6', label:'Edad ≥70 años'},
+    {id:'pad7', label:'Insuficiencia cardíaca o respiratoria'},
+    {id:'pad8', label:'IAM o EVC'},
+    {id:'pad9', label:'Infección aguda o enfermedad reumatológica'},
+    {id:'pad10', label:'Obesidad'},
+    {id:'pad11', label:'Tratamiento hormonal activo'}
+  ])) return;
   const ids=['pad1','pad2','pad3','pad4','pad5','pad6','pad7','pad8','pad9','pad10','pad11'];
   const total=ids.reduce((s,i)=>s+parseInt(document.getElementById(i).value),0);
   document.getElementById('padua-total').textContent=total;
@@ -7608,6 +7759,13 @@ function calcPADUA() {
 
 // ============ CURB-65 ============
 function calcCURB() {
+  if (!validate([
+    {id:'curb1', label:'Confusión nueva'},
+    {id:'curb2', label:'BUN >19 mg/dL'},
+    {id:'curb3', label:'FR ≥30 rpm'},
+    {id:'curb4', label:'PAS <90 o PAD ≤60 mmHg'},
+    {id:'curb5', label:'Edad ≥65 años'}
+  ])) return;
   const ids=['curb1','curb2','curb3','curb4','curb5'];
   const total=ids.reduce((s,i)=>s+parseInt(document.getElementById(i).value),0);
   document.getElementById('curb-total').textContent=total;
@@ -7622,6 +7780,13 @@ function calcCURB() {
 
 // ============ ROCKALL ============
 function calcROCKALL() {
+  if (!validate([
+    {id:'rock1', label:'Edad'},
+    {id:'rock2', label:'Choque'},
+    {id:'rock3', label:'Comorbilidades'},
+    {id:'rock4', label:'Diagnóstico endoscópico'},
+    {id:'rock5', label:'Estigmas de sangrado reciente'}
+  ])) return;
   const map={rock1:'r-age',rock2:'r-shock',rock3:'r-comor',rock4:'r-diag',rock5:'r-stig'};
   let total=0;
   Object.keys(map).forEach(k=>{
@@ -7669,16 +7834,16 @@ function syncPatient() {
   }
 
   // ── Auto-fill: PESO (all calculators) ───────────────
-  ['vas-peso','bal-peso','kd-peso','hb-peso','el-peso','tsr-peso','uf-peso','ac-peso','ox-peso','sed-weight','tf-weight','hemo-weight','gfr-peso','vp-peso','ot-sc','bom-peso'].forEach(id => forceVal(id, peso));
+  ['vas-peso','bal-peso','kd-peso','hb-peso','el-peso','tsr-peso','uf-peso','ac-peso','ox-peso','sed-weight','tf-weight','hemo-weight','gfr-peso','ot-sc','bom-peso'].forEach(id => forceVal(id, peso));
 
   // ── Auto-fill: TALLA ────────────────────────────────
-  ['vt-tall','hb-tall','hemo-height','vp-talla'].forEach(id => forceVal(id, talla));
+  ['vt-tall','hb-tall','hemo-height'].forEach(id => forceVal(id, talla));
 
   // ── Auto-fill: EDAD ─────────────────────────────────
   ['hb-edad','gfr-edad','ap-age','saps-age','nut-age'].forEach(id => forceVal(id, edad));
 
   // ── Auto-fill: SEXO ─────────────────────────────────
-  if (sexo) { ['vt-sex','hb-sex','gfr-sexo','vp-sexo'].forEach(id => forceSelect(id, sexo)); }
+  if (sexo) { ['vt-sex','hb-sex','gfr-sexo'].forEach(id => forceSelect(id, sexo)); }
 
   // ── Auto-fill: DIAS UCI → NUTRIC ────────────────────
   if (dias) {
@@ -7769,7 +7934,7 @@ function syncPatient() {
   if (peso && talla) calcVT();
   if (peso) calcBAL();
   if (peso && talla && edad) calcHARRIS();
-  if (peso && talla) updateVentParamsPIC();
+  if (peso && talla) calcVT();
   if (peso && talla) {
     const sc = Math.sqrt(parseFloat(peso) * parseFloat(talla) / 3600);
     const scEl = document.getElementById('ot-sc');
@@ -7813,10 +7978,10 @@ function highlightSyncedFields() {
   const talla = document.getElementById('pat-talla').value.trim();
   const edad  = document.getElementById('pat-edad').value.trim();
   const sexo  = document.getElementById('pat-sexo').value;
-  if (peso)  ['vas-peso','bal-peso','kd-peso','hb-peso','el-peso','tsr-peso','uf-peso','ac-peso','ox-peso','sed-weight','tf-weight','hemo-weight','gfr-peso','vp-peso'].forEach(id => markSynced(id));
-  if (talla) ['vt-tall','hb-tall','hemo-height','vp-talla'].forEach(id => markSynced(id));
+  if (peso)  ['vas-peso','bal-peso','kd-peso','hb-peso','el-peso','tsr-peso','uf-peso','ac-peso','ox-peso','sed-weight','tf-weight','hemo-weight','gfr-peso'].forEach(id => markSynced(id));
+  if (talla) ['vt-tall','hb-tall','hemo-height'].forEach(id => markSynced(id));
   if (edad)  ['hb-edad','gfr-edad','ap-age','saps-age','nut-age'].forEach(id => markSynced(id));
-  if (sexo)  ['vt-sex','hb-sex','gfr-sexo','vp-sexo'].forEach(id => markSynced(id));
+  if (sexo)  ['vt-sex','hb-sex','gfr-sexo'].forEach(id => markSynced(id));
 }
 function markSynced(id) {
   const el = document.getElementById(id);
@@ -7858,7 +8023,8 @@ function updateExportPanel() {
   // SOFA
   const sofaEl = document.getElementById('sofa-total');
   const sofaBEl = document.getElementById('sofa-badge');
-  if (sofaEl && hasRenderableValue('sofa-total')) { document.getElementById('ex-sofa').textContent = sofaEl.textContent + ' pts'; copyBadge(sofaBEl, 'ex-sofa-b'); }
+  const sofaHasCalc = sofaBEl && (sofaBEl.textContent || '').trim() !== '';
+  if (sofaEl && hasRenderableValue('sofa-total') && sofaHasCalc) { document.getElementById('ex-sofa').textContent = sofaEl.textContent + ' pts'; copyBadge(sofaBEl, 'ex-sofa-b'); }
   else { setVal('ex-sofa', '—'); clearBadge('ex-sofa-b'); }
 
   // APACHE
@@ -7875,6 +8041,11 @@ function updateExportPanel() {
   const nutR = document.getElementById('nutric-result');
   if (nutR && nutR.style.display!=='none') { document.getElementById('ex-nutric').textContent = document.getElementById('nutric-total').textContent+' pts'; copyBadge(document.getElementById('nutric-badge'),'ex-nutric-b'); }
   else { setVal('ex-nutric', '—'); clearBadge('ex-nutric-b'); }
+
+  // MELD
+  const meldR = document.getElementById('meld-result');
+  if (meldR && meldR.style.display!=='none') { document.getElementById('ex-meld').textContent = document.getElementById('meld-total').textContent+' pts'; copyBadge(document.getElementById('meld-badge'),'ex-meld-b'); }
+  else { setVal('ex-meld', '—'); clearBadge('ex-meld-b'); }
 
   // PAFI
   const pafiR = document.getElementById('pafi-result');
@@ -8059,10 +8230,11 @@ ${scores}
 function collectScores() {
   const groups = [
     {title:'Pronóstico', items:[
-      {name:'SOFA', val:()=>document.getElementById('sofa-total').textContent+' pts', badge:()=>document.getElementById('sofa-badge')},
       {name:'APACHE II', val:()=>{ const r=document.getElementById('apache-result'); return r&&r.style.display!=='none'?document.getElementById('apache-total').textContent+' pts':'—';}, badge:()=>document.getElementById('apache-badge')},
+      {name:'SOFA', val:()=>{ const b=document.getElementById('sofa-badge'); return b && (b.textContent||'').trim()!=='' ? document.getElementById('sofa-total').textContent+' pts' : '—'; }, badge:()=>document.getElementById('sofa-badge')},
       {name:'SAPS II', val:()=>{ const r=document.getElementById('saps-result'); return r&&r.style.display!=='none'?document.getElementById('saps-total').textContent+' pts':'—';}, badge:()=>document.getElementById('saps-badge')},
       {name:'NUTRIC', val:()=>{ const r=document.getElementById('nutric-result'); return r&&r.style.display!=='none'?document.getElementById('nutric-total').textContent+' pts':'—';}, badge:()=>document.getElementById('nutric-badge')},
+      {name:'MELD', val:()=>{ const r=document.getElementById('meld-result'); return r&&r.style.display!=='none'?document.getElementById('meld-total').textContent+' pts':'—';}, badge:()=>document.getElementById('meld-badge')},
     ]},
     {title:'Ventilación', items:[
       {name:'PAFI (P:F)', val:()=>{ const r=document.getElementById('pafi-result'); return r&&r.style.display!=='none'?document.getElementById('pafi-val').textContent+' mmHg':'—';}, badge:()=>document.getElementById('pafi-badge')},
@@ -10193,11 +10365,21 @@ function switchTfTab(tab, btn) {
   document.getElementById('tf-tab-sangrado').classList.toggle('active', tab === 'sangrado');
   document.getElementById('tf-result-box').style.display = 'none';
   document.getElementById('tf-result-bleed-box').style.display = 'none';
-  if (tab === 'electivo') calcTransfusion();
-  else calcTransfusionBleed();
 }
 
 function calcTransfusionBleed() {
+  if (!validate([
+    {id:'tf-hb', label:'Hemoglobina'},
+    {id:'tf-plt', label:'Plaquetas'},
+    {id:'tf-inr', label:'INR'},
+    {id:'tf-fibrin', label:'Fibrinógeno'},
+    {id:'tf-aptt', label:'aPTT'},
+    {id:'tf-scenario-b', label:'Diagnóstico (sangrado)'}
+  ])) {
+    document.getElementById('tf-result-bleed-box').style.display = 'none';
+    showToast('Completa los campos requeridos de transfusión (sangrado).');
+    return;
+  }
   const hb = parseFloat(document.getElementById('tf-hb').value);
   const plt = parseFloat(document.getElementById('tf-plt').value);
   const inr = parseFloat(document.getElementById('tf-inr').value);
@@ -10206,10 +10388,6 @@ function calcTransfusionBleed() {
   const weight = parseFloat(document.getElementById('tf-weight').value) || 70;
   const scenario = document.getElementById('tf-scenario-b').value;
   const bleeding = document.getElementById('tf-bleeding-b').value;
-
-  if (!hb || !plt || !inr || !fibrin || !aptt || !scenario) {
-    document.getElementById('tf-result-bleed-box').style.display = 'none'; return;
-  }
 
   let r = '';
   r += `<b>Hb: ${hb} | Plaquetas: ${plt}K | INR: ${inr} | Fib: ${fibrin} | aPTT: ${aptt}</b><br><br>`;
@@ -10304,11 +10482,6 @@ function calcQSOFA() {
   const pas = document.getElementById('qsofa-pas').value;
   const fr = document.getElementById('qsofa-fr').value;
   const gcs = document.getElementById('qsofa-gcs').value;
-  if (pas === '' || fr === '' || gcs === '') {
-    document.getElementById('qsofa-result').style.display = 'none';
-    document.getElementById('qsofa-detail').style.display = 'none';
-    return;
-  }
   const total = parseInt(pas) + parseInt(fr) + parseInt(gcs);
   document.getElementById('qsofa-total').textContent = total;
   let interp, cls;
@@ -10325,6 +10498,15 @@ function calcQSOFA() {
 
 // ============ WELLS — TEP ============
 function calcWells() {
+  if (!validate([
+    {id:'wells-tvp', label:'Signos/síntomas de TVP'},
+    {id:'wells-alt', label:'TEP diagnóstico más probable'},
+    {id:'wells-fc', label:'FC >100 lpm'},
+    {id:'wells-inmov', label:'Inmovilización o cirugía reciente'},
+    {id:'wells-prev', label:'TEP/TVP previo'},
+    {id:'wells-hemo', label:'Hemoptisis'},
+    {id:'wells-cancer', label:'Cáncer activo'}
+  ])) return;
   const ids = ['wells-tvp','wells-alt','wells-fc','wells-inmov','wells-prev','wells-hemo','wells-cancer'];
   const total = ids.reduce((s, id) => s + parseFloat(document.getElementById(id).value || 0), 0);
   document.getElementById('wells-total').textContent = total;
@@ -10343,16 +10525,29 @@ function calcWells() {
 
 // ============ MELD ============
 function calcMELD() {
+  if (!validate([
+    {id:'meld-bili', label:'Bilirrubina total'},
+    {id:'meld-cr', label:'Creatinina sérica'},
+    {id:'meld-inr', label:'INR'}
+  ])) {
+    document.getElementById('meld-result').style.display = 'none';
+    document.getElementById('meld-detail').style.display = 'none';
+    const total = document.getElementById('meld-total');
+    if (total) total.textContent = '0';
+    const b = document.getElementById('meld-badge');
+    if (b) { b.className = 'result-badge'; b.textContent = ''; }
+    ['meld-classic','meld-na-val','meld-mort','meld-interp'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = '—';
+    });
+    updateExportPanel();
+    return;
+  }
   let bili = parseFloat(document.getElementById('meld-bili').value);
   let cr   = parseFloat(document.getElementById('meld-cr').value);
   const inr = parseFloat(document.getElementById('meld-inr').value);
   const na  = parseFloat(document.getElementById('meld-na').value);
   const hd  = document.getElementById('meld-hd').value === '1';
-  if (isNaN(bili) || isNaN(cr) || isNaN(inr)) {
-    document.getElementById('meld-result').style.display = 'none';
-    document.getElementById('meld-detail').style.display = 'none';
-    return;
-  }
   if (hd) cr = 4.0;
   bili = Math.max(bili, 1); cr = Math.max(cr, 1);
   const inrC = Math.max(inr, 1);
@@ -10380,6 +10575,7 @@ function calcMELD() {
   b.className = 'result-badge ' + cls; b.textContent = displayScore + ' pts';
   document.getElementById('meld-result').style.display = 'flex';
   document.getElementById('meld-detail').style.display = 'block';
+  updateExportPanel();
   ensureEvidenceForCalc('meld');
 }
 
