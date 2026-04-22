@@ -4059,7 +4059,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Lactato en descenso (clearance ≥10%/h ideal)</label>
       <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Diuresis ≥0.5 mL/kg/h</label>
       <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Re-evaluar foco infeccioso → control de fuente si aplica</label>
-      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Considerar hidrocortisona si choque refractario a vasopresores</label>
+      <label class="bundle-check"><input type="checkbox" onchange="updateBundleProgress()"> Registrar uso de hidrocortisona en choque refractario a vasopresores (si se documenta en el caso)</label>
     </div>
 
     <div class="multi-result" style="margin-top:14px;">
@@ -4937,7 +4937,7 @@ function calcNEWS2() {
   } else {
     interp = 'Riesgo ALTO — Evaluación urgente';
     cls = 'badge-red';
-    action = '🚨 REVISAR INMEDIATAMENTE — Considerar RCP / UTIP';
+    action = '🚨 REVISIÓN INMEDIATA — perfil de gravedad crítica';
   }
 
   document.getElementById('news2-interp').textContent = interp;
@@ -4968,7 +4968,7 @@ function calcShock() {
   const context = document.getElementById('shock-context').value;
 
   if (isNaN(map) || isNaN(fc) || isNaN(cvp) || isNaN(diuresis) || isNaN(lactato) || context === '') {
-    showToast('Completa los parámetros de shock para obtener recomendaciones.');
+    showToast('Completa los parámetros de shock para obtener interpretación descriptiva.');
     document.getElementById('shock-result').style.display = 'none';
     return;
   }
@@ -5000,11 +5000,11 @@ function calcShock() {
     color = 'badge-red';
     management = `
       <b>Diagnóstico:</b> Contractilidad ↓, CVP elevada, MAP baja<br>
-      <b>Manejo:</b><br>
+      <b>Patrón descriptivo:</b><br>
       1. <b>Evitar carga de volumen</b> — CVP ya elevada<br>
       2. <b>Reducción de poscarga:</b> Vasodilatadores (nitratos), ACE-i, hidralazina<br>
       3. <b>Inotrópicos:</b> Dobutamina 5 mcg/kg/min (aumenta contractilidad sin ↑ FC)<br>
-      4. <b>Considerar soporte mecánico:</b> IABP, ECMO si falla médica<br>
+      4. <b>Soporte mecánico (si está documentado):</b> IABP, ECMO en escenarios refractarios<br>
       5. <b>Diagnóstico:</b> ECG, ecocardiograma, troponina, BNP<br>
       6. <b>Causa:</b> MI, miocarditis, insuficiencia cardíaca descompensada<br>
       ⚠ <b>Meta MAP:</b> ≥65 mmHg · CI ≥2.2 L/min/m²
@@ -5015,7 +5015,7 @@ function calcShock() {
     color = 'badge-red';
     management = `
       <b>Diagnóstico:</b> Resistencia vascular sistémica ↓, CVP normal, MAP baja<br>
-      <b>Manejo inmediato (primeras 3 horas):</b><br>
+      <b>Lectura descriptiva temprana (primeras 3 horas):</b><br>
       1. <b>Reposición agresiva de volumen:</b> 30 mL/kg cristaloides en 15-30 min<br>
       &nbsp;&nbsp;&nbsp;&nbsp;→ Reasegurar cada 15 min, objetivo: MAP ≥65, lactato ↓, diuresis ≥0.5 mL/kg/min<br>
       2. <b>Antibióticos de amplio espectro</b> dentro de 1 hora<br>
@@ -5128,7 +5128,7 @@ const drugDatabase = {
       'normal': '1-2 g IV Q12H',
       'mild': 'GFR ≥30: Sin cambio de dosis',
       'moderate': 'GFR 30-59: Sin cambio de dosis (acumula lentamente)',
-      'severe': 'GFR <30: Considerar dosis más espaciadas o agente alternativo',
+      'severe': 'GFR <30: esquema usualmente más espaciado o alternativa según protocolo local',
       'dialysis': 'En CRRT: sin cambio de dosis'
     }
   },
@@ -5149,7 +5149,7 @@ const drugDatabase = {
       'mild': 'GFR ≥60: 5-7 mg/kg Q24H',
       'moderate': 'GFR 30-59: 5-7 mg/kg Q24-36H | Monitorizar niveles',
       'severe': 'GFR <30: Contraído o dosis muy espaciadas (Q48-72H) | Requiere TDM|En CRRT: 4-5 mg/kg Q24H + dosing post-sesión',
-      'dialysis': 'CRRT: Considerar alternativa o TDM'
+      'dialysis': 'CRRT: alternativa o TDM según protocolo local'
     }
   },
   'acyclovir': {
@@ -5168,7 +5168,7 @@ const drugDatabase = {
       'normal': '400-800 mg día 1, luego 200-400 mg/día',
       'mild': 'GFR >50: Sin cambio de dosis',
       'moderate': 'GFR 10-50: 50% dosis normal',
-      'severe': 'GFR <10: Considerar dosis en días alternos',
+      'severe': 'GFR <10: esquema frecuentemente en días alternos',
       'dialysis': 'En CRRT: Dosis normal, poco clearance renal'
     }
   },
@@ -5438,7 +5438,7 @@ function showAntibioticDosing() {
       name: 'Ceftriaxona',
       normal: 'Loading: 1-2 g Q12H | Max 4 g/día',
       moderate: '1-2 g Q12H (sin cambio de dosis requerido)',
-      severe: '1 g Q12H | Considerar concentraciones',
+      severe: '1 g Q12H | niveles séricos según protocolo local',
       esrd: '500 mg-1 g Q12H | Monitorización de niveles',
       rrt: {
         crrt: 'CRRT: 1-2 g Q12H (normal dosing)',
@@ -5449,7 +5449,7 @@ function showAntibioticDosing() {
       name: 'Cefepima',
       normal: '1-2 g IV Q8-12H | Max 6 g/día',
       moderate: 'GFR 30-59: 1 g Q12H | GFR <30: 1 g Q24H',
-      severe: '500 mg-1 g Q24H | Considerar TDM',
+      severe: '500 mg-1 g Q24H | TDM según protocolo local',
       esrd: '500 mg Q24-48H | Requiere monitorización',
       rrt: {
         crrt: 'CRRT: 1-2 g Q12H (buena clearance)',
@@ -5461,7 +5461,7 @@ function showAntibioticDosing() {
       normal: '500 mg-1 g IV Q8H | Max 4 g/día',
       moderate: 'GFR 26-50: 500 mg-1 g Q8-12H | GFR 10-25: 500 mg-1 g Q12-24H',
       severe: '250-500 mg Q12-24H',
-      esrd: '250-500 mg Q24H | Considerar TDM',
+      esrd: '250-500 mg Q24H | TDM según protocolo local',
       rrt: {
         crrt: 'CRRT: 1 g Q8H (good clearance)',
         ihd: 'IHD: 500 mg post-HD, then Q12-24H'
@@ -5513,10 +5513,10 @@ function showAntibioticDosing() {
     },
     acyclovir: {
       name: 'Aciclovir',
-      normal: '5-10 mg/kg IV Q8H | Ajustar por renales',
+      normal: '5-10 mg/kg IV Q8H | correlacionar con función renal',
       moderate: 'GFR 25-50: 5-10 mg/kg Q12H | GFR 10-25: 5-10 mg/kg Q24H',
       severe: 'GFR <10: 2.5-5 mg/kg Q24H',
-      esrd: '2.5 mg/kg post-diálisis Q24-48H | Considerar CRRT clearance',
+      esrd: '2.5 mg/kg post-diálisis Q24-48H | correlacionar con clearance en CRRT',
       rrt: {
         crrt: 'CRRT: 5-10 mg/kg Q8-12H (buena clearance)',
         ihd: 'IHD: 5-10 mg/kg post-HD'
@@ -5583,7 +5583,7 @@ function showAntibioticDosing() {
     } else if (drug === 'vancomycin' || drug === 'gentamicin') {
       dosing += '• Mínimo cambio hepático de dosis (principalmente renales)';
     } else {
-      dosing += '• Considerar reducción de dosis si hepatopatía grave';
+      dosing += '• Puede observarse reducción de dosis en hepatopatía grave según protocolo local';
     }
   }
 
@@ -5709,11 +5709,11 @@ function calcTransfusion() {
   let hb_goal = '';
   if (scenario === 'elective') {
     if (hb < 7) hb_goal = '🔴 Transfundir: Hb <7 (electivo)';
-    else if (hb < 8) hb_goal = '🟡 Considerar: Hb 7-8 (comorbilidad cardíaca)';
+    else if (hb < 8) hb_goal = '🟡 Umbral intermedio: Hb 7-8 (comorbilidad cardíaca)';
     else hb_goal = '🟢 Sin transfusión: Hb ≥8';
   } else if (scenario === 'bleeding' || scenario === 'uncontrolled') {
     if (hb < 10) hb_goal = '🔴 Transfundir: Hb <10 (sangrado activo)';
-    else if (hb < 11) hb_goal = '🟡 Considerar: Hb 10-11 (según pérdida)';
+    else if (hb < 11) hb_goal = '🟡 Umbral intermedio: Hb 10-11 (según pérdida)';
     else hb_goal = '🟢 Sin transfusión urgente: Hb ≥11';
   } else if (scenario === 'dic') {
     hb_goal = '🔴 TRANSFUNDIR si Hb <10 (DIC con coagulopatía)';
@@ -5750,7 +5750,7 @@ function calcTransfusion() {
     const ffpUnitsMax = Math.max(ffpUnitsMin, Math.round(ffpMaxMl / 250));
     result += `   Dosis: 10-15 mL/kg (~${ffpMinMl}-${ffpMaxMl} mL, aprox ${ffpUnitsMin}-${ffpUnitsMax} U)<br>`;
   } else if (inr > 2.0) {
-    result += `🟡 CONSIDERAR: INR ${inr} (sin sangrado) - monitorizar<br>`;
+    result += `🟡 Perfil intermedio: INR ${inr} (sin sangrado) - monitorización serial<br>`;
   } else {
     result += '🟢 SIN INDICACIÓN: INR normal o <1.5';
   }
@@ -5775,7 +5775,7 @@ function calcTransfusion() {
     result += `🔴 TRANSFUNDIR: Fibrinógeno ${fibrin} <100 mg/dL + sangrado<br>`;
     result += `   Dosis: 1 unidad por 5 kg (≈${Math.max(1, Math.round(weight/5))} U para ${weight.toFixed(0)} kg)<br>`;
   } else if (fibrin < 150 && scenario === 'dic') {
-    result += `🟡 CONSIDERAR: Fibrinógeno ${fibrin} en DIC (mantener >100)<br>`;
+    result += `🟡 Perfil intermedio: Fibrinógeno ${fibrin} en DIC (meta referencial >100)<br>`;
   } else {
     result += `🟢 SIN INDICACIÓN: Fibrinógeno ${fibrin} mg/dL`;
   }
@@ -5822,8 +5822,8 @@ function calcTransfusion() {
     result += '1. <b>Causa subyacente:</b> Sepsis, trauma, malignidad, embolia de líquido amniótico<br>';
     result += '2. <b>Monitorización:</b> PT/INR, APTT, plaquetas, fibrinógeno, D-dímero cada 4-6 hr<br>';
     result += '3. <b>Transfusión componentes:</b> Meta INR <1.5, plaquetas >30, fibrinógeno >100<br>';
-    result += '4. <b>Terapia anticoagulante:</b> CONSIDERAR heparina si: trombosis > hemorragia OR shock refractario<br>';
-    result += '5. <b>TXA:</b> Considerar si hemorragia masiva (1 g bolus + 1 g infusión en 8 hr)';
+    result += '4. <b>Terapia anticoagulante:</b> heparina en escenarios donde trombosis predomina sobre hemorragia o en shock refractario (según protocolo)<br>';
+    result += '5. <b>TXA:</b> uso descrito en hemorragia masiva (1 g bolus + 1 g infusión en 8 hr)';
   }
 
   // APTt guidance
@@ -5899,7 +5899,7 @@ function calcNUTRIC() {
   const total = ids.reduce((s,i) => s + parseInt(document.getElementById('nut-'+i).value), 0);
   document.getElementById('nutric-total').textContent = total;
   const high = total >= 5;
-  document.getElementById('nutric-interp').textContent = high ? 'ALTO RIESGO — Iniciar soporte nutricional <48h' : 'Bajo riesgo — Monitorizar';
+  document.getElementById('nutric-interp').textContent = high ? 'ALTO RIESGO — perfil compatible con requerimiento nutricional temprano' : 'Bajo riesgo — monitorización nutricional';
   const b=document.getElementById('nutric-badge');
   b.className='result-badge '+(high?'badge-red':'badge-green'); b.textContent=high?'Alto riesgo':'Bajo riesgo';
   document.getElementById('nutric-result').style.display='flex';
@@ -6200,37 +6200,37 @@ function calcVentMonitor() {
   document.getElementById('vm-pm').textContent = pm.toFixed(2) + ' J/min';
   document.getElementById('vm-dp').textContent = dpRef.toFixed(1) + ' cmH₂O';
 
-  if (cdyn > 50) setBadge('vm-cdyn-badge', 'badge-green', 'Normal');
-  else if (cdyn >= 40) setBadge('vm-cdyn-badge', 'badge-yellow', 'Límite');
-  else setBadge('vm-cdyn-badge', 'badge-red', 'Baja');
+  if (cdyn > 50) setBadge('vm-cdyn-badge', 'badge-green', 'En rango');
+  else if (cdyn >= 40) setBadge('vm-cdyn-badge', 'badge-yellow', 'Rango limítrofe');
+  else setBadge('vm-cdyn-badge', 'badge-red', 'Alteración moderada');
 
-  if (cstat > 60) setBadge('vm-cstat-badge', 'badge-green', 'Normal');
-  else if (cstat >= 45) setBadge('vm-cstat-badge', 'badge-yellow', 'Límite');
-  else setBadge('vm-cstat-badge', 'badge-red', 'Baja');
+  if (cstat > 60) setBadge('vm-cstat-badge', 'badge-green', 'En rango');
+  else if (cstat >= 45) setBadge('vm-cstat-badge', 'badge-yellow', 'Rango limítrofe');
+  else setBadge('vm-cstat-badge', 'badge-red', 'Alteración moderada');
 
-  if (raw < 10) setBadge('vm-raw-badge', 'badge-green', 'Normal');
-  else if (raw <= 15) setBadge('vm-raw-badge', 'badge-yellow', 'Elevada');
-  else setBadge('vm-raw-badge', 'badge-red', 'Alta');
+  if (raw < 10) setBadge('vm-raw-badge', 'badge-green', 'En rango');
+  else if (raw <= 15) setBadge('vm-raw-badge', 'badge-yellow', 'Rango limítrofe');
+  else setBadge('vm-raw-badge', 'badge-red', 'Alteración moderada');
 
-  if (wob < 0.8) setBadge('vm-wob-badge', 'badge-green', 'Adecuado');
-  else if (wob <= 1.2) setBadge('vm-wob-badge', 'badge-yellow', 'Límite');
-  else setBadge('vm-wob-badge', 'badge-red', 'Alto');
+  if (wob < 0.8) setBadge('vm-wob-badge', 'badge-green', 'En rango');
+  else if (wob <= 1.2) setBadge('vm-wob-badge', 'badge-yellow', 'Rango limítrofe');
+  else setBadge('vm-wob-badge', 'badge-red', 'Alteración moderada');
 
   if (vdvt !== null) {
-    if (vdvt < 0.30) setBadge('vm-vdvt-badge', 'badge-green', 'Normal');
-    else if (vdvt <= 0.40) setBadge('vm-vdvt-badge', 'badge-yellow', 'Límite');
-    else setBadge('vm-vdvt-badge', 'badge-red', 'Elevado');
+    if (vdvt < 0.30) setBadge('vm-vdvt-badge', 'badge-green', 'En rango');
+    else if (vdvt <= 0.40) setBadge('vm-vdvt-badge', 'badge-yellow', 'Rango limítrofe');
+    else setBadge('vm-vdvt-badge', 'badge-red', 'Alteración moderada');
   } else {
     setBadge('vm-vdvt-badge', 'badge-yellow', 'Sin dato');
   }
 
-  if (dpRef <= 15) setBadge('vm-dp-badge', 'badge-green', 'Protector');
-  else if (dpRef <= 18) setBadge('vm-dp-badge', 'badge-yellow', 'Límite');
-  else setBadge('vm-dp-badge', 'badge-red', 'Alto');
+  if (dpRef <= 15) setBadge('vm-dp-badge', 'badge-green', 'En rango');
+  else if (dpRef <= 18) setBadge('vm-dp-badge', 'badge-yellow', 'Rango limítrofe');
+  else setBadge('vm-dp-badge', 'badge-red', 'Alteración moderada');
 
-  if (pm < 12) setBadge('vm-mp-badge', 'badge-green', 'Bajo');
-  else if (pm < 17) setBadge('vm-mp-badge', 'badge-yellow', 'Intermedio');
-  else setBadge('vm-mp-badge', 'badge-red', 'Alto');
+  if (pm < 12) setBadge('vm-mp-badge', 'badge-green', 'En rango');
+  else if (pm < 17) setBadge('vm-mp-badge', 'badge-yellow', 'Rango limítrofe');
+  else setBadge('vm-mp-badge', 'badge-red', 'Alteración moderada');
 
   document.getElementById('vm-result-wrap').style.display = 'grid';
   const autoFilledPI = fillVentPIFromMechanics({silent:true});
@@ -6477,8 +6477,11 @@ function calcO2Transport() {
   };
   const setBadgeOpt = (id, v, min, max) => {
     if (isNaN(v)) return;
-    setBadge(id, (v>=min && v<=max) ? 'badge-green' : (v<min ? 'badge-yellow' : 'badge-orange'),
-      (v>=min && v<=max) ? 'Normal' : (v<min ? 'Bajo' : 'Alto'));
+    setBadge(
+      id,
+      (v>=min && v<=max) ? 'badge-green' : (v<min ? 'badge-yellow' : 'badge-orange'),
+      (v>=min && v<=max) ? 'En rango' : (v<min ? 'Rango limítrofe' : 'Alteración moderada')
+    );
   };
 
   put('ot-cco2', cco2, 'mL/dL');
@@ -6494,7 +6497,7 @@ function calcO2Transport() {
     const qsqt = ((cco2 - cao2) / (cco2 - cvo2)) * 100;
     put('ot-qsqt', qsqt, '%');
     setBadge('ot-qsqt-b', qsqt < 15 ? 'badge-green' : 'badge-red',
-      qsqt < 15 ? 'Normal' : 'Elevado');
+      qsqt < 15 ? 'En rango' : 'Alteración moderada');
   }
 
   if (!isNaN(fc) && fc > 0) {
@@ -6545,7 +6548,7 @@ function calcO2Transport() {
       const aa = pao2alv - pao2;
       put('ot-aa', aa, 'mmHg');
       setBadge('ot-aa-b', (aa>=10 && aa<=20) ? 'badge-green' : 'badge-yellow',
-        (aa>=10 && aa<=20) ? 'Normal' : 'Alterado');
+        (aa>=10 && aa<=20) ? 'En rango' : 'Rango limítrofe');
     }
   }
 
@@ -9169,7 +9172,7 @@ const modoVentData = {
       ['FR','12-16 rpm'],
       ['Sedoanalgesia','Mínima (monitoreo neurológico)'],
       ['Destete','Gradual con PSV · criterio: CV >10 mL/kg'],
-      ['Traqueostomía','Considerar si VM >14 días esperada'],
+      ['Traqueostomía','Escenario frecuente cuando VM >14 días es esperada (según protocolo local)'],
     ]
   }
 };
@@ -9805,7 +9808,7 @@ function calcMetabolic() {
   let ddx = '';
   if (agc > 12 && lac > 2) ddx += '• Acidosis láctica (sepsis, choque, isquemia, metformina)<br>';
   if (agc > 12 && !isNaN(osmMed) && !isNaN(glu) && !isNaN(bun) && (osmMed - (2*na + glu/18 + bun/2.8 + etoh/4.6)) > 10) ddx += '• Brecha osmolar elevada: metanol, etilenglicol, propilenglicol, isopropanol<br>';
-  if (agc > 12) ddx += '• Considerar: cetoacidosis (DKA, alcohólica, inanición), uremia, salicilatos<br>';
+  if (agc > 12) ddx += '• Patrón compatible con cetoacidosis (DKA, alcohólica, inanición), uremia o salicilatos<br>';
   if (dd < 1) ddx += '• NAGMA coexistente: diarrea, RTA, solución salina excesiva<br>';
   if (dd > 2) ddx += '• Alcalosis metabólica concomitante: vómito, diuréticos, contracción de volumen<br>';
   if (agc <= 12 && deltaHCO3 > 0) ddx += '• NAGMA pura: pérdida de HCO₃ (diarrea, RTA tipo 1/2/4, acetazolamida)<br>';
@@ -10316,7 +10319,7 @@ const uciKB = {
   },
   ventilacion: {
     keys: ['ventilación','ventilador','sdra','ards','peep','vt','volumen tidal','protectora','driving pressure','presión meseta'],
-    answer: '**Ventilación protectora**:\n• Vt 6-8 mL/kg peso ideal\n• Pplat ≤30 cmH₂O\n• Driving pressure ≤15 cmH₂O\n• PEEP según tabla ARDSNet o titulación\n**SDRA** (Berlin): Leve PaFi 200-300, Moderado 100-200, Severo <100\n• Prono ≥16h si PaFi <150\n• Considerar relajante neuromuscular en SDRA severo temprano.'
+    answer: '**Ventilación protectora (descriptivo)**:\n• Vt 6-8 mL/kg peso ideal\n• Pplat ≤30 cmH₂O\n• Driving pressure ≤15 cmH₂O\n• PEEP en relación con tablas de referencia (ARDSNet)\n**SDRA** (Berlin): Leve PaFi 200-300, Moderado 100-200, Severo <100\n• Prono ≥16h se describe en PaFi <150\n• Bloqueo neuromuscular puede observarse en SDRA severo temprano según protocolo local.'
   },
   extubacion: {
     keys: ['extubación','destete','weaning','tubo en t','rsbi','pva'],
@@ -10340,7 +10343,7 @@ const uciKB = {
   },
   antibioticos: {
     keys: ['antibiótico','antimicrobiano','empírico','vancomicina','meropenem','piperacilina','ceftriaxona','infección'],
-    answer: '**Antibióticos en UCI — Principios**:\n• Administrar en ≤1h si sepsis\n• Empírico según foco y flora local\n• NAC severa: Ceftriaxona + Macrólido o Fluoroquinolona\n• Nosocomial/VAP: Pipe/Tazo o Meropenem ± Vancomicina\n• Intraabdominal: Pipe/Tazo o Meropenem\n• Ajustar por TFG (CKD-EPI) y niveles séricos\n• Desescalar a las 48-72h según cultivos.'
+    answer: '**Antibióticos en UCI — marco descriptivo**:\n• En sepsis se documenta inicio temprano (≤1h) en protocolos habituales\n• Esquema empírico según foco y flora local\n• NAC severa: Ceftriaxona + Macrólido o Fluoroquinolona\n• Nosocomial/VAP: Pipe/Tazo o Meropenem ± Vancomicina\n• Intraabdominal: Pipe/Tazo o Meropenem\n• Correlación por TFG (CKD-EPI) y niveles séricos\n• Reevaluación microbiológica a las 48-72h según cultivos.'
   },
   vexus: {
     keys: ['vexus','congestión venosa','vci','vena cava inferior','fluid responsiveness','precarga'],
@@ -10352,7 +10355,7 @@ const uciKB = {
   },
   nutricion: {
     keys: ['nutrición','harris benedict','calorías','proteínas','nutrición enteral','nutrición parenteral','gasto energético'],
-    answer: '**Nutrición en UCI**:\n• Iniciar nutrición enteral temprana (24-48h)\n• Calorías: 25-30 kcal/kg/día (fase aguda: 15-20 kcal/kg/día)\n• Proteínas: 1.2-2.0 g/kg/día\n• Harris-Benedict para gasto energético basal × factor de estrés\n• Si intolerancia enteral: procinéticos → post-pilórica → parenteral suplementaria\n• Monitorizar residuo gástrico, glucemia, triglicéridos.'
+    answer: '**Nutrición en UCI (descriptivo)**:\n• La nutrición enteral temprana (24-48h) es un patrón frecuente en protocolos UCI\n• Calorías: 25-30 kcal/kg/día (fase aguda: 15-20 kcal/kg/día)\n• Proteínas: 1.2-2.0 g/kg/día\n• Harris-Benedict para gasto energético basal × factor de estrés\n• En intolerancia enteral se describen estrategias escalonadas (procinéticos, post-pilórica, parenteral suplementaria)\n• Seguimiento de residuo gástrico, glucemia y triglicéridos.'
   },
   padua: {
     keys: ['padua','tev','tromboembolismo','tvp','tep','anticoagulación profiláctica','enoxaparina'],
@@ -10392,7 +10395,7 @@ const uciKB = {
   },
   profilaxis_ulcera: {
     keys: ['profilaxis úlcera','sangrado digestivo','estrés','omeprazol','pantoprazol','ranitidina','sucralfato','hemorragia digestiva'],
-    answer: '**Profilaxis de úlcera por estrés en UCI**\nIndicaciones (factores de riesgo altos):\n• VM >48h\n• Coagulopatía (INR >1.5, plaquetas <50,000)\n• Antecedente de HDA\n• TEC, quemados, politrauma\nFármacos: Pantoprazol 40mg IV c/24h (preferido) u Omeprazol 40mg IV c/24h.\nSi bajo riesgo: no dar profilaxis (riesgo de NAV y C. difficile).\nSuspender al tolerar vía oral y sin factores de riesgo activos.'
+    answer: '**Profilaxis de úlcera por estrés en UCI (descriptivo)**\nFactores de riesgo altos:\n• VM >48h\n• Coagulopatía (INR >1.5, plaquetas <50,000)\n• Antecedente de HDA\n• TEC, quemados, politrauma\nEsquemas referenciales: Pantoprazol 40mg IV c/24h u Omeprazol 40mg IV c/24h.\nEn bajo riesgo se describe omisión de profilaxis por balance riesgo-beneficio (NAV/C. difficile).\nReevaluación al tolerar vía oral y sin factores de riesgo activos.'
   },
   dolor_sedacion: {
     keys: ['dolor','analgesia','sedación profunda','escala dolor','cpot','bas','eva','pain','opioides','protocolo sedación'],
