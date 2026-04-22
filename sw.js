@@ -1,7 +1,7 @@
-// UCI Tools — Service Worker v17
+// UCI Tools — Service Worker v18
 // stale-while-revalidate + update notification
 
-const CACHE_NAME = 'uci-tools-v17';
+const CACHE_NAME = 'uci-tools-v18';
 
 function assetUrl(path) {
   return new URL(path, self.location.href).href;
@@ -10,8 +10,10 @@ function assetUrl(path) {
 const ASSETS = [
   assetUrl('./index.html'),
   assetUrl('./manifest.json'),
-  assetUrl('./icon-192.png'),
-  assetUrl('./icon-512.png'),
+  assetUrl('./icon-192-any.png'),
+  assetUrl('./icon-192-maskable.png'),
+  assetUrl('./icon-512-any.png'),
+  assetUrl('./icon-512-maskable.png'),
   assetUrl('./apple-touch-icon-apple.png'),
   'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap'
 ];

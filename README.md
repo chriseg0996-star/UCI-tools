@@ -1,138 +1,93 @@
 # UCI Tools
 
-> Calculadoras clínicas para Medicina Crítica · Progressive Web App
+Calculadoras clínicas para Medicina Crítica en formato Progressive Web App (PWA).
 
-![PWA](https://img.shields.io/badge/PWA-Ready-00e676?style=flat-square)
-![License](https://img.shields.io/badge/Licencia-Personal-ffb300?style=flat-square)
+## Enfoque clínico
 
----
+UCI Tools está diseñada como herramienta **analítica-descriptiva**:
 
-## ¿Qué es UCI Tools?
+- calcula métricas fisiológicas y scores clínicos,
+- clasifica hallazgos por rangos e interpretación,
+- presenta resultados para correlación con contexto clínico.
 
-UCI Tools es una **Progressive Web App (PWA)** de calculadoras 
-clínicas diseñada para médicos intensivistas. Pensada para uso 
-real en la unidad de cuidados intensivos — rápida, funcional 
-sin conexión y optimizada para teléfono con una mano.
+No emite recomendaciones terapéuticas automáticas y no sustituye el juicio clínico.
 
-Desarrollada por **Dr. Christopher Godines**, médico internista 
-y residente de Medicina Crítica.
+## Estado actual de módulos
 
----
+### Admisión y tamizaje
+- NEWS2
+- qSOFA
+- Glasgow
+- PADUA
+- CURB-65
+- Rockall
+- Wells
 
-## Calculadoras disponibles
-
-### 🚨 Admisión y Tamizaje
-- NEWS2 — National Early Warning Score 2
-- qSOFA — Sepsis rápido
-- Glasgow Coma Scale
-- PADUA — Riesgo tromboembólico venoso
-- CURB-65 — Neumonía adquirida en la comunidad
-- Rockall — Hemorragia de tubo digestivo alto
-- Wells — Tromboembolismo pulmonar
-
-### 📊 Pronóstico y Severidad
-- SOFA Score
+### Pronóstico y severidad
+- SOFA
 - APACHE II
 - SAPS II
-- NUTRIC Score
-- MELD — Función hepática
+- NUTRIC
+- MELD
 
-### 🫁 Ventilación
-- Parámetros ventilatorios (PIC, VT protector, FiO₂, PEEP)
-- Mecánica ventilatoria (distensibilidad, resistencia, WOB, 
-  poder mecánico)
-- Destete / Extubación (Tobin, SBT, criterios de extubación)
+### Ventilación
+- Parámetros ventilatorios (PIC + VT)
+- Modo ventilatorio por diagnóstico (referencia descriptiva)
+- Mecánica ventilatoria (con PI analítica integrada)
+- Destete/extubación (PAFI, ExPreS, Tobin y criterios clínicos)
 
-### 🧪 Ácido-base y Hemodinámica
-- Gasometría y análisis metabólico completo
-- Oxigenación y transporte de O₂ (20 fórmulas)
+### Gasometría y oxigenación
+- Gasometría y análisis metabólico por bloques
+- Oxigenación y transporte de O₂
+- PAFI / OI / Kirby (SF)
 
-### 💉 Hemodinámica
-- Perfil hemodinámico (clasificación de choque)
-- Ultrasonido hemodinámico — POCUS (4 módulos)
-- Bombas de infusión (17 fármacos UCI)
-- VExUS — Congestión venosa sistémica
+### Hemodinámica
+- Ultrasonido hemodinámico
+- Bombas de infusión
+- VExUS
 
-### 🫘 Renal, Electrolitos y TSR
-- KDIGO — Lesión renal aguda
+### Renal, electrolitos y TSR
+- KDIGO
 - Balance hídrico
-- Dosificación renal (TFG + ajuste de ATB)
+- Dosificación renal y antibióticos
 - Electrolitos urinarios y reposición
-- Terapia de sustitución renal (Kt/V, CRRT, ultrafiltrado, 
-  anticoagulación, modalidad)
+- TSR (dosis, UF, anticoagulación, modalidad)
 
-### 🧠 Neuro, Sedación y Analgesia
-- Sedación / Analgesia
-- CAM-ICU — Delirium
-- RASS — Nivel de sedación
-- Perfusión cerebral (PPC)
+### Neuro, sedación y soporte
+- PPC
+- Sedación/analgesia
+- RASS
+- CAM-ICU
+- Sepsis bundle
+- Transfusión
+- Harris-Benedict
 
-### 💊 Soporte y Manejo
-- Sepsis Bundle 3h/6h
-- Transfusión — Decisión clínica
-- Harris-Benedict — Nutrición
+## PWA e instalación
 
----
+- `manifest.json` usa íconos separados para `any` y `maskable` en 192 y 512.
+- Incluye `apple-touch-icon` para instalación en iOS.
+- Service worker con caché y actualización versionada.
 
-## Características
+Instalación:
 
-- **PWA instalable** — funciona como app nativa en iOS y Android
-- **Modo sin conexión** — service worker con caché completo
-- **Perfil del paciente** — datos propagados automáticamente 
-  a todas las calculadoras
-- **Validación visual** — campos faltantes se resaltan con 
-  animación
-- **Modo oscuro/claro** automático según preferencia del sistema
-- **Asistente IA** — integrado para consultas clínicas
-- **Exportar PDF** — resumen clínico del paciente
-- **Responsive** — optimizado para teléfono con una mano
-
----
-
-## Instalación como PWA
-
-### Android
-1. Abrir en Chrome: `https://chriseg0996-star.github.io/UCI-tools`
-2. Menú → "Agregar a pantalla de inicio"
-
-### iOS
-1. Abrir en Safari: `https://chriseg0996-star.github.io/UCI-tools`
-2. Compartir → "Agregar a pantalla de inicio"
-
----
+- Android (Chrome): abrir la URL y usar "Agregar a pantalla de inicio".
+- iOS (Safari): abrir la URL y usar "Agregar a pantalla de inicio".
 
 ## Stack técnico
 
-| Componente | Tecnología |
-|---|---|
-| Frontend | HTML5 + CSS3 + JavaScript vanilla |
-| Fuentes | JetBrains Mono + IBM Plex Sans |
-| PWA | manifest.json + Service Worker |
-| Hosting | GitHub Pages |
-| IA | Anthropic Claude API |
-
----
-
-## Estructura del proyecto
-
----
+- HTML5 + CSS3 + JavaScript (vanilla)
+- `manifest.json` + `sw.js`
+- Hosting en GitHub Pages
 
 ## Aviso médico
 
-> ⚠️ **UCI Tools es una herramienta de apoyo clínico.** 
-> Los resultados deben interpretarse siempre en el contexto 
-> clínico completo del paciente y bajo criterio médico. 
-> No reemplaza el juicio clínico del médico tratante ni debe 
-> usarse como única fuente para decisiones terapéuticas.
-
----
+> UCI Tools es un apoyo de cálculo e interpretación.
+>  
+> Los resultados se deben interpretar con contexto clínico completo y criterio médico profesional.
+>  
+> No reemplaza decisiones clínicas del equipo tratante.
 
 ## Autor
 
 **Dr. Christopher Godines**  
-Médico Internista · Residente de Medicina Crítica  
-© 2025 — Todos los derechos reservados
-
----
-
-*UCI Tools — Precisión clínica en cada turno.*
+Médico Internista · Residente de Medicina Crítica

@@ -256,6 +256,33 @@ button.reset {
 }
 button.reset:hover { border-color: var(--muted); color: var(--text); }
 
+.bom-mode-toggle {
+  display: inline-flex;
+  gap: 6px;
+  padding: 4px;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+}
+.bom-mode-btn {
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--muted2);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.bom-mode-btn.active {
+  background: rgba(0,200,255,0.15);
+  border-color: rgba(0,200,255,0.35);
+  color: var(--accent);
+}
+
 /* RESULTS */
 .result {
   background: var(--bg); border: 1px solid var(--border2); border-radius: 6px;
@@ -926,7 +953,7 @@ input.pat-synced:focus, select.pat-synced:focus {
 <header>
   <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
   <div class="logo" style="display:flex;align-items:center;gap:10px;">
-    <img src="./icon-192.png" alt="UCI Tools" class="brand-mark">
+    <img src="./icon-192-any.png" alt="UCI Tools" class="brand-mark">
     <span style="font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;">UCI Tools</span>
   </div>
   <div class="header-right">
@@ -1008,7 +1035,6 @@ input.pat-synced:focus, select.pat-synced:focus {
       <span class="nav-group-label">💉 Hemodinámica</span><span class="nav-chevron">▾</span>
     </div>
     <div class="nav-group-items collapsed" id="g-hemo">
-      <div class="nav-item" id="nav-perfil-hemo" onclick="showCalc('perfil-hemo',this)"><span class="nav-icon">·</span>Perfil hemodinámico</div>
       <div class="nav-item" id="nav-us-hemo" onclick="showCalc('us-hemo',this)"><span class="nav-icon">·</span>Ultrasonido hemodinámico</div>
       <div class="nav-item" id="nav-bombas" onclick="showCalc('bombas',this)"><span class="nav-icon">·</span>Bombas de infusión</div>
       <div class="nav-item" id="nav-vexus" onclick="showCalc('vexus',this)"><span class="nav-icon">·</span>VExUS — Congestión venosa</div>
@@ -1257,7 +1283,7 @@ input.pat-synced:focus, select.pat-synced:focus {
   <div class="card">
     <div class="card-title">UCI Tools · Medicina Crítica</div>
     <div class="welcome-brand">
-      <img src="./icon-512.png" alt="UCI Tools" class="welcome-brand-mark">
+      <img src="./icon-512-any.png" alt="UCI Tools" class="welcome-brand-mark">
     </div>
     <div style="color:var(--muted2);font-size:13px;line-height:1.8;">
       Flujo sugerido: captura primero <b>Datos del Paciente</b> y luego navega por categoría clínica.<br><br>
@@ -1265,7 +1291,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">📊 PRONÓSTICO Y SEVERIDAD</span> — SOFA · APACHE II · SAPS II · NUTRIC · MELD<br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫁 VENTILACIÓN</span> — Parámetros ventilatorios · Mecánica ventilatoria · Destete/Extubación<br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🧪 GASOMETRÍA Y TRANSPORTE O₂</span> — Gasometría y análisis metabólico · Oxigenación y transporte de O₂<br>
-      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💉 HEMODINÁMICA</span> — Perfil hemodinámico · Ultrasonido hemodinámico · Bombas de infusión · VExUS<br>
+      <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💉 HEMODINÁMICA</span> — Ultrasonido hemodinámico · Bombas de infusión · VExUS<br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🫘 RENAL, ELECTROLITOS Y TSR</span> — KDIGO · Balance hídrico · Dosificación renal · Electrolitos urinarios · Reposición electrolitos · TSR (Dosis · UF · Anticoagulación · Modalidad)<br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">🧠 NEURO, SEDACIÓN Y ANALGESIA</span> — Perfusión cerebral/Neuromonitoreo (PPC) · Sedación/Analgesia · RASS · CAM-ICU<br>
       <span style="color:var(--accent);font-family:var(--mono);font-size:11px;">💊 SOPORTE Y MANEJO</span> — Sepsis Bundle · Transfusión · Harris-Benedict
@@ -1371,9 +1397,9 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="result-badge" id="shock-badge"></div>
     </div>
 
-    <div class="section-sub" style="margin-top:16px;">Manejo recomendado</div>
+    <div class="section-sub" style="margin-top:16px;">Resumen analítico</div>
     <div id="shock-management" style="padding:12px;background:rgba(0,200,255,0.06);border-radius:6px;border:1px solid rgba(0,200,255,0.15);font-size:12px;line-height:1.6;color:var(--text);">
-      Completa los parámetros para ver recomendaciones
+      Completa los parámetros para ver descripción analítica
     </div>
 
     <div id="evid-wrap-shock" style="margin-top:0;"></div>
@@ -2172,7 +2198,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div class="row cols4">
       <div><label>PaO₂ (mmHg)</label><input type="number" id="gm-pao2" placeholder="80 – 100" step="0.1"></div>
-      <div><label>FiO₂ (decimal)</label><input type="number" id="gm-fio2" placeholder="0.21 – 0.40" step="0.01"></div>
+      <div><label>FiO₂ (decimal 0.21–1.0 o % 21–100)</label><input type="number" id="gm-fio2" placeholder="0.40 o 40" step="0.01"></div>
       <div><label>SaO₂ (%)</label><input type="number" id="gm-sao2" placeholder="95 – 100" step="0.1"></div>
       <div><label>Lactato (mmol/L)</label><input type="number" id="gm-lac" placeholder="0.5 – 2.0" step="0.1"></div>
     </div>
@@ -2226,7 +2252,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
 
     <div class="multi-result" id="gm-res-int" style="display:none;margin-top:12px;">
-      <div class="card-title" style="margin:0 0 6px 0;">Interpretación y recomendación</div>
+      <div class="card-title" style="margin:0 0 6px 0;">Interpretación integrada</div>
       <div class="mr-row"><span class="mr-label">Resumen</span><span class="mr-val" id="gm-int-text" style="max-width:70%;text-align:right;">—</span></div>
       <div class="mr-row"><span class="mr-label">Severidad global</span><span class="result-badge" id="gm-int-badge"></span></div>
     </div>
@@ -2269,7 +2295,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div class="row cols4">
       <div><label>SC (m²)</label><input type="number" id="ot-sc" placeholder="1.7 – 2.0" step="0.01"></div>
-      <div><label title="Fracción inspirada de oxígeno">FiO₂ (decimal)</label><input type="number" id="ot-fio2" placeholder="0.21 – 0.40" step="0.01"></div>
+      <div><label title="Fracción inspirada de oxígeno">FiO₂ (decimal 0.21–1.0 o % 21–100)</label><input type="number" id="ot-fio2" placeholder="0.40 o 40" step="0.01"></div>
       <div><label>PaCO₂ (mmHg)</label><input type="number" id="ot-paco2" placeholder="35 – 45" step="0.1"></div>
       <div style="display:flex;align-items:end;"><button class="reset" type="button" style="width:100%;padding:8px 10px;" onclick="calcOTSc()">Calcular SC</button></div>
     </div>
@@ -2278,14 +2304,14 @@ input.pat-synced:focus, select.pat-synced:focus {
       <button class="reset" onclick="resetPanel('calc-o2-transport')">Limpiar</button>
     </div>
     <div class="multi-result" id="ot-result" style="display:none;margin-top:12px;">
-      <div class="mr-row"><span class="mr-label">CcO₂</span><span class="mr-val" id="ot-cco2">—</span></div>
-      <div class="mr-row"><span class="mr-label">CaO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-cao2">—</span><span class="result-badge" id="ot-cao2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">CvO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-cvo2">—</span><span class="result-badge" id="ot-cvo2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">DavO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-davo2">—</span><span class="result-badge" id="ot-davo2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">Qs/Qt</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-qsqt">—</span><span class="result-badge" id="ot-qsqt-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">DO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-do2">—</span><span class="result-badge" id="ot-do2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">VO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-vo2">—</span><span class="result-badge" id="ot-vo2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">IEO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-ieo2">—</span><span class="result-badge" id="ot-ieo2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">CcO₂ = Hb×1.34 + 0.0031×PaO₂</span><span class="mr-val" id="ot-cco2">—</span></div>
+      <div class="mr-row"><span class="mr-label">CaO₂ = Hb×1.34×(SaO₂/100) + 0.0031×PaO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-cao2">—</span><span class="result-badge" id="ot-cao2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">CvO₂ = Hb×1.34×(SvO₂/100) + 0.0031×PvO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-cvo2">—</span><span class="result-badge" id="ot-cvo2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">ΔavO₂ = CaO₂ − CvO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-davo2">—</span><span class="result-badge" id="ot-davo2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">Qs/Qt = (CcO₂−CaO₂)/(CcO₂−CvO₂)×100</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-qsqt">—</span><span class="result-badge" id="ot-qsqt-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">DO₂ = GC×10×CaO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-do2">—</span><span class="result-badge" id="ot-do2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">VO₂ = GC×10×(CaO₂−CvO₂)</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-vo2">—</span><span class="result-badge" id="ot-vo2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">IEO₂ = ((CaO₂−CvO₂)/CaO₂)×100</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-ieo2">—</span><span class="result-badge" id="ot-ieo2-b"></span></span></div>
       <div class="mr-row"><span class="mr-label">VS</span><span class="mr-val" id="ot-vs">—</span></div>
       <div class="mr-row"><span class="mr-label">VSI</span><span class="mr-val" id="ot-vsi">—</span></div>
       <div class="mr-row"><span class="mr-label">IC</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-ic">—</span><span class="result-badge" id="ot-ic-b"></span></span></div>
@@ -2295,9 +2321,9 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="mr-row"><span class="mr-label">RVPI</span><span class="mr-val" id="ot-rvpi">—</span></div>
       <div class="mr-row"><span class="mr-label">TLVI</span><span class="mr-val" id="ot-tlvi">—</span></div>
       <div class="mr-row"><span class="mr-label">TLVD</span><span class="mr-val" id="ot-tlvd">—</span></div>
-      <div class="mr-row"><span class="mr-label">PiO₂</span><span class="mr-val" id="ot-pio2">—</span></div>
-      <div class="mr-row"><span class="mr-label">PAO₂</span><span class="mr-val" id="ot-pao2alv">—</span></div>
-      <div class="mr-row"><span class="mr-label">P(A-a)O₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-aa">—</span><span class="result-badge" id="ot-aa-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">PiO₂ = (587−47)×FiO₂</span><span class="mr-val" id="ot-pio2">—</span></div>
+      <div class="mr-row"><span class="mr-label">PAO₂ = PiO₂ − (PaCO₂/0.8)</span><span class="mr-val" id="ot-pao2alv">—</span></div>
+      <div class="mr-row"><span class="mr-label">P(A-a)O₂ = PAO₂ − PaO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-aa">—</span><span class="result-badge" id="ot-aa-b"></span></span></div>
     </div>
     <div class="info" style="margin-top:10px;">*Presión barométrica CDMX: 587 mmHg · Presión de vapor de agua: 47 mmHg</div>
     <div class="evid-panel" style="margin-top:10px;">
@@ -2325,7 +2351,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
     <div class="row cols3">
       <div><label>pO2 (mmHg)</label><input type="number" id="gas-po2" placeholder="80 – 100" step="0.1"></div>
-      <div><label>FiO2 (decimal: 0.21–1.0)</label><input type="number" id="gas-fio2" placeholder="0.21 – 0.40" step="0.01"></div>
+      <div><label>FiO2 (decimal 0.21–1.0 o % 21–100)</label><input type="number" id="gas-fio2" placeholder="0.40 o 40" step="0.01"></div>
       <div><label>Na (mEq/L)</label><input type="number" id="gas-na" placeholder="136 – 145" step="0.1"></div>
     </div>
     <div class="row cols3">
@@ -2402,12 +2428,12 @@ input.pat-synced:focus, select.pat-synced:focus {
         font-style:italic; width:100%;
         margin-top:2px;">—</span>
     </div>
-    <div class="nota-format-toggle" style="margin-bottom:8px;">
-      <button class="nota-format-btn active"
+    <div class="bom-mode-toggle" style="margin-bottom:8px;">
+      <button class="bom-mode-btn active"
         onclick="setBombaMode('dosis',this)">
         Velocidad → Dosis
       </button>
-      <button class="nota-format-btn"
+      <button class="bom-mode-btn"
         onclick="setBombaMode('vel',this)">
         Dosis → Velocidad
       </button>
@@ -2419,22 +2445,33 @@ input.pat-synced:focus, select.pat-synced:focus {
           placeholder="60 – 100" step="0.1">
       </div>
       <div>
-        <label>Concentración</label>
-        <input type="number" id="bom-conc"
+        <label>Cantidad total en bolsa</label>
+        <input type="number" id="bom-cant-total"
           step="0.001">
       </div>
       <div>
-        <label>Unidades conc.</label>
-        <select id="bom-conc-unit">
-          <option>mg/mL</option>
-          <option>mcg/mL</option>
-          <option>UI/mL</option>
+        <label>Unidad de cantidad</label>
+        <select id="bom-cant-unit">
+          <option>mg</option>
+          <option>mcg</option>
+          <option>UI</option>
         </select>
       </div>
+      <div>
+        <label>Volumen total bolsa (mL)</label>
+        <input type="number" id="bom-vol-total"
+          placeholder="50 – 250" step="0.1">
+      </div>
+    </div>
+    <div class="row cols2" style="margin-bottom:8px;">
       <div id="bom-input-principal">
         <label id="bom-input-label">Velocidad (mL/h)</label>
         <input type="number" id="bom-valor-input"
           placeholder="velocidad en bomba" step="0.1">
+      </div>
+      <div>
+        <label>Concentración calculada</label>
+        <div id="bom-conc-calc" class="info" style="margin-top:0;">—</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;
@@ -2444,6 +2481,9 @@ input.pat-synced:focus, select.pat-synced:focus {
       </button>
       <button class="reset" onclick="resetBombas()">
         Limpiar
+      </button>
+      <button class="reset" onclick="applyBombaStdDilution()">
+        Usar dilución estándar
       </button>
       <div id="bom-result-inline" style="
         display:none; flex:1;
@@ -2473,70 +2513,6 @@ input.pat-synced:focus, select.pat-synced:focus {
       border-left:1px solid var(--border);">
       <span style="color:var(--accent2);">Dilución: </span>
       <span id="bom-dilucion-txt">—</span>
-    </div>
-  </div>
-</div>
-
-<div id="calc-perfil-hemo" class="calc-panel">
-  <div class="card">
-    <div class="card-title">Perfil hemodinámico</div>
-    <div class="section-sub">Clasificación de choque</div>
-    <div class="row cols3">
-      <div><label title="Presión arterial media">PAM (presión arterial media) (mmHg)</label><input type="number" id="ph-pam" placeholder="70 – 105"></div>
-      <div><label>FC (lpm)</label><input type="number" id="ph-fc" placeholder="60 – 100"></div>
-      <div><label>PVC (mmHg)</label><input type="number" id="ph-pvc" placeholder="8 – 12"></div>
-    </div>
-    <div class="row cols3">
-      <div><label>GC (L/min)</label><input type="number" id="ph-gc" placeholder="4 – 8" step="0.1"></div>
-      <div><label>IC (L/min/m²)</label><input type="number" id="ph-ic" placeholder="2.5 – 4.0" step="0.1"></div>
-      <div><label>RVS (dynas·s/cm⁵)</label><input type="number" id="ph-rvs" placeholder="1000 – 1500"></div>
-    </div>
-    <div class="row cols3">
-      <div><label>SvO₂ (%)</label><input type="number" id="ph-svo2" placeholder="65 – 75" step="0.1"></div>
-      <div><label>Lactato (mmol/L)</label><input type="number" id="ph-lac" placeholder="0.5 – 2.0" step="0.1"></div>
-      <div><label>Temperatura (°C)</label><input type="number" id="ph-temp" placeholder="36.0 – 37.5" step="0.1"></div>
-    </div>
-    <div class="btn-row">
-      <button class="calc" onclick="calcPerfilHemo()">Clasificar</button>
-      <button class="reset" onclick="resetPanel('calc-perfil-hemo')">Limpiar</button>
-    </div>
-    <div class="multi-result" id="ph-shock-result" style="display:none;margin-top:12px;">
-      <div class="mr-row" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-        <span class="mr-label">Fenotipo de choque</span><span class="result-badge" id="ph-shock-badge">—</span>
-      </div>
-      <div class="mr-row"><span class="mr-label">Descripción</span><span class="mr-val" id="ph-shock-desc" style="max-width:70%;text-align:right;">—</span></div>
-    </div>
-
-    <div class="section-sub">Transporte y consumo de O₂</div>
-    <div class="row cols4">
-      <div><label>Hb (g/dL)</label><input type="number" id="ph-hb" placeholder="12 – 16" step="0.1"></div>
-      <div><label>SaO₂ (%)</label><input type="number" id="ph-sao2" placeholder="95 – 100" step="0.1"></div>
-      <div><label>PaO₂ (mmHg)</label><input type="number" id="ph-pao2" placeholder="80 – 100" step="0.1"></div>
-      <div><label>PvO₂ (mmHg)</label><input type="number" id="ph-pvo2" placeholder="35 – 45" step="0.1"></div>
-    </div>
-    <div class="row cols2">
-      <div><label>SC (m²)</label><input type="number" id="ph-sc" placeholder="1.7 – 2.0" step="0.01"></div>
-      <div><label>RVS calculada</label><input type="number" id="ph-rvs-calc" readonly placeholder="auto" style="background:rgba(0,200,255,0.05);"></div>
-    </div>
-    <div class="multi-result" id="ph-ox-result" style="display:none;margin-top:12px;">
-      <div class="mr-row"><span class="mr-label">CaO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-cao2">—</span><span class="result-badge" id="ph-cao2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">CvO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-cvo2">—</span><span class="result-badge" id="ph-cvo2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">DavO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-davo2">—</span><span class="result-badge" id="ph-davo2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">DO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-do2">—</span><span class="result-badge" id="ph-do2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">VO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-vo2">—</span><span class="result-badge" id="ph-vo2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">IEO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-ieo2">—</span><span class="result-badge" id="ph-ieo2-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">RVS = [(PAM−PVC)×80]/GC</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-rvs-out">—</span><span class="result-badge" id="ph-rvs-b"></span></span></div>
-      <div class="mr-row"><span class="mr-label">IC = GC/SC</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ph-ic-out">—</span><span class="result-badge" id="ph-ic-b"></span></span></div>
-    </div>
-
-    <div class="evid-panel" style="margin-top:10px;">
-      <div class="evid-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
-        <span>📚 Bibliografía y Evidencia</span><span class="evid-arrow">▾</span>
-      </div>
-      <div class="evid-body">
-        <div class="evid-ref"><span class="evid-year">2008</span> — <b>Vincent JL</b>. Understanding cardiac output. <i>Crit Care</i>.</div>
-        <div class="evid-ref"><span class="evid-year">2017</span> — <b>Rhodes A et al.</b> Surviving Sepsis Campaign 2016. <i>Intensive Care Med</i>.</div>
-      </div>
     </div>
   </div>
 </div>
@@ -3419,7 +3395,7 @@ input.pat-synced:focus, select.pat-synced:focus {
     <div class="card-title">PAFI / P:F (PaO₂/FiO₂)</div>
     <div class="row cols2">
       <div><label>PaO₂ (mmHg)</label><input type="number" id="pafi-pao2" placeholder="80 – 100"></div>
-      <div><label>FiO₂ (decimal: 0.21–1.0)</label><input type="number" id="pafi-fio2" placeholder="0.21 – 0.40" step="0.01"></div>
+      <div><label>FiO₂ (decimal 0.21–1.0 o % 21–100)</label><input type="number" id="pafi-fio2" placeholder="0.40 o 40" step="0.01"></div>
     </div>
     <div class="btn-row">
       <button class="calc" onclick="calcPAFI()">Calcular PAFI</button>
@@ -3813,7 +3789,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div><label>PaO₂ en prueba SBT (mmHg)</label><input type="number" id="tb-pao2" placeholder="80 – 100"></div>
     </div>
     <div class="row cols3">
-      <div><label>FiO₂ en prueba SBT (decimal)</label><input type="number" id="tb-fio2" placeholder="0.21 – 0.40" step="0.01"></div>
+      <div><label>FiO₂ en prueba SBT (decimal 0.21–1.0 o % 21–100)</label><input type="number" id="tb-fio2" placeholder="0.40 o 40" step="0.01"></div>
       <div><label>PEEP en SBT (cmH2O)</label><input type="number" id="tb-peep" placeholder="5 – 8"></div>
       <div><label>MIP / PiMáx (cmH2O)</label><input type="number" id="tb-mip" placeholder="-20 – -60" step="1"></div>
     </div>
@@ -3827,7 +3803,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="sofa-item" style="grid-template-columns:1fr auto;"><div class="sofa-name">Causa del fallo respiratorio resuelta o en resolución</div><select id="tb-c1" style="width:80px;"><option value="0">No</option><option value="1">Sí</option></select></div>
       <div class="sofa-item" style="grid-template-columns:1fr auto;"><div class="sofa-name">FiO₂ ≤0.40 y PEEP ≤8 cmH2O</div><select id="tb-c2" style="width:80px;"><option value="0">No</option><option value="1">Sí</option></select></div>
       <div class="sofa-item" style="grid-template-columns:1fr auto;"><div class="sofa-name">Hemodinámicamente estable (sin vasopresor o dosis mínima)</div><select id="tb-c3" style="width:80px;"><option value="0">No</option><option value="1">Sí</option></select></div>
-      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div class="sofa-name">Capaz de iniciar esfuerzo respiratorio espontáneo</div><select id="tb-c4" style="width:80px;"><option value="0">No</option><option value="1">Sí</option></select></div>
+      <div class="sofa-item" style="grid-template-columns:1fr auto;"><div class="sofa-name">Capaz de generar esfuerzo respiratorio espontáneo</div><select id="tb-c4" style="width:80px;"><option value="0">No</option><option value="1">Sí</option></select></div>
       <div class="sofa-item" style="grid-template-columns:1fr auto;"><div class="sofa-name">Tos efectiva / protege la vía aérea</div><select id="tb-c5" style="width:80px;"><option value="0">No</option><option value="1">Sí</option></select></div>
       <div class="sofa-item" style="grid-template-columns:1fr auto;"><div class="sofa-name">Estado mental adecuado (sigue órdenes simples)</div><select id="tb-c6" style="width:80px;"><option value="0">No</option><option value="1">Sí</option></select></div>
       <div class="sofa-item" style="grid-template-columns:1fr auto;"><div class="sofa-name">Secreciones manejables (&lt;4 aspiraciones/2h)</div><select id="tb-c7" style="width:80px;"><option value="0">No</option><option value="1">Sí</option></select></div>
@@ -3966,11 +3942,11 @@ input.pat-synced:focus, select.pat-synced:focus {
         <div><label>Meta TTPa (seg)</label><input type="number" id="ac-ttpa-meta" placeholder="45-70"></div>
       </div>
       <div class="btn-row">
-        <button class="calc" onclick="calcHeparina()">Calcular ajuste</button>
+      <button class="calc" onclick="calcHeparina()">Calcular análisis</button>
       </div>
       <div class="multi-result" id="hep-result" style="display:none; margin-top:10px;">
-        <div class="mr-row"><span class="mr-label">Dosis inicial sugerida</span><span class="mr-val accent" id="hep-inicio">—</span></div>
-        <div class="mr-row"><span class="mr-label">Ajuste recomendado</span><span class="mr-val green" id="hep-ajuste">—</span></div>
+        <div class="mr-row"><span class="mr-label">Dosis inicial de referencia</span><span class="mr-val accent" id="hep-inicio">—</span></div>
+        <div class="mr-row"><span class="mr-label">Estado frente a rango de referencia</span><span class="mr-val green" id="hep-ajuste">—</span></div>
         <div class="mr-row"><span class="mr-label">Infusión en mL/h</span><span class="mr-val" id="hep-rate">—</span></div>
       </div>
     </div>
@@ -3983,7 +3959,7 @@ input.pat-synced:focus, select.pat-synced:focus {
         <div><label>Ca ionizado sistémico (mmol/L)</label><input type="number" id="ci-ca-sist" placeholder="1.0-1.2" step="0.01"></div>
       </div>
       <div class="btn-row">
-        <button class="calc" onclick="calcCitrato()">Calcular ajuste citrato</button>
+        <button class="calc" onclick="calcCitrato()">Calcular análisis citrato</button>
       </div>
       <div class="multi-result" id="ci-result" style="display:none; margin-top:10px;">
         <div class="mr-row"><span class="mr-label">Flujo citrato inicial</span><span class="mr-val accent" id="ci-flujo">—</span></div>
@@ -4405,7 +4381,7 @@ const evidData = {
     ]
   },
   gfr_dosing: {
-    formula: 'Estimación de TFG para ajuste farmacológico renal (según ecuación usada en el cálculo)',
+    formula: 'Estimación de TFG para evaluación farmacológica renal (según ecuación usada en el cálculo)',
     interpretation: 'Recalcular cuando cambie creatinina o condición clínica para evitar infra/sobredosificación',
     refs: [
       {year:'2012', authors:'KDIGO CKD Work Group', title:'KDIGO 2012 Clinical Practice Guideline for CKD', journal:'Kidney Int Suppl', doi:'10.1038/kisup.2012.73'},
@@ -4672,7 +4648,7 @@ const evidData = {
     ]
   },
   tsr_anticoag: {
-    formula: 'Heparina: ajuste por TTPa meta.\nCitrato regional: titular a Ca postfiltro 0.25-0.35 mmol/L y Ca sistémico 1.0-1.2 mmol/L.',
+    formula: 'Heparina: comparación con TTPa meta.\nCitrato regional: comparación con Ca postfiltro 0.25-0.35 mmol/L y Ca sistémico 1.0-1.2 mmol/L.',
     interpretation: 'Citrato regional suele prolongar vida del filtro y reduce sangrado vs heparina sistémica en pacientes de alto riesgo.',
     refs: [
       {year:'2023', authors:'Raimundo M et al.', title:'Regional citrate versus systemic heparin anticoagulation for CRRT: systematic review and meta-analysis', journal:'Crit Care', doi:'10.1186/s13054-023-04359-3'},
@@ -4699,7 +4675,7 @@ const evidData = {
   },
   gcs: {
     formula: 'GCS = E (1-4) + V (1-5) + M (1-6)\nRango: 3-15',
-    interpretation: '13-15: leve · 9-12: moderado · 6-8: grave (considerar intubación) · 3-5: muy grave (intubar, TAC urgente)',
+    interpretation: '13-15: leve · 9-12: moderado · 6-8: grave (severidad neurológica alta) · 3-5: muy grave (severidad neurológica crítica)',
     refs: [
       {year:'1974', authors:'Teasdale G, Jennett B', title:'Assessment of coma and impaired consciousness: a practical scale', journal:'Lancet', doi:'10.1016/S0140-6736(74)91639-0'},
       {year:'2014', authors:'Teasdale G et al.', title:'The Glasgow Coma Scale at 40 years: standing the test of time', journal:'Lancet Neurol', doi:'10.1016/S1474-4422(14)70120-6'},
@@ -4707,7 +4683,7 @@ const evidData = {
   },
   qsofa: {
     formula: 'qSOFA = PAS ≤100 (1 pt) + FR ≥22 (1 pt) + GCS <15 (1 pt)\nRango: 0-3',
-    interpretation: '0: bajo riesgo · 1: vigilar · ≥2: alta sospecha de sepsis — completar SOFA, lactato, hemocultivos y considerar ATB empírico.',
+    interpretation: '0: bajo riesgo · 1: vigilancia analítica · ≥2: alta sospecha de sepsis — ampliar evaluación con SOFA, lactato y hemocultivos.',
     refs: [
       {year:'2016', authors:'Seymour CW et al.', title:'Assessment of Clinical Criteria for Sepsis (Sepsis-3)', journal:'JAMA', doi:'10.1001/jama.2016.0288'},
       {year:'2016', authors:'Singer M et al.', title:'The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3)', journal:'JAMA', doi:'10.1001/jama.2016.0287'},
@@ -4735,11 +4711,6 @@ const evidData = {
 // VALIDACIÓN GLOBAL — campos requeridos
 // ══════════════════════════════════════════════════════
 let _toastTimer = null;
-const hemoGasSyncState = {
-  lastAuto: {},
-  manualEdited: new Set()
-};
-
 function showToast(msg) {
   const t = document.getElementById('val-toast');
   document.getElementById('val-toast-msg').textContent = msg;
@@ -4778,60 +4749,6 @@ function validate(fields) {
     return false;
   }
   return true;
-}
-
-function markHemoFieldManual(fieldId) {
-  const el = document.getElementById(fieldId);
-  if (!el || el.dataset.gasSyncing === '1') return;
-  hemoGasSyncState.manualEdited.add(fieldId);
-}
-
-function initHemoGasSyncWatchers() {
-  ['ph-pao2', 'ph-sao2', 'ph-svo2', 'ph-lac'].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el || el.dataset.gasSyncWatcher === '1') return;
-    el.dataset.gasSyncWatcher = '1';
-    el.addEventListener('input', () => markHemoFieldManual(id));
-    el.addEventListener('change', () => markHemoFieldManual(id));
-  });
-}
-
-function pushGasToPerfilHemo(payload) {
-  const mappings = [
-    { src: payload.pao2, target: 'ph-pao2', label: 'PaO₂' },
-    { src: payload.sao2, target: 'ph-sao2', label: 'SaO₂' },
-    { src: payload.svo2, target: 'ph-svo2', label: 'SvO₂/ScvO₂' },
-    { src: payload.lac,  target: 'ph-lac',  label: 'Lactato' }
-  ];
-  const updated = [];
-  const skippedManual = [];
-
-  mappings.forEach(m => {
-    if (isNaN(m.src)) return;
-    const el = document.getElementById(m.target);
-    if (!el) return;
-    const nextVal = Number(m.src).toFixed(1);
-    const currentVal = el.value.trim();
-    const wasAuto = hemoGasSyncState.lastAuto[m.target];
-    const isManualOverride = hemoGasSyncState.manualEdited.has(m.target) && currentVal !== '' && currentVal !== wasAuto;
-    if (isManualOverride) {
-      skippedManual.push(m.label);
-      return;
-    }
-    el.dataset.gasSyncing = '1';
-    el.value = nextVal;
-    delete el.dataset.gasSyncing;
-    hemoGasSyncState.lastAuto[m.target] = nextVal;
-    hemoGasSyncState.manualEdited.delete(m.target);
-    updated.push(m.label);
-  });
-
-  if (updated.length || skippedManual.length) {
-    let msg = '';
-    if (updated.length) msg += '↔️ Perfil hemodinámico actualizado: ' + updated.join(', ');
-    if (skippedManual.length) msg += (msg ? ' · ' : '') + 'se respetó edición manual en: ' + skippedManual.join(', ');
-    showToast(msg);
-  }
 }
 
 function validateRanges(rules) {
@@ -5135,13 +5052,13 @@ function calcShock() {
     management = `
       <b>Diagnóstico:</b> Obstrucción mecánica al flujo<br>
       <b>Causas posibles:</b> EP, neumotórax a tensión, tamponade pericárdica, ACS, PP<br>
-      <b>Manejo:</b><br>
-      1. <b>PRIMERO: Aliviar la obstrucción</b><br>
+      <b>Descripción:</b><br>
+      1. <b>Patrón principal: obstrucción mecánica</b><br>
       &nbsp;&nbsp;&nbsp;&nbsp;→ Neumotórax: descompresión, toracotomía<br>
       &nbsp;&nbsp;&nbsp;&nbsp;→ Tamponade: pericardiocentesis<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;→ EP masiva: anticoagulación, considerar trombolisis<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;→ EP masiva: hallazgo compatible con alta carga trombótica (intervención según protocolo local)<br>
       2. <b>Volumen conservador</b> (no fluidos agresivos)<br>
-      3. <b>Vasopresores</b> si MAP &lt;65 después de alivio<br>
+      3. <b>Vasopresores</b>: uso asociado cuando MAP &lt;65 tras alivio mecánico<br>
       4. <b>Diagnóstico definitivo:</b> ECG, ecocardio, CT pulmonar, etc.<br>
       ⚠ <b>Emergencia quirúrgica posible</b>
     `;
@@ -5155,15 +5072,15 @@ function calcShock() {
         <b>Sin embargo:</b><br>
         - Lactato elevado (${lactato} mmol/L) sugiere hipoperfusión incipiente<br>
         - Diuresis baja sugiere compromiso renal<br>
-        - Considerar etiología: ¿sepsis incipiente? ¿hipovolemia? ¿cardíaca?<br>
-        <b>Recomendación:</b> Continuar monitorización y optimización antes de progresar a shock
+        - Etiología posible: ¿sepsis incipiente? ¿hipovolemia? ¿cardíaca?<br>
+        <b>Interpretación:</b> continuar monitorización y correlación hemodinámica seriada
       `;
     } else {
       shockType = 'INDETERMINADO';
       color = 'badge-yellow';
       management = `
         <b>Clasificación difícil con datos disponibles.</b><br>
-        <b>Considerar:</b><br>
+        <b>Correlacionar:</b><br>
         1. ¿Hay foco infeccioso? → Séptico<br>
         2. ¿Hay cardiopatía subyacente? → Cardiogénico<br>
         3. ¿Hay sangrado o deshidratación? → Hipovolémico<br>
@@ -5183,13 +5100,13 @@ function calcShock() {
 }
 
 // ============ GFR & RENAL DRUG DOSING ============
-// Tabla de medicamentos y ajustes por GFR
+// Tabla de medicamentos y cambios por GFR
 const drugDatabase = {
   'vancomycin': {
     name: 'Vancomicina',
     dosing: {
       'normal': 'Loading: 15-20 mg/kg IV | Maintenance: 15-20 mg/kg Q8-12H | Target trough: 15-20 mcg/mL',
-      'mild': 'GFR 60-89: Sin ajuste requerido | Trough: 15-20 mcg/mL',
+      'mild': 'GFR 60-89: Sin cambio de dosis requerido | Trough: 15-20 mcg/mL',
       'moderate': 'GFR 30-59: Q12-24H | Trough: 10-15 mcg/mL',
       'severe': 'GFR <30: Q24-48H | Trough: 10-15 mcg/mL | Requiere TDM',
       'dialysis': 'En CRRT: Loading 15-20 mg/kg, luego redosificar Q24H | Requiere monitorización'
@@ -5199,7 +5116,7 @@ const drugDatabase = {
     name: 'Piperacilina/Tazobactam',
     dosing: {
       'normal': '4.5 g IV Q6H (3.375 g si <60 kg)',
-      'mild': 'GFR 60-89: Sin ajuste',
+      'mild': 'GFR 60-89: Sin cambio de dosis',
       'moderate': 'GFR 20-59: 2.25 g Q6H o 3.375 g Q8H',
       'severe': 'GFR <20: 2.25 g Q8H | En CRRT: Dosis normal',
       'dialysis': 'En CRRT: Dosis normal o Q8H según clearance'
@@ -5209,17 +5126,17 @@ const drugDatabase = {
     name: 'Ceftriaxona',
     dosing: {
       'normal': '1-2 g IV Q12H',
-      'mild': 'GFR ≥30: Sin ajuste',
-      'moderate': 'GFR 30-59: Sin ajuste (acumula lentamente)',
+      'mild': 'GFR ≥30: Sin cambio de dosis',
+      'moderate': 'GFR 30-59: Sin cambio de dosis (acumula lentamente)',
       'severe': 'GFR <30: Considerar dosis más espaciadas o agente alternativo',
-      'dialysis': 'En CRRT: Sin ajuste'
+      'dialysis': 'En CRRT: sin cambio de dosis'
     }
   },
   'meropenem': {
     name: 'Meropenem',
     dosing: {
       'normal': '1 g IV Q8H',
-      'mild': 'GFR 50-89: Sin ajuste',
+      'mild': 'GFR 50-89: Sin cambio de dosis',
       'moderate': 'GFR 25-49: 500 mg Q8H o 1 g Q12H',
       'severe': 'GFR <25: 500 mg Q12H',
       'dialysis': 'En CRRT: 500 mg Q8-12H'
@@ -5239,7 +5156,7 @@ const drugDatabase = {
     name: 'Aciclovir',
     dosing: {
       'normal': '10-15 mg/kg IV Q8H',
-      'mild': 'GFR >50: Sin ajuste',
+      'mild': 'GFR >50: Sin cambio de dosis',
       'moderate': 'GFR 25-50: 10-15 mg/kg Q12H',
       'severe': 'GFR <25: 10-15 mg/kg Q24H | Requiere monitorización (nefrotoxicidad)',
       'dialysis': 'Post-CRRT: Redosificar si clearance alto'
@@ -5249,7 +5166,7 @@ const drugDatabase = {
     name: 'Fluconazol',
     dosing: {
       'normal': '400-800 mg día 1, luego 200-400 mg/día',
-      'mild': 'GFR >50: Sin ajuste',
+      'mild': 'GFR >50: Sin cambio de dosis',
       'moderate': 'GFR 10-50: 50% dosis normal',
       'severe': 'GFR <10: Considerar dosis en días alternos',
       'dialysis': 'En CRRT: Dosis normal, poco clearance renal'
@@ -5269,7 +5186,7 @@ const drugDatabase = {
     name: 'Heparina (profilaxis TEV)',
     dosing: {
       'normal': 'ENOXAPARINA 40 mg SC Q24H o 30 mg Q12H',
-      'mild': 'GFR >30: Sin ajuste',
+      'mild': 'GFR >30: Sin cambio de dosis',
       'moderate': 'GFR 30-59: Enoxaparina 30 mg Q24H (no Q12H)',
       'severe': 'GFR <30: Enoxaparina 30 mg Q24H O UFH IV (monitorizar aPTT)',
       'dialysis': 'CRRT: Heparina UFH IV (mejor control, clearance renal mínimo)'
@@ -5428,7 +5345,7 @@ function calcHemodynamics() {
 
   // CI interpretation
   if (ci < 2.2) {
-    interpretation += '🔴 <b>CI bajo:</b> ↓ Gasto cardíaco → Considerar cardiogénico/shock hipovolémico<br>';
+    interpretation += '🔴 <b>CI bajo:</b> ↓ Gasto cardíaco → patrón compatible con componente cardiogénico o hipovolémico<br>';
   } else if (ci > 4.0) {
     interpretation += '🟡 <b>CI elevado:</b> Estado hiperdinámico → Típico en sepsis temprana<br>';
   } else {
@@ -5437,9 +5354,9 @@ function calcHemodynamics() {
 
   // SVR interpretation
   if (svr < 800) {
-    interpretation += '🔴 <b>SVR bajo:</b> Vasodilatación → Shock distributivo/séptico, considerar vasopresores<br>';
+    interpretation += '🔴 <b>SVR bajo:</b> Vasodilatación → patrón compatible con shock distributivo/séptico en este análisis<br>';
   } else if (svr > 1200) {
-    interpretation += '🔴 <b>SVR elevado:</b> Vasoconstrición → Cardiogénico/hipovolémico, considerar vasodilatadores<br>';
+    interpretation += '🔴 <b>SVR elevado:</b> Vasoconstrición → patrón compatible con componente cardiogénico/hipovolémico en este análisis<br>';
   } else {
     interpretation += '🟢 <b>SVR normal</b><br>';
   }
@@ -5520,7 +5437,7 @@ function showAntibioticDosing() {
     ceftriaxone: {
       name: 'Ceftriaxona',
       normal: 'Loading: 1-2 g Q12H | Max 4 g/día',
-      moderate: '1-2 g Q12H (sin ajuste requerido)',
+      moderate: '1-2 g Q12H (sin cambio de dosis requerido)',
       severe: '1 g Q12H | Considerar concentraciones',
       esrd: '500 mg-1 g Q12H | Monitorización de niveles',
       rrt: {
@@ -5553,7 +5470,7 @@ function showAntibioticDosing() {
     ertapenem: {
       name: 'Ertapenem',
       normal: '1 g IV daily (Q24H)',
-      moderate: '1 g Q24H (sin ajuste requerido)',
+      moderate: '1 g Q24H (sin cambio de dosis requerido)',
       severe: 'GFR <30: 500 mg Q24H',
       esrd: '500 mg Q24-48H',
       rrt: {
@@ -5618,12 +5535,12 @@ function showAntibioticDosing() {
     },
     linezolid: {
       name: 'Linezolid',
-      normal: '600 mg IV/PO Q12H | No ajuste renal',
-      moderate: 'No ajuste requerido',
-      severe: 'No ajuste requerido (metabolitos pueden acumularse)',
+      normal: '600 mg IV/PO Q12H | Sin cambio renal de dosis',
+      moderate: 'Sin cambio de dosis requerido',
+      severe: 'Sin cambio de dosis requerido (metabolitos pueden acumularse)',
       esrd: '600 mg Q12H | Monitorizar si >14 días por metabolitos',
       rrt: {
-        crrt: 'CRRT: 600 mg Q12H (sin ajuste necesario)',
+        crrt: 'CRRT: 600 mg Q12H (sin cambio de dosis necesario)',
         ihd: 'IHD: 600 mg Q12H (monitorizar metabolitos)'
       }
     }
@@ -5664,7 +5581,7 @@ function showAntibioticDosing() {
     if (drug === 'fluconazole' || drug === 'linezolid') {
       dosing += '• Reducción de 25-50% si hepatopatía moderada-grave';
     } else if (drug === 'vancomycin' || drug === 'gentamicin') {
-      dosing += '• Mínimo ajuste hepático (principalmente renales)';
+      dosing += '• Mínimo cambio hepático de dosis (principalmente renales)';
     } else {
       dosing += '• Considerar reducción de dosis si hepatopatía grave';
     }
@@ -6180,12 +6097,14 @@ function calcVentPI(opts) {
 function calcPAFI() {
   if (!validate([{id:'pafi-pao2',label:'PaO₂'},{id:'pafi-fio2',label:'FiO₂'}])) return;
   if (!validateRanges([
-    {id:'pafi-pao2', label:'PaO₂', min:20, max:600},
-    {id:'pafi-fio2', label:'FiO₂', min:0.21, max:1.0}
+    {id:'pafi-pao2', label:'PaO₂', min:20, max:600}
   ])) return;
   const pao2=parseFloat(document.getElementById('pafi-pao2').value);
-  const fio2=parseFloat(document.getElementById('pafi-fio2').value);
-  if (fio2<=0) return;
+  const fio2=normalizeFio2Input(document.getElementById('pafi-fio2').value);
+  if (isNaN(fio2)) {
+    showToast('PAFI: FiO₂ inválida. Use decimal 0.21–1.0 o porcentaje 21–100.');
+    return;
+  }
   const pf=pao2/fio2;
   document.getElementById('pafi-val').textContent=Math.round(pf);
   let interp, cls;
@@ -6203,12 +6122,15 @@ function calcOI() {
   if (!validate([{id:'pafi-pao2',label:'PaO₂'},{id:'pafi-fio2',label:'FiO₂'},{id:'oi-paw',label:'MAP/Paw'}])) return;
   if (!validateRanges([
     {id:'pafi-pao2', label:'PaO₂', min:20, max:600},
-    {id:'pafi-fio2', label:'FiO₂', min:0.21, max:1.0},
     {id:'oi-paw', label:'MAP', min:0, max:80}
   ])) return;
   const pao2 = parseFloat(document.getElementById('pafi-pao2').value);
-  const fio2 = parseFloat(document.getElementById('pafi-fio2').value);
+  const fio2 = normalizeFio2Input(document.getElementById('pafi-fio2').value);
   const map = parseFloat(document.getElementById('oi-paw').value);
+  if (isNaN(fio2)) {
+    showToast('OI: FiO₂ inválida. Use decimal 0.21–1.0 o porcentaje 21–100.');
+    return;
+  }
   if (pao2 <= 0 || fio2 <= 0) return;
   const oi = (fio2 * map * 100) / pao2;
   document.getElementById('oi-val').textContent = oi.toFixed(1);
@@ -6328,7 +6250,8 @@ function calcGasMet() {
   const pco2 = parseFloat(document.getElementById('gm-pco2').value);
   const hco3 = parseFloat(document.getElementById('gm-hco3').value);
   const pao2 = parseFloat(document.getElementById('gm-pao2').value);
-  const fio2 = parseFloat(document.getElementById('gm-fio2').value);
+  const fio2Raw = document.getElementById('gm-fio2').value.trim();
+  const fio2 = normalizeFio2Input(fio2Raw);
   const lac = parseFloat(document.getElementById('gm-lac').value);
   const na = parseFloat(document.getElementById('gm-na').value);
   const cl = parseFloat(document.getElementById('gm-cl').value);
@@ -6337,8 +6260,31 @@ function calcGasMet() {
   const bun = parseFloat(document.getElementById('gm-bun').value);
   const osmMed = parseFloat(document.getElementById('gm-osm-med').value);
   const beInput = parseFloat(document.getElementById('gm-be').value);
+  const hasPao2 = !isNaN(pao2);
+  const hasFio2 = fio2Raw !== '';
+  const fio2Valid = !isNaN(fio2) && fio2 >= 0.21 && fio2 <= 1.0;
+  const hasNa = !isNaN(na);
+  const hasCl = !isNaN(cl);
+  const hasAlb = !isNaN(alb);
+  const hasGlu = !isNaN(glu);
+  const hasLac = !isNaN(lac);
+  const hasBun = !isNaN(bun);
+  const hasOsmMed = !isNaN(osmMed);
+  const blockAlerts = [];
+  const insuff = 'Datos insuficientes para este bloque';
 
-  if ([ph,pco2,hco3,pao2,fio2,na,cl,alb,glu,lac].some(v => isNaN(v))) return;
+  const acidWrap = document.getElementById('gm-res-acid');
+  const agWrap = document.getElementById('gm-res-ag');
+  const oxWrap = document.getElementById('gm-res-ox');
+  const metWrap = document.getElementById('gm-res-met');
+  const intWrap = document.getElementById('gm-res-int');
+
+  acidWrap.style.display = 'grid';
+  agWrap.style.display = 'grid';
+  oxWrap.style.display = 'grid';
+  metWrap.style.display = 'grid';
+  intWrap.style.display = 'grid';
+
   const beEst = isNaN(beInput) ? (hco3 - 24 + 16.2 * (ph - 7.4)) : beInput;
   let prim = 'Indeterminado', comp = '—', mixed = 'Sin datos concluyentes';
   if (ph < 7.35) {
@@ -6377,77 +6323,109 @@ function calcGasMet() {
     comp = 'Interpretar con AG, delta-delta y contexto clínico';
   }
 
-  const ag = na - (cl + hco3);
-  const agc = ag + 2.5 * (4 - alb);
-  const dd = (24 - hco3) !== 0 ? (agc - 12) / (24 - hco3) : null;
+  let ag = null;
+  let agc = null;
+  let dd = null;
   let ddInt = 'No interpretable';
-  if (dd !== null) {
-    if (dd < 0.4) ddInt = '<0.4: acidosis metabólica sin AG';
-    else if (dd < 1) ddInt = '0.4–1: mixta (AG + sin AG)';
-    else if (dd <= 2) ddInt = '1–2: acidosis metabólica con AG pura';
-    else ddInt = '>2: mixta (AG + alcalosis metabólica)';
+  const agReady = hasNa && hasCl;
+  if (agReady) {
+    ag = na - (cl + hco3);
+    if (hasAlb) {
+      agc = ag + 2.5 * (4 - alb);
+      dd = (24 - hco3) !== 0 ? (agc - 12) / (24 - hco3) : null;
+      if (dd !== null) {
+        if (dd < 0.4) ddInt = '<0.4: acidosis metabólica sin AG';
+        else if (dd < 1) ddInt = '0.4–1: patrón mixto (AG + sin AG)';
+        else if (dd <= 2) ddInt = '1–2: acidosis metabólica con AG elevada predominante';
+        else ddInt = '>2: patrón mixto (AG elevada + alcalosis metabólica)';
+      }
+    } else {
+      ddInt = 'Datos insuficientes para delta-delta (falta albúmina)';
+    }
+  } else {
+    const agMissing = [];
+    if (!hasNa) agMissing.push('Na');
+    if (!hasCl) agMissing.push('Cl');
+    blockAlerts.push('AG no disponible: faltan ' + agMissing.join(', ') + '.');
   }
 
-  const pafi = pao2 / fio2;
-  const pio2 = (587 - 47) * fio2;
-  const pao2Alv = pio2 - (pco2 / 0.8);
-  const aa = pao2Alv - pao2;
-  let pafiTxt = 'Normal', pafiCls = 'badge-green';
-  if (pafi < 100) { pafiTxt = 'SDRA grave'; pafiCls = 'badge-red'; }
-  else if (pafi < 200) { pafiTxt = 'SDRA moderado'; pafiCls = 'badge-orange'; }
-  else if (pafi <= 300) { pafiTxt = 'SDRA leve'; pafiCls = 'badge-yellow'; }
+  let pafi = null;
+  let pio2 = null;
+  let pao2Alv = null;
+  let aa = null;
+  if (hasPao2 && hasFio2 && fio2Valid) {
+    pafi = pao2 / fio2;
+    pio2 = (587 - 47) * fio2;
+    pao2Alv = pio2 - (pco2 / 0.8);
+    aa = pao2Alv - pao2;
+    let pafiTxt = 'Oxigenación conservada';
+    let pafiCls = 'badge-green';
+    if (pafi < 100) { pafiTxt = 'Alteración grave de oxigenación'; pafiCls = 'badge-red'; }
+    else if (pafi < 200) { pafiTxt = 'Alteración moderada de oxigenación'; pafiCls = 'badge-orange'; }
+    else if (pafi <= 300) { pafiTxt = 'Alteración leve de oxigenación'; pafiCls = 'badge-yellow'; }
+    setBadge('gm-pafi-b', pafiCls, pafiTxt);
+  } else {
+    const oxMissing = [];
+    if (!hasPao2) oxMissing.push('PaO₂');
+    if (!hasFio2) oxMissing.push('FiO₂');
+    if (hasFio2 && !fio2Valid) oxMissing.push('FiO₂ en rango válido (0.21–1.0 o 21–100)');
+    if (oxMissing.length) blockAlerts.push('Oxigenación no disponible: faltan ' + oxMissing.join(', ') + '.');
+  }
 
-  const osmCalc = !isNaN(bun) ? (2 * na + glu / 18 + bun / 2.8) : null;
-  const osmGap = (!isNaN(osmMed) && osmCalc !== null) ? (osmMed - osmCalc) : null;
+  const metReady = hasGlu || hasLac || hasBun || hasOsmMed;
+  const osmCalc = (hasNa && hasGlu && hasBun) ? (2 * na + glu / 18 + bun / 2.8) : null;
+  const osmGap = (hasOsmMed && osmCalc !== null) ? (osmMed - osmCalc) : null;
 
-  if (glu >= 70 && glu <= 110) setBadge('gm-glu-b', 'badge-green', 'Normal');
-  else if (glu <= 180) setBadge('gm-glu-b', 'badge-yellow', 'Hiperglucemia leve');
-  else if (glu > 180) setBadge('gm-glu-b', 'badge-orange', 'Hiperglucemia significativa');
-  else setBadge('gm-glu-b', 'badge-red', 'Hipoglucemia');
+  if (hasGlu) {
+    if (glu >= 70 && glu <= 110) setBadge('gm-glu-b', 'badge-green', 'Normal');
+    else if (glu <= 180) setBadge('gm-glu-b', 'badge-yellow', 'Hiperglucemia leve');
+    else if (glu > 180) setBadge('gm-glu-b', 'badge-orange', 'Hiperglucemia significativa');
+    else setBadge('gm-glu-b', 'badge-red', 'Hipoglucemia');
+  } else {
+    setBadge('gm-glu-b', 'badge-yellow', 'Sin dato');
+  }
 
-  if (lac < 2) setBadge('gm-lac-b', 'badge-green', 'Normal');
-  else if (lac <= 4) setBadge('gm-lac-b', 'badge-yellow', 'Elevado');
-  else setBadge('gm-lac-b', 'badge-red', 'Crítico — choque');
-  setBadge('gm-pafi-b', pafiCls, pafiTxt);
+  if (hasLac) {
+    if (lac < 2) setBadge('gm-lac-b', 'badge-green', 'Normal');
+    else if (lac <= 4) setBadge('gm-lac-b', 'badge-yellow', 'Elevado');
+    else setBadge('gm-lac-b', 'badge-red', 'Elevación marcada');
+  } else {
+    setBadge('gm-lac-b', 'badge-yellow', 'Sin dato');
+  }
+  if (!metReady) blockAlerts.push('Perfil metabólico no disponible: faltan glucosa, lactato y/o BUN.');
 
   const hints = [];
   let sev = 'NORMAL', sevCls = 'badge-green';
-  if (prim.includes('Acidosis metabólica') && agc > 12) {
-    hints.push('Acidosis metabólica con AG elevado: considerar MUDPILES (metanol, uremia, CAD, propilenglicol, isoniazida, lactato, etilenglicol, salicilatos).');
+  if (prim.includes('Acidosis metabólica') && agc !== null && agc > 12) {
+    hints.push('Acidosis metabólica con AG elevado: patrón compatible con acumulación de aniones no medidos.');
     sev = 'ALTERACIÓN MODERADA'; sevCls = 'badge-orange';
   }
-  if (prim.includes('Alcalosis metabólica')) hints.push('Alcalosis metabólica: evaluar pérdidas GI/renales, diuréticos y reposición de cloro/potasio.');
-  if (prim.includes('Acidosis respiratoria')) hints.push('Acidosis respiratoria: evaluar ventilación minuto, fatiga y estrategia ventilatoria.');
+  if (prim.includes('Alcalosis metabólica')) hints.push('Alcalosis metabólica: patrón observado en contexto de pérdidas digestivas o renales.');
+  if (prim.includes('Acidosis respiratoria')) hints.push('Acidosis respiratoria: se observa componente ventilatorio en el análisis actual.');
   if (mixed.includes('agregad')) { sev = 'ALTERACIÓN GRAVE'; sevCls = 'badge-red'; }
-  if (aa > 20 || pafi < 200 || lac > 4) { sev = 'ALTERACIÓN GRAVE'; sevCls = 'badge-red'; }
-  else if (sev === 'NORMAL' && (lac >= 2 || pafi <= 300 || agc > 12)) { sev = 'ALTERACIÓN LEVE'; sevCls = 'badge-yellow'; }
+  if ((aa !== null && aa > 20) || (pafi !== null && pafi < 200) || (hasLac && lac > 4)) { sev = 'ALTERACIÓN GRAVE'; sevCls = 'badge-red'; }
+  else if (sev === 'NORMAL' && ((hasLac && lac >= 2) || (pafi !== null && pafi <= 300) || (agc !== null && agc > 12))) { sev = 'ALTERACIÓN LEVE'; sevCls = 'badge-yellow'; }
 
   document.getElementById('gm-prim').textContent = prim;
   document.getElementById('gm-comp').textContent = comp;
   document.getElementById('gm-mix').textContent = mixed;
   document.getElementById('gm-be-est').textContent = beEst.toFixed(1) + ' mEq/L';
-  document.getElementById('gm-ag').textContent = ag.toFixed(1);
-  document.getElementById('gm-agc').textContent = agc.toFixed(1);
-  document.getElementById('gm-dd').textContent = dd === null ? '—' : dd.toFixed(2);
+  document.getElementById('gm-ag').textContent = agReady ? ag.toFixed(1) : insuff;
+  document.getElementById('gm-agc').textContent = !agReady ? insuff : (agc === null ? 'Datos insuficientes (falta albúmina)' : agc.toFixed(1));
+  document.getElementById('gm-dd').textContent = !agReady ? insuff : (dd === null ? '—' : dd.toFixed(2));
   document.getElementById('gm-dd-int').textContent = ddInt;
-  document.getElementById('gm-pafi').textContent = pafi.toFixed(0) + ' mmHg';
-  document.getElementById('gm-pio2').textContent = pio2.toFixed(1) + ' mmHg';
-  document.getElementById('gm-pao2-alv').textContent = pao2Alv.toFixed(1) + ' mmHg';
-  document.getElementById('gm-aa').textContent = aa.toFixed(1) + ' mmHg';
-  document.getElementById('gm-osm-calc').textContent = osmCalc === null ? 'Requiere BUN' : osmCalc.toFixed(1) + ' mOsm/kg';
-  document.getElementById('gm-osm-gap').textContent = osmGap === null ? '—' : osmGap.toFixed(1);
-  document.getElementById('gm-glu-v').textContent = glu.toFixed(1) + ' mg/dL';
-  document.getElementById('gm-lac-v').textContent = lac.toFixed(1) + ' mmol/L';
+  document.getElementById('gm-pafi').textContent = pafi === null ? insuff : pafi.toFixed(0) + ' mmHg';
+  document.getElementById('gm-pio2').textContent = pio2 === null ? insuff : pio2.toFixed(1) + ' mmHg';
+  document.getElementById('gm-pao2-alv').textContent = pao2Alv === null ? insuff : pao2Alv.toFixed(1) + ' mmHg';
+  document.getElementById('gm-aa').textContent = aa === null ? insuff : aa.toFixed(1) + ' mmHg';
+  document.getElementById('gm-osm-calc').textContent = !metReady ? insuff : (osmCalc === null ? 'Datos insuficientes para osmolaridad calculada' : osmCalc.toFixed(1) + ' mOsm/kg');
+  document.getElementById('gm-osm-gap').textContent = !metReady ? insuff : (osmGap === null ? '—' : osmGap.toFixed(1));
+  document.getElementById('gm-glu-v').textContent = hasGlu ? glu.toFixed(1) + ' mg/dL' : 'Sin dato';
+  document.getElementById('gm-lac-v').textContent = hasLac ? lac.toFixed(1) + ' mmol/L' : 'Sin dato';
   document.getElementById('gm-int-text').textContent = [prim, mixed, ...hints].join(' · ');
   setBadge('gm-int-badge', sevCls, sev);
-  pushGasToPerfilHemo({
-    pao2: pao2,
-    sao2: parseFloat(document.getElementById('gm-sao2').value),
-    svo2: parseFloat(document.getElementById('ot-svo2') ? document.getElementById('ot-svo2').value : ''),
-    lac: lac
-  });
 
-  ['gm-res-acid','gm-res-ag','gm-res-ox','gm-res-met','gm-res-int'].forEach(id => document.getElementById(id).style.display = 'grid');
+  if (blockAlerts.length) showToast(blockAlerts.join(' | '));
 }
 
 function calcOTSc() {
@@ -6481,7 +6459,8 @@ function calcO2Transport() {
   const poap = parseFloat(document.getElementById('ot-poap').value);
   const sc = parseFloat(document.getElementById('ot-sc').value);
   const pad = parseFloat(document.getElementById('ot-pad').value);
-  const fio2 = parseFloat(document.getElementById('ot-fio2').value);
+  const fio2Raw = document.getElementById('ot-fio2').value.trim();
+  const fio2 = normalizeFio2Input(fio2Raw);
   const paco2 = parseFloat(document.getElementById('ot-paco2').value);
 
   const cco2 = (hb * 1.34) + (0.0031 * (pao2 || 0));
@@ -6555,7 +6534,9 @@ function calcO2Transport() {
     }
   }
 
-  if (!isNaN(fio2) && !isNaN(paco2) && fio2 > 0) {
+  if (fio2Raw !== '' && isNaN(fio2)) {
+    showToast('Oxigenación y transporte: FiO₂ inválida. Use decimal 0.21–1.0 o porcentaje 21–100.');
+  } else if (!isNaN(fio2) && !isNaN(paco2) && fio2 > 0) {
     const pio2 = (587 - 47) * fio2;
     const pao2alv = pio2 - (paco2 / 0.8);
     put('ot-pio2', pio2, 'mmHg');
@@ -6569,57 +6550,6 @@ function calcO2Transport() {
   }
 
   document.getElementById('ot-result').style.display = 'grid';
-}
-
-function calcPerfilHemo() {
-  const pam = parseFloat(document.getElementById('ph-pam').value);
-  const fc = parseFloat(document.getElementById('ph-fc').value);
-  const pvc = parseFloat(document.getElementById('ph-pvc').value);
-  const gc = parseFloat(document.getElementById('ph-gc').value);
-  const ic = parseFloat(document.getElementById('ph-ic').value);
-  const rvsIn = parseFloat(document.getElementById('ph-rvs').value);
-  const svo2 = parseFloat(document.getElementById('ph-svo2').value);
-  const lac = parseFloat(document.getElementById('ph-lac').value);
-  if (!validate([
-    {id:'ph-pam', label:'PAM'},
-    {id:'ph-gc', label:'GC'},
-    {id:'ph-pvc', label:'PVC'},
-    {id:'ph-rvs', label:'RVS'},
-    {id:'ph-svo2', label:'SvO₂'},
-    {id:'ph-lac', label:'Lactato'}
-  ])) return;
-  let shock='Choque mixto', desc='Patrón no concluyente — evaluar componentes', cls='badge-yellow';
-  if (gc >= 4 && rvsIn < 1000 && svo2 >= 70 && lac >= 2) { shock='Choque distributivo'; desc='GC↑ RVS↓ — Patrón hiperdinámico. Considerar: sepsis, anafilaxia, SIRS'; cls='badge-red'; }
-  else if (gc < 4 && ic < 2.5 && rvsIn > 1500 && svo2 < 65) { shock='Choque cardiogénico'; desc='GC↓ RVS↑ — Patrón hipodinámico. Considerar: IAM, miocarditis, arritmia'; cls='badge-red'; }
-  else if (gc < 4 && pvc < 8 && rvsIn > 1500 && svo2 < 65) { shock='Choque hipovolémico'; desc='GC↓ PVC↓ RVS↑ — Precarga reducida. Considerar: hemorragia, deshidratación severa'; cls='badge-orange'; }
-  else if (gc < 4 && pvc > 12 && rvsIn > 1500 && svo2 < 65) { shock='Choque obstructivo'; desc='GC↓ PVC↑ — Obstrucción al flujo. Considerar: TEP masivo, taponamiento, neumotórax'; cls='badge-orange'; }
-  setBadge('ph-shock-badge', cls, shock);
-  document.getElementById('ph-shock-desc').textContent = desc;
-  document.getElementById('ph-shock-result').style.display = 'grid';
-
-  const hb = parseFloat(document.getElementById('ph-hb').value);
-  const sao2 = parseFloat(document.getElementById('ph-sao2').value);
-  const pao2 = parseFloat(document.getElementById('ph-pao2').value);
-  const pvo2 = parseFloat(document.getElementById('ph-pvo2').value);
-  const sc = parseFloat(document.getElementById('ph-sc').value);
-  if (!isNaN(hb) && !isNaN(sao2) && !isNaN(pao2) && !isNaN(pvo2) && !isNaN(sc) && !isNaN(gc)) {
-    const cao2 = (hb*1.34*(sao2/100)) + (0.0031*pao2);
-    const cvo2 = (hb*1.34*(svo2/100)) + (0.0031*pvo2);
-    const davo2 = cao2 - cvo2;
-    const do2 = gc*10*cao2;
-    const vo2 = gc*10*davo2;
-    const ieo2 = ((cao2-cvo2)/cao2)*100;
-    const rvs = ((pam-pvc)*80)/gc;
-    const icCalc = gc/sc;
-    document.getElementById('ph-rvs-calc').value = rvs.toFixed(0);
-    const put=(id,v,u='')=>document.getElementById(id).textContent=v.toFixed(2)+(u?(' '+u):'');
-    put('ph-cao2',cao2,'mL/dL'); put('ph-cvo2',cvo2,'mL/dL'); put('ph-davo2',davo2,'mL/dL');
-    put('ph-do2',do2,'mL/min'); put('ph-vo2',vo2,'mL/min'); put('ph-ieo2',ieo2,'%'); put('ph-rvs-out',rvs,'dyn·s/cm⁵'); put('ph-ic-out',icCalc,'L/min/m²');
-    const badge=(id,v,min,max)=>setBadge(id,(v>=min&&v<=max)?'badge-green':(v<min?'badge-yellow':'badge-red'),(v>=min&&v<=max)?'Normal':(v<min?'Bajo':'Alto'));
-    badge('ph-cao2-b',cao2,17,20); badge('ph-cvo2-b',cvo2,12,15); badge('ph-davo2-b',davo2,4,6); badge('ph-do2-b',do2,950,1150);
-    badge('ph-vo2-b',vo2,200,250); badge('ph-ieo2-b',ieo2,20,30); badge('ph-rvs-b',rvs,1000,1500); badge('ph-ic-b',icCalc,2.5,4.0);
-    document.getElementById('ph-ox-result').style.display = 'grid';
-  }
 }
 
 function calcUshSistolica() {
@@ -6641,8 +6571,8 @@ function calcUshSistolica() {
     document.getElementById('ush-fa-calc').textContent = 'Sin datos';
   }
   let txt='Función sistólica VI conservada', cls='badge-green';
-  if (fevi < 30) { txt='Disfunción sistólica grave — considerar soporte inotrópico'; cls='badge-red'; }
-  else if (fevi < 40) { txt='Disfunción sistólica significativa — considerar soporte inotrópico'; cls='badge-orange'; }
+  if (fevi < 30) { txt='Disfunción sistólica grave con bajo gasto potencial'; cls='badge-red'; }
+  else if (fevi < 40) { txt='Disfunción sistólica significativa con compromiso hemodinámico posible'; cls='badge-orange'; }
   else if (fevi < 55) { txt='Disfunción sistólica leve — monitorizar'; cls='badge-yellow'; }
   if (!isNaN(mapse) && mapse < 10 && cls === 'badge-green') cls = 'badge-yellow';
   if (!isNaN(smit) && smit < 8 && cls === 'badge-green') cls = 'badge-yellow';
@@ -6731,7 +6661,7 @@ function calcUshPrecarga() {
   else if (!isNaN(varE) && varE > 12) setBadge('ush-fluid-b','badge-green','Responde a volumen (FA)');
   else setBadge('ush-fluid-b','badge-yellow','Sin dato dinámico');
   let txt='Precarga adecuada — normovolemia';
-  if (coll > 50 && ((!isNaN(varVti) && varVti > 12) || (!isNaN(varE) && varE > 12))) txt='Hipovolemia probable — considerar resucitación';
+  if (coll > 50 && ((!isNaN(varVti) && varVti > 12) || (!isNaN(varE) && varE > 12))) txt='Hipovolemia probable en el contexto de variabilidad dinámica elevada';
   else if (coll < 15 && !(!isNaN(varVti) && varVti > 12)) txt='Sobrecarga — evaluar diuresis/ultrafiltración';
   document.getElementById('ush-pre-int').textContent = txt;
   document.getElementById('ush-pre-res').style.display = 'grid';
@@ -6753,7 +6683,6 @@ function calcGAS() {
     {id:'gas-co2', label:'pCO₂', min:10, max:140},
     {id:'gas-hco3', label:'HCO₃', min:2, max:60},
     {id:'gas-po2', label:'PaO₂', min:20, max:600},
-    {id:'gas-fio2', label:'FiO₂', min:0.21, max:1.0},
     {id:'gas-na', label:'Na', min:90, max:190},
     {id:'gas-cl', label:'Cl', min:60, max:160},
     {id:'gas-alb', label:'Albúmina', min:1.0, max:6.0},
@@ -6763,7 +6692,12 @@ function calcGAS() {
   const co2=parseFloat(document.getElementById('gas-co2').value);
   const hco3=parseFloat(document.getElementById('gas-hco3').value);
   const po2=parseFloat(document.getElementById('gas-po2').value);
-  const fio2=parseFloat(document.getElementById('gas-fio2').value)||0.21;
+  const fio2Input = document.getElementById('gas-fio2').value.trim();
+  const fio2 = fio2Input === '' ? 0.21 : normalizeFio2Input(fio2Input);
+  if (isNaN(fio2)) {
+    showToast('Gasometría: FiO₂ inválida. Use decimal 0.21–1.0 o porcentaje 21–100.');
+    return;
+  }
   const na=parseFloat(document.getElementById('gas-na').value)||140;
   const cl=parseFloat(document.getElementById('gas-cl').value)||105;
   const alb=parseFloat(document.getElementById('gas-alb').value)||4.0;
@@ -6782,13 +6716,13 @@ function calcGAS() {
       const e=24+0.1*(co2-40); comp='HCO3 esperado: '+e.toFixed(1)+' — Actual: '+hco3+' → '+(Math.abs(hco3-e)<3?'Compensada':'No compensada'); }
     else if (hco3<22){ prim='Acidosis Metabólica'; color='var(--red)';
       const e=1.5*hco3+8; comp='pCO2 esperado: '+e.toFixed(1)+' +/-2 — Actual: '+co2+' → '+(Math.abs(co2-e)<3?'Compensada':'No compensada'); }
-    else { prim='Acidemia mixta o compleja'; color='var(--orange)'; comp='Evaluar ambos componentes'; }
+    else { prim='Acidemia mixta o compleja'; color='var(--orange)'; comp='Coexisten componentes respiratorios y metabólicos'; }
   } else if (ph>7.45) {
     if (co2<35){ prim='Alcalosis Respiratoria'; color='var(--yellow)';
       const e=24-0.2*(40-co2); comp='HCO3 esperado: '+e.toFixed(1)+' — Actual: '+hco3+' → '+(Math.abs(hco3-e)<3?'Compensada':'No compensada'); }
     else if (hco3>26){ prim='Alcalosis Metabólica'; color='var(--yellow)';
       const e=0.7*hco3+21; comp='pCO2 esperado: '+e.toFixed(1)+' +/-2 — Actual: '+co2+' → '+(Math.abs(co2-e)<3?'Compensada':'No compensada'); }
-    else { prim='Alcalemia mixta o compleja'; color='var(--orange)'; comp='Evaluar ambos componentes'; }
+    else { prim='Alcalemia mixta o compleja'; color='var(--orange)'; comp='Coexisten componentes respiratorios y metabólicos'; }
   } else { prim='pH Normal'; color='var(--green)'; comp=co2<35&&hco3<22?'Posible mixta compensada':'Sin trastorno aparente'; }
   gasPrimEl.textContent=prim;
   gasPrimEl.style.color=color;
@@ -6816,7 +6750,7 @@ function calcGAS() {
 }
 
 const FARMACOS = {
-  norepinefrina:{nombre:'Norepinefrina',grupo:'vaso',indicacion:'Choque distributivo / séptico de primera línea',unidades:'mcg/kg/min',rangoMin:0.01,rangoMax:0.5,dosisMax:1.0,concStd:4,concStdDesc:'4 mg en 50 mL SSN (0.08 mg/mL)',concUnit:'mg/mL',notas:'Vasopresor de elección en sepsis. Titular por PAM ≥65. Acceso central recomendado.',dilucion:'4 mg en 50 mL SSN = 0.08 mg/mL = 80 mcg/mL'},
+  norepinefrina:{nombre:'Norepinefrina',grupo:'vaso',indicacion:'Choque distributivo / séptico (uso frecuente)',unidades:'mcg/kg/min',rangoMin:0.01,rangoMax:0.5,dosisMax:1.0,concStd:4,concStdDesc:'4 mg en 50 mL SSN (0.08 mg/mL)',concUnit:'mg/mL',notas:'Vasopresor de uso frecuente en sepsis. Correlacionar con PAM y perfusión. Acceso central habitual.',dilucion:'4 mg en 50 mL SSN = 0.08 mg/mL = 80 mcg/mL'},
   epinefrina:{nombre:'Epinefrina',grupo:'vaso',indicacion:'Choque anafiláctico / cardiogénico / PCR',unidades:'mcg/kg/min',rangoMin:0.01,rangoMax:0.5,dosisMax:1.0,concStd:4,concStdDesc:'4 mg en 50 mL SSN (0.08 mg/mL)',concUnit:'mg/mL',notas:'Efectos alfa y beta. A dosis bajas efecto β predomina. Monitorizar lactato.',dilucion:'4 mg en 50 mL SSN = 0.08 mg/mL = 80 mcg/mL'},
   vasopresina:{nombre:'Vasopresina',grupo:'vaso',indicacion:'Choque séptico refractario — adyuvante NE',unidades:'UI/h',rangoMin:0.01,rangoMax:0.03,dosisMax:0.04,concStd:20,concStdDesc:'20 UI en 50 mL SSN (0.4 UI/mL)',concUnit:'UI/mL',notas:'Dosis fija 0.03 UI/min (1.8 UI/h). No titular. Efecto vasoconstrictor puro.',dilucion:'20 UI en 50 mL SSN = 0.4 UI/mL'},
   dopamina:{nombre:'Dopamina',grupo:'vaso',indicacion:'Soporte inotrópico / vasopresor (uso limitado)',unidades:'mcg/kg/min',rangoMin:2,rangoMax:20,dosisMax:20,concStd:200,concStdDesc:'200 mg en 50 mL SSN (4 mg/mL)',concUnit:'mg/mL',notas:'<5 mcg/kg/min: efecto dopaminérgico. 5-10: β predomina. >10: α predomina. Mayor riesgo arritmias vs NE.',dilucion:'200 mg en 50 mL SSN = 4 mg/mL = 4000 mcg/mL'},
@@ -6830,7 +6764,7 @@ const FARMACOS = {
   morfina:{nombre:'Morfina',grupo:'sed',indicacion:'Analgesia — opioide con efecto venodilatador',unidades:'mg/h',rangoMin:1,rangoMax:10,dosisMax:20,concStd:50,concStdDesc:'50 mg en 50 mL SSN (1 mg/mL)',concUnit:'mg/mL',notas:'Útil en edema pulmonar agudo. Acumulación en IR. Vigilar histaminoliberación.',dilucion:'50 mg en 50 mL SSN = 1 mg/mL'},
   remifentanilo:{nombre:'Remifentanilo',grupo:'sed',indicacion:'Analgesia/sedación — ultra corta duración',unidades:'mcg/kg/min',rangoMin:0.05,rangoMax:0.2,dosisMax:2,concStd:1,concStdDesc:'1 mg en 50 mL SSN (20 mcg/mL)',concUnit:'mcg/mL',notas:'Metabolismo por esterasas plasmáticas — no acumula en IR/IH. Ideal para destete.',dilucion:'1 mg en 50 mL SSN = 20 mcg/mL'},
   cisatracurio:{nombre:'Cisatracurio',grupo:'bnm',indicacion:'Bloqueo neuromuscular en SDRA grave / asincronía',unidades:'mcg/kg/min',rangoMin:0.5,rangoMax:3,dosisMax:10,concStd:40,concStdDesc:'40 mg en 100 mL SSN (0.4 mg/mL)',concUnit:'mg/mL',notas:'Eliminación de Hofmann — no acumula en IR/IH. Monitorizar TOF. Usar con sedación profunda.',dilucion:'40 mg en 100 mL SSN = 0.4 mg/mL = 400 mcg/mL'},
-  nimodipino:{nombre:'Nimodipino',grupo:'neuro',indicacion:'Prevención vasoespasmo en HSA',unidades:'mg/h',rangoMin:1,rangoMax:2,dosisMax:2,concStd:0.2,concStdDesc:'Solución lista 0.2 mg/mL — no diluir',concUnit:'mg/mL',notas:'Iniciar 0.5 mg/h x1h, luego 1-2 mg/h. Vigilar hipotensión. Usar equipo especial (no PVC). Duración 21 días.',dilucion:'Solución lista 0.2 mg/mL. 50 mL/h = 10 mg/h — ajustar según tolerancia'},
+  nimodipino:{nombre:'Nimodipino',grupo:'neuro',indicacion:'Prevención vasoespasmo en HSA',unidades:'mg/h',rangoMin:1,rangoMax:2,dosisMax:2,concStd:0.2,concStdDesc:'Solución lista 0.2 mg/mL — no diluir',concUnit:'mg/mL',notas:'Rango de referencia habitual: 0.5 mg/h la primera hora, luego 1-2 mg/h. Vigilar hipotensión. Usar equipo especial (no PVC). Duración 21 días.',dilucion:'Solución lista 0.2 mg/mL. 50 mL/h = 10 mg/h — rango según tolerancia'},
   insulina:{nombre:'Insulina regular',grupo:'otros',indicacion:'Control glucémico en UCI — meta 140-180 mg/dL',unidades:'UI/h',rangoMin:0.5,rangoMax:10,dosisMax:50,concStd:50,concStdDesc:'50 UI en 50 mL SSN (1 UI/mL)',concUnit:'UI/mL',notas:'Titular según glucemia horaria. Meta 140-180 mg/dL UCI. Vigilar hipoglucemia.',dilucion:'50 UI insulina regular en 50 mL SSN = 1 UI/mL'},
   amiodarona:{nombre:'Amiodarona',grupo:'otros',indicacion:'Arritmias ventriculares / FA con respuesta ventricular rápida',unidades:'mg/h',rangoMin:15,rangoMax:60,dosisMax:1200,concStd:300,concStdDesc:'300 mg en 250 mL SG5% (1.2 mg/mL)',concUnit:'mg/mL',notas:'Carga: 150 mg en 10 min. Mantenimiento: 1 mg/min x6h, luego 0.5 mg/min. Solo en SG5%.',dilucion:'300 mg en 250 mL SG5% = 1.2 mg/mL'},
   labetalol:{nombre:'Labetalol',grupo:'otros',indicacion:'Crisis hipertensiva — α y β bloqueador',unidades:'mg/h',rangoMin:20,rangoMax:160,dosisMax:300,concStd:200,concStdDesc:'200 mg en 200 mL SSN (1 mg/mL)',concUnit:'mg/mL',notas:'Inicio: 20 mg IV bolo, luego infusión. Contraindicado en asma, ICC descompensada, BAV.',dilucion:'200 mg en 200 mL SSN = 1 mg/mL'},
@@ -6843,7 +6777,7 @@ Object.keys(FARMACOS).forEach(k => delete FARMACOS[k]);
 Object.assign(FARMACOS, {
   norepinefrina: {
     nombre: 'Norepinefrina', grupo: 'vaso',
-    indicacion: 'Vasopresor de elección en sepsis. Titular por PAM ≥65. Acceso central recomendado.',
+    indicacion: 'Vasopresor de uso frecuente en sepsis. Correlacionar con PAM ≥65 y perfusión. Acceso central habitual.',
     unidades: 'mcg/kg/min', rangoMin: 0.01, rangoMax: 0.5, dosisMax: 1.0,
     concStd: 0.08, concUnit: 'mg/mL',
     dilucion: '4 mg en 50 mL SSN = 0.08 mg/mL = 80 mcg/mL'
@@ -7011,22 +6945,19 @@ function updateBombaFarmaco() {
     'Máx: ' + f.dosisMax + ' ' + f.unidades;
   document.getElementById('bom-indicacion').textContent =
     f.indicacion;
-  document.getElementById('bom-conc').value =
-    f.concStd.toFixed(3);
-  const unitSel = document.getElementById('bom-conc-unit');
-  for (let o of unitSel.options) {
-    if (o.value === f.concUnit) {
-      unitSel.value = o.value; break;
-    }
-  }
   document.getElementById('bom-dilucion-txt').textContent =
     f.dilucion;
+  applyBombaStdDilution();
+  syncBombaPesoRequirement();
   document.getElementById('bom-result-inline').style.display =
     'none';
 }
 
+let BOMBA_MODE = 'dosis';
+
 function setBombaMode(mode, btn) {
-  document.querySelectorAll('.nota-format-btn')
+  BOMBA_MODE = mode;
+  document.querySelectorAll('.bom-mode-btn')
     .forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   const label = document.getElementById('bom-input-label');
@@ -7042,76 +6973,213 @@ function setBombaMode(mode, btn) {
     'none';
 }
 
+function isBombaPesoDependiente(unidadDosis) {
+  return unidadDosis === 'mcg/kg/min' ||
+         unidadDosis === 'mcg/kg/h' ||
+         unidadDosis === 'mg/kg/h';
+}
+
+function parseStdDilutionFromText(f) {
+  if (!f) return null;
+  const txt = (f.concStdDesc || f.dilucion || '').replace(',', '.');
+  const m = txt.match(/(\d+(\.\d+)?)\s*(mg|mcg|UI)\s*en\s*(\d+(\.\d+)?)\s*mL/i);
+  if (m) {
+    return {
+      amount: parseFloat(m[1]),
+      unit: m[3],
+      volume: parseFloat(m[4])
+    };
+  }
+  const concUnitBase = (f.concUnit || 'mg/mL').split('/')[0];
+  return { amount: f.concStd, unit: concUnitBase, volume: 1 };
+}
+
+function normalizeBombaConc(amount, amountUnit, volume, dosisUnit) {
+  if (!isFinite(amount) || amount <= 0) return null;
+  if (!isFinite(volume) || volume <= 0) return null;
+  const unit = (amountUnit || '').trim();
+  const conc = amount / volume;
+
+  if (dosisUnit === 'UI/h') {
+    if (unit === 'UI') return { value: conc, baseUnit: 'UI/mL' };
+    return null;
+  }
+
+  if (dosisUnit === 'mg/h' || dosisUnit === 'mg/kg/h') {
+    if (unit === 'mg') return { value: conc, baseUnit: 'mg/mL' };
+    if (unit === 'mcg') return { value: conc / 1000, baseUnit: 'mg/mL' };
+    return null;
+  }
+
+  if (dosisUnit === 'mcg/kg/min' || dosisUnit === 'mcg/kg/h') {
+    if (unit === 'mcg') return { value: conc, baseUnit: 'mcg/mL' };
+    if (unit === 'mg') return { value: conc * 1000, baseUnit: 'mcg/mL' };
+    return null;
+  }
+
+  return null;
+}
+
+function applyBombaStdDilution() {
+  const key = document.getElementById('bom-farmaco').value;
+  const f = FARMACOS[key];
+  if (!f) return;
+  const std = parseStdDilutionFromText(f);
+  if (!std) return;
+  document.getElementById('bom-cant-total').value = std.amount;
+  const unitSel = document.getElementById('bom-cant-unit');
+  if (unitSel) unitSel.value = std.unit;
+  document.getElementById('bom-vol-total').value = std.volume;
+  updateBombaConcPreview();
+}
+
+function updateBombaConcPreview() {
+  const key = document.getElementById('bom-farmaco').value;
+  const f = FARMACOS[key];
+  if (!f) return null;
+  const amount = parseFloat(document.getElementById('bom-cant-total').value);
+  const amountUnit = document.getElementById('bom-cant-unit').value;
+  const volume = parseFloat(document.getElementById('bom-vol-total').value);
+  const out = document.getElementById('bom-conc-calc');
+  if (!isFinite(amount) || !isFinite(volume) || amount <= 0 || volume <= 0) {
+    out.textContent = 'Concentración calculada: —';
+    return null;
+  }
+  const normalized = normalizeBombaConc(amount, amountUnit, volume, f.unidades);
+  if (!normalized) {
+    out.textContent = 'Concentración calculada: unidad incompatible para ' + f.unidades;
+    return null;
+  }
+  out.textContent = 'Concentración calculada: ' + normalized.value.toFixed(4) + ' ' + normalized.baseUnit;
+  return normalized;
+}
+
+function syncBombaPesoRequirement() {
+  const key = document.getElementById('bom-farmaco').value;
+  const f = FARMACOS[key];
+  const pesoEl = document.getElementById('bom-peso');
+  if (!pesoEl || !f) return;
+  if (isBombaPesoDependiente(f.unidades)) {
+    pesoEl.placeholder = '60 – 100';
+    pesoEl.style.opacity = '';
+  } else {
+    pesoEl.placeholder = 'No requerido';
+    pesoEl.style.opacity = '0.75';
+  }
+}
+
 function calcBomba() {
   const key = document.getElementById('bom-farmaco').value;
   const f = FARMACOS[key];
+  if (!f) {
+    showToast('Seleccione un fármaco válido.');
+    return;
+  }
   const peso = parseFloat(
     document.getElementById('bom-peso').value);
-  const conc = parseFloat(
-    document.getElementById('bom-conc').value);
+  const amount = parseFloat(
+    document.getElementById('bom-cant-total').value);
+  const amountUnit = document.getElementById('bom-cant-unit').value;
+  const volume = parseFloat(
+    document.getElementById('bom-vol-total').value);
   const val = parseFloat(
     document.getElementById('bom-valor-input').value);
-  const modeActivo = document.querySelector(
-    '.nota-format-btn.active').textContent.includes('Velocidad');
-
-  if (!validate([
-    {id:'bom-peso', label:'Peso'},
-    {id:'bom-conc', label:'Concentración'},
-    {id:'bom-valor-input', label: modeActivo ?
-      'Velocidad' : 'Dosis'}
-  ])) return;
+  const isVelToDose = BOMBA_MODE === 'dosis';
+  const valorLabel = isVelToDose ? 'Velocidad (mL/h)' : 'Dosis';
+  const pesoDependiente = isBombaPesoDependiente(f.unidades);
+  const faltantes = [];
+  if (pesoDependiente && (!isFinite(peso) || peso <= 0)) faltantes.push('Peso');
+  if (!isFinite(amount) || amount <= 0) faltantes.push('Cantidad total en bolsa (>0)');
+  if (!isFinite(volume) || volume <= 0) faltantes.push('Volumen total bolsa (>0)');
+  if (!isFinite(val) || val <= 0) faltantes.push(valorLabel + ' (>0)');
+  if (faltantes.length) {
+    showToast('Bombas: datos inválidos o faltantes: ' + faltantes.join(', ') + '.');
+    return;
+  }
 
   const u = f.unidades;
+  const normalized = normalizeBombaConc(amount, amountUnit, volume, u);
+  if (!normalized) {
+    showToast('Preparación incompatible para ' + u + '. Verifique unidad de cantidad.');
+    return;
+  }
+  updateBombaConcPreview();
+
+  const concBase = normalized.value;
   let dosis, vel;
 
-  if (modeActivo) {
+  if (isVelToDose) {
     vel = val;
     if (u === 'mcg/kg/min')
-      dosis = (conc * 1000 * vel) / (60 * peso);
+      dosis = (concBase * vel) / (60 * peso);
     else if (u === 'mcg/kg/h')
-      dosis = (conc * 1000 * vel) / peso;
+      dosis = (concBase * vel) / peso;
     else if (u === 'mg/kg/h')
-      dosis = (conc * vel) / peso;
-    else
-      dosis = conc * vel;
+      dosis = (concBase * vel) / peso;
+    else if (u === 'UI/h')
+      dosis = concBase * vel;
+    else if (u === 'mg/h')
+      dosis = concBase * vel;
+    else {
+      showToast('Unidad de dosis no soportada: ' + u);
+      return;
+    }
   } else {
     dosis = val;
     if (u === 'mcg/kg/min')
-      vel = (dosis * 60 * peso) / (conc * 1000);
+      vel = (dosis * 60 * peso) / concBase;
     else if (u === 'mcg/kg/h')
-      vel = (dosis * peso) / (conc * 1000);
+      vel = (dosis * peso) / concBase;
     else if (u === 'mg/kg/h')
-      vel = (dosis * peso) / conc;
-    else
-      vel = dosis / conc;
+      vel = (dosis * peso) / concBase;
+    else if (u === 'UI/h')
+      vel = dosis / concBase;
+    else if (u === 'mg/h')
+      vel = dosis / concBase;
+    else {
+      showToast('Unidad de dosis no soportada: ' + u);
+      return;
+    }
+  }
+
+  if (!isFinite(dosis) || !isFinite(vel) || dosis <= 0 || vel <= 0) {
+    showToast('Resultado inválido: verifique entradas y unidad de concentración.');
+    return;
   }
 
   const wrap = document.getElementById('bom-result-inline');
   wrap.style.display = 'flex';
-  document.getElementById('bom-out-val').textContent =
-    dosis.toFixed(3);
-  document.getElementById('bom-out-unit').textContent = u;
-  document.getElementById('bom-out-vel').textContent =
-    '· ' + vel.toFixed(1) + ' mL/h';
+  if (isVelToDose) {
+    document.getElementById('bom-out-val').textContent = dosis.toFixed(3);
+    document.getElementById('bom-out-unit').textContent = u;
+    document.getElementById('bom-out-vel').textContent = '· Velocidad: ' + vel.toFixed(2) + ' mL/h';
+  } else {
+    document.getElementById('bom-out-val').textContent = vel.toFixed(2);
+    document.getElementById('bom-out-unit').textContent = 'mL/h';
+    document.getElementById('bom-out-vel').textContent = '· Dosis: ' + dosis.toFixed(3) + ' ' + u;
+  }
 
   const badge = document.getElementById('bom-out-badge');
   if (dosis > f.dosisMax) {
     badge.className = 'result-badge badge-red';
-    badge.textContent = '⚠ Dosis máxima excedida';
+    badge.textContent = 'Evaluación de dosis: Máx excedida';
   } else if (dosis > f.rangoMax) {
     badge.className = 'result-badge badge-orange';
-    badge.textContent = 'Sobre rango habitual';
+    badge.textContent = 'Evaluación de dosis: Sobre rango';
   } else if (dosis < f.rangoMin) {
     badge.className = 'result-badge badge-yellow';
-    badge.textContent = 'Subterapéutico';
+    badge.textContent = 'Evaluación de dosis: Subrango';
   } else {
     badge.className = 'result-badge badge-green';
-    badge.textContent = 'En rango';
+    badge.textContent = 'Evaluación de dosis: En rango';
   }
 }
 
 function resetBombas() {
   document.getElementById('bom-valor-input').value = '';
+  document.getElementById('bom-cant-total').value = '';
+  document.getElementById('bom-vol-total').value = '';
+  document.getElementById('bom-conc-calc').textContent = 'Concentración calculada: —';
   document.getElementById('bom-result-inline').style.display =
     'none';
 }
@@ -7119,13 +7187,18 @@ function resetBombas() {
 document.addEventListener('DOMContentLoaded', () => {
   setBombaCategoria('vaso',
     document.querySelector('#bom-cat-bar .tab-btn'));
+  ['bom-cant-total', 'bom-cant-unit', 'bom-vol-total'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', updateBombaConcPreview);
+    if (el) el.addEventListener('change', updateBombaConcPreview);
+  });
 });
 
 // ============ VASOPRESOR ============
 const vasoRefs={
-  NE:'Rango: 0.01-3 mcg/kg/min — Inicio habitual: 0.05-0.1 mcg/kg/min',
+  NE:'Rango analítico: 0.01-3 mcg/kg/min — referencia habitual: 0.05-0.1 mcg/kg/min',
   EP:'Rango: 0.01-1 mcg/kg/min — Anafilaxis/sepsis',
-  VP:'Dosis fija: 0.03-0.04 U/min — No ajustar por peso',
+  VP:'Dosis fija: 0.03-0.04 U/min — independiente de peso',
   DA:'1-20 mcg/kg/min — Dopaminergico <5, inotr. 5-10, vasopresor >10',
   DB:'2.5-20 mcg/kg/min — Inotropico puro',
   PH:'0.5-6 mcg/kg/min — Vasopresion pura'
@@ -7140,12 +7213,12 @@ const vasoDoseHints={
   PH:'1 (PH: 0.5-6)'
 };
 const vasoInterpByDrug={
-  NE:'Primera línea en choque distributivo/séptico. Titular para meta de PAM y perfusión.',
+  NE:'Perfil frecuentemente asociado a soporte vasopresor en choque distributivo/séptico.',
   EP:'Útil cuando hay necesidad de inotropía + vasopresión (p. ej., choque refractario).',
-  VP:'Vasopresor no catecolaminérgico como coadyuvante para ahorrar norepinefrina.',
+  VP:'Vasopresor no catecolaminérgico, habitualmente usado como coadyuvante de norepinefrina.',
   DA:'Reservar para escenarios seleccionados; mayor riesgo de taquiarritmias.',
   DB:'Inotrópico predominante: útil en bajo gasto con presión relativamente preservada.',
-  PH:'Vasopresor alfa-puro: considerar cuando predomina vasoplejía con taquicardia.'
+  PH:'Vasopresor alfa-puro: patrón de uso en contextos con vasoplejía y taquicardia.'
 };
 function updateVasoInfo() {
   const drug=elCached('vas-drug').value;
@@ -7488,7 +7561,7 @@ function calcKDIGO() {
   if (isNaN(base) || base <= 0) {
     const baseEl = elCached('kd-base');
     baseEl.classList.add('val-error');
-    showToast('⚠️ Cr basal debe ser > 0');
+    showToast('⚠️ Cr basal: se requiere valor > 0');
     return;
   }
   const curr=parseFloat(elCached('kd-curr').value);
@@ -7603,9 +7676,9 @@ function calcCURB() {
   document.getElementById('curb-total').textContent=total;
   const b=document.getElementById('curb-badge');
   let interp;
-  if (total<=1){ b.className='result-badge badge-green'; b.textContent='Bajo riesgo'; interp='Mortalidad ~1.5% — considerar ambulatorio'; }
+  if (total<=1){ b.className='result-badge badge-green'; b.textContent='Bajo riesgo'; interp='Mortalidad ~1.5% — perfil de baja gravedad en este score'; }
   else if (total===2){ b.className='result-badge badge-yellow'; b.textContent='Moderado'; interp='Mortalidad ~9.2% — hospitalizacion'; }
-  else { b.className='result-badge badge-red'; b.textContent='Alto riesgo'; interp='Mortalidad ~22-57% — considerar UCI'; }
+  else { b.className='result-badge badge-red'; b.textContent='Alto riesgo'; interp='Mortalidad ~22-57% — perfil de alta gravedad en este score'; }
   document.getElementById('curb-interp').textContent=interp;
   document.getElementById('curb-result').style.display='flex';
 }
@@ -8126,13 +8199,21 @@ function selectRASS(val, el) {
 function calcKIRBY() {
   if (!validate([{id:'kb-spo2',label:'SpO₂'},{id:'pafi-fio2',label:'FiO₂'}])) return;
   if (!validateRanges([
-    {id:'kb-spo2', label:'SpO₂', min:40, max:100},
-    {id:'pafi-fio2', label:'FiO₂', min:0.21, max:1.0}
+    {id:'kb-spo2', label:'SpO₂', min:40, max:100}
   ])) return;
   const spo2 = parseFloat(document.getElementById('kb-spo2').value);
-  const fio2 = parseFloat(document.getElementById('pafi-fio2').value);
+  const fio2 = normalizeFio2Input(document.getElementById('pafi-fio2').value);
   const spo2m = parseFloat(document.getElementById('kb-spo2-meta').value);
-  const fio2m = parseFloat(document.getElementById('kb-fio2-meta').value);
+  const fio2mRaw = document.getElementById('kb-fio2-meta').value.trim();
+  const fio2m = fio2mRaw === '' ? NaN : normalizeFio2Input(fio2mRaw);
+  if (isNaN(fio2)) {
+    showToast('Kirby: FiO₂ inválida. Use decimal 0.21–1.0 o porcentaje 21–100.');
+    return;
+  }
+  if (fio2mRaw !== '' && isNaN(fio2m)) {
+    showToast('Kirby: FiO₂ deseada inválida. Use decimal 0.21–1.0 o porcentaje 21–100.');
+    return;
+  }
 
   const sf = spo2 / fio2;
   document.getElementById('kb-sf').textContent = sf.toFixed(0);
@@ -8391,23 +8472,23 @@ function calcVEXUS() {
   if (!isNaN(vci) && vci < 2.0) {
     grado = 'GRADO 0'; gradoCls = 'badge-green';
     congestion = 'Sin congestión venosa sistémica significativa';
-    conducta = 'No restricción hídrica por congestión. Continuar monitoreo.';
+    conducta = 'Sin señal de restricción hídrica por congestión en esta medición. Mantener monitoreo.';
   } else if (nGraves === 0 && nAlterados === 0) {
     grado = 'GRADO 1'; gradoCls = 'badge-green';
     congestion = 'VCI dilatada sin patrones anormales — congestión leve';
-    conducta = 'Vigilar evolución, considerar balance neutro o ligeramente negativo.';
+    conducta = 'Seguimiento evolutivo; patrón compatible con balance neutro o ligeramente negativo.';
   } else if (nGraves === 0 && nAlterados >= 1) {
     grado = 'GRADO 1-2'; gradoCls = 'badge-yellow';
     congestion = 'Patrones leves — congestión moderada';
-    conducta = 'Considerar balance negativo 500-1000 mL/día. Reevaluar VExUS en 6-12h.';
+    conducta = 'Patrón compatible con balance negativo de 500-1000 mL/día. Revaluar VExUS en 6-12 h.';
   } else if (nGraves === 1) {
     grado = 'GRADO 2'; gradoCls = 'badge-orange';
     congestion = 'Un patrón grave — congestión moderada-severa';
-    conducta = 'Balance negativo 1000-1500 mL/día. Diuréticos IV (furosemida). Restringir fluidos.';
+    conducta = 'Patrón compatible con balance negativo de 1000-1500 mL/día y congestión clínicamente relevante.';
   } else {
     grado = 'GRADO 3'; gradoCls = 'badge-red';
     congestion = 'Múltiples patrones graves — congestión venosa severa';
-    conducta = 'Balance muy negativo. Furosemida en infusión o CRRT con UF neta. Alto riesgo de LRA por congestión.';
+    conducta = 'Congestión venosa severa en esta medición; perfil compatible con balance fuertemente negativo y alto riesgo de LRA por congestión.';
   }
 
   document.getElementById('vx-grado').className   = 'result-badge ' + gradoCls;
@@ -8833,14 +8914,14 @@ const metasData = {
   sepsis: {
     title: 'Sepsis / Choque Séptico (Surviving Sepsis 2021)',
     metas: [
-      ['PAM','≥65 mmHg (considerar ≥72 si HTA crónica)'],
+      ['PAM','≥65 mmHg (en algunos contextos se usa ≥72 si HTA crónica)'],
       ['Lactato','Meta: <2 mmol/L / clearance ≥10% c/2h'],
       ['ScvO₂','≥70% (venosa central)'],
       ['Balance hídrico','Negativo o neutro tras resucitación inicial'],
       ['Uresis','≥0.5 mL/kg/h'],
       ['PaO₂','60-80 mmHg · PAFI ≥150 si en VM'],
-      ['Vasopresor','NE de primera línea, agregar VP si NE ≥0.25'],
-      ['Antibiótico','Inicio ≤1h de diagnóstico de choque'],
+      ['Vasopresor','NE como referencia frecuente; VP como coadyuvante si NE ≥0.25'],
+      ['Antibiótico','Ventana de referencia ≤1h desde diagnóstico de choque'],
     ]
   },
   tbi: {
@@ -8990,9 +9071,9 @@ const modoVentData = {
   sdra: {
     title: 'SDRA / Lesión Pulmonar Aguda',
     metas: [
-      ['Modo recomendado','VCV (control volumen) o PCV con límite meseta'],
+      ['Modo de referencia','VCV (control volumen) o PCV con límite meseta'],
       ['VT','6 mL/kg PP (rango 4-8 según compliancia)'],
-      ['FR','14-30 rpm · ajustar para pH 7.30-7.45'],
+      ['FR','14-30 rpm · rango analítico según pH 7.30-7.45'],
       ['PEEP','Tabla ARDSnet alta si FiO₂ >0.50'],
       ['P meseta','≤28 cmH2O'],
       ['Driving Pressure','≤15 cmH2O (objetivo principal)'],
@@ -9003,7 +9084,7 @@ const modoVentData = {
   epoc: {
     title: 'EPOC Exacerbado',
     metas: [
-      ['Modo recomendado','VCV o PRVC · VNI preferida si tolera'],
+      ['Modo de referencia','VCV o PRVC · VNI como modalidad frecuente si hay tolerancia'],
       ['VT','5-7 mL/kg PP (cuidar atrapamiento)'],
       ['FR','12-16 rpm (minimizar hiperinflación)'],
       ['I:E ratio','1:3 o 1:4 (espiración prolongada)'],
@@ -9016,7 +9097,7 @@ const modoVentData = {
   asma: {
     title: 'Crisis Asmática Grave',
     metas: [
-      ['Modo recomendado','VCV — flujo constante'],
+      ['Modo de referencia','VCV — flujo constante'],
       ['VT','5-7 mL/kg PP (muy conservador)'],
       ['FR','10-14 rpm (prioridad: espiración)'],
       ['I:E ratio','1:4 o 1:5 mínimo'],
@@ -9029,7 +9110,7 @@ const modoVentData = {
   neumonia: {
     title: 'Neumonía Grave (sin SDRA)',
     metas: [
-      ['Modo recomendado','VCV o PCV estándar'],
+      ['Modo de referencia','VCV o PCV estándar'],
       ['VT','6-8 mL/kg PP'],
       ['FR','14-20 rpm'],
       ['PEEP','5-8 cmH2O (según tolerancia)'],
@@ -9042,7 +9123,7 @@ const modoVentData = {
   tbi: {
     title: 'TBI / Hipertensión Endocraneal',
     metas: [
-      ['Modo recomendado','VCV · evitar lucha con ventilador'],
+      ['Modo de referencia','VCV · con énfasis en sincronía con ventilador'],
       ['VT','6-8 mL/kg PP'],
       ['PaCO₂','35-40 mmHg (normocapnia)'],
       ['Hiperventilaión temporal','PaCO₂ 30-35 sólo en hernación activa'],
@@ -9055,7 +9136,7 @@ const modoVentData = {
   icc_vent: {
     title: 'Edema Pulmonar / ICC',
     metas: [
-      ['Modo recomendado','VNI (CPAP/BiPAP) primera línea'],
+      ['Modo de referencia','VNI (CPAP/BiPAP) como modalidad frecuente'],
       ['CPAP/PEEP','8-12 cmH2O (reduce postcarga VI)'],
       ['FiO₂','Para SpO₂ ≥94%'],
       ['Si intuba: VCV','6-8 mL/kg PP · PEEP 5-8'],
@@ -9068,10 +9149,10 @@ const modoVentData = {
   posqx: {
     title: 'Postoperatorio General',
     metas: [
-      ['Modo recomendado','VCV o PCV + PSV para destete temprano'],
+      ['Modo de referencia','VCV o PCV + PSV para destete temprano'],
       ['VT','6-8 mL/kg PP (protector siempre)'],
       ['PEEP','5-8 cmH2O (prevenir atelectasias)'],
-      ['FiO₂','0.40-0.60 inicial, reducir a mínima'],
+      ['FiO₂','0.40-0.60 inicial; progresión según respuesta de oxigenación'],
       ['Filtro HME','Sí, siempre'],
       ['Destete','Inicio en las primeras 2-4h postqx si posible'],
       ['SBT','PSV 5-8 + PEEP 5 por 30 min'],
@@ -9115,7 +9196,9 @@ function showModoVent() {
 function normalizeFio2Input(rawFio2) {
   const fio2Raw = parseFloat(rawFio2);
   if (isNaN(fio2Raw)) return NaN;
-  return fio2Raw > 1 ? fio2Raw / 100 : fio2Raw;
+  const fio2Norm = fio2Raw > 1 ? fio2Raw / 100 : fio2Raw;
+  if (fio2Norm < 0.21 || fio2Norm > 1.0) return NaN;
+  return fio2Norm;
 }
 
 function calcPAFITvent() {
@@ -9124,7 +9207,7 @@ function calcPAFITvent() {
   const fio2 = normalizeFio2Input(document.getElementById('tvent-pafi-fio2').value);
 
   if (isNaN(pao2) || pao2 <= 0) {
-    showToast('PAFI: PaO₂ debe ser mayor a 0 mmHg.');
+    showToast('PAFI: PaO₂ inválida (se requiere valor > 0 mmHg).');
     return;
   }
   if (isNaN(fio2) || fio2 < 0.21 || fio2 > 1.0) {
@@ -9276,7 +9359,8 @@ function calcDestete() {
   const fr   = parseFloat(document.getElementById('tb-fr').value);
   const vt   = parseFloat(document.getElementById('tb-vt').value);
   const pao2 = parseFloat(document.getElementById('tb-pao2').value);
-  const fio2 = parseFloat(document.getElementById('tb-fio2').value);
+  const fio2Raw = document.getElementById('tb-fio2').value.trim();
+  const fio2 = fio2Raw === '' ? NaN : normalizeFio2Input(fio2Raw);
   const peep = parseFloat(document.getElementById('tb-peep').value);
   const mip  = parseFloat(document.getElementById('tb-mip').value);
   const cpf  = parseFloat(document.getElementById('tb-cpf').value);
@@ -9294,6 +9378,9 @@ function calcDestete() {
 
   let pafi = null;
   if (!isNaN(pao2)&&!isNaN(fio2)) pafi = pao2/fio2;
+  if (fio2Raw !== '' && isNaN(fio2)) {
+    showToast('Destete: FiO₂ inválida. Use decimal 0.21–1.0 o porcentaje 21–100.');
+  }
 
   const critPct = Math.round((crit/critTotal)*100);
   const apto = crit >= 5 &&
@@ -9397,7 +9484,7 @@ function calcTSRDosis() {
     if (isNaN(peso) || peso <= 0) {
       const pesoEl = document.getElementById('tsr-peso');
       pesoEl.classList.add('val-error');
-      showToast('⚠️ Peso actual debe ser > 0');
+      showToast('⚠️ Peso actual: se requiere valor > 0');
       return;
     }
     R.style.display = 'grid';
@@ -9405,9 +9492,9 @@ function calcTSRDosis() {
       const dosis = efluente / peso;
       document.getElementById('tsr-dose-val').textContent = dosis.toFixed(1) + ' mL/kg/h';
       const b = document.getElementById('tsr-dose-badge');
-      if (dosis >= 20 && dosis <= 25) { b.className='result-badge badge-green';  b.textContent='En meta (20-25 mL/kg/h)'; }
-      else if (dosis < 20)            { b.className='result-badge badge-yellow'; b.textContent='Sub-terapéutico (<20) — aumentar'; }
-      else                            { b.className='result-badge badge-orange'; b.textContent='Supra-terapéutico (>25) — revisar'; }
+      if (dosis >= 20 && dosis <= 25) { b.className='result-badge badge-green';  b.textContent='En rango analítico (20-25 mL/kg/h)'; }
+      else if (dosis < 20)            { b.className='result-badge badge-yellow'; b.textContent='Por debajo de rango analítico (<20)'; }
+      else                            { b.className='result-badge badge-orange'; b.textContent='Por encima de rango analítico (>25)'; }
     }
     if (!isNaN(ff)) {
       document.getElementById('tsr-ff-val').textContent = ff.toFixed(1) + '%';
@@ -9434,7 +9521,7 @@ function calcTSRDosis() {
     if (isNaN(bunPre) || bunPre <= 0) {
       const bunPreEl = document.getElementById('tsr-bun-pre');
       bunPreEl.classList.add('val-error');
-      showToast('⚠️ BUN pre-diálisis debe ser > 0');
+      showToast('⚠️ BUN pre-diálisis: se requiere valor > 0');
       return;
     }
     R.style.display = 'grid';
@@ -9447,7 +9534,7 @@ function calcTSRDosis() {
       document.getElementById('tsr-ktv').textContent = ktvCalc.toFixed(2);
       const b = document.getElementById('tsr-ktv-badge');
       if (ktvCalc >= 1.2) { b.className='result-badge badge-green';  b.textContent='Adecuada (Kt/V ≥1.2)'; }
-      else                { b.className='result-badge badge-red';    b.textContent='Insuficiente (<1.2) — ajustar'; }
+      else                { b.className='result-badge badge-red';    b.textContent='Insuficiente (<1.2) — fuera de rango de referencia'; }
     }
     document.getElementById('tsr-dose-val').textContent = '—';
     document.getElementById('tsr-dose-badge').textContent = 'Ver Kt/V para IHD/SLED';
@@ -9538,16 +9625,16 @@ function calcHeparina() {
   }
   if (!isNaN(ttpa) && !isNaN(meta)) {
     let ajuste;
-    if      (ttpa < 35)            ajuste = 'Bolear 80 UI/kg + aumentar infusión 4 UI/kg/h';
-    else if (ttpa < 45)            ajuste = 'Bolear 40 UI/kg + aumentar infusión 2 UI/kg/h';
-    else if (ttpa <= meta+10)      ajuste = 'Sin cambio — en meta';
-    else if (ttpa <= meta+20)      ajuste = 'Reducir infusión 2 UI/kg/h';
-    else if (ttpa <= meta+40)      ajuste = 'Pausar 30 min, reducir 3 UI/kg/h';
-    else                           ajuste = 'Pausar 60 min, reducir 4 UI/kg/h + evaluar reversión';
+    if      (ttpa < 35)            ajuste = 'TTPa muy por debajo de meta: alteración grave frente al rango objetivo.';
+    else if (ttpa < 45)            ajuste = 'TTPa por debajo de meta: alteración moderada frente al rango objetivo.';
+    else if (ttpa <= meta+10)      ajuste = 'TTPa en rango objetivo.';
+    else if (ttpa <= meta+20)      ajuste = 'TTPa por encima de meta: alteración leve frente al rango objetivo.';
+    else if (ttpa <= meta+40)      ajuste = 'TTPa por encima de meta: alteración moderada frente al rango objetivo.';
+    else                           ajuste = 'TTPa muy por encima de meta: alteración grave frente al rango objetivo.';
     document.getElementById('hep-ajuste').textContent = ajuste;
   }
   if (isNaN(ttpa) || isNaN(meta)) {
-    showToast('Verifica TTPa actual y meta para ajustar heparina.');
+    showToast('Verifica TTPa actual y meta para análisis de heparina.');
   }
   if (!isNaN(peso)) {
     document.getElementById('hep-rate').textContent = Math.round(peso*7/50) + ' mL/h (solución estándar 25,000 UI/500 mL)';
@@ -9578,7 +9665,7 @@ function calcCitrato() {
     const flujoCitrato = qb * 1.5;
     document.getElementById('ci-flujo').textContent = flujoCitrato.toFixed(0) + ' mL/h (ACD-A, ratio 1.5:1 Qb)';
   }
-  document.getElementById('ci-ca-rep').textContent = 'Ca gluconato 10%: 10-30 mL/h IV central (ajustar a Ca sistémico)';
+  document.getElementById('ci-ca-rep').textContent = 'Ca gluconato 10%: 10-30 mL/h IV central (según Ca sistémico observado)';
   if (!isNaN(caPost)) {
     if      (caPost < 0.25) { estP.className='result-badge badge-yellow'; estP.textContent='Citrato insuficiente — aumentar flujo'; }
     else if (caPost <= 0.35){ estP.className='result-badge badge-green';  estP.textContent='En meta (0.25-0.35 mmol/L)'; }
@@ -9604,7 +9691,7 @@ function evalAEIOU() {
   const i = document.getElementById('aeiou-interp');
   if (total >= 1) {
     b.className='result-badge badge-red'; b.textContent='Inicio TSR indicado';
-    i.textContent = 'Cumple ≥1 indicación absoluta de TSR — iniciar según modalidad disponible';
+    i.textContent = 'Cumple ≥1 indicación absoluta de TSR — hallazgo compatible con necesidad de TSR según modalidad disponible';
   } else {
     b.className='result-badge badge-green'; b.textContent='Sin indicación absoluta';
     i.textContent = 'No cumple criterios AEIOU — monitorizar evolución';
@@ -9825,9 +9912,9 @@ function calcGCS() {
   document.getElementById('gcs-components').textContent = `E${e} V${v} M${m}`;
   let interp, cls;
   if (total >= 13)      { interp = 'Leve — Paciente alerta o mínimamente alterado'; cls = 'badge-green'; }
-  else if (total >= 9)  { interp = 'Moderado — Considerar vigilancia estrecha'; cls = 'badge-yellow'; }
-  else if (total >= 6)  { interp = 'Grave — Proteger vía aérea, considerar intubación'; cls = 'badge-orange'; }
-  else                  { interp = 'Muy grave — Intubar, TAC urgente, neurocirugía'; cls = 'badge-red'; }
+  else if (total >= 9)  { interp = 'Moderado — alteración neurológica intermedia'; cls = 'badge-yellow'; }
+  else if (total >= 6)  { interp = 'Grave — compromiso neurológico significativo'; cls = 'badge-orange'; }
+  else                  { interp = 'Muy grave — compromiso neurológico crítico'; cls = 'badge-red'; }
   document.getElementById('gcs-interp').textContent = interp;
   const b = document.getElementById('gcs-badge');
   b.className = 'result-badge ' + cls; b.textContent = total + ' / 15';
@@ -9856,7 +9943,7 @@ function calcQSOFA() {
   let interp, cls;
   if (total === 0)      { interp = 'Bajo riesgo — No cumple criterios de sepsis por qSOFA'; cls = 'badge-green'; }
   else if (total === 1) { interp = 'Intermedio — Monitorizar, reevaluar en 1h'; cls = 'badge-yellow'; }
-  else                  { interp = '≥2 criterios — Alta sospecha de sepsis. Iniciar SOFA completo, lactato y hemocultivos. Considerar antibiótico empírico.'; cls = 'badge-red'; }
+  else                  { interp = '≥2 criterios — perfil compatible con alta probabilidad de sepsis; ampliar evaluación con SOFA, lactato y hemocultivos.'; cls = 'badge-red'; }
   document.getElementById('qsofa-interp').textContent = interp;
   const b = document.getElementById('qsofa-badge');
   b.className = 'result-badge ' + cls; b.textContent = total + ' / 3';
@@ -9871,9 +9958,9 @@ function calcWells() {
   const total = ids.reduce((s, id) => s + parseFloat(document.getElementById(id).value || 0), 0);
   document.getElementById('wells-total').textContent = total;
   let interp, action, cls;
-  if (total <= 1)       { interp = 'Baja probabilidad (~1.3% TEP)'; action = 'Solicitar dímero D. Si negativo, excluye TEP.'; cls = 'badge-green'; }
-  else if (total <= 4)  { interp = 'Probabilidad moderada (~16% TEP)'; action = 'Solicitar dímero D. Si positivo → angioTAC.'; cls = 'badge-yellow'; }
-  else                  { interp = 'Alta probabilidad (~41% TEP)'; action = 'AngioTAC directa. No esperar dímero D. Considerar anticoagulación empírica.'; cls = 'badge-red'; }
+  if (total <= 1)       { interp = 'Baja probabilidad (~1.3% TEP)'; action = 'Perfil de baja probabilidad; correlacionar con estrategia diagnóstica local.'; cls = 'badge-green'; }
+  else if (total <= 4)  { interp = 'Probabilidad moderada (~16% TEP)'; action = 'Perfil intermedio; integrar dímero D e imagen según protocolo local.'; cls = 'badge-yellow'; }
+  else                  { interp = 'Alta probabilidad (~41% TEP)'; action = 'Perfil de alta probabilidad; priorizar confirmación diagnóstica según protocolo local.'; cls = 'badge-red'; }
   document.getElementById('wells-interp').textContent = interp;
   document.getElementById('wells-action').textContent = action;
   const b = document.getElementById('wells-badge');
@@ -10008,7 +10095,6 @@ document.addEventListener('DOMContentLoaded', function() {
   calcSOFA();
   calcBAL();
   syncPatient();
-  initHemoGasSyncWatchers();
   ensureEvidenceForCalc('sofa');
 
   document.querySelectorAll('.calc-panel').forEach(panel => {
@@ -10069,7 +10155,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function getRange(input) {
     if (input.id === 'vp-dose') return PHYS_RANGES['vp-dose'];
-    if (input.id === 'tvent-pafi-fio2') return null;
+    if (/fio2/i.test(input.id)) return null;
     if (PHYS_RANGES[input.id]) return PHYS_RANGES[input.id];
     var label = (input.previousElementSibling && input.previousElementSibling.tagName === 'LABEL')
                 ? input.previousElementSibling.textContent : '';
@@ -10086,7 +10172,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (hint) hint.remove();
     var v = parseFloat(input.value);
     if (isNaN(v) || input.value === '') return;
-    if (input.id === 'tvent-pafi-fio2') {
+    if (/fio2/i.test(input.id)) {
       var levelFio2 = null;
       if (v <= 1) {
         if (v < 0.15 || v > 1.1) levelFio2 = 'danger';
@@ -10210,7 +10296,7 @@ const uciKB = {
   },
   nutric: {
     keys: ['nutric','nutrición','riesgo nutricional','desnutrición'],
-    answer: '**NUTRIC** — Riesgo nutricional en UCI.\n≤4: bajo riesgo (nutrición estándar) · 5-9: alto riesgo (optimizar aporte calórico-proteico, considerar nutrición enteral temprana).'
+    answer: '**NUTRIC** — Riesgo nutricional en UCI.\n≤4: bajo riesgo (perfil nutricional conservado) · 5-9: alto riesgo (perfil compatible con mayor requerimiento calórico-proteico).'
   },
   sepsis: {
     keys: ['sepsis','séptico','sepsis bundle','hour-1','bundle sepsis','qsofa'],
@@ -10238,7 +10324,7 @@ const uciKB = {
   },
   kdigo: {
     keys: ['kdigo','lesión renal','aki','creatinina','oliguria','diálisis','terapia renal'],
-    answer: '**KDIGO AKI**:\n• Estadio 1: Cr ×1.5-1.9 o +0.3 mg/dL en 48h, o UO <0.5 mL/kg/h ×6-12h\n• Estadio 2: Cr ×2-2.9, o UO <0.5 mL/kg/h ×≥12h\n• Estadio 3: Cr ×3 o ≥4 mg/dL, o UO <0.3 mL/kg/h ×≥24h, o anuria ×12h, o TRR\nManejo: optimizar volemia, suspender nefrotóxicos, ajustar dosis renales.'
+    answer: '**KDIGO AKI**:\n• Estadio 1: Cr ×1.5-1.9 o +0.3 mg/dL en 48h, o UO <0.5 mL/kg/h ×6-12h\n• Estadio 2: Cr ×2-2.9, o UO <0.5 mL/kg/h ×≥12h\n• Estadio 3: Cr ×3 o ≥4 mg/dL, o UO <0.3 mL/kg/h ×≥24h, o anuria ×12h, o TRR\nInterpretación: alteración renal progresiva; correlacionar volemia, exposición a nefrotóxicos y función renal estimada.'
   },
   electrolitos: {
     keys: ['electrolitos','sodio','potasio','calcio','magnesio','fósforo','hiponatremia','hiperkalemia','hipocalcemia'],
@@ -10286,19 +10372,19 @@ const uciKB = {
   },
   insulina: {
     keys: ['insulina','cetoacidosis','cad','estado hiperosmolar','ehh','hiperglucemia','dka','infusión insulina','glucosa control'],
-    answer: '**Insulina en UCI**\n**CAD**: Insulina regular 0.1 U/kg/h IV. Meta: ↓glucosa 50-70 mg/dL/h. Cuando glucosa <200: reducir a 0.02-0.05 U/kg/h + Dx5%. Cerrar brecha aniónica antes de transición a SC.\n**EHH**: Igual dosis, pero priorizar reposición hídrica agresiva (SF 0.9% 1L/h × 2h).\n**Infusión en paciente crítico**: Meta glucosa 140-180 mg/dL (NICE-SUGAR). Protocolo: iniciar 1-2 U/h, titular c/1-2h según glucometría.\n**Hiperkalemia**: Insulina regular 10 U + Dx50% 50mL IV (efecto en 15-30min, dura 4-6h).'
+    answer: '**Insulina en UCI**\n**CAD**: Insulina regular 0.1 U/kg/h IV. Objetivo de descenso glucémico: 50-70 mg/dL/h. Bajo 200 mg/dL, se observan esquemas de 0.02-0.05 U/kg/h + dextrosa; transición SC tras cierre de brecha aniónica.\n**EHH**: dosis similar, con reposición hídrica relevante en protocolos habituales.\n**Infusión en paciente crítico**: rango objetivo 140-180 mg/dL (NICE-SUGAR). Esquema frecuente: 1-2 U/h con reevaluación seriada por glucometría.\n**Hiperkalemia**: referencia habitual: insulina regular 10 U + Dx50% 50 mL IV (inicio 15-30 min, duración 4-6 h).'
   },
   intubacion: {
     keys: ['intubación','vía aérea','secuencia rápida','rsi','laringoscopia','videolaringoscopio','tubo endotraqueal','vía aérea difícil','mallampati','preoxigenación'],
-    answer: '**Intubación en UCI — Secuencia Rápida (RSI)**\n**Preparación**: Equipo listo, Plan B (bougie, mascarilla laríngea), aspiración, monitoreo.\n**Preoxigenación**: FiO2 100% × 3-5min. VNI/CNAF si SpO2 <93%.\n**Inducción + Bloqueo NM** (push-push):\n• Ketamina 1-2mg/kg (hemodinámicamente estable) o Etomidato 0.3mg/kg o Propofol 1-2mg/kg\n• Succinilcolina 1.5mg/kg (inicio 45s) o Rocuronio 1.2mg/kg (inicio 60s)\n**Posintubación**: Verificar EtCO2, Rx, iniciar sedoanalgesia.\n**Vía aérea difícil**: ≥2 intentos fallidos → mascarilla laríngea → cricotirotomía si CICO.'
+    answer: '**Intubación en UCI — Secuencia Rápida (RSI)**\n**Preparación**: equipo, plan alterno, aspiración y monitoreo.\n**Preoxigenación**: FiO2 100% por 3-5 min; puede usarse VNI/CNAF si SpO2 <93%.\n**Inducción + Bloqueo NM** (push-push):\n• Ketamina 1-2 mg/kg o Etomidato 0.3 mg/kg o Propofol 1-2 mg/kg\n• Succinilcolina 1.5 mg/kg (inicio 45 s) o Rocuronio 1.2 mg/kg (inicio 60 s)\n**Posintubación**: verificación con EtCO2 e imagen; sedoanalgesia según protocolo.\n**Vía aérea difícil**: escalamiento por dispositivos alternos según algoritmo local.'
   },
   glasgow: {
     keys: ['glasgow','gcs','coma','nivel de consciencia','escala de coma'],
-    answer: '**Glasgow Coma Scale (GCS)**\nE: Apertura ocular (1-4) · V: Respuesta verbal (1-5) · M: Respuesta motora (1-6)\nTotal: 3-15\n• 13-15: leve\n• 9-12: moderado\n• 6-8: grave → proteger vía aérea, considerar intubación\n• 3-5: muy grave → intubar, TAC urgente\nReportar siempre desglosado: E_V_M (ej. E3V4M5 = 12).\nEn paciente intubado: reportar como E_VT_M.'
+    answer: '**Glasgow Coma Scale (GCS)**\nE: Apertura ocular (1-4) · V: Respuesta verbal (1-5) · M: Respuesta motora (1-6)\nTotal: 3-15\n• 13-15: leve\n• 9-12: moderado\n• 6-8: grave (severidad neurológica elevada)\n• 3-5: muy grave (severidad neurológica crítica)\nReportar siempre desglosado: E_V_M (ej. E3V4M5 = 12).\nEn paciente intubado: reportar como E_VT_M.'
   },
   wells_kb: {
     keys: ['wells','tep','embolia pulmonar','tromboembolia pulmonar','dímero d','angiotac'],
-    answer: '**Score de Wells para TEP**\nBaja (≤1): dímero D → si negativo, excluye TEP.\nModerada (2-4): dímero D → si positivo, angioTAC.\nAlta (>4): angioTAC directo, considerar anticoagulación empírica.\nAnticoagulación empírica: Heparina NF 80 U/kg bolo + 18 U/kg/h o Enoxaparina 1mg/kg c/12h.\nTEP masivo (inestabilidad): trombolisis con Alteplasa 100mg IV en 2h.'
+    answer: '**Score de Wells para TEP**\nBaja (≤1): perfil de baja probabilidad.\nModerada (2-4): perfil intermedio.\nAlta (>4): perfil de alta probabilidad.\nIntegrar dímero D e imagen según protocolo local.\nEn escenarios de inestabilidad, correlacionar con algoritmos institucionales de reperfusión.'
   },
   meld_kb: {
     keys: ['meld','hepático','cirrosis','insuficiencia hepática','trasplante hepático','child-pugh','falla hepática'],
@@ -10404,7 +10490,7 @@ Responde de forma concisa, práctica y basada en evidencia. Usa viñetas y negri
 
 REGLAS:
 - Respuestas cortas y directas (máx 200 palabras)
-- Si el usuario pide dosis, incluye rangos y ajustes renales/hepáticos
+- Si el usuario pide dosis, incluye rangos y referencias renales/hepáticas
 - Si interpretas resultados, da significado clínico + siguiente paso sugerido
 - Siempre incluye una advertencia si la decisión es de alto riesgo
 - No inventes datos; si no estás seguro, dilo`;
