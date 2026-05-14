@@ -1,7 +1,7 @@
-// UCI Tools — Service Worker v29
+// UCI Tools — Service Worker v32
 // stale-while-revalidate + update notification
 
-const CACHE_NAME = 'uci-tools-v29';
+const CACHE_NAME = 'uci-tools-v32';
 
 function assetUrl(path) {
   return new URL(path, self.location.href).href;

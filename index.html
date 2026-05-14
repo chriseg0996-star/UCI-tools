@@ -2291,7 +2291,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div><label>PVC (mmHg)</label><input type="number" id="ot-pvc" placeholder="8 – 12" step="0.1"></div>
       <div><label>PAPM (mmHg)</label><input type="number" id="ot-papm" placeholder="10 – 20" step="0.1"></div>
       <div><label>POAP (mmHg)</label><input type="number" id="ot-poap" placeholder="6 – 12" step="0.1"></div>
-      <div><label>PAD (mmHg)</label><input type="number" id="ot-pad" placeholder="60 – 90" step="0.1"></div>
+      <div><label title="Presión diastólica en arteria pulmonar; opcional, no entra en TLVD">PAD pulmonar (mmHg) — opcional</label><input type="number" id="ot-pad" placeholder="8 – 15" step="0.1"></div>
     </div>
     <div class="row cols4">
       <div><label>SC (m²)</label><input type="number" id="ot-sc" placeholder="1.7 – 2.0" step="0.01"></div>
@@ -2304,13 +2304,14 @@ input.pat-synced:focus, select.pat-synced:focus {
       <button class="reset" onclick="resetPanel('calc-o2-transport')">Limpiar</button>
     </div>
     <div class="multi-result" id="ot-result" style="display:none;margin-top:12px;">
-      <div class="mr-row"><span class="mr-label">CcO₂ = Hb×1.34 + 0.0031×PaO₂</span><span class="mr-val" id="ot-cco2">—</span></div>
+      <div class="mr-row"><span class="mr-label">CcO₂ (capilar; PO₂ disuelto = PAO₂ si FiO₂+PaCO₂, si no PaO₂)</span><span class="mr-val" id="ot-cco2">—</span></div>
       <div class="mr-row"><span class="mr-label">CaO₂ = Hb×1.34×(SaO₂/100) + 0.0031×PaO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-cao2">—</span><span class="result-badge" id="ot-cao2-b"></span></span></div>
       <div class="mr-row"><span class="mr-label">CvO₂ = Hb×1.34×(SvO₂/100) + 0.0031×PvO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-cvo2">—</span><span class="result-badge" id="ot-cvo2-b"></span></span></div>
       <div class="mr-row"><span class="mr-label">ΔavO₂ = CaO₂ − CvO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-davo2">—</span><span class="result-badge" id="ot-davo2-b"></span></span></div>
       <div class="mr-row"><span class="mr-label">Qs/Qt = (CcO₂−CaO₂)/(CcO₂−CvO₂)×100</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-qsqt">—</span><span class="result-badge" id="ot-qsqt-b"></span></span></div>
       <div class="mr-row"><span class="mr-label">DO₂ = GC×10×CaO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-do2">—</span><span class="result-badge" id="ot-do2-b"></span></span></div>
       <div class="mr-row"><span class="mr-label">VO₂ = GC×10×(CaO₂−CvO₂)</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-vo2">—</span><span class="result-badge" id="ot-vo2-b"></span></span></div>
+      <div class="mr-row"><span class="mr-label">VO₂ indexado (VO₂/SC)</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-vo2i">—</span><span class="result-badge" id="ot-vo2i-b"></span></span></div>
       <div class="mr-row"><span class="mr-label">IEO₂ = ((CaO₂−CvO₂)/CaO₂)×100</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-ieo2">—</span><span class="result-badge" id="ot-ieo2-b"></span></span></div>
       <div class="mr-row"><span class="mr-label">VS</span><span class="mr-val" id="ot-vs">—</span></div>
       <div class="mr-row"><span class="mr-label">VSI</span><span class="mr-val" id="ot-vsi">—</span></div>
@@ -2320,7 +2321,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="mr-row"><span class="mr-label">RVP</span><span class="mr-val" id="ot-rvp">—</span></div>
       <div class="mr-row"><span class="mr-label">RVPI</span><span class="mr-val" id="ot-rvpi">—</span></div>
       <div class="mr-row"><span class="mr-label">TLVI</span><span class="mr-val" id="ot-tlvi">—</span></div>
-      <div class="mr-row"><span class="mr-label">TLVD</span><span class="mr-val" id="ot-tlvd">—</span></div>
+      <div class="mr-row"><span class="mr-label">TLVD ≈ RVSW = VS×(PAPM−PVC)×0.0136</span><span class="mr-val" id="ot-tlvd">—</span></div>
       <div class="mr-row"><span class="mr-label">PiO₂ = (587−47)×FiO₂</span><span class="mr-val" id="ot-pio2">—</span></div>
       <div class="mr-row"><span class="mr-label">PAO₂ = PiO₂ − (PaCO₂/0.8)</span><span class="mr-val" id="ot-pao2alv">—</span></div>
       <div class="mr-row"><span class="mr-label">P(A-a)O₂ = PAO₂ − PaO₂</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ot-aa">—</span><span class="result-badge" id="ot-aa-b"></span></span></div>
@@ -2574,7 +2575,10 @@ input.pat-synced:focus, select.pat-synced:focus {
         <div class="mr-row"><span class="mr-label">TRIV / IVRT</span><span class="mr-val" id="ush-dia-triv-out">—</span></div>
         <div class="mr-row"><span class="mr-label">FEVI (rama ASE)</span><span class="mr-val" id="ush-dia-fevi-out">—</span></div>
         <div class="mr-row"><span class="mr-label">Relación E/A</span><span class="mr-val" id="ush-ea">—</span></div>
-        <div class="mr-row"><span class="mr-label">E/e' medio (estimación PCP)</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ush-ee">—</span><span class="result-badge" id="ush-ee-b"></span></span></div>
+        <div class="mr-row"><span class="mr-label">E/e′ septal (TDI)</span><span class="mr-val" id="ush-ee-sept">—</span></div>
+        <div class="mr-row"><span class="mr-label">E/e' medio (ASE 2016)</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ush-ee">—</span><span class="result-badge" id="ush-ee-b"></span></span></div>
+        <div class="mr-row"><span class="mr-label">PCP estimada (Nagueh, TDI)</span><span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;"><span class="mr-val" id="ush-pcwp">—</span><span class="result-badge" id="ush-pcwp-b"></span></span></div>
+        <div class="mr-row" style="font-size:10px;color:var(--muted);line-height:1.35;"><span class="mr-label" style="align-self:start;">Fórmula</span><span>PCWP ≈ 1.9 + 1.24 × (E/e′ <b>septal</b>) mmHg · Correlación TDI vs PCP invasiva (scatter amplio; ver limitaciones).</span></div>
         <div class="mr-row"><span class="mr-label">Clasificación ASE (simplificada)</span><span class="mr-val" id="ush-dia-int">—</span></div>
         <div class="mr-row"><span class="mr-label">Pasos ASE (resumen)</span><span class="mr-val" id="ush-dia-steps" style="white-space:pre-wrap;font-size:11px;line-height:1.45;">—</span></div>
         <div class="mr-row"><span class="mr-label">Limitaciones</span><span class="mr-val" id="ush-dia-limits" style="font-size:11px;line-height:1.4;">—</span></div>
@@ -6095,18 +6099,27 @@ function calcO2Transport() {
   const papm = parseFloat(document.getElementById('ot-papm').value);
   const poap = parseFloat(document.getElementById('ot-poap').value);
   const sc = parseFloat(document.getElementById('ot-sc').value);
-  const pad = parseFloat(document.getElementById('ot-pad').value);
   const fio2Raw = document.getElementById('ot-fio2').value.trim();
   const fio2 = normalizeFio2Input(fio2Raw);
   const paco2 = parseFloat(document.getElementById('ot-paco2').value);
 
-  const cco2 = (hb * 1.34) + (0.0031 * (pao2 || 0));
+  if (isNaN(gc) || gc <= 0) {
+    showToast('El gasto cardíaco (GC) debe ser mayor que 0.');
+    return;
+  }
+
+  let pO2ForCc = (pao2 || 0);
+  if (!isNaN(fio2) && fio2 > 0 && !isNaN(paco2)) {
+    const pAlv = (587 - 47) * fio2 - (paco2 / 0.8);
+    if (pAlv > 0) pO2ForCc = pAlv;
+  }
+  const cco2 = (hb * 1.34) + (0.0031 * pO2ForCc);
   const cao2 = (hb * 1.34 * (sao2/100)) + (0.0031 * (pao2 || 0));
   const cvo2 = (hb * 1.34 * (svo2/100)) + (0.0031 * (pvo2 || 0));
   const davo2 = cao2 - cvo2;
   const do2 = gc * 10 * cao2;
   const vo2 = gc * 10 * davo2;
-  const ieo2 = ((cao2 - cvo2) / cao2) * 100;
+  const ieo2 = cao2 > 0.01 ? ((cao2 - cvo2) / cao2) * 100 : NaN;
 
   const put = (id, v, unit='') => {
     const el = document.getElementById(id);
@@ -6126,15 +6139,40 @@ function calcO2Transport() {
   put('ot-cvo2', cvo2, 'mL/dL'); setBadgeOpt('ot-cvo2-b', cvo2, 12, 15);
   put('ot-davo2', davo2, 'mL/dL'); setBadgeOpt('ot-davo2-b', davo2, 4, 6);
   put('ot-do2', do2, 'mL/min'); setBadgeOpt('ot-do2-b', do2, 950, 1150);
-  put('ot-vo2', !isNaN(sc) && sc > 0 ? vo2/sc : vo2, 'mL/min');
-  setBadgeOpt('ot-vo2-b', !isNaN(sc) && sc > 0 ? vo2/sc : NaN, 200, 250);
-  put('ot-ieo2', ieo2, '%'); setBadgeOpt('ot-ieo2-b', ieo2, 20, 30);
+  put('ot-vo2', vo2, 'mL/min');
+  setBadgeOpt('ot-vo2-b', vo2, 200, 250);
+  if (!isNaN(sc) && sc > 0) {
+    const vo2i = vo2 / sc;
+    put('ot-vo2i', vo2i, 'mL/min/m²');
+    setBadgeOpt('ot-vo2i-b', vo2i, 115, 165);
+  } else {
+    put('ot-vo2i', NaN, '');
+    const vo2iB = document.getElementById('ot-vo2i-b');
+    if (vo2iB) { vo2iB.className = 'result-badge'; vo2iB.textContent = ''; }
+  }
+  put('ot-ieo2', ieo2, '%');
+  if (!isNaN(ieo2)) setBadgeOpt('ot-ieo2-b', ieo2, 20, 30);
+  else {
+    const ieB = document.getElementById('ot-ieo2-b');
+    if (ieB) { ieB.className = 'result-badge'; ieB.textContent = ''; }
+  }
 
-  if (!isNaN(pao2) && pao2 > 0) {
-    const qsqt = ((cco2 - cao2) / (cco2 - cvo2)) * 100;
-    put('ot-qsqt', qsqt, '%');
-    setBadge('ot-qsqt-b', qsqt < 15 ? 'badge-green' : 'badge-red',
-      qsqt < 15 ? 'En rango' : 'Alteración moderada');
+  const denQs = cco2 - cvo2;
+  if (!isNaN(pao2) && pao2 > 0 && denQs > 0.05) {
+    const qsqt = ((cco2 - cao2) / denQs) * 100;
+    if (isFinite(qsqt)) {
+      put('ot-qsqt', qsqt, '%');
+      setBadge('ot-qsqt-b', qsqt < 15 ? 'badge-green' : 'badge-red',
+        qsqt < 15 ? 'En rango' : 'Alteración moderada');
+    } else {
+      put('ot-qsqt', NaN, '');
+      const qb = document.getElementById('ot-qsqt-b');
+      if (qb) { qb.className = 'result-badge'; qb.textContent = ''; }
+    }
+  } else {
+    put('ot-qsqt', NaN, '');
+    const qb = document.getElementById('ot-qsqt-b');
+    if (qb) { qb.className = 'result-badge'; qb.textContent = ''; }
   }
 
   if (!isNaN(fc) && fc > 0) {
@@ -6142,41 +6180,69 @@ function calcO2Transport() {
     put('ot-vs', vs, 'mL/lat');
     if (!isNaN(sc) && sc > 0) {
       put('ot-vsi', vs / sc, 'mL/m²/lat');
+    } else {
+      put('ot-vsi', NaN, '');
     }
+  } else {
+    put('ot-vs', NaN, '');
+    put('ot-vsi', NaN, '');
   }
 
   if (!isNaN(sc) && sc > 0) {
     const ic = gc / sc;
     put('ot-ic', ic, 'L/min/m²'); setBadgeOpt('ot-ic-b', ic, 2.5, 4.0);
+  } else {
+    put('ot-ic', NaN, '');
+    const icB = document.getElementById('ot-ic-b');
+    if (icB) { icB.className = 'result-badge'; icB.textContent = ''; }
   }
 
-  if (!isNaN(pam) && !isNaN(pvc) && pam > 0) {
+  if (!isNaN(pam) && !isNaN(pvc) && pam > pvc && gc > 0) {
     const rvs = ((pam - pvc) * 80) / gc;
     put('ot-rvs', rvs, 'dyn·s/cm⁵'); setBadgeOpt('ot-rvs-b', rvs, 1000, 1500);
     if (!isNaN(sc) && sc > 0) {
       put('ot-rvsi', rvs * sc, 'dyn·s/cm⁵/m²');
+    } else {
+      put('ot-rvsi', NaN, '');
     }
-    if (!isNaN(fc) && fc > 0 && !isNaN(poap) && poap > 0) {
+    if (!isNaN(fc) && fc > 0 && !isNaN(poap) && poap > 0 && pam > poap) {
       const vs = (gc / fc) * 1000;
       put('ot-tlvi', vs * (pam - poap) * 0.0136, 'g·m/lat');
+    } else {
+      put('ot-tlvi', NaN, '');
     }
+  } else {
+    put('ot-rvs', NaN, '');
+    put('ot-rvsi', NaN, '');
+    put('ot-tlvi', NaN, '');
+    const rb = document.getElementById('ot-rvs-b');
+    if (rb) { rb.className = 'result-badge'; rb.textContent = ''; }
   }
 
-  if (!isNaN(papm) && !isNaN(poap) && papm > 0) {
+  if (!isNaN(papm) && !isNaN(poap) && papm > poap && gc > 0) {
     const rvp = ((papm - poap) * 80) / gc;
     put('ot-rvp', rvp, 'dyn·s/cm⁵');
     if (!isNaN(sc) && sc > 0) {
       put('ot-rvpi', rvp * sc, 'dyn·s/cm⁵/m²');
+    } else {
+      put('ot-rvpi', NaN, '');
     }
-    if (!isNaN(fc) && fc > 0 && !isNaN(pad) && pad > 0) {
-      const vs = (gc / fc) * 1000;
-      put('ot-tlvd', vs * (papm - pad) * 0.0136, 'g·m/lat');
-    }
+  } else {
+    put('ot-rvp', NaN, '');
+    put('ot-rvpi', NaN, '');
+  }
+
+  if (!isNaN(papm) && !isNaN(pvc) && papm > pvc && !isNaN(fc) && fc > 0 && gc > 0) {
+    const vs = (gc / fc) * 1000;
+    put('ot-tlvd', vs * (papm - pvc) * 0.0136, 'g·m/lat');
+  } else {
+    put('ot-tlvd', NaN, '');
   }
 
   if (fio2Raw !== '' && isNaN(fio2)) {
     showToast('Oxigenación y transporte: FiO₂ inválida. Use decimal 0.21–1.0 o porcentaje 21–100.');
-  } else if (!isNaN(fio2) && !isNaN(paco2) && fio2 > 0) {
+  }
+  if (!isNaN(fio2) && !isNaN(paco2) && fio2 > 0) {
     const pio2 = (587 - 47) * fio2;
     const pao2alv = pio2 - (paco2 / 0.8);
     put('ot-pio2', pio2, 'mmHg');
@@ -6186,7 +6252,17 @@ function calcO2Transport() {
       put('ot-aa', aa, 'mmHg');
       setBadge('ot-aa-b', (aa>=10 && aa<=20) ? 'badge-green' : 'badge-yellow',
         (aa>=10 && aa<=20) ? 'En rango' : 'Rango limítrofe');
+    } else {
+      put('ot-aa', NaN, '');
+      const aab = document.getElementById('ot-aa-b');
+      if (aab) { aab.className = 'result-badge'; aab.textContent = ''; }
     }
+  } else {
+    put('ot-pio2', NaN, '');
+    put('ot-pao2alv', NaN, '');
+    put('ot-aa', NaN, '');
+    const aab = document.getElementById('ot-aa-b');
+    if (aab) { aab.className = 'result-badge'; aab.textContent = ''; }
   }
 
   document.getElementById('ot-result').style.display = 'grid';
@@ -6253,6 +6329,9 @@ function classifyLvDiastolicAse2016(E, A, ep, eps, tde, ivrt, fevi, lavi, trVel,
   }
   if (ee <= 8 && ((!isNaN(lavi) && lavi >= 34) || (!isNaN(trVel) && trVel >= 2.8)))
     steps.push('8) E/e′≤8 pero LAVI o TR positivos — correlación clínica (discordancia).');
+  var eeSept = E / eps;
+  var pcwpNagueh = 1.9 + 1.24 * eeSept;
+  steps.push('9) PCP estimada (regresión TDI e′ septal, cohortes Nagueh et al.): PCWP ≈ 1.9 + 1.24×(E/e′ septal) = 1.9 + 1.24×' + eeSept.toFixed(2) + ' ≈ ' + pcwpNagueh.toFixed(1) + ' mmHg.');
   var gradeText = '';
   if (lapStrongElev) {
     gradeText = reducedBranch
@@ -6271,8 +6350,8 @@ function classifyLvDiastolicAse2016(E, A, ep, eps, tde, ivrt, fevi, lavi, trVel,
   } else {
     gradeText = 'Integrar hallazgos con clínica y carga hemodinámica.';
   }
-  var limits = 'FA/flutter, taquicardia, bradicardia, IM significativa, prótesis/anuloplastia mitral, post-MitraClip y ritmo irregular alteran E/A, TDE y TRIV. No sustituye informe ecocardiográfico completo.';
-  return { ee: ee, ea: ea, steps: steps, gradeText: gradeText, limits: limits };
+  var limits = 'FA/flutter, taquicardia, bradicardia, IM significativa, prótesis/anuloplastia mitral, post-MitraClip y ritmo irregular alteran E/A, TDE y TRIV. La PCWP en mmHg (1.9+1.24×E/e′ septal) es estimación estadística con intervalo amplio al invasivo; FEVI reducida, dilatación anular o error de medida sesgan el valor. No sustituye informe ecocardiográfico ni catéter.';
+  return { ee: ee, ea: ea, eeSept: eeSept, pcwpNagueh: pcwpNagueh, steps: steps, gradeText: gradeText, limits: limits };
 }
 
 function calcUshSistolica() {
@@ -6330,10 +6409,18 @@ function calcUshDiastolica() {
   var out = classifyLvDiastolicAse2016(E, A, ep, eps, tde, ivrt, fevi, lavi, trVel, ageY, fcLpm, reducedBranch);
   var ee = out.ee;
   document.getElementById('ush-ea').textContent = out.ea.toFixed(2);
+  var eeSeptEl = document.getElementById('ush-ee-sept');
+  if (eeSeptEl) eeSeptEl.textContent = out.eeSept.toFixed(2);
   document.getElementById('ush-ee').textContent = ee.toFixed(1);
   if (ee <= 8) setBadge('ush-ee-b', 'badge-green', 'PCP improbable elevada (E/e′≤8)');
   else if (ee >= 14) setBadge('ush-ee-b', 'badge-red', 'PCP probablemente elevada (E/e′≥14)');
   else setBadge('ush-ee-b', 'badge-yellow', 'Zona indeterminada E/e′ 9–13');
+  var pcwp = out.pcwpNagueh;
+  var pcwpEl = document.getElementById('ush-pcwp');
+  if (pcwpEl) pcwpEl.textContent = pcwp.toFixed(1) + ' mmHg';
+  if (pcwp < 12) setBadge('ush-pcwp-b', 'badge-green', '≈PCP baja/normal');
+  else if (pcwp <= 18) setBadge('ush-pcwp-b', 'badge-yellow', '≈PCP límite');
+  else setBadge('ush-pcwp-b', 'badge-red', '≈PCP elevada');
   document.getElementById('ush-dia-int').textContent = out.gradeText;
   document.getElementById('ush-dia-steps').textContent = out.steps.join('\n');
   document.getElementById('ush-dia-limits').textContent = out.limits;

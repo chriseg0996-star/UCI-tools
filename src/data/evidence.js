@@ -350,8 +350,8 @@ window.evidData = {
     ]
   },
   us_hemo: {
-    formula: 'Diástole (ASE 2016, Nagueh): E/e′ medio = E / media(e′ septal, e′ lateral). PCP no elevada improbable si E/e′≤8; más probable elevación si E/e′≥14; zona 9–13 con LAVI≥34 mL/m² o VPS TR≥2.8 m/s. TDE, TRIV/IVRT y e′ como apoyo fisiológico. PSAP = 4×VIT² + RAP(PVC). GC ≈ π×(DTSVI/2)²×VTI×FC/1000.',
-    interpretation: 'Herramienta descriptiva: integrar ritmo (FA), valvulopatía mitral, post-MitraClip y carga. FEVI en sistólica ramifica el enfoque ASE; LAVI y TR opcionales refinan la zona gris E/e′.',
+    formula: 'Diástole ASE 2016 (Nagueh): E/e′ medio = E / media(e′ septal, e′ lateral); umbrales 8 / 14 y LAVI/TR en zona gris. Estimación numérica PCP (TDI, e′ septal): PCWP ≈ 1.9 + 1.24 × (E/e′ septal) mmHg (correlación invasiva; scatter amplio). PSAP = 4×VIT² + RAP(PVC). GC ≈ π×(DTSVI/2)²×VTI×FC/1000.',
+    interpretation: 'Integrar ritmo (FA), valvulopatía mitral, post-MitraClip y carga. La cifra en mmHg no sustituye catéter; contrastar con clasificación ASE y clínica.',
     refs: [
       {year:'2016', authors:'Nagueh SF et al.', title:'Recommendations for the Evaluation of Left Ventricular Diastolic Function by Echocardiography', journal:'J Am Soc Echocardiogr', doi:'10.1016/j.echo.2016.01.011'},
       {year:'2015', authors:'Lang RM et al.', title:'Recommendations for Cardiac Chamber Quantification by Echocardiography in Adults', journal:'J Am Soc Echocardiogr', doi:'10.1016/j.echo.2015.01.005'},
