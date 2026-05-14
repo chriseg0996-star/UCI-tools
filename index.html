@@ -2538,7 +2538,10 @@ input.pat-synced:focus, select.pat-synced:focus {
         <div><label>Diámetro VI sistólico (mm)</label><input type="number" id="ush-dvis" placeholder="25 – 42" step="0.1"></div>
         <div><label>Diámetro VI diastólico (mm)</label><input type="number" id="ush-dvid" placeholder="42 – 58" step="0.1"></div>
       </div>
-      <div class="btn-row"><button class="calc" onclick="calcUshSistolica()">Evaluar</button></div>
+      <div class="btn-row">
+        <button class="calc" onclick="calcUshSistolica()">Evaluar</button>
+        <button type="button" class="reset" onclick="resetUshHemoTab('sistolica')">Limpiar</button>
+      </div>
       <div class="multi-result" id="ush-sis-res" style="display:none;margin-top:10px;">
         <div class="mr-row"><span class="mr-label">FA calculada</span><span class="mr-val" id="ush-fa-calc">—</span></div>
         <div class="mr-row"><span class="mr-label">Interpretación</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ush-sis-int">—</span><span class="result-badge" id="ush-sis-b"></span></span></div>
@@ -2546,20 +2549,35 @@ input.pat-synced:focus, select.pat-synced:focus {
     </div>
 
     <div class="tab-content" id="us-tab-diastolica">
-      <div class="row cols3">
+      <div class="info" style="margin-bottom:10px;font-size:11px;">La ramificación ASE 2016 usa la <b>FEVI</b> del campo de la pestaña <b>Función sistólica</b> si está completada. LAVI y VPS TR desbloquean la zona gris E/e′ 9–13.</div>
+      <div class="row cols4">
         <div><label>Onda E mitral (cm/s)</label><input type="number" id="ush-e" placeholder="60 – 100"></div>
         <div><label>Onda A mitral (cm/s)</label><input type="number" id="ush-a" placeholder="40 – 80"></div>
         <div><label>T desaceleración E (ms)</label><input type="number" id="ush-tde" placeholder="160 – 240"></div>
+        <div><label>TRIV / IVRT (ms)</label><input type="number" id="ush-triv" placeholder="70 – 100" step="1"></div>
+      </div>
+      <div class="row cols3">
+        <div><label>LAVI (mL/m²) — opcional</label><input type="number" id="ush-lavi" placeholder="&lt;34 normal" step="0.1"></div>
+        <div><label>VPS TR (m/s) — opcional</label><input type="number" id="ush-tr-vmax" placeholder="&lt;2.8" step="0.01"></div>
+        <div><label>FC (lpm) — opcional</label><input type="number" id="ush-dia-fc" placeholder="desde eco" step="1"></div>
       </div>
       <div class="row cols2">
         <div><label>e' lateral (cm/s)</label><input type="number" id="ush-eprim" placeholder="≥ 10" step="0.1"></div>
         <div><label>e' septal (cm/s)</label><input type="number" id="ush-eprims" placeholder="≥ 7" step="0.1"></div>
       </div>
-      <div class="btn-row"><button class="calc" onclick="calcUshDiastolica()">Evaluar</button></div>
+      <div class="btn-row">
+        <button class="calc" onclick="calcUshDiastolica()">Evaluar</button>
+        <button type="button" class="reset" onclick="resetUshHemoTab('diastolica')">Limpiar</button>
+      </div>
       <div class="multi-result" id="ush-dia-res" style="display:none;margin-top:10px;">
+        <div class="mr-row"><span class="mr-label">T desaceleración E</span><span class="mr-val" id="ush-dia-tde-out">—</span></div>
+        <div class="mr-row"><span class="mr-label">TRIV / IVRT</span><span class="mr-val" id="ush-dia-triv-out">—</span></div>
+        <div class="mr-row"><span class="mr-label">FEVI (rama ASE)</span><span class="mr-val" id="ush-dia-fevi-out">—</span></div>
         <div class="mr-row"><span class="mr-label">Relación E/A</span><span class="mr-val" id="ush-ea">—</span></div>
-        <div class="mr-row"><span class="mr-label">E/e' promedio</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ush-ee">—</span><span class="result-badge" id="ush-ee-b"></span></span></div>
-        <div class="mr-row"><span class="mr-label">Clasificación</span><span class="mr-val" id="ush-dia-int">—</span></div>
+        <div class="mr-row"><span class="mr-label">E/e' medio (estimación PCP)</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ush-ee">—</span><span class="result-badge" id="ush-ee-b"></span></span></div>
+        <div class="mr-row"><span class="mr-label">Clasificación ASE (simplificada)</span><span class="mr-val" id="ush-dia-int">—</span></div>
+        <div class="mr-row"><span class="mr-label">Pasos ASE (resumen)</span><span class="mr-val" id="ush-dia-steps" style="white-space:pre-wrap;font-size:11px;line-height:1.45;">—</span></div>
+        <div class="mr-row"><span class="mr-label">Limitaciones</span><span class="mr-val" id="ush-dia-limits" style="font-size:11px;line-height:1.4;">—</span></div>
       </div>
     </div>
 
@@ -2573,7 +2591,11 @@ input.pat-synced:focus, select.pat-synced:focus {
         <div><label>Velocidad IT (m/s)</label><input type="number" id="ush-vit" placeholder="2.0 – 2.8" step="0.1"></div>
         <div><label>PVC estimada (mmHg)</label><input type="number" id="ush-pvc-eco" placeholder="8 – 12"></div>
       </div>
-      <div class="btn-row"><button class="calc" onclick="calcUshDerecha()">Evaluar</button></div>
+      <div class="info" style="margin-bottom:8px;font-size:11px;">La PVC en PSAP suele estimarse con VCI (p. ej. 3-7-15 mmHg) si no hay catéter; valore IVC colapsable vs congestión.</div>
+      <div class="btn-row">
+        <button class="calc" onclick="calcUshDerecha()">Evaluar</button>
+        <button type="button" class="reset" onclick="resetUshHemoTab('derecha')">Limpiar</button>
+      </div>
       <div class="multi-result" id="ush-der-res" style="display:none;margin-top:10px;">
         <div class="mr-row"><span class="mr-label">PSAP</span><span style="display:flex;gap:8px;align-items:center;"><span class="mr-val" id="ush-psap">—</span><span class="result-badge" id="ush-psap-b"></span></span></div>
         <div class="mr-row"><span class="mr-label">Interpretación</span><span class="mr-val" id="ush-der-int">—</span></div>
@@ -2594,7 +2616,10 @@ input.pat-synced:focus, select.pat-synced:focus {
       <div class="row cols2">
         <div><label>Variabilidad transmitral E (%)</label><input type="number" id="ush-varE" placeholder="< 12" step="0.1"></div>
       </div>
-      <div class="btn-row"><button class="calc" onclick="calcUshPrecarga()">Calcular</button></div>
+      <div class="btn-row">
+        <button class="calc" onclick="calcUshPrecarga()">Calcular</button>
+        <button type="button" class="reset" onclick="resetUshHemoTab('precarga')">Limpiar</button>
+      </div>
       <div class="multi-result" id="ush-pre-res" style="display:none;margin-top:10px;">
         <div class="mr-row"><span class="mr-label">VS</span><span class="mr-val" id="ush-vs">—</span></div>
         <div class="mr-row"><span class="mr-label">GC</span><span class="mr-val" id="ush-gc">—</span></div>
@@ -2604,16 +2629,7 @@ input.pat-synced:focus, select.pat-synced:focus {
       </div>
     </div>
 
-    <div class="evid-panel" style="margin-top:10px;">
-      <div class="evid-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
-        <span>📚 Bibliografía y Evidencia</span><span class="evid-arrow">▾</span>
-      </div>
-      <div class="evid-body">
-        <div class="evid-ref"><span class="evid-year">2015</span> — <b>Lang RM et al.</b> Cardiac chamber quantification. <i>JASE</i>.</div>
-        <div class="evid-ref"><span class="evid-year">2016</span> — <b>Nagueh SF et al.</b> LV diastolic function. <i>JASE</i>.</div>
-        <div class="evid-ref"><span class="evid-year">2007</span> — <b>Lamia B et al.</b> Echo prediction of fluid responsiveness. <i>Intensive Care Med</i>.</div>
-      </div>
-    </div>
+    <div id="evid-wrap-us-hemo" style="margin-top:10px;"></div>
   </div>
 </div>
 
@@ -4310,402 +4326,23 @@ input.pat-synced:focus, select.pat-synced:focus {
   </div>
 </footer>
 
+<script src="./src/core/state.js"></script>
+<script src="./src/core/utils.js"></script>
+<script src="./src/calculators/starling.js"></script>
+<script src="./src/core/patient.js"></script>
+<script src="./src/data/evidence.js"></script>
+<script src="./src/ui/evidence-ui.js"></script>
+<script src="./src/data/drugs.js"></script>
+<script src="./src/calculators/bombas.js"></script>
+<script src="./src/data/ranges.js"></script>
+<script src="./src/calculators/balance.js"></script>
+<script src="./src/calculators/vasopresores.js"></script>
+<script src="./src/calculators/dvno.js"></script>
+<script src="./src/calculators/dtc.js"></script>
+
 <script>
 
-// ══════════════════════════════════════════════════════
-// EVIDENCIA / BIBLIOGRAFÍA
-// ══════════════════════════════════════════════════════
-function toggleEvid(id) {
-  const body   = document.getElementById('evid-body-'+id);
-  const toggle = document.getElementById('evid-toggle-'+id);
-  body.classList.toggle('open');
-  toggle.classList.toggle('open');
-}
 
-// Build evidence panel HTML for a given calc id
-function buildEvid(id) {
-  const d = evidData[id];
-  if (!d) return '';
-  let html = `<div class="evid-panel">
-    <div class="evid-toggle" id="evid-toggle-${id}" onclick="toggleEvid('${id}')">
-      <span>📚 Bibliografía y Evidencia</span>
-      <span class="evid-arrow">▾</span>
-    </div>
-    <div class="evid-body" id="evid-body-${id}">`;
-
-  if (d.interpretation) {
-    html += `<div class="evid-section">
-      <div class="evid-section-title">Interpretación</div>
-      <div class="evid-interp">${d.interpretation}</div>
-    </div>`;
-  }
-  if (d.formula || (d.refs && d.refs.length)) {
-    html += `<div class="evid-section"><div class="evid-section-title">Referencias</div>`;
-    if (d.formula) {
-      html += `<div class="evid-ref"><span class="evid-year">Fórmula</span> — ${d.formula.replace(/\n/g, ' · ')}</div>`;
-    }
-    if (d.refs && d.refs.length) {
-      d.refs.forEach(r => {
-        html += `<div class="evid-ref"><span class="evid-year">${r.year}</span> — <b>${r.authors}</b>. ${r.title}. <i>${r.journal}</i>${r.doi ? '. <a href="https://doi.org/'+r.doi+'" target="_blank" style="color:var(--accent);font-size:10px;">DOI</a>' : ''}.</div>`;
-      });
-    }
-    html += `</div>`;
-  }
-  html += `</div></div>`;
-  return html;
-}
-
-const evidData = {
-  news2: {
-    formula: 'Suma de 6 variables fisiológicas + nivel de conciencia (AVPU)\nRango total: 0-20 puntos',
-    interpretation: '0-4: riesgo bajo · 5-6 o cualquier parámetro con 3 puntos: riesgo intermedio · ≥7: riesgo alto y respuesta urgente',
-    refs: [
-      {year:'2017', authors:'Royal College of Physicians', title:'National Early Warning Score (NEWS) 2', journal:'RCP London', doi:''},
-      {year:'2019', authors:'Pimentel MAF et al.', title:'Comparison of NEWS and NEWS2 for in-hospital mortality prediction', journal:'Resuscitation', doi:'10.1016/j.resuscitation.2019.02.017'},
-    ]
-  },
-  shock: {
-    formula: 'Integración clínica: PAM, FC, PVC, lactato, diuresis y ScvO2 según contexto',
-    interpretation: 'La clasificación final de choque requiere integrar clínica, hemodinamia y respuesta al tratamiento',
-    refs: [
-      {year:'2021', authors:'Evans L et al.', title:'Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021', journal:'Intensive Care Med', doi:'10.1007/s00134-021-06506-y'},
-      {year:'2014', authors:'Cecconi M et al.', title:'Consensus on circulatory shock and hemodynamic monitoring', journal:'Intensive Care Med', doi:'10.1007/s00134-014-3525-z'},
-    ]
-  },
-  hemodynamics: {
-    formula: 'CI = CO/BSA · SVR = (MAP−CVP)×80/CO · DO2 = (Hb×SaO2×1.34 + PaO2×0.003)×CO · VO2 = (SaO2−SvO2)×Hb×1.34×CO',
-    interpretation: 'Útil para perfusión global y fenotipo hemodinámico (distributivo, cardiogénico, hipovolémico)',
-    refs: [
-      {year:'2017', authors:'Cecconi M et al.', title:'Fluid challenges and hemodynamic monitoring in critical care', journal:'Intensive Care Med', doi:'10.1007/s00134-017-4810-2'},
-      {year:'2019', authors:'Vincent JL, De Backer D', title:'Circulatory shock', journal:'N Engl J Med', doi:'10.1056/NEJMra1208943'},
-    ]
-  },
-  gfr_dosing: {
-    formula: 'Estimación de TFG para evaluación farmacológica renal (según ecuación usada en el cálculo)',
-    interpretation: 'Recalcular cuando cambie creatinina o condición clínica para evitar infra/sobredosificación',
-    refs: [
-      {year:'2012', authors:'KDIGO CKD Work Group', title:'KDIGO 2012 Clinical Practice Guideline for CKD', journal:'Kidney Int Suppl', doi:'10.1038/kisup.2012.73'},
-      {year:'2009', authors:'Levey AS et al.', title:'A new equation to estimate glomerular filtration rate', journal:'Ann Intern Med', doi:'10.7326/0003-4819-150-9-200905050-00006'},
-    ]
-  },
-  abx_dosing: {
-    formula: 'Ajuste por TFG + modalidad de TSR (IHD/CRRT/SLED) + farmacocinética del antimicrobiano',
-    interpretation: 'En vancomicina y aminoglucósidos, idealmente complementar con monitorización terapéutica',
-    refs: [
-      {year:'2020', authors:'Rybak MJ et al.', title:'Therapeutic Monitoring of Vancomycin for Serious MRSA Infections', journal:'Am J Health Syst Pharm', doi:'10.1093/ajhp/zxaa036'},
-      {year:'2024', authors:'Roberts JA et al.', title:'Individualised antibiotic dosing for critically ill patients', journal:'Lancet Infect Dis', doi:'10.1016/S1473-3099(24)00058-9'},
-    ]
-  },
-  sedation: {
-    formula: 'Estrategia guiada por objetivo RASS y condición clínica del paciente',
-    interpretation: 'Priorizar mínima sedación efectiva con reevaluación frecuente para reducir delirium y días de VM',
-    refs: [
-      {year:'2018', authors:'Devlin JW et al.', title:'PADIS Guidelines in Adult ICU Patients', journal:'Crit Care Med', doi:'10.1097/CCM.0000000000003299'},
-      {year:'2012', authors:'Shehabi Y et al.', title:'Early goal-directed sedation versus standard sedation', journal:'JAMA', doi:'10.1001/jama.2012.13664'},
-    ]
-  },
-  transfusion: {
-    formula: 'Decisión transfusional por Hb, plaquetas, INR/fibrinógeno y escenario de sangrado',
-    interpretation: 'Estrategia restrictiva en paciente estable; protocolo masivo en hemorragia no controlada',
-    refs: [
-      {year:'2023', authors:'AABB', title:'Red blood cell transfusion: 2023 international guidelines', journal:'JAMA', doi:'10.1001/jama.2023.9515'},
-      {year:'2015', authors:'Holcomb JB et al.', title:'Plasma, Platelets, and Red Blood Cells in a 1:1:1 vs 1:1:2 Ratio', journal:'JAMA', doi:'10.1001/jama.2015.12'},
-    ]
-  },
-  tgas: {
-    formula: 'Análisis integrado: ácido-base (pH/pCO2/HCO3), anion gap corregido, delta-delta, lactato y transporte de O2 (DO2/VO2/ERO2)',
-    interpretation: 'Prioriza detección de hipoperfusión y trastornos mixtos; usar tendencias seriadas para guiar reanimación',
-    refs: [
-      {year:'2010', authors:'Emmett M, Narins RG', title:'Clinical use of the anion gap', journal:'Medicine (Baltimore)', doi:'10.1097/00005792-197701000-00002'},
-      {year:'2021', authors:'Evans L et al.', title:'Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021', journal:'Intensive Care Med', doi:'10.1007/s00134-021-06506-y'},
-      {year:'2001', authors:'Rivers E et al.', title:'Early Goal-Directed Therapy in the Treatment of Severe Sepsis and Septic Shock', journal:'N Engl J Med', doi:'10.1056/NEJMoa010307'},
-    ]
-  },
-  sofa: {
-    formula: 'Suma de 6 órganos (Resp, Coag, Hepático, CV, Neuro, Renal)\nCada órgano: 0-4 pts · Total: 0-24 pts',
-    interpretation: '0-1: &lt;10% mortalidad · 7-9: ~20% · 10-12: ~40% · &gt;12: &gt;80%\nIncremento de ≥2 pts en 48h define disfunción orgánica en sepsis (Sepsis-3)',
-    refs: [
-      {year:'1996', authors:'Vincent JL et al.', title:'The SOFA (Sepsis-related Organ Failure Assessment) score to describe organ dysfunction/failure', journal:'Intensive Care Med', doi:'10.1007/BF01709751'},
-      {year:'2016', authors:'Singer M et al.', title:'The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3)', journal:'JAMA', doi:'10.1001/jama.2016.0287'},
-    ]
-  },
-  apache: {
-    formula: 'APS (12 variables fisiológicas) + Edad + Enfermedad crónica\nLogit = −3.517 + 0.146 × APACHE II\nMortalidad = 1 / (1 + e^−logit)',
-    interpretation: '&lt;10 pts: &lt;10% mortalidad · 20-29: 40% · ≥30: &gt;70%',
-    refs: [
-      {year:'1985', authors:'Knaus WA et al.', title:'APACHE II: a severity of disease classification system', journal:'Crit Care Med', doi:'10.1097/00003246-198510000-00009'},
-    ]
-  },
-  saps: {
-    formula: 'Logit = −7.7631 + 0.0737×SAPS + 0.9971×ln(SAPS+1)\nMortalidad = e^logit / (1 + e^logit)',
-    interpretation: '&lt;30 pts: baja mortalidad · 30-60: moderada · &gt;60: alta',
-    refs: [
-      {year:'1993', authors:'Le Gall JR et al.', title:'A new Simplified Acute Physiology Score (SAPS II) based on a European/North American multicenter study', journal:'JAMA', doi:'10.1001/jama.270.24.2957'},
-    ]
-  },
-  nutric: {
-    formula: 'Suma: Edad (0-2) + APACHE II (0-3) + SOFA (0-2) + Comorbilidades (0-1) + Días hosp. (0-1) + IL-6 opcional (0-1)\nRango: 0-9 (con IL-6) / 0-8 (sin IL-6)',
-    interpretation: '≥5 pts: alto riesgo nutricional — inicio soporte &lt;48h mejora outcomes\n&lt;5 pts: bajo riesgo — monitorizar tolerancia',
-    refs: [
-      {year:'2011', authors:'Heyland D et al.', title:'Identifying critically ill patients who benefit most from nutrition therapy: the development and initial validation of a novel risk assessment tool', journal:'Crit Care', doi:'10.1186/cc10072'},
-    ]
-  },
-  vt: {
-    formula: 'PP Hombre = 50 + 0.91 × (Talla cm − 152.4)\nPP Mujer = 45.5 + 0.91 × (Talla cm − 152.4)\nVT protector = 6 mL/kg PP',
-    interpretation: 'Meta ventilación protectora: 6 mL/kg PP (rango 4-8)\nReducir si P meseta &gt;28 o DP &gt;15 cmH₂O',
-    refs: [
-      {year:'2000', authors:'ARDS Network (ARDSnet)', title:'Ventilation with lower tidal volumes as compared with traditional tidal volumes for acute lung injury and the acute respiratory distress syndrome', journal:'NEJM', doi:'10.1056/NEJM200005043421801'},
-    ]
-  },
-  dp: {
-    formula: 'Driving Pressure (ΔP) = P Meseta − PEEP total\nRefleja la presión que el pulmón "recibe" en cada ciclo',
-    interpretation: 'ΔP ≤15 cmH₂O: meta ventilación protectora\nΔP &gt;15: mayor mortalidad en SDRA\nReducir VT o aumentar PEEP si ΔP elevado',
-    refs: [
-      {year:'2015', authors:'Amato MBP et al.', title:'Driving Pressure and Survival in the Acute Respiratory Distress Syndrome', journal:'NEJM', doi:'10.1056/NEJMsa1410639'},
-    ]
-  },
-  mp: {
-    formula: 'MP = 0.098 × FR × VT(L) × (Ppico − ΔP/2)\nUnidades: J/min',
-    interpretation: '&lt;12 J/min: riesgo bajo de VILI · 12-17: zona gris · &gt;17: alto riesgo VILI\nValor umbral más aceptado: 17 J/min',
-    refs: [
-      {year:'2016', authors:'Gattinoni L et al.', title:'The Future of Mechanical Ventilation: Lessons from the Present and the Past', journal:'Crit Care', doi:'10.1186/s13054-017-1750-x'},
-      {year:'2018', authors:'Serpa Neto A et al.', title:'Mechanical Power of Ventilation Is Associated With Mortality in Critically Ill Patients', journal:'Intensive Care Med', doi:'10.1007/s00134-018-5375-6'},
-    ]
-  },
-  pafi: {
-    formula: 'P:F ratio = PaO₂ / FiO₂\nSF ratio = SpO₂ / FiO₂ (sustituto no invasivo)',
-    interpretation: 'Berlin 2012 (con PEEP ≥5):\n&gt;300: sin SDRA · 200-300: Leve · 100-200: Moderado · &lt;100: Grave',
-    refs: [
-      {year:'2012', authors:'ARDS Definition Task Force', title:'Acute Respiratory Distress Syndrome: The Berlin Definition', journal:'JAMA', doi:'10.1001/jama.2012.5669'},
-    ]
-  },
-  vent_monitor: {
-    formula: 'Cstat = VTe/(Ppl−PEEPt) · Cdin = VTe/(Pp−PEEPt) · Raw = (Pp−Ppl)/flujo(L/s)\nWOB = [(Pp−½Ppl)/10]×VTe · WOBmin = WOB×FR · IF = [(Pp−½Ppl)×0.33]/Pdiafr\nVI = VE/PaCO₂ · Vd/Vt ≈ (PaCO₂−PETCO₂)/PaCO₂ · VA = VE×(1−Vd/Vt)\nPM = 0.098×FR×VC(L)×(Pp−ΔP/2) — ΔP = Ppl−PEEP (Gattinoni)',
-    interpretation: 'Alineado a la hoja de fórmulas del servicio (Pp=pico, Ppl=meseta). Modo, trigger y auto-PEEP modifican el significado clínico. OI (FiO₂×MAP×100/PaO₂) va en «Oxigenación».',
-    refs: [
-      {year:'2016', authors:'Gattinoni L et al.', title:'Mechanical Power of Ventilation', journal:'Crit Care', doi:'10.1186/s13054-017-1750-x'},
-    ]
-  },
-  expres: {
-    formula: 'Suma 0-100 pts (Fig. 3 Baptistella 2021). RSBI en SBT (resp/min/L): ≤42→25 · ≤54→20 · ≤76→10 · ≤90→5 · ≥91→0. Compliance dinámica (mL/cmH₂O): ≥63→15 · ≥51→10 · ≥43→7 · ≥32→3 · &lt;32→0. Días VM: ≤3→10 · ≤5→7 · ≤8→4 · ≤10→1 · &gt;10→0. GCS estimado: ≥13.5→10 · ≥11.7→6 · ≥8.9→3 · &lt;8.9→0. MRC (0-60): ≥49→10 · ≥37→7 · ≥25→4 · ≥13→1 · &lt;13→0. Hematocrito (%): ≥37→10 · ≥32→7 · ≥26→3 · ≥22→1 · &lt;22→0. Creatinina (mg/dL): ≤0.99→10 · ≤1.2→7 · ≤1.5→4 · ≤2.9→1 · &gt;2.9→0. Comorbilidad neurológica: ausente→10 · presente→0.\nFig. 3: https://journals.plos.org/plosone/article/figure/image?size=original&id=10.1371/journal.pone.0248868.g003 · Fig. 5: https://journals.plos.org/plosone/article/figure/image?size=original&id=10.1371/journal.pone.0248868.g005',
-    interpretation: 'Total ≤44: baja probabilidad de éxito (derivación ~57.1% éxito; ver Fig. 5). 45-58: intermedia (~83.3%). ≥59: alta (~98.7%). AUC informada 0,875. No sustituye juicio clínico ni prueba de tolerancia.',
-    refs: [
-      {year:'2021', authors:'Baptistella AR et al.', title:'Prediction of extubation outcome in mechanically ventilated patients: Development and validation of the Extubation Predictive Score (ExPreS)', journal:'PLoS ONE', doi:'10.1371/journal.pone.0248868'},
-    ]
-  },
-  gas: {
-    formula: 'AG = Na − (Cl + HCO₃) · AG corregido = AG + 2.5×(4 − Alb)\nDelta-Delta = (AG−12) / (24−HCO₃)\nBE ≈ HCO₃ − 24 + 16.2×(pH − 7.4)',
-    interpretation: 'AG normal ≤12 mEq/L · Delta-delta 1-2: acidosis pura · &lt;1 o &gt;2: trastorno mixto\nCompensación ácido-base: Winter (AM), regla 1-4 (AR)',
-    refs: [
-      {year:'2010', authors:'Emmett M, Narins RG', title:'Clinical use of the anion gap', journal:'Medicine (Baltimore)', doi:'10.1097/00005792-197701000-00002'},
-    ]
-  },
-  vaso: {
-    formula: 'Velocidad (mL/h) = Dosis × Peso × 60 / Concentración (mcg/mL)\nVasopresina: Velocidad = Dosis (U/min) / Concentración (U/mL) × 60',
-    interpretation: 'Norepinefrina es vasopresor de primera línea en choque séptico.\nAgregar vasopresina cuando NE aumenta para reducir catecolaminas.',
-    refs: [
-      {year:'2021', authors:'Evans L et al.', title:'Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021', journal:'Intensive Care Med', doi:'10.1007/s00134-021-06506-y'},
-      {year:'2018', authors:'Lamontagne F et al.', title:'Vasopressin or norepinephrine in septic shock: an individual patient data meta-analysis', journal:'Lancet Respir Med', doi:'10.1016/S2213-2600(18)30095-1'},
-    ]
-  },
-  balance: {
-    formula: 'Balance parcial = Ingresos − Egresos\nIndice urinario = Uresis / (Peso × horas)',
-    interpretation: 'Meta de uresis habitual en UCI: ≥0.5 mL/kg/h.\nBalance positivo acumulado se asocia con peor pronóstico en sepsis y SDRA.',
-    refs: [
-      {year:'2018', authors:'Malbrain MLNG et al.', title:'Principles of fluid management and stewardship in septic shock', journal:'Ann Intensive Care', doi:'10.1186/s13613-018-0402-1'},
-      {year:'2017', authors:'Acheampong A, Vincent JL', title:'A positive fluid balance is an independent prognostic factor in patients with sepsis', journal:'Crit Care', doi:'10.1186/cc11881'},
-    ]
-  },
-  kirby: {
-    formula: 'SF ratio = SpO₂ (%) / FiO₂\nFiO₂ requerida = SpO₂ meta / SF ratio actual\nP:F (PaO₂/FiO₂) se calcula solo en el bloque PAFI del mismo panel (misma FiO₂).',
-    interpretation: 'SF &gt;315: normal · 235-315: SDRA leve · 150-235: moderado · &lt;150: grave\nSF ratio correlaciona con PF ratio (Rice TW, 2007)',
-    refs: [
-      {year:'2007', authors:'Rice TW et al.', title:'Comparison of the SpO2/FiO2 ratio and the PaO2/FiO2 ratio in patients with acute lung injury or ARDS', journal:'Chest', doi:'10.1378/chest.07-0617'},
-      {year:'2012', authors:'Bongard FS, Sue DY', title:'Current Diagnosis and Treatment: Critical Care', journal:'McGraw-Hill', doi:''},
-    ]
-  },
-  oxygen_index: {
-    formula: 'OI = (FiO₂ × MAP × 100) / PaO₂\nFiO₂ decimal · MAP = presión media en vía aérea (cmH₂O) · PaO₂ en mmHg',
-    interpretation: 'Índice de oxigenación clásico en pediatría y criterios de ECMO; en adultos usar como apoyo junto con P/F y SF. Umbrales de decisión varían por protocolo (ELSO, institucional).',
-    refs: [
-      {year:'2017', authors:'ELSO', title:'Extracorporeal Life Support Organization — Guidelines', journal:'', doi:''},
-    ]
-  },
-  kdigo: {
-    formula: 'LRA por Cr: aumento ≥0.3 en 48h, o ×1.5 basal en 7d, o TFG &lt;35\nLRA por uresis: &lt;0.5 mL/kg/h por ≥6h',
-    interpretation: 'Estadio 1: Cr ×1.5-1.9 o +0.3 · Estadio 2: ×2-2.9 · Estadio 3: ×3 o Cr ≥4 o TRS\nFactor pronóstico: estadio al ingreso + recuperación renal',
-    refs: [
-      {year:'2012', authors:'KDIGO AKI Work Group', title:'KDIGO Clinical Practice Guideline for Acute Kidney Injury', journal:'Kidney Int Suppl', doi:'10.1038/kisup.2012.1'},
-    ]
-  },
-  ppc: {
-    formula: 'PPC = PAM − PIC\nDVNO: PIC (Robba) = −6.72 + 4.04×DVNO\nDTC: IP = (Vs − Vd) / Vm · PIC (Bellner) = (IP×10.93) − 1.28',
-    interpretation: 'Meta TBI: PPC 60-70 mmHg (BTF 2016)\nDVNO ≥5.8 mm: HTIC probable (S 74%, E 86%)\nIP DTC &gt;1.4: resistencia cerebrovascular elevada',
-    refs: [
-      {year:'2007', authors:'Brain Trauma Foundation', title:'Guidelines for the Management of Severe Traumatic Brain Injury, 3rd Ed.', journal:'J Neurotrauma', doi:'10.1089/neu.2007.9999'},
-      {year:'2019', authors:'Robba C et al.', title:'Optic nerve sheath diameter ultrasonography for ICP assessment', journal:'Intensive Care Med', doi:'10.1007/s00134-018-5453-9'},
-      {year:'2004', authors:'Bellner J et al.', title:'Transcranial Doppler sonography pulsatility index correlates with intracranial pressure', journal:'Neurosurgery', doi:'10.1227/01.neu.0000137537.72919.45'},
-    ]
-  },
-  harris: {
-    formula: 'Hombre: GEB = 66.5 + 13.75×P + 5.003×T − 6.775×E\nMujer: GEB = 655.1 + 9.563×P + 1.85×T − 4.676×E\nGET = GEB × Factor de estrés',
-    interpretation: 'Proteínas UCI: 1.2-2.0 g/kg/día (recomendación ASPEN/ESPEN 2022)\nFactores de estrés: 1.2 (postqx) · 1.35 (sepsis) · 1.5-1.6 (trauma) · 1.8 (gran quemado)',
-    refs: [
-      {year:'1919', authors:'Harris JA, Benedict FG', title:'A Biometric Study of Human Basal Metabolism', journal:'Proc Natl Acad Sci', doi:'10.1073/pnas.4.12.370'},
-      {year:'2022', authors:'Thibault R et al.', title:'ESPEN guidelines on clinical nutrition in the intensive care unit', journal:'Clin Nutr', doi:'10.1016/j.clnu.2021.09.039'},
-    ]
-  },
-  camicu: {
-    formula: 'POSITIVO si: Criterio 1 (cambio agudo) Y Criterio 2 (inatención)\nY [Criterio 3 (RASS≠0) O Criterio 4 (pensamiento desorg.)]',
-    interpretation: 'Sensibilidad: 80% · Especificidad: 96% · VPP: 95%\nVálido con RASS ≥ −3 · Prevalencia delirium UCI: 20-80%',
-    refs: [
-      {year:'2001', authors:'Ely EW et al.', title:'Delirium in mechanically ventilated patients: validity and reliability of the confusion assessment method for the intensive care unit (CAM-ICU)', journal:'JAMA', doi:'10.1001/jama.286.21.2703'},
-    ]
-  },
-  padua: {
-    formula: 'Suma de 11 ítems ponderados (1-3 pts cada uno)\nRango 0-20 pts',
-    interpretation: '≥4 pts: alto riesgo TEV — NNT para HBPM ≈ 48\n&lt;4 pts: bajo riesgo — profilaxis mecánica',
-    refs: [
-      {year:'2010', authors:'Barbar S et al.', title:'A risk assessment model for the identification of hospitalized medical patients at risk for venous thromboembolism: the Padua Prediction Score', journal:'J Thromb Haemost', doi:'10.1111/j.1538-7836.2010.03Barbar'},
-    ]
-  },
-  curb: {
-    formula: 'C: Confusión · U: BUN &gt;19 · R: FR ≥30 · B: PAS &lt;90 o PAD ≤60 · 65: Edad ≥65\nUn punto por criterio presente',
-    interpretation: '0-1: mortalidad ~1.5%, ambulatorio · 2: ~9.2%, hospitalización · 3-5: ~22-57%, UCI',
-    refs: [
-      {year:'2003', authors:'Lim WS et al.', title:'Defining community acquired pneumonia severity on presentation to hospital: an international derivation and validation study', journal:'Thorax', doi:'10.1136/thorax.58.5.377'},
-    ]
-  },
-  rockall: {
-    formula: 'Suma: Edad + Choque + Comorbilidades + Diagnóstico + Estigmas sangrado reciente\nRango 0-11 pts',
-    interpretation: '0-2: mortalidad &lt;5% · 3-4: 10-20% · ≥5: &gt;40%\nRockall pre-endoscopia (3 primeras vars.) predice necesidad de intervención',
-    refs: [
-      {year:'1996', authors:'Rockall TA et al.', title:'Risk assessment after acute upper gastrointestinal haemorrhage', journal:'Gut', doi:'10.1136/gut.38.3.316'},
-    ]
-  },
-  elec_uri: {
-    formula: 'EFNa = (NaU×CrS)/(NaS×CrU) × 100 · EFUrea = (UreaU×CrS)/(UreaS×CrU) × 100\nTTKG = (KU/KS) × (OsmS/OsmU) · AG urinario = NaU + KU − ClU',
-    interpretation: 'EFNa <1% y EFUrea <35% sugieren hipoperfusión prerrenal (con contexto clínico).\nEFNa >2% orienta a daño tubular; usar EFUrea si recibe diuréticos.',
-    refs: [
-      {year:'2002', authors:'Carvounis CP et al.', title:'Significance of the fractional excretion of urea in the differential diagnosis of acute renal failure', journal:'Kidney Int', doi:'10.1046/j.1523-1755.2002.00511.x'},
-      {year:'2017', authors:'Pons B et al.', title:'Diagnostic performance of fractional excretion of urea and sodium in acute kidney injury', journal:'Clin J Am Soc Nephrol', doi:'10.2215/CJN.03120317'},
-    ]
-  },
-  rass: {
-    formula: 'Escala de −5 a +4 basada en respuesta a voz y estímulo físico.\n0 = alerta tranquilo; negativos = sedación; positivos = agitación.',
-    interpretation: 'Meta de sedación en VM: RASS entre −2 y 0 salvo indicación específica.\nRASS ≤−4 limita evaluación neurológica y delirium.',
-    refs: [
-      {year:'2002', authors:'Sessler CN et al.', title:'The Richmond Agitation-Sedation Scale: validity and reliability in adult ICU patients', journal:'Am J Respir Crit Care Med', doi:'10.1164/rccm.2107138'},
-      {year:'2018', authors:'Devlin JW et al.', title:'Clinical Practice Guidelines for the Prevention and Management of Pain, Agitation/Sedation, Delirium, Immobility, and Sleep in Adult ICU Patients', journal:'Crit Care Med', doi:'10.1097/CCM.0000000000003299'},
-    ]
-  },
-  starling: {
-    formula: 'VPP = (PPmax − PPmin) / PPmedia × 100\nDistensibilidad VCI = (VCImax − VCImin) / VCImax × 100\nConversión PVC: cmH₂O / 1.36 = mmHg',
-    interpretation: 'VPP &gt;13%: responde a volumen (en VM controlada, RS regular)\nDistensibilidad VCI &gt;18%: precarga dependiente · PVC: pobre predictor aislado',
-    refs: [
-      {year:'2008', authors:'Michard F, Teboul JL', title:'Predicting fluid responsiveness in ICU patients', journal:'Chest', doi:'10.1378/chest.121.6.2000'},
-      {year:'2012', authors:'Monnet X et al.', title:'Passive leg raising for predicting fluid responsiveness', journal:'Intensive Care Med', doi:'10.1007/s00134-012-2593-y'},
-    ]
-  },
-  vexus: {
-    formula: 'Grado 0: VCI &lt;2 cm\nGrado 1: VCI ≥2 cm, sin patrones anormales\nGrado 2: VCI ≥2 cm + 1 patrón grave\nGrado 3: VCI ≥2 cm + ≥2 patrones graves',
-    interpretation: 'VExUS 3: HR para LRA 3.7 (IC 1.5-9.3)\nPatrones graves: hepática (S invertida), porta (pulsatilidad ≥30%), intrarenal (monofásico)',
-    refs: [
-      {year:'2020', authors:'Beaubien-Souligny W et al.', title:'Quantifying Systemic Congestion with Point-Of-Care Ultrasound: Development of the Venous Excess Ultrasound Grading System', journal:'Ultrasound J', doi:'10.1186/s13089-020-00163-w'},
-    ]
-  },
-  osmo: {
-    formula: 'Osmolaridad = 2×Na + Glucosa/18 + BUN/2.8 + EtOH/4.6\nBrecha osmótica = Osm medida − Osm calculada',
-    interpretation: 'Normal: 280-295 mOsm/kg · Brecha &lt;10: normal\nBrecha &gt;10: metanol, etilenglicol, propilenglicol, manitol, etanol',
-    refs: [
-      {year:'2000', authors:'Bhagat CI et al.', title:'Calculated osmolality: not quite right', journal:'Clin Chem', doi:'10.1093/clinchem/46.7.1053'},
-    ]
-  },
-  ca: {
-    formula: 'Ca corregido = Ca total + 0.8 × (4 − Albúmina)\nAlternativa ionizado: Ca corregido = Ca total / (0.6 + [Total proteína/8.5])',
-    interpretation: 'Normal Ca total: 8.5-10.2 mg/dL · Ionizado: 1.12-1.32 mmol/L\nHipocalcemia &lt;8.5: evaluar PTH, Mg, vit D',
-    refs: [
-      {year:'1977', authors:'Payne RB et al.', title:'Interpretation of serum total calcium: effects of adjustment for albumin concentration on frequency of abnormal values', journal:'J Clin Pathol', doi:'10.1136/jcp.30.3.169'},
-    ]
-  },
-  harris_nutric: {
-    formula: '',
-    refs: []
-  },
-  electrolitos: {
-    formula: 'Déficit K = (Kmeta − Kactual) × 0.4 × Peso\nDosis P = 0.16-0.32 mmol/kg IV según severidad\nCa corregido = Ca + 0.8 × (4 − Alb)',
-    interpretation: 'K crítico &lt;2.5: reposición urgente IV · Mg: corregir antes de K refractario\nP &lt;1.0: síndrome de realimentación — reposición urgente',
-    refs: [
-      {year:'2018', authors:'Kraft MD et al.', title:'Treatment of electrolyte disorders in adult patients in the intensive care unit', journal:'Am J Health Syst Pharm', doi:'10.2146/ajhp160298'},
-    ]
-  },
-  kdigo_tsr: {
-    formula: 'Kt/V (Daugirdas): −ln(R − 0.008×t) + (4 − 3.5R)×(UF/V)\nR = BUN post / BUN pre · t = duración sesión\nCRRT dosis = Efluente total / Peso (mL/kg/h)',
-    interpretation: 'CRRT meta: 20-25 mL/kg/h · IHD meta Kt/V ≥1.2/sesión\nFF &lt;25%: evitar coagulación filtro',
-    refs: [
-      {year:'2012', authors:'KDIGO AKI Work Group', title:'KDIGO Clinical Practice Guideline for Acute Kidney Injury — Section on Renal Replacement Therapy', journal:'Kidney Int Suppl', doi:'10.1038/kisup.2012.1'},
-      {year:'2016', authors:'RENAL Study Investigators', title:'Intensity of Continuous Renal-Replacement Therapy in Critically Ill Patients', journal:'NEJM', doi:'10.1056/NEJMoa0902413'},
-    ]
-  },
-  tsr_anticoag: {
-    formula: 'Heparina: comparación con TTPa meta.\nCitrato regional: comparación con Ca postfiltro 0.25-0.35 mmol/L y Ca sistémico 1.0-1.2 mmol/L.',
-    interpretation: 'Citrato regional suele prolongar vida del filtro y reduce sangrado vs heparina sistémica en pacientes de alto riesgo.',
-    refs: [
-      {year:'2023', authors:'Raimundo M et al.', title:'Regional citrate versus systemic heparin anticoagulation for CRRT: systematic review and meta-analysis', journal:'Crit Care', doi:'10.1186/s13054-023-04359-3'},
-      {year:'2012', authors:'KDIGO AKI Work Group', title:'KDIGO Clinical Practice Guideline for Acute Kidney Injury — anticoagulation in CRRT', journal:'Kidney Int Suppl', doi:'10.1038/kisup.2012.1'},
-    ]
-  },
-  sepsis_bundle: {
-    formula: 'Checklist SSC: Hora-1 (lactato, hemocultivos, ATB, cristaloides 30mL/kg, vasopresores)\n3h: reevaluación volemia, repetir lactato\n6h: PAM ≥65, clearance lactato, diuresis, control fuente',
-    interpretation: 'El cumplimiento completo del bundle se asocia a reducción absoluta de mortalidad del 10-15% vs cumplimiento parcial.',
-    refs: [
-      {year:'2021', authors:'Evans L et al.', title:'Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021', journal:'Intensive Care Med', doi:'10.1007/s00134-021-06506-y'},
-      {year:'2018', authors:'Levy MM et al.', title:'The Surviving Sepsis Campaign Bundle: 2018 Update', journal:'Crit Care Med', doi:'10.1097/CCM.0000000000003119'},
-      {year:'2019', authors:'Seymour CW et al.', title:'Time to Treatment and Mortality during Mandated Emergency Care for Sepsis', journal:'N Engl J Med', doi:'10.1056/NEJMoa1703058'},
-    ]
-  },
-  metabolic: {
-    formula: 'AG = Na − (Cl + HCO₃)\nAG corregido = AG + 2.5 × (4.0 − Alb)\nΔ/Δ = (AG − 12) / (24 − HCO₃)\nOsm calc = 2×Na + Glu/18 + BUN/2.8 + EtOH/4.6\nOG = Osm medida − Osm calculada',
-    interpretation: 'AG >12 (corregido): acidosis metabólica con AG elevado · Δ/Δ <1: AGMA + NAGMA · Δ/Δ >2: AGMA + alcalosis metabólica · OG >10: sospechar alcoholes tóxicos.',
-    refs: [
-      {year:'2014', authors:'Kraut JA, Madias NE', title:'Lactic Acidosis', journal:'N Engl J Med', doi:'10.1056/NEJMra1309483'},
-      {year:'2007', authors:'Kellum JA', title:'Disorders of acid-base balance', journal:'Crit Care Med', doi:'10.1097/01.CCM.0000259722.63680.80'},
-      {year:'2017', authors:'Berend K et al.', title:'Physiological approach to assessment of acid-base disturbances', journal:'N Engl J Med', doi:'10.1056/NEJMra1003327'},
-    ]
-  },
-  gcs: {
-    formula: 'GCS = E (1-4) + V (1-5) + M (1-6)\nRango: 3-15',
-    interpretation: '13-15: leve · 9-12: moderado · 6-8: grave (severidad neurológica alta) · 3-5: muy grave (severidad neurológica crítica)',
-    refs: [
-      {year:'1974', authors:'Teasdale G, Jennett B', title:'Assessment of coma and impaired consciousness: a practical scale', journal:'Lancet', doi:'10.1016/S0140-6736(74)91639-0'},
-      {year:'2014', authors:'Teasdale G et al.', title:'The Glasgow Coma Scale at 40 years: standing the test of time', journal:'Lancet Neurol', doi:'10.1016/S1474-4422(14)70120-6'},
-    ]
-  },
-  qsofa: {
-    formula: 'qSOFA = PAS ≤100 (1 pt) + FR ≥22 (1 pt) + GCS <15 (1 pt)\nRango: 0-3',
-    interpretation: '0: bajo riesgo · 1: vigilancia analítica · ≥2: alta sospecha de sepsis — ampliar evaluación con SOFA, lactato y hemocultivos.',
-    refs: [
-      {year:'2016', authors:'Seymour CW et al.', title:'Assessment of Clinical Criteria for Sepsis (Sepsis-3)', journal:'JAMA', doi:'10.1001/jama.2016.0288'},
-      {year:'2016', authors:'Singer M et al.', title:'The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3)', journal:'JAMA', doi:'10.1001/jama.2016.0287'},
-    ]
-  },
-  wells: {
-    formula: 'Signos TVP (+3) + TEP dx más probable (+3) + FC >100 (+1.5) + Inmovilización/cirugía (+1.5) + TEV previo (+1.5) + Hemoptisis (+1) + Cáncer (+1)',
-    interpretation: '≤1: baja probabilidad (~1.3%) → dímero D · 2-4: moderada (~16%) → dímero D, si + → angioTAC · >4: alta (~41%) → angioTAC directo',
-    refs: [
-      {year:'2000', authors:'Wells PS et al.', title:'Derivation of a Simple Clinical Model to Categorize Patients Probability of Pulmonary Embolism', journal:'Thromb Haemost', doi:'10.1055/s-0037-1613938'},
-      {year:'2006', authors:'van Belle A et al.', title:'Effectiveness of managing suspected pulmonary embolism using an algorithm combining clinical probability, D-dimer testing, and CT', journal:'JAMA', doi:'10.1001/jama.295.2.172'},
-    ]
-  },
-  meld: {
-    formula: 'MELD = 10 × (0.957×ln(Cr) + 0.378×ln(Bili) + 1.120×ln(INR) + 0.643)\nMELD-Na = MELD + 1.32×(137−Na) − 0.033×MELD×(137−Na)',
-    interpretation: '<10: compensada · 10-19: moderada · 20-29: severa, listar para trasplante · ≥30: falla terminal, urgencia',
-    refs: [
-      {year:'2001', authors:'Kamath PS et al.', title:'A model to predict survival in patients with end-stage liver disease', journal:'Hepatology', doi:'10.1053/jhep.2001.22172'},
-      {year:'2006', authors:'Kim WR et al.', title:'Hyponatremia and Mortality among Patients on the Liver-Transplant Waiting List', journal:'N Engl J Med', doi:'10.1056/NEJMoa062034'},
-    ]
-  },
-};
 
 // ══════════════════════════════════════════════════════
 // VALIDACIÓN GLOBAL — campos requeridos
@@ -6555,6 +6192,89 @@ function calcO2Transport() {
   document.getElementById('ot-result').style.display = 'grid';
 }
 
+function resetUshHemoTab(which) {
+  function clear(ids) {
+    ids.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+  }
+  if (which === 'sistolica') {
+    clear(['ush-fevi', 'ush-mapse', 'ush-smit', 'ush-fac', 'ush-dvis', 'ush-dvid']);
+    var sr = document.getElementById('ush-sis-res');
+    if (sr) sr.style.display = 'none';
+  } else if (which === 'diastolica') {
+    clear(['ush-e', 'ush-a', 'ush-tde', 'ush-triv', 'ush-lavi', 'ush-tr-vmax', 'ush-dia-fc', 'ush-eprim', 'ush-eprims']);
+    var dr = document.getElementById('ush-dia-res');
+    if (dr) dr.style.display = 'none';
+  } else if (which === 'derecha') {
+    clear(['ush-tapse', 'ush-stric', 'ush-facvd', 'ush-vit', 'ush-pvc-eco']);
+    var der = document.getElementById('ush-der-res');
+    if (der) der.style.display = 'none';
+  } else if (which === 'precarga') {
+    clear(['ush-vti', 'ush-dtsvi', 'ush-fc-eco', 'ush-varvti', 'ush-vcii', 'ush-vcie', 'ush-varE']);
+    var pr = document.getElementById('ush-pre-res');
+    if (pr) pr.style.display = 'none';
+  }
+}
+
+/** ASE 2016 (Nagueh) — simplificado para cama UCI; pasos descriptivos sin sustituir informe formal */
+function classifyLvDiastolicAse2016(E, A, ep, eps, tde, ivrt, fevi, lavi, trVel, ageY, fcLpm, reducedBranch) {
+  var steps = [];
+  var meanEp = (ep + eps) / 2;
+  var ea = E / A;
+  var ee = E / meanEp;
+  steps.push('1) E/e′ medio = E / media(e′) = ' + E.toFixed(0) + ' / ' + meanEp.toFixed(2) + ' ≈ ' + ee.toFixed(1) + '.');
+  steps.push('2) E/A = ' + ea.toFixed(2) + '.');
+  if (reducedBranch) steps.push('3) Rama FEVI <50%: mismos cortes orientativos E/e′ 8 / 14 para estimación de PCP; integrar volumen/motilidad VI.');
+  else steps.push('3) Rama FEVI ≥50% (o FEVI no indicada, asumida preservada): algoritmo transmitral + LAVI/TR en zona gris.');
+  if (!isNaN(tde)) {
+    var tdeHint = tde < 160 ? 'corto — apoyo a llenado acelerado/restrictivo si coherente con E/A alto' : (tde > 240 ? 'alargado — apoyo a relajación retardada si E/A bajo' : 'intermedio');
+    steps.push('4) T desaceleración E: ' + tde.toFixed(0) + ' ms (' + tdeHint + ').');
+  } else steps.push('4) TDE no ingresada — útil para coherencia con patrón transmitral.');
+  if (!isNaN(ivrt)) {
+    var ivLine = '5) TRIV/IVRT: ' + ivrt.toFixed(0) + ' ms';
+    if (!isNaN(ageY) && ageY >= 60) ivLine += ' (edad ≥60: valores de referencia tienden a ser más bajos)';
+    ivLine += ivrt < 70 ? ' — corto: apoyo a PCP elevada/patrón restrictivo si E/A alto.' : (ivrt > 110 ? ' — alargado: apoyo a relajación retardada si E/A <1.' : ' — intermedio: apoyo hemodinámico, no discriminatorio aislado.');
+    steps.push(ivLine);
+  } else steps.push('5) TRIV/IVRT no ingresado — recomendable junto a E/A y TDE.');
+  if (!isNaN(fcLpm) && fcLpm > 100) steps.push('6) FC >100: E/A y TDE pueden sesgarse; integrar ritmo y clínica.');
+  var septLow = eps < 7;
+  var latLow = ep < 10;
+  var lapStrongElev = (ee >= 14) || (!isNaN(lavi) && lavi >= 34) || (!isNaN(trVel) && trVel >= 2.8);
+  var lapStrongLow = (ee <= 8) && !((!isNaN(lavi) && lavi >= 34) || (!isNaN(trVel) && trVel >= 2.8));
+  var lapGray = (ee > 8 && ee < 14);
+  if (lapStrongElev) steps.push('7) Marcador(es) de PCP elevada: E/e′≥14 y/o LAVI≥34 y/o VPS TR≥2.8 (según datos).');
+  else if (lapStrongLow) steps.push('7) E/e′≤8 sin LAVI/TR contradictorios → PCP no elevada improbable por E/e′ (ASE).');
+  else if (lapGray) {
+    if (!isNaN(lavi) && !isNaN(trVel) && lavi < 34 && trVel < 2.8) steps.push('7) Zona 9–13 con LAVI<34 y TR<2.8 → elevación de PCP menos probable.');
+    else if ((!isNaN(lavi) && lavi >= 34) || (!isNaN(trVel) && trVel >= 2.8)) steps.push('7) Zona 9–13 con LAVI≥34 o TR≥2.8 → PCP elevada más probable.');
+    else steps.push('7) Zona indeterminada E/e′ 9–13: aportar LAVI indexada y VPS TR.');
+  }
+  if (ee <= 8 && ((!isNaN(lavi) && lavi >= 34) || (!isNaN(trVel) && trVel >= 2.8)))
+    steps.push('8) E/e′≤8 pero LAVI o TR positivos — correlación clínica (discordancia).');
+  var gradeText = '';
+  if (lapStrongElev) {
+    gradeText = reducedBranch
+      ? 'FEVI reducida: elevación probable de presiones de llenado / congestión (criterios ASE transmitral + LAVI/TR).'
+      : 'Elevación probable de presiones de llenado izquierdo (enfoque ASE 2016 / Nagueh).';
+  } else if (lapGray && ((!isNaN(lavi) && lavi >= 34) || (!isNaN(trVel) && trVel >= 2.8))) {
+    gradeText = 'Zona E/e′ intermedia resuelta hacia PCP elevada por LAVI o TR.';
+  } else if (lapGray && !isNaN(lavi) && !isNaN(trVel) && lavi < 34 && trVel < 2.8) {
+    gradeText = 'Zona E/e′ intermedia con LAVI y TR favorables — PCP elevada menos probable.';
+  } else if (lapGray) {
+    gradeText = 'Huella diastólica indeterminada (E/e′ 9–13) — completar LAVI y VPS TR.';
+  } else if (lapStrongLow && ea < 0.8 && (septLow || latLow)) {
+    gradeText = 'Patrón de relajación retardada (Grado I típico) sin criterios de PCP elevada por E/e′.';
+  } else if (lapStrongLow) {
+    gradeText = 'Función diastólica conservada o PCP no sugerida elevada por índices actuales.';
+  } else {
+    gradeText = 'Integrar hallazgos con clínica y carga hemodinámica.';
+  }
+  var limits = 'FA/flutter, taquicardia, bradicardia, IM significativa, prótesis/anuloplastia mitral, post-MitraClip y ritmo irregular alteran E/A, TDE y TRIV. No sustituye informe ecocardiográfico completo.';
+  return { ee: ee, ea: ea, steps: steps, gradeText: gradeText, limits: limits };
+}
+
 function calcUshSistolica() {
   if (!validate([{id:'ush-fevi', label:'FEVI'}])) return;
   const fevi = parseFloat(document.getElementById('ush-fevi').value);
@@ -6592,23 +6312,40 @@ function calcUshDiastolica() {
     {id:'ush-eprim', label:"e' lateral"},
     {id:'ush-eprims', label:"e' septal"}
   ])) return;
-  const E = parseFloat(document.getElementById('ush-e').value);
-  const A = parseFloat(document.getElementById('ush-a').value);
-  const ep = parseFloat(document.getElementById('ush-eprim').value);
-  const eps = parseFloat(document.getElementById('ush-eprims').value);
-  if ([E,A,ep,eps].some(v => isNaN(v) || v === 0)) return;
-  const ea = E / A;
-  const ee = E / ((ep + eps) / 2);
-  document.getElementById('ush-ea').textContent = ea.toFixed(2);
-  document.getElementById('ush-ee').textContent = ee.toFixed(2);
-  if (ee < 8) setBadge('ush-ee-b','badge-green','Presión llenado normal');
-  else if (ee <= 14) setBadge('ush-ee-b','badge-yellow','Indeterminado');
-  else setBadge('ush-ee-b','badge-red','Presión llenado elevada');
-  let txt='Función diastólica normal';
-  if (ea < 0.8) txt='Disfunción diastólica grado I (relajación alterada)';
-  else if (ea <= 2.0 && ee > 14) txt='Disfunción diastólica grado II (pseudonormal)';
-  else if (ea > 2.0) txt='Disfunción diastólica grado III (restrictivo)';
-  document.getElementById('ush-dia-int').textContent = txt;
+  var E = parseFloat(document.getElementById('ush-e').value);
+  var A = parseFloat(document.getElementById('ush-a').value);
+  var ep = parseFloat(document.getElementById('ush-eprim').value);
+  var eps = parseFloat(document.getElementById('ush-eprims').value);
+  if ([E, A, ep, eps].some(function (v) { return isNaN(v) || v === 0; }) || A === 0) return;
+  var tde = parseFloat(document.getElementById('ush-tde').value);
+  var ivrt = parseFloat(document.getElementById('ush-triv').value);
+  var lavi = parseFloat(document.getElementById('ush-lavi').value);
+  var trVel = parseFloat(document.getElementById('ush-tr-vmax').value);
+  var fevi = parseFloat(document.getElementById('ush-fevi').value);
+  var diaFc = parseFloat(document.getElementById('ush-dia-fc').value);
+  var preFc = parseFloat(document.getElementById('ush-fc-eco').value);
+  var fcLpm = !isNaN(diaFc) ? diaFc : preFc;
+  var ageY = parseFloat(document.getElementById('pat-edad').value);
+  var reducedBranch = !isNaN(fevi) && fevi < 50;
+  var out = classifyLvDiastolicAse2016(E, A, ep, eps, tde, ivrt, fevi, lavi, trVel, ageY, fcLpm, reducedBranch);
+  var ee = out.ee;
+  document.getElementById('ush-ea').textContent = out.ea.toFixed(2);
+  document.getElementById('ush-ee').textContent = ee.toFixed(1);
+  if (ee <= 8) setBadge('ush-ee-b', 'badge-green', 'PCP improbable elevada (E/e′≤8)');
+  else if (ee >= 14) setBadge('ush-ee-b', 'badge-red', 'PCP probablemente elevada (E/e′≥14)');
+  else setBadge('ush-ee-b', 'badge-yellow', 'Zona indeterminada E/e′ 9–13');
+  document.getElementById('ush-dia-int').textContent = out.gradeText;
+  document.getElementById('ush-dia-steps').textContent = out.steps.join('\n');
+  document.getElementById('ush-dia-limits').textContent = out.limits;
+  var tdeEl = document.getElementById('ush-dia-tde-out');
+  if (tdeEl) tdeEl.textContent = !isNaN(tde) ? (tde.toFixed(0) + ' ms') : '— (opcional)';
+  var trivEl = document.getElementById('ush-dia-triv-out');
+  if (trivEl) trivEl.textContent = !isNaN(ivrt) ? (ivrt.toFixed(0) + ' ms') : '— (opcional)';
+  var feviOut = document.getElementById('ush-dia-fevi-out');
+  if (feviOut) {
+    if (!isNaN(fevi)) feviOut.textContent = fevi.toFixed(0) + '% — ' + (reducedBranch ? 'rama FEVI <50%' : 'rama FEVI ≥50%');
+    else feviOut.textContent = 'No indicada (asume rama ≥50%); completar en sistólica';
+  }
   document.getElementById('ush-dia-res').style.display = 'grid';
 }
 
@@ -6920,412 +6657,7 @@ Object.assign(FARMACOS, {
   }
 });
 
-function setBombaCategoria(grupo, btn) {
-  document.querySelectorAll('#bom-cat-bar .tab-btn')
-    .forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  const sel = document.getElementById('bom-farmaco');
-  sel.innerHTML = '';
-  Object.entries(FARMACOS).forEach(([key, f]) => {
-    if (f.grupo === grupo) {
-      const o = document.createElement('option');
-      o.value = key; o.textContent = f.nombre;
-      sel.appendChild(o);
-    }
-  });
-  updateBombaFarmaco();
-}
-
-function updateBombaFarmaco() {
-  const key = document.getElementById('bom-farmaco').value;
-  const f = FARMACOS[key];
-  if (!f) return;
-  document.getElementById('bom-badge-unit').textContent =
-    f.unidades;
-  document.getElementById('bom-badge-rango').textContent =
-    'Rango: ' + f.rangoMin + ' – ' + f.rangoMax + ' ' + f.unidades;
-  document.getElementById('bom-badge-max').textContent =
-    'Máx: ' + f.dosisMax + ' ' + f.unidades;
-  document.getElementById('bom-indicacion').textContent =
-    f.indicacion;
-  document.getElementById('bom-dilucion-txt').textContent =
-    f.dilucion;
-  applyBombaStdDilution();
-  syncBombaPesoRequirement();
-  document.getElementById('bom-result-inline').style.display =
-    'none';
-}
-
-let BOMBA_MODE = 'dosis';
-
-function setBombaMode(mode, btn) {
-  BOMBA_MODE = mode;
-  document.querySelectorAll('.bom-mode-btn')
-    .forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  const label = document.getElementById('bom-input-label');
-  const input = document.getElementById('bom-valor-input');
-  if (mode === 'dosis') {
-    label.textContent = 'Velocidad (mL/h)';
-    input.placeholder = 'velocidad en bomba';
-  } else {
-    label.textContent = 'Dosis deseada';
-    input.placeholder = 'dosis objetivo';
-  }
-  document.getElementById('bom-result-inline').style.display =
-    'none';
-}
-
-function isBombaPesoDependiente(unidadDosis) {
-  return unidadDosis === 'mcg/kg/min' ||
-         unidadDosis === 'mcg/kg/h' ||
-         unidadDosis === 'mg/kg/h';
-}
-
-function parseStdDilutionFromText(f) {
-  if (!f) return null;
-  const txt = (f.concStdDesc || f.dilucion || '').replace(',', '.');
-  const m = txt.match(/(\d+(\.\d+)?)\s*(mg|mcg|UI)\s*en\s*(\d+(\.\d+)?)\s*mL/i);
-  if (m) {
-    return {
-      amount: parseFloat(m[1]),
-      unit: m[3],
-      volume: parseFloat(m[4])
-    };
-  }
-  const concUnitBase = (f.concUnit || 'mg/mL').split('/')[0];
-  return { amount: f.concStd, unit: concUnitBase, volume: 1 };
-}
-
-function normalizeBombaConc(amount, amountUnit, volume, dosisUnit) {
-  if (!isFinite(amount) || amount <= 0) return null;
-  if (!isFinite(volume) || volume <= 0) return null;
-  const unit = (amountUnit || '').trim();
-  const conc = amount / volume;
-
-  if (dosisUnit === 'UI/h') {
-    if (unit === 'UI') return { value: conc, baseUnit: 'UI/mL' };
-    return null;
-  }
-
-  if (dosisUnit === 'mg/h' || dosisUnit === 'mg/kg/h') {
-    if (unit === 'mg') return { value: conc, baseUnit: 'mg/mL' };
-    if (unit === 'mcg') return { value: conc / 1000, baseUnit: 'mg/mL' };
-    return null;
-  }
-
-  if (dosisUnit === 'mcg/kg/min' || dosisUnit === 'mcg/kg/h') {
-    if (unit === 'mcg') return { value: conc, baseUnit: 'mcg/mL' };
-    if (unit === 'mg') return { value: conc * 1000, baseUnit: 'mcg/mL' };
-    return null;
-  }
-
-  return null;
-}
-
-function applyBombaStdDilution() {
-  const key = document.getElementById('bom-farmaco').value;
-  const f = FARMACOS[key];
-  if (!f) return;
-  const std = parseStdDilutionFromText(f);
-  if (!std) return;
-  document.getElementById('bom-cant-total').value = std.amount;
-  const unitSel = document.getElementById('bom-cant-unit');
-  if (unitSel) unitSel.value = std.unit;
-  document.getElementById('bom-vol-total').value = std.volume;
-  updateBombaConcPreview();
-}
-
-function updateBombaConcPreview() {
-  const key = document.getElementById('bom-farmaco').value;
-  const f = FARMACOS[key];
-  if (!f) return null;
-  const amount = parseFloat(document.getElementById('bom-cant-total').value);
-  const amountUnit = document.getElementById('bom-cant-unit').value;
-  const volume = parseFloat(document.getElementById('bom-vol-total').value);
-  const out = document.getElementById('bom-conc-calc');
-  if (!isFinite(amount) || !isFinite(volume) || amount <= 0 || volume <= 0) {
-    out.textContent = 'Concentración calculada: —';
-    return null;
-  }
-  const normalized = normalizeBombaConc(amount, amountUnit, volume, f.unidades);
-  if (!normalized) {
-    out.textContent = 'Concentración calculada: unidad incompatible para ' + f.unidades;
-    return null;
-  }
-  out.textContent = 'Concentración calculada: ' + normalized.value.toFixed(4) + ' ' + normalized.baseUnit;
-  return normalized;
-}
-
-function syncBombaPesoRequirement() {
-  const key = document.getElementById('bom-farmaco').value;
-  const f = FARMACOS[key];
-  const pesoEl = document.getElementById('bom-peso');
-  if (!pesoEl || !f) return;
-  if (isBombaPesoDependiente(f.unidades)) {
-    pesoEl.placeholder = '60 – 100';
-    pesoEl.style.opacity = '';
-  } else {
-    pesoEl.placeholder = 'No requerido';
-    pesoEl.style.opacity = '0.75';
-  }
-}
-
-function calcBomba() {
-  const key = document.getElementById('bom-farmaco').value;
-  const f = FARMACOS[key];
-  if (!f) {
-    showToast('Seleccione un fármaco válido.');
-    return;
-  }
-  const peso = parseFloat(
-    document.getElementById('bom-peso').value);
-  const amount = parseFloat(
-    document.getElementById('bom-cant-total').value);
-  const amountUnit = document.getElementById('bom-cant-unit').value;
-  const volume = parseFloat(
-    document.getElementById('bom-vol-total').value);
-  const val = parseFloat(
-    document.getElementById('bom-valor-input').value);
-  const isVelToDose = BOMBA_MODE === 'dosis';
-  const valorLabel = isVelToDose ? 'Velocidad (mL/h)' : 'Dosis';
-  const pesoDependiente = isBombaPesoDependiente(f.unidades);
-  const faltantes = [];
-  if (pesoDependiente && (!isFinite(peso) || peso <= 0)) faltantes.push('Peso');
-  if (!isFinite(amount) || amount <= 0) faltantes.push('Cantidad total en bolsa (>0)');
-  if (!isFinite(volume) || volume <= 0) faltantes.push('Volumen total bolsa (>0)');
-  if (!isFinite(val) || val <= 0) faltantes.push(valorLabel + ' (>0)');
-  if (faltantes.length) {
-    showToast('Bombas: datos inválidos o faltantes: ' + faltantes.join(', ') + '.');
-    return;
-  }
-
-  const u = f.unidades;
-  const normalized = normalizeBombaConc(amount, amountUnit, volume, u);
-  if (!normalized) {
-    showToast('Preparación incompatible para ' + u + '. Verifique unidad de cantidad.');
-    return;
-  }
-  updateBombaConcPreview();
-
-  const concBase = normalized.value;
-  let dosis, vel;
-
-  if (isVelToDose) {
-    vel = val;
-    if (u === 'mcg/kg/min')
-      dosis = (concBase * vel) / (60 * peso);
-    else if (u === 'mcg/kg/h')
-      dosis = (concBase * vel) / peso;
-    else if (u === 'mg/kg/h')
-      dosis = (concBase * vel) / peso;
-    else if (u === 'UI/h')
-      dosis = concBase * vel;
-    else if (u === 'mg/h')
-      dosis = concBase * vel;
-    else {
-      showToast('Unidad de dosis no soportada: ' + u);
-      return;
-    }
-  } else {
-    dosis = val;
-    if (u === 'mcg/kg/min')
-      vel = (dosis * 60 * peso) / concBase;
-    else if (u === 'mcg/kg/h')
-      vel = (dosis * peso) / concBase;
-    else if (u === 'mg/kg/h')
-      vel = (dosis * peso) / concBase;
-    else if (u === 'UI/h')
-      vel = dosis / concBase;
-    else if (u === 'mg/h')
-      vel = dosis / concBase;
-    else {
-      showToast('Unidad de dosis no soportada: ' + u);
-      return;
-    }
-  }
-
-  if (!isFinite(dosis) || !isFinite(vel) || dosis <= 0 || vel <= 0) {
-    showToast('Resultado inválido: verifique entradas y unidad de concentración.');
-    return;
-  }
-
-  const wrap = document.getElementById('bom-result-inline');
-  wrap.style.display = 'flex';
-  if (isVelToDose) {
-    document.getElementById('bom-out-val').textContent = dosis.toFixed(3);
-    document.getElementById('bom-out-unit').textContent = u;
-    document.getElementById('bom-out-vel').textContent = '· Velocidad: ' + vel.toFixed(2) + ' mL/h';
-  } else {
-    document.getElementById('bom-out-val').textContent = vel.toFixed(2);
-    document.getElementById('bom-out-unit').textContent = 'mL/h';
-    document.getElementById('bom-out-vel').textContent = '· Dosis: ' + dosis.toFixed(3) + ' ' + u;
-  }
-
-  const badge = document.getElementById('bom-out-badge');
-  if (dosis > f.dosisMax) {
-    badge.className = 'result-badge badge-red';
-    badge.textContent = 'Evaluación de dosis: Máx excedida';
-  } else if (dosis > f.rangoMax) {
-    badge.className = 'result-badge badge-orange';
-    badge.textContent = 'Evaluación de dosis: Sobre rango';
-  } else if (dosis < f.rangoMin) {
-    badge.className = 'result-badge badge-yellow';
-    badge.textContent = 'Evaluación de dosis: Subrango';
-  } else {
-    badge.className = 'result-badge badge-green';
-    badge.textContent = 'Evaluación de dosis: En rango';
-  }
-}
-
-function resetBombas() {
-  document.getElementById('bom-valor-input').value = '';
-  document.getElementById('bom-cant-total').value = '';
-  document.getElementById('bom-vol-total').value = '';
-  document.getElementById('bom-conc-calc').textContent = 'Concentración calculada: —';
-  document.getElementById('bom-result-inline').style.display =
-    'none';
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  setBombaCategoria('vaso',
-    document.querySelector('#bom-cat-bar .tab-btn'));
-  ['bom-cant-total', 'bom-cant-unit', 'bom-vol-total'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('input', updateBombaConcPreview);
-    if (el) el.addEventListener('change', updateBombaConcPreview);
-  });
-});
-
 // ============ VASOPRESOR ============
-const vasoRefs={
-  NE:'Rango analítico: 0.01-3 mcg/kg/min — referencia habitual: 0.05-0.1 mcg/kg/min',
-  EP:'Rango: 0.01-1 mcg/kg/min — Anafilaxis/sepsis',
-  VP:'Dosis fija: 0.03-0.04 U/min — independiente de peso',
-  DA:'1-20 mcg/kg/min — Dopaminergico <5, inotr. 5-10, vasopresor >10',
-  DB:'2.5-20 mcg/kg/min — Inotropico puro',
-  PH:'0.5-6 mcg/kg/min — Vasopresion pura'
-};
-const vasoUnits={NE:'mcg/kg/min',EP:'mcg/kg/min',VP:'U/min',DA:'mcg/kg/min',DB:'mcg/kg/min',PH:'mcg/kg/min'};
-const vasoDoseHints={
-  NE:'0.05 (NE: 0.01-3)',
-  EP:'0.05 (EP: 0.01-1)',
-  VP:'0.03 (VP: 0.03-0.04 U/min)',
-  DA:'5 (DA: 1-20)',
-  DB:'5 (DB: 2.5-20)',
-  PH:'1 (PH: 0.5-6)'
-};
-const vasoInterpByDrug={
-  NE:'Perfil frecuentemente asociado a soporte vasopresor en choque distributivo/séptico.',
-  EP:'Útil cuando hay necesidad de inotropía + vasopresión (p. ej., choque refractario).',
-  VP:'Vasopresor no catecolaminérgico, habitualmente usado como coadyuvante de norepinefrina.',
-  DA:'Reservar para escenarios seleccionados; mayor riesgo de taquiarritmias.',
-  DB:'Inotrópico predominante: útil en bajo gasto con presión relativamente preservada.',
-  PH:'Vasopresor alfa-puro: patrón de uso en contextos con vasoplejía y taquicardia.'
-};
-function updateVasoInfo() {
-  const drug=elCached('vas-drug').value;
-  elCached('vaso-ref').textContent=vasoRefs[drug];
-  elCached('vaso-dose-label').textContent='Unidades: '+vasoUnits[drug];
-  elCached('vas-dose').placeholder=vasoDoseHints[drug];
-  elCached('vas-conc-unit').textContent = drug==='VP' ? 'U/mL' : 'mcg/mL';
-  elCached('vaso-interp').textContent = vasoInterpByDrug[drug];
-}
-function calcVASO() {
-  if (!validate([{id:'vas-peso',label:'Peso'},{id:'vas-mg',label:'mg en bolsa'},{id:'vas-vol',label:'Volumen bolsa'},{id:'vas-dose',label:'Dosis'}])) return;
-  if (!validateRanges([
-    {id:'vas-peso', label:'Peso', min:20, max:300},
-    {id:'vas-mg', label:'mg en bolsa', min:0.1, max:200},
-    {id:'vas-vol', label:'Volumen bolsa', min:10, max:1000},
-    {id:'vas-dose', label:'Dosis', min:0.001, max:50}
-  ])) return;
-  const drug=elCached('vas-drug').value;
-  const peso=parseFloat(elCached('vas-peso').value);
-  const mg=parseFloat(elCached('vas-mg').value);
-  const vol=parseFloat(elCached('vas-vol').value);
-  const dose=parseFloat(elCached('vas-dose').value);
-  const concMcg=mg*1000/vol;
-  let rate;
-  if (drug==='VP'){ const concU=mg/vol; rate=(dose/concU)*60; }
-  else { rate=(dose*peso*60)/concMcg; }
-  if (rate > 200) {
-    showToast('⚠️ Velocidad calculada muy alta (>200 mL/h), revisar concentración y dosis');
-  }
-  elCached('vas-rate').textContent=rate.toFixed(2);
-  elCached('vas-dosis-ok').textContent=dose;
-  elCached('vas-unit-label').textContent=vasoUnits[drug];
-  elCached('vas-conc').textContent = drug==='VP' ? (mg/vol).toFixed(3) : concMcg.toFixed(1);
-  elCached('vas-conc-unit').textContent = drug==='VP' ? 'U/mL' : 'mcg/mL';
-  let doseMsg = '';
-  if (drug === 'VP') {
-    doseMsg = dose < 0.03 ? 'Dosis baja para vasopresina' : dose > 0.04 ? 'Dosis por encima del rango usual (0.03-0.04)' : 'Dosis en rango usual';
-  } else if (drug === 'NE') {
-    doseMsg = dose < 0.05 ? 'Dosis inicial-baja de norepinefrina' : dose > 1 ? 'Dosis alta, vigilar perfusión periférica y respuesta' : 'Dosis intermedia';
-  } else if (drug === 'EP') {
-    doseMsg = dose < 0.05 ? 'Dosis baja de epinefrina' : dose > 0.5 ? 'Dosis alta, vigilar lactato/taquiarritmia' : 'Dosis intermedia';
-  } else if (drug === 'DA') {
-    doseMsg = dose < 5 ? 'Rango dopaminérgico' : dose <= 10 ? 'Rango inotrópico' : 'Rango vasopresor';
-  } else if (drug === 'DB') {
-    doseMsg = dose < 5 ? 'Inicio inotrópico bajo' : dose > 15 ? 'Dosis alta, vigilar taquicardia' : 'Dosis intermedia';
-  } else if (drug === 'PH') {
-    doseMsg = dose < 1 ? 'Inicio bajo de fenilefrina' : dose > 4 ? 'Dosis alta, vigilar perfusión' : 'Dosis intermedia';
-  }
-  elCached('vaso-interp').textContent = vasoInterpByDrug[drug] + ' ' + doseMsg + '.';
-  elCached('vaso-result').style.display='grid';
-}
-
-// ============ BALANCE HIDRICO ============
-function calcBAL() {
-  const ing=['sol','med','ne','np','hem','ot'].reduce((s,i)=>s+(parseFloat(elCached('bi-'+i).value)||0),0);
-  const egr=['uri','dre','asp','hec','ins','ot'].reduce((s,i)=>s+(parseFloat(elCached('be-'+i).value)||0),0);
-  const bal=ing-egr;
-  const prev=parseFloat(elCached('bal-prev').value);
-  const peso=parseFloat(elCached('bal-peso').value);
-  const hrs=parseFloat(elCached('bal-hrs').value)||8;
-  const uri=parseFloat(elCached('be-uri').value)||0;
-  elCached('bal-ing').textContent=ing.toFixed(0)+' mL';
-  elCached('bal-egr').textContent=egr.toFixed(0)+' mL';
-  const parEl=elCached('bal-par');
-  parEl.textContent=(bal>=0?'+':'')+bal.toFixed(0)+' mL';
-  parEl.className='mr-val '+(bal>500?'red':bal<-500?'yellow':'green');
-  if (!isNaN(prev)){
-    const glo=bal+prev;
-    const gloEl=elCached('bal-glo');
-    gloEl.textContent=(glo>=0?'+':'')+glo.toFixed(0)+' mL';
-    gloEl.className='mr-val '+(glo>1000?'red':glo<-1000?'yellow':'green');
-  }
-  if (!isNaN(peso)&&peso>0){
-    const iuk=uri/(peso*hrs);
-    const iukEl=elCached('bal-iuk');
-    iukEl.textContent=iuk.toFixed(2)+' mL/kg/h';
-    iukEl.className='mr-val '+(iuk<0.5?'red':iuk>2?'yellow':'green');
-  }
-}
-
-// ============ STARLING / PRECARGA ============
-function calcSTARLING() {
-  const pvc=parseFloat(document.getElementById('st-pvc').value);
-  const pvcmm=parseFloat(document.getElementById('st-pvcmm').value);
-  const ppmax=parseFloat(document.getElementById('st-ppmax').value);
-  const ppmin=parseFloat(document.getElementById('st-ppmin').value);
-  const vcimax=parseFloat(document.getElementById('st-vcimax').value);
-  const vcimin=parseFloat(document.getElementById('st-vcimin').value);
-  if (isNaN(pvc)&&isNaN(pvcmm)&&isNaN(ppmax)&&isNaN(ppmin)&&isNaN(vcimax)&&isNaN(vcimin)) { showToast('⚠️ Ingresa al menos una medición (PVC, VPP o VCI)'); return; }
-  if (!isNaN(pvc)) document.getElementById('st-conv').textContent=(pvc/1.36).toFixed(1)+' mmHg (de '+pvc+' cmH2O)';
-  else if (!isNaN(pvcmm)) document.getElementById('st-conv').textContent=(pvcmm*1.36).toFixed(1)+' cmH2O (de '+pvcmm+' mmHg)';
-  if (!isNaN(ppmax)&&!isNaN(ppmin)) {
-    const vpp=((ppmax-ppmin)/((ppmax+ppmin)/2))*100;
-    document.getElementById('st-vpp').textContent=vpp.toFixed(1)+'%';
-    document.getElementById('st-vppinterp').textContent=vpp>13?'Responde a liquidos (VPP >13%)':'No responde a liquidos (VPP ≤13%)';
-  }
-  if (!isNaN(vcimax)&&!isNaN(vcimin)) {
-    const dist=((vcimax-vcimin)/vcimax)*100;
-    document.getElementById('st-vci').textContent=dist.toFixed(1)+'%';
-    document.getElementById('st-vciinterp').textContent=dist>18?'Precarga dependiente (dist. >18%)':'No precarga dependiente (dist. ≤18%)';
-  }
-  document.getElementById('starling-result').style.display='grid';
-}
-
 // ============ PPC — 3 MÉTODOS ============
 function ppcStatus(ppc, meta) {
   meta = meta || 60;
@@ -7363,117 +6695,6 @@ function calcPPC() {
   const b = elCached('ppc-badge');
   b.className = 'result-badge ' + cls; b.textContent = txt;
   elCached('ppc-result').style.display = 'grid';
-  updatePPCResumen();
-}
-
-// ── DVNO ─────────────────────────────────────────────────────────────────────
-function calcDVNO() {
-  const od  = parseFloat(elCached('dvno-od').value);
-  const oi  = parseFloat(elCached('dvno-oi').value);
-  const pam = parseFloat(elCached('dvno-pam').value);
-  if (isNaN(od) && isNaN(oi)) return;
-
-  const prom = (!isNaN(od) && !isNaN(oi)) ? (od + oi) / 2 : (!isNaN(od) ? od : oi);
-
-  // Robba 2019: PIC = -6.72 + 4.04 × DVNO
-  const picRobba = -6.72 + 4.04 * prom;
-  // Maissan 2015: PIC = (DVNO − 3.57) / 0.065 + 10
-  const picMaissan = (prom - 3.57) / 0.065 + 10;
-  // Promedio de fórmulas
-  const picProm = (picRobba + picMaissan) / 2;
-
-  elCached('dvno-prom').textContent = prom.toFixed(2) + ' mm';
-  elCached('dvno-pic').textContent  =
-    picRobba.toFixed(1) + ' mmHg (Robba) / ' + picMaissan.toFixed(1) + ' mmHg (Maissan)';
-
-  const b = elCached('dvno-badge');
-  if (prom < 5.0)       { b.className='result-badge badge-green';  b.textContent='DVNO normal (<5.0 mm) — PIC probablemente normal'; }
-  else if (prom < 5.8)  { b.className='result-badge badge-yellow'; b.textContent='DVNO límite (5.0-5.8) — vigilar, repetir'; }
-  else                  { b.className='result-badge badge-red';     b.textContent='DVNO elevado (≥5.8 mm) — HTIC probable'; }
-
-  if (!isNaN(pam)) {
-    const ppcEst = pam - picProm;
-    elCached('dvno-ppc').textContent = ppcEst.toFixed(0) + ' mmHg (estimada)';
-    const [cls, txt] = ppcStatus(ppcEst);
-    const pb = elCached('dvno-ppc-badge');
-    pb.className = 'result-badge ' + cls; pb.textContent = txt;
-  }
-
-  elCached('dvno-result').style.display = 'grid';
-  // Store for integrator
-  window._dvno_pic = picProm;
-  window._dvno_dvno = prom;
-  updatePPCResumen();
-}
-
-// ── DTC ──────────────────────────────────────────────────────────────────────
-function calcDTC() {
-  const vs  = parseFloat(elCached('dtc-vs').value);
-  const vd  = parseFloat(elCached('dtc-vd').value);
-  const vm  = parseFloat(elCached('dtc-vm').value);
-  const pam = parseFloat(elCached('dtc-pam').value);
-  const pas = parseFloat(elCached('dtc-pas').value);
-  const pad = parseFloat(elCached('dtc-pad').value);
-  if (isNaN(vs) || isNaN(vd)) return;
-
-  // Si no hay Vm calculada, estimar: Vm ≈ (Vs + 2×Vd) / 3
-  const vmCalc = !isNaN(vm) ? vm : (vs + 2 * vd) / 3;
-
-  // Índice de Pulsatilidad (Gosling): IP = (Vs − Vd) / Vm
-  const ip = (vs - vd) / vmCalc;
-  // Índice de Resistencia (Pourcelot): IR = (Vs − Vd) / Vs
-  const ir = (vs - vd) / vs;
-
-  elCached('dtc-ip').textContent = ip.toFixed(3);
-  elCached('dtc-ir').textContent = ir.toFixed(3);
-
-  // PIC Bellner 2004: PIC = (IP × 10.93) − 1.28
-  const picBellner = (ip * 10.93) - 1.28;
-
-  // PIC por aproximación CPP (Czosnyka/Aaslid): CPP ≈ MAP × Vd/Vm → PIC = MAP × (1 − Vd/Vm)
-  // Corrección vs. Schmidt original (MAP×IP−14) que sobreestimaba en ~40 mmHg para valores normales
-  let picSchmidt = null;
-  const pamVal = !isNaN(pam) ? pam : (!isNaN(pas) && !isNaN(pad) ? (pas + 2*pad)/3 : null);
-  if (pamVal !== null) {
-    picSchmidt = pamVal * (1 - vd / vmCalc);
-  }
-
-  // IR × PAD: índice cualitativo (no incluir en consenso — sobreestima sistemáticamente)
-  let picRAP = null;
-  if (!isNaN(pad)) {
-    picRAP = pad * ir;  // IR = (Vs−Vd)/Vs
-  }
-
-  elCached('dtc-pic-bellner').textContent = picBellner.toFixed(1) + ' mmHg';
-  elCached('dtc-pic-schmidt').textContent = picSchmidt !== null ? picSchmidt.toFixed(1) + ' mmHg' : 'Ingresar PAM';
-  elCached('dtc-pic-rap').textContent     = picRAP !== null ? picRAP.toFixed(1) + ' (cualitativo)' : '—';
-
-  // Interpretación IP
-  const ib = elCached('dtc-ip-badge');
-  if      (ip < 0.6)  { ib.className='result-badge badge-yellow'; ib.textContent='IP bajo (<0.6) — vasodilatación/hipercapnia'; }
-  else if (ip <= 1.1) { ib.className='result-badge badge-green';  ib.textContent='IP normal (0.6-1.1)'; }
-  else if (ip <= 1.4) { ib.className='result-badge badge-yellow'; ib.textContent='IP elevado (1.1-1.4) — resistencia aumentada'; }
-  else if (ip <= 2.0) { ib.className='result-badge badge-orange'; ib.textContent='IP alto (1.4-2.0) — HTIC probable'; }
-  else                { ib.className='result-badge badge-red';     ib.textContent='IP >2.0 — flujo diastólico ausente/reverso, HTIC crítica'; }
-
-  // Consenso solo con fórmulas validadas (Bellner + CPP approx), excluir IR×PAD
-  const picsDisp = [picBellner, picSchmidt].filter(v => v !== null && v > 0);
-  const picPromedio = picsDisp.length > 0 ? picsDisp.reduce((a,b) => a+b, 0) / picsDisp.length : null;
-
-  if (picPromedio !== null) {
-    elCached('dtc-pic-prom').textContent = picPromedio.toFixed(1) + ' mmHg';
-    window._dtc_pic = picPromedio;
-    if (pamVal !== null) {
-      const ppcEst = pamVal - picPromedio;
-      elCached('dtc-ppc').textContent = ppcEst.toFixed(0) + ' mmHg (estimada)';
-      const [cls, txt] = ppcStatus(ppcEst);
-      const pb = elCached('dtc-ppc-badge');
-      pb.className = 'result-badge ' + cls; pb.textContent = txt;
-    }
-  }
-
-  elCached('dtc-result').style.display = 'grid';
-  window._dtc_ip = ip;
   updatePPCResumen();
 }
 
@@ -7703,200 +6924,6 @@ function calcROCKALL() {
   else { b.className='result-badge badge-red'; b.textContent='Alto riesgo'; interp='Mortalidad >40% — UCI, endoscopia urgente'; }
   document.getElementById('rock-interp').textContent=interp;
   document.getElementById('rockall-result').style.display='flex';
-}
-
-// ============ PATIENT SYNC ============
-function syncPatient() {
-  const nombre = document.getElementById('pat-nombre').value.trim();
-  const cama   = document.getElementById('pat-cama').value.trim();
-  const nss    = document.getElementById('pat-nss').value.trim();
-  const edad   = document.getElementById('pat-edad').value.trim();
-  const sexo   = document.getElementById('pat-sexo').value;
-  const peso   = document.getElementById('pat-peso').value.trim();
-  const talla  = document.getElementById('pat-talla').value.trim();
-  let   dias   = document.getElementById('pat-dias').value.trim();
-  const dx     = document.getElementById('pat-dx').value.trim();
-  const medico = document.getElementById('pat-medico').value.trim();
-  const fecha  = document.getElementById('pat-fecha').value;
-
-  // ── Auto-calc dias from fecha ingreso ───────────────
-  const diasAutoEl = document.getElementById('pat-dias-auto');
-  if (fecha) {
-    const diff = Math.floor((new Date() - new Date(fecha)) / 86400000);
-    if (diff >= 0) {
-      diasAutoEl.textContent = '(auto)';
-      if (!dias) {
-        document.getElementById('pat-dias').value = diff;
-        dias = String(diff);
-      }
-    }
-  } else {
-    diasAutoEl.textContent = '';
-  }
-
-  // ── Auto-fill: PESO (all calculators) ───────────────
-  ['vas-peso','bal-peso','kd-peso','hb-peso','el-peso','tsr-peso','uf-peso','ac-peso','ox-peso','sed-weight','tf-weight','hemo-weight','gfr-peso','ot-sc','bom-peso'].forEach(id => forceVal(id, peso));
-
-  // ── Auto-fill: TALLA ────────────────────────────────
-  ['vt-tall','hb-tall','hemo-height','vp-talla'].forEach(id => forceVal(id, talla));
-
-  // ── Auto-fill: EDAD ─────────────────────────────────
-  ['hb-edad','gfr-edad','ap-age','saps-age','nut-age'].forEach(id => forceVal(id, edad));
-
-  // ── Auto-fill: SEXO ─────────────────────────────────
-  if (sexo) { ['vt-sex','hb-sex','gfr-sexo','vp-sexo'].forEach(id => forceSelect(id, sexo)); }
-
-  // ── Auto-fill: DIAS UCI → NUTRIC ────────────────────
-  if (dias) {
-    const nutDays = document.getElementById('nut-days');
-    if (nutDays) nutDays.value = parseInt(dias) >= 2 ? '1' : '0';
-  }
-
-  // ── Highlight filled fields ─────────────────────────
-  highlightSyncedFields();
-
-  // ── Sticky header (always visible — no display toggle) ──
-  document.getElementById('ps-name').textContent = nombre || '—';
-  document.getElementById('ps-cama').textContent = cama || '—';
-  document.getElementById('ps-peso').textContent = peso || '—';
-  document.getElementById('ps-dias').textContent = dias || '—';
-  document.getElementById('ps-dx').textContent   = dx || '—';
-
-  // ── Derived values (no display toggle — badges always reserve space) ──
-  const p = parseFloat(peso), t = parseFloat(talla);
-
-  const imcWrap = document.getElementById('db-imc-wrap');
-  const pciWrap = document.getElementById('db-pci-wrap');
-  const bsaWrap = document.getElementById('db-bsa-wrap');
-  const diasWrap = document.getElementById('db-dias-wrap');
-
-  if (p > 0 && t > 0) {
-    const imc = p / ((t/100) * (t/100));
-    document.getElementById('db-imc').textContent = imc.toFixed(1);
-    let imcCat, imcCls;
-    if (imc < 18.5)     { imcCat = 'Bajo peso'; imcCls = 'db-yellow'; }
-    else if (imc < 25)  { imcCat = 'Normal'; imcCls = 'db-green'; }
-    else if (imc < 30)  { imcCat = 'Sobrepeso'; imcCls = 'db-yellow'; }
-    else if (imc < 35)  { imcCat = 'Obesidad I'; imcCls = 'db-orange'; }
-    else                 { imcCat = 'Obesidad II+'; imcCls = 'db-red'; }
-    document.getElementById('db-imc-cat').textContent = imcCat;
-    imcWrap.className = 'derived-badge ' + imcCls;
-    const bsa = Math.sqrt(p * t / 3600);
-    document.getElementById('db-bsa').textContent = bsa.toFixed(2);
-    bsaWrap.className = 'derived-badge';
-  } else {
-    document.getElementById('db-imc').textContent = '—';
-    document.getElementById('db-imc-cat').textContent = '—';
-    imcWrap.className = 'derived-badge';
-    document.getElementById('db-bsa').textContent = '—';
-    bsaWrap.className = 'derived-badge';
-  }
-
-  if (t > 0 && sexo) {
-    const pci = sexo === 'M' ? 50 + 0.91 * (t - 152.4) : 45.5 + 0.91 * (t - 152.4);
-    document.getElementById('db-pci').textContent = Math.max(0, pci).toFixed(1);
-    pciWrap.className = 'derived-badge';
-  } else {
-    document.getElementById('db-pci').textContent = '—';
-    pciWrap.className = 'derived-badge';
-  }
-
-  if (dias) {
-    document.getElementById('db-dias').textContent = dias;
-    const d = parseInt(dias);
-    diasWrap.className = 'derived-badge ' + (d <= 3 ? 'db-green' : d <= 7 ? 'db-yellow' : d <= 14 ? 'db-orange' : 'db-red');
-    const badge = document.getElementById('pat-estancia-badge');
-    if (d <= 3)       badge.textContent = 'Estancia corta';
-    else if (d <= 7)  badge.textContent = 'Primera semana';
-    else if (d <= 14) badge.textContent = 'Estancia prolongada';
-    else              badge.textContent = 'Larga estancia (>' + d + 'd)';
-  } else {
-    document.getElementById('db-dias').textContent = '—';
-    diasWrap.className = 'derived-badge';
-    document.getElementById('pat-estancia-badge').textContent = 'días';
-  }
-
-  // ── Export / Print header ───────────────────────────
-  document.getElementById('exp-nombre').textContent = nombre || 'Sin datos';
-  document.getElementById('exp-cama').textContent   = cama   || '—';
-  document.getElementById('exp-nss').textContent    = nss    || '—';
-  document.getElementById('exp-edad').textContent   = edad   || '—';
-  document.getElementById('exp-sexo').textContent   = sexo==='M'?'Masculino':sexo==='F'?'Femenino':'—';
-  document.getElementById('exp-peso').textContent   = peso   || '—';
-  document.getElementById('exp-dias').textContent   = dias   || '—';
-  document.getElementById('exp-dx').textContent     = dx     || '—';
-  document.getElementById('ph-nombre').textContent  = nombre || '—';
-  document.getElementById('ph-cama').textContent    = cama   || '—';
-  document.getElementById('ph-nss').textContent     = nss    || '—';
-  document.getElementById('ph-medico').textContent  = medico || '—';
-  document.getElementById('ph-dx').textContent      = dx     || '—';
-
-  // ── Recalculate where possible ──────────────────────
-  if (peso && talla) calcVT();
-  if (peso) calcBAL();
-  if (peso && talla && edad) calcHARRIS();
-  if (talla) calcVentParams(true);
-  if (peso && talla) {
-    const sc = Math.sqrt(parseFloat(peso) * parseFloat(talla) / 3600);
-    const scEl = document.getElementById('ot-sc');
-    if (scEl) scEl.classList.remove('pat-synced');
-    if (scEl && !scEl.classList.contains('pat-synced')) {
-      scEl.value = sc.toFixed(2);
-      scEl.classList.add('pat-synced');
-    }
-  }
-
-  // ── Persist to localStorage ─────────────────────────
-  try {
-    localStorage.setItem('uci-patient', JSON.stringify({
-      nombre, cama, edad, sexo, peso, talla, dias, dx, medico, fecha
-    }));
-  } catch(e) {}
-}
-const debouncedSyncPatient = debounce(syncPatient, 120);
-
-// Force-set value (always overwrites, even if field has data — from patient profile)
-function forceVal(id, val) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  if (val) {
-    el.value = val;
-    el.classList.add('pat-synced');
-  } else {
-    el.classList.remove('pat-synced');
-  }
-}
-function forceSelect(id, val) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  if (val) { el.value = val; el.classList.add('pat-synced'); }
-  else { el.classList.remove('pat-synced'); }
-}
-
-function highlightSyncedFields() {
-  document.querySelectorAll('.pat-synced').forEach(el => el.classList.remove('pat-synced'));
-  const peso  = document.getElementById('pat-peso').value.trim();
-  const talla = document.getElementById('pat-talla').value.trim();
-  const edad  = document.getElementById('pat-edad').value.trim();
-  const sexo  = document.getElementById('pat-sexo').value;
-  if (peso)  ['vas-peso','bal-peso','kd-peso','hb-peso','el-peso','tsr-peso','uf-peso','ac-peso','ox-peso','sed-weight','tf-weight','hemo-weight','gfr-peso'].forEach(id => markSynced(id));
-  if (talla) ['vt-tall','hb-tall','hemo-height','vp-talla'].forEach(id => markSynced(id));
-  if (edad)  ['hb-edad','gfr-edad','ap-age','saps-age','nut-age'].forEach(id => markSynced(id));
-  if (sexo)  ['vt-sex','hb-sex','gfr-sexo','vp-sexo'].forEach(id => markSynced(id));
-}
-function markSynced(id) {
-  const el = document.getElementById(id);
-  if (el) el.classList.add('pat-synced');
-}
-
-function clearPatient() {
-  ['pat-nombre','pat-cama','pat-nss','pat-edad','pat-peso','pat-talla','pat-dias','pat-fecha','pat-dx','pat-medico'].forEach(id=>{
-    const el = document.getElementById(id);
-    if (el) el.value='';
-  });
-  document.getElementById('pat-sexo').value='';
-  try { localStorage.removeItem('uci-patient'); } catch(e) {}
-  syncPatient();
 }
 
 // ============ EXPORT / UPDATE SCORES PANEL ============
@@ -10015,82 +9042,10 @@ function calcMELD() {
   ensureEvidenceForCalc('meld');
 }
 
-const evidenceByCalc = {
-  news2: ['evid-wrap-news2', 'news2'],
-  shock: ['evid-wrap-shock', 'shock'],
-  hemodynamics: ['evid-wrap-hemodynamics', 'hemodynamics'],
-  'gfr-dosing': [['evid-wrap-gfr-dosing', 'gfr_dosing'], ['evid-wrap-abx-dosing', 'abx_dosing']],
-  sedation: ['evid-wrap-sedation', 'sedation'],
-  transfusion: ['evid-wrap-transfusion', 'transfusion'],
-  tgas: ['evid-wrap-tgas', 'tgas'],
-  sofa: ['evid-wrap-sofa', 'sofa'],
-  apache: ['evid-wrap-apache', 'apache'],
-  saps: ['evid-wrap-saps', 'saps'],
-  nutric: ['evid-wrap-nutric', 'nutric'],
-  tvent: ['evid-wrap-expres', 'expres'],
-  gas: ['evid-wrap-gas', 'gas'],
-  vaso: ['evid-wrap-vaso', 'vaso'],
-  balance: ['evid-wrap-balance', 'balance'],
-  ppc: ['evid-wrap-ppc', 'ppc'],
-  vexus: [['evid-wrap-vexus', 'vexus'], ['evid-wrap-starling', 'starling']],
-  'elec-uri': ['evid-wrap-elec-uri', 'elec_uri'],
-  electrolitos: ['evid-wrap-electrolitos', 'electrolitos'],
-  kdigo: ['evid-wrap-kdigo', 'kdigo'],
-  osmo: ['evid-wrap-osmo', 'osmo'],
-  ca: ['evid-wrap-ca', 'ca'],
-  harris: ['evid-wrap-harris', 'harris'],
-  camicu: ['evid-wrap-camicu', 'camicu'],
-  padua: ['evid-wrap-padua', 'padua'],
-  curb: ['evid-wrap-curb', 'curb'],
-  rockall: ['evid-wrap-rockall', 'rockall'],
-  rass: ['evid-wrap-rass', 'rass'],
-  kirby: [['evid-wrap-pafi', 'pafi'], ['evid-wrap-oi', 'oxygen_index'], ['evid-wrap-kirby', 'kirby']],
-  gcs: ['evid-wrap-gcs', 'gcs'],
-  qsofa: ['evid-wrap-qsofa', 'qsofa'],
-  wells: ['evid-wrap-wells', 'wells'],
-  meld: ['evid-wrap-meld', 'meld'],
-  'sepsis-bundle': ['evid-wrap-sepsis-bundle', 'sepsis_bundle'],
-  metabolic: ['evid-wrap-metabolic', 'metabolic'],
-  'tsr-dosis': ['evid-wrap-tsr-dosis', 'kdigo_tsr'],
-  'tsr-uf': ['evid-wrap-tsr-uf', 'kdigo_tsr'],
-  'tsr-anticoag': ['evid-wrap-tsr-anticoag', 'tsr_anticoag'],
-  'tsr-modalidad': ['evid-wrap-tsr-modalidad', 'kdigo_tsr']
-};
-const loadedEvidence = new Set();
 
-function renderEvidencePanel(pair) {
-  const el = document.getElementById(pair[0]);
-  if (!el || loadedEvidence.has(pair[0])) return;
-  el.innerHTML = buildEvid(pair[1]);
-  loadedEvidence.add(pair[0]);
-}
-
-function ensureEvidenceForCalc(calcId) {
-  const entry = evidenceByCalc[calcId];
-  if (!entry) return;
-  if (Array.isArray(entry[0])) {
-    for (let i = 0; i < entry.length; i++) renderEvidencePanel(entry[i]);
-    return;
-  }
-  renderEvidencePanel(entry);
-}
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Restore patient data from localStorage
-  try {
-    const saved = JSON.parse(localStorage.getItem('uci-patient'));
-    if (saved) {
-      const map = {
-        nombre:'pat-nombre', cama:'pat-cama', nss:'pat-nss',
-        edad:'pat-edad', peso:'pat-peso', talla:'pat-talla',
-        dias:'pat-dias', dx:'pat-dx', medico:'pat-medico', fecha:'pat-fecha'
-      };
-      Object.keys(map).forEach(k => {
-        if (saved[k]) { const el = document.getElementById(map[k]); if (el) el.value = saved[k]; }
-      });
-      if (saved.sexo) document.getElementById('pat-sexo').value = saved.sexo;
-    }
-  } catch(e) {}
+  loadPatient();
 
   updateClock();
   setInterval(updateClock, 10000);

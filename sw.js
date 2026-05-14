@@ -1,7 +1,7 @@
-// UCI Tools — Service Worker v18
+// UCI Tools — Service Worker v29
 // stale-while-revalidate + update notification
 
-const CACHE_NAME = 'uci-tools-v18';
+const CACHE_NAME = 'uci-tools-v29';
 
 function assetUrl(path) {
   return new URL(path, self.location.href).href;
@@ -9,6 +9,20 @@ function assetUrl(path) {
 
 const ASSETS = [
   assetUrl('./index.html'),
+  assetUrl('./src/core/state.js'),
+  assetUrl('./src/core/utils.js'),
+  assetUrl('./src/calculators/starling.js'),
+  assetUrl('./src/core/patient.js'),
+  assetUrl('./src/data/evidence.js'),
+  assetUrl('./src/ui/evidence-ui.js'),
+  assetUrl('./src/data/drugs.js'),
+  assetUrl('./src/calculators/bombas.js'),
+  assetUrl('./src/data/ranges.js'),
+  assetUrl('./src/calculators/balance.js'),
+  assetUrl('./src/calculators/vasopresores.js'),
+  assetUrl('./src/calculators/dvno.js'),
+  assetUrl('./src/calculators/dtc.js'),
+  assetUrl('./src/data/knowledge.js'),
   assetUrl('./manifest.json'),
   assetUrl('./icon-192-any.png'),
   assetUrl('./icon-192-maskable.png'),
